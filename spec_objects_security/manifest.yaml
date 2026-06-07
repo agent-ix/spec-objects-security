@@ -2,6 +2,12 @@ manifest_version: 1.0.0
 name: spec-objects-security
 version: 0.1.0
 description: 'Filament Module: tier-2 security and identity ObjectTypes (threats, controls, auth flows, secrets, policies)'
+nav:
+  category:
+    slug: security
+    label: Security
+    icon: ShieldCheck
+    order: 54
 archetypes: []
 grammars: []
 artifact_types: []
