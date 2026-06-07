@@ -8,6 +8,9 @@ version = "0.1.0"  # Placeholder, dynamically replaced
 description = "Filament Module: tier-2 security and identity ObjectTypes (threat, control, risk, asset, policy, auth_flow, role, scope, jwt_claim, secret)"
 authors = ["Agent IX <agents@agent-ix.dev>"]
 packages = [{ include = "spec_objects_security" }]
+include = [
+    { path = "spec_objects_security/manifest.yaml", format = ["sdist", "wheel"] },
+]
 
 [tool.poetry.dependencies]
 python = ">=3.13,<3.14"
