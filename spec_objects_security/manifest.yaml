@@ -23,21 +23,21 @@ object_types:
           from: frontmatter_field
           path:
           - id
-          required: false
+          required: true
         title: &id002
           from: frontmatter_field
           path:
           - title
-          required: false
+          required: true
         artifact_type: &id003
           from: frontmatter_field
           path:
           - artifact_type
-          required: false
+          required: true
         flow:
           from: code_block
           after_heading: Flow
-          required: false
+          required: true
           language: mermaid
 - name: permission
   data_schema:
@@ -52,12 +52,12 @@ object_types:
           from: frontmatter_field
           path:
           - resource
-          required: false
+          required: true
         verb:
           from: frontmatter_field
           path:
           - verb
-          required: false
+          required: true
 - name: scope
   data_schema:
     type: object
@@ -70,7 +70,7 @@ object_types:
         grants:
           from: section_body
           after_heading: Grants
-          required: false
+          required: true
 - name: role
   data_schema:
     type: object
@@ -83,7 +83,7 @@ object_types:
         permissions:
           from: section_body
           after_heading: Permissions
-          required: false
+          required: true
 - name: secret
   data_schema:
     type: object
@@ -96,7 +96,7 @@ object_types:
         rotation:
           from: section_body
           after_heading: Rotation
-          required: false
+          required: true
 - name: encryption_key
   data_schema:
     type: object
@@ -110,7 +110,7 @@ object_types:
           from: frontmatter_field
           path:
           - algorithm
-          required: false
+          required: true
         rotation:
           from: frontmatter_field
           path:
@@ -128,7 +128,7 @@ object_types:
         settings:
           from: section_body
           after_heading: Settings
-          required: false
+          required: true
 - name: data_classification
   data_schema:
     type: object
@@ -141,7 +141,7 @@ object_types:
         handling:
           from: section_body
           after_heading: Handling
-          required: false
+          required: true
 - name: trust_boundary
   data_schema:
     type: object
@@ -154,7 +154,7 @@ object_types:
         boundary:
           from: code_block
           after_heading: Boundary
-          required: false
+          required: true
           language: mermaid
 - name: audit_event
   data_schema:
@@ -168,7 +168,7 @@ object_types:
         event_schema:
           from: code_block
           after_heading: Event Schema
-          required: false
+          required: true
           language: json
 - name: csrf_token
   data_schema:
@@ -183,7 +183,7 @@ object_types:
           from: frontmatter_field
           path:
           - rotation_window
-          required: false
+          required: true
 - name: cors_policy
   data_schema:
     type: object
@@ -196,7 +196,7 @@ object_types:
         origins:
           from: section_body
           after_heading: Origins
-          required: false
+          required: true
 - name: password_policy
   data_schema:
     type: object
@@ -209,7 +209,7 @@ object_types:
         rules:
           from: section_body
           after_heading: Rules
-          required: false
+          required: true
 - name: mfa_method
   data_schema:
     type: object
@@ -223,7 +223,7 @@ object_types:
           from: frontmatter_field
           path:
           - kind
-          required: false
+          required: true
         factor:
           from: frontmatter_field
           path:
@@ -241,7 +241,7 @@ object_types:
         schema_json:
           from: code_block
           after_heading: Schema
-          required: false
+          required: true
           language: json
 - name: threat
   data_schema:
@@ -253,27 +253,27 @@ object_types:
           from: frontmatter_field
           path:
           - id
-          required: false
+          required: true
         title: &id005
           from: frontmatter_field
           path:
           - title
-          required: false
+          required: true
         artifact_type: &id006
           from: frontmatter_field
           path:
           - artifact_type
-          required: false
+          required: true
         stride_category:
           from: frontmatter_field
           path:
           - stride_category
-          required: false
+          required: true
         vector:
           from: frontmatter_field
           path:
           - vector
-          required: false
+          required: true
 - name: control
   data_schema:
     type: object
@@ -286,7 +286,7 @@ object_types:
         mappings:
           from: section_body
           after_heading: Mappings
-          required: false
+          required: true
 - name: risk
   data_schema:
     type: object
@@ -300,12 +300,12 @@ object_types:
           from: frontmatter_field
           path:
           - likelihood
-          required: false
+          required: true
         impact:
           from: frontmatter_field
           path:
           - impact
-          required: false
+          required: true
 - name: vulnerability
   data_schema:
     type: object
@@ -324,7 +324,7 @@ object_types:
           from: frontmatter_field
           path:
           - severity
-          required: false
+          required: true
 - name: asset
   data_schema:
     type: object
@@ -337,7 +337,7 @@ object_types:
         description_body:
           from: section_body
           after_heading: Description
-          required: false
+          required: true
 - name: attack_surface
   data_schema:
     type: object
@@ -350,7 +350,7 @@ object_types:
         entry_points:
           from: section_body
           after_heading: Entry Points
-          required: false
+          required: true
 - name: policy
   data_schema:
     type: object
@@ -363,7 +363,7 @@ object_types:
         policy_body:
           from: section_body
           after_heading: Policy
-          required: false
+          required: true
 - name: audit_finding
   data_schema:
     type: object
@@ -376,4 +376,4 @@ object_types:
         recommendation:
           from: section_body
           after_heading: Recommendation
-          required: false
+          required: true
