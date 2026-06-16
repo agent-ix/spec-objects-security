@@ -1,11 +1,11 @@
 ---
 id: SESSION-001
 title: "Atlas web session configuration"
-artifact_type: session_config
+type: session_config
 ---
 <!-- session_config authoring skeleton (spec-objects-security). Fill every part
      with substantive content. Contract (manifest body_extraction asserts):
-     - Frontmatter MUST carry id, title, artifact_type (artifact_type:
+     - Frontmatter MUST carry id, title, type (type:
        session_config).
      - A "Settings" section MUST enumerate the effective session parameters. -->
 # [SESSION-001] Atlas web session configuration

@@ -11,7 +11,7 @@ object_type:
   every asserted code block carries the asserted fence language;
 * reverse direction: the skeleton declares no headings, fence languages or
   frontmatter keys beyond the manifest's locators (no drift);
-* required frontmatter fields are present, ``artifact_type`` equals the type
+* required frontmatter fields are present, ``type`` equals the type
   name, and bodies are substantive (no placeholder tokens);
 * roundtrip: each skeleton passes ``quire.validate_document`` when the
   installed quire wheel exposes it (skipped cleanly otherwise — quire is not
@@ -109,7 +109,7 @@ def test_every_object_type_ships_a_skeleton_and_nothing_extra() -> None:
 
 @pytest.mark.parametrize("name", _NAMES, ids=lambda n: n)
 def test_frontmatter_matches_manifest_locators(name: str) -> None:
-    """Required frontmatter fields are present and non-empty; artifact_type is
+    """Required frontmatter fields are present and non-empty; type is
     the object_type name; no undeclared frontmatter keys (reverse drift)."""
     fm = _frontmatter(_skeleton_text(name))
     fm_locators = {
@@ -124,7 +124,7 @@ def test_frontmatter_matches_manifest_locators(name: str) -> None:
             assert field in fm, f"{name}: required frontmatter {field!r} missing"
             value = fm[field]
             assert value not in (None, ""), f"{name}: frontmatter {field!r} empty"
-    assert fm["artifact_type"] == name
+    assert fm["type"] == name
     assert fm["id"] and fm["title"]
     undeclared = set(fm) - declared_fields
     assert not undeclared, f"{name}: undeclared frontmatter keys {undeclared}"

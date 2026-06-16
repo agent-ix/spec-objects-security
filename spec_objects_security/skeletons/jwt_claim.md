@@ -1,11 +1,11 @@
 ---
 id: CLAIM-001
 title: "tenant_id access-token claim"
-artifact_type: jwt_claim
+type: jwt_claim
 ---
 <!-- jwt_claim authoring skeleton (spec-objects-security). Fill every part with
      substantive content. Contract (manifest body_extraction asserts):
-     - Frontmatter MUST carry id, title, artifact_type (artifact_type:
+     - Frontmatter MUST carry id, title, type (type:
        jwt_claim).
      - A "Schema" section MUST carry a ```json code block with the claim's
        JSON Schema. -->

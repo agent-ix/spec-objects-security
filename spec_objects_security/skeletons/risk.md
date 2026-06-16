@@ -1,13 +1,13 @@
 ---
 id: RISK-001
 title: "Tenant account takeover via token theft"
-artifact_type: risk
+type: risk
 likelihood: medium
 impact: high
 ---
 <!-- risk authoring skeleton (spec-objects-security). Fill every part with
      substantive content. Contract (manifest body_extraction asserts):
-     - Frontmatter MUST carry id, title, artifact_type (artifact_type: risk),
+     - Frontmatter MUST carry id, title, type (type: risk),
        likelihood and impact (qualitative ratings driving the risk score). -->
 # [RISK-001] Tenant account takeover via token theft
 

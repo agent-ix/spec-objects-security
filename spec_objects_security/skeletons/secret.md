@@ -1,11 +1,11 @@
 ---
 id: SECRET-001
 title: "Atlas OIDC client secret"
-artifact_type: secret
+type: secret
 ---
 <!-- secret authoring skeleton (spec-objects-security). Fill every part with
      substantive content. Contract (manifest body_extraction asserts):
-     - Frontmatter MUST carry id, title, artifact_type (artifact_type: secret).
+     - Frontmatter MUST carry id, title, type (type: secret).
      - A "Rotation" section MUST describe how and how often the secret rotates. -->
 # [SECRET-001] Atlas OIDC client secret
 

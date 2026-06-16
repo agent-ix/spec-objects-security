@@ -1,12 +1,12 @@
 ---
 id: CSRF-001
 title: "Atlas web CSRF token"
-artifact_type: csrf_token
+type: csrf_token
 rotation_window: 30m
 ---
 <!-- csrf_token authoring skeleton (spec-objects-security). Fill every part with
      substantive content. Contract (manifest body_extraction asserts):
-     - Frontmatter MUST carry id, title, artifact_type (artifact_type:
+     - Frontmatter MUST carry id, title, type (type:
        csrf_token) and rotation_window (how often a fresh token is issued). -->
 # [CSRF-001] Atlas web CSRF token
 

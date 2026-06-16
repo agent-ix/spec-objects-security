@@ -1,13 +1,13 @@
 ---
 id: THREAT-001
 title: "Stolen refresh token replay"
-artifact_type: threat
+type: threat
 stride_category: Spoofing
 vector: "exfiltrated refresh token replayed from attacker infrastructure"
 ---
 <!-- threat authoring skeleton (spec-objects-security). Fill every part with
      substantive content. Contract (manifest body_extraction asserts):
-     - Frontmatter MUST carry id, title, artifact_type (artifact_type: threat),
+     - Frontmatter MUST carry id, title, type (type: threat),
        stride_category (STRIDE class) and vector (the attack vector). -->
 # [THREAT-001] Stolen refresh token replay
 

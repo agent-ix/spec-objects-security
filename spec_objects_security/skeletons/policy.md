@@ -1,11 +1,11 @@
 ---
 id: POL-001
 title: "Access token lifetime policy"
-artifact_type: policy
+type: policy
 ---
 <!-- policy authoring skeleton (spec-objects-security). Fill every part with
      substantive content. Contract (manifest body_extraction asserts):
-     - Frontmatter MUST carry id, title, artifact_type (artifact_type: policy).
+     - Frontmatter MUST carry id, title, type (type: policy).
      - A "Policy" section MUST state the normative policy text. -->
 # [POL-001] Access token lifetime policy
 

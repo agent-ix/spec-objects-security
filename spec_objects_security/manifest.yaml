@@ -29,10 +29,10 @@ object_types:
           path:
           - title
           required: true
-        artifact_type: &id003
+        type: &id003
           from: frontmatter_field
           path:
-          - artifact_type
+          - type
           required: true
         flow:
           from: code_block
@@ -47,7 +47,7 @@ object_types:
       match:
         id: *id001
         title: *id002
-        artifact_type: *id003
+        type: *id003
         resource:
           from: frontmatter_field
           path:
@@ -66,7 +66,7 @@ object_types:
       match:
         id: *id001
         title: *id002
-        artifact_type: *id003
+        type: *id003
         grants:
           from: section_body
           after_heading: Grants
@@ -79,7 +79,7 @@ object_types:
       match:
         id: *id001
         title: *id002
-        artifact_type: *id003
+        type: *id003
         permissions:
           from: section_body
           after_heading: Permissions
@@ -92,7 +92,7 @@ object_types:
       match:
         id: *id001
         title: *id002
-        artifact_type: *id003
+        type: *id003
         rotation:
           from: section_body
           after_heading: Rotation
@@ -105,7 +105,7 @@ object_types:
       match:
         id: *id001
         title: *id002
-        artifact_type: *id003
+        type: *id003
         algorithm:
           from: frontmatter_field
           path:
@@ -124,7 +124,7 @@ object_types:
       match:
         id: *id001
         title: *id002
-        artifact_type: *id003
+        type: *id003
         settings:
           from: section_body
           after_heading: Settings
@@ -137,7 +137,7 @@ object_types:
       match:
         id: *id001
         title: *id002
-        artifact_type: *id003
+        type: *id003
         handling:
           from: section_body
           after_heading: Handling
@@ -150,7 +150,7 @@ object_types:
       match:
         id: *id001
         title: *id002
-        artifact_type: *id003
+        type: *id003
         boundary:
           from: code_block
           after_heading: Boundary
@@ -164,7 +164,7 @@ object_types:
       match:
         id: *id001
         title: *id002
-        artifact_type: *id003
+        type: *id003
         event_schema:
           from: code_block
           after_heading: Event Schema
@@ -178,7 +178,7 @@ object_types:
       match:
         id: *id001
         title: *id002
-        artifact_type: *id003
+        type: *id003
         rotation_window:
           from: frontmatter_field
           path:
@@ -192,7 +192,7 @@ object_types:
       match:
         id: *id001
         title: *id002
-        artifact_type: *id003
+        type: *id003
         origins:
           from: section_body
           after_heading: Origins
@@ -205,7 +205,7 @@ object_types:
       match:
         id: *id001
         title: *id002
-        artifact_type: *id003
+        type: *id003
         rules:
           from: section_body
           after_heading: Rules
@@ -218,7 +218,7 @@ object_types:
       match:
         id: *id001
         title: *id002
-        artifact_type: *id003
+        type: *id003
         kind:
           from: frontmatter_field
           path:
@@ -237,7 +237,7 @@ object_types:
       match:
         id: *id001
         title: *id002
-        artifact_type: *id003
+        type: *id003
         schema_json:
           from: code_block
           after_heading: Schema
@@ -259,10 +259,10 @@ object_types:
           path:
           - title
           required: true
-        artifact_type: &id006
+        type: &id006
           from: frontmatter_field
           path:
-          - artifact_type
+          - type
           required: true
         stride_category:
           from: frontmatter_field
@@ -282,7 +282,7 @@ object_types:
       match:
         id: *id004
         title: *id005
-        artifact_type: *id006
+        type: *id006
         mappings:
           from: section_body
           after_heading: Mappings
@@ -295,7 +295,7 @@ object_types:
       match:
         id: *id004
         title: *id005
-        artifact_type: *id006
+        type: *id006
         likelihood:
           from: frontmatter_field
           path:
@@ -314,7 +314,7 @@ object_types:
       match:
         id: *id004
         title: *id005
-        artifact_type: *id006
+        type: *id006
         cve_id:
           from: frontmatter_field
           path:
@@ -333,7 +333,7 @@ object_types:
       match:
         id: *id004
         title: *id005
-        artifact_type: *id006
+        type: *id006
         description_body:
           from: section_body
           after_heading: Description
@@ -346,7 +346,7 @@ object_types:
       match:
         id: *id004
         title: *id005
-        artifact_type: *id006
+        type: *id006
         entry_points:
           from: section_body
           after_heading: Entry Points
@@ -359,7 +359,7 @@ object_types:
       match:
         id: *id004
         title: *id005
-        artifact_type: *id006
+        type: *id006
         policy_body:
           from: section_body
           after_heading: Policy
@@ -372,7 +372,7 @@ object_types:
       match:
         id: *id004
         title: *id005
-        artifact_type: *id006
+        type: *id006
         recommendation:
           from: section_body
           after_heading: Recommendation

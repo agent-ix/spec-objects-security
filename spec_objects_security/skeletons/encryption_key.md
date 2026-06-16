@@ -1,13 +1,13 @@
 ---
 id: KEY-001
 title: "Tenant data encryption key"
-artifact_type: encryption_key
+type: encryption_key
 algorithm: AES-256-GCM
 rotation: 90d
 ---
 <!-- encryption_key authoring skeleton (spec-objects-security). Fill every part
      with substantive content. Contract (manifest body_extraction asserts):
-     - Frontmatter MUST carry id, title, artifact_type (artifact_type:
+     - Frontmatter MUST carry id, title, type (type:
        encryption_key) and algorithm (the cipher); rotation gives the cadence. -->
 # [KEY-001] Tenant data encryption key
 

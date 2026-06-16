@@ -1,11 +1,11 @@
 ---
 id: CORS-001
 title: "Atlas public API CORS policy"
-artifact_type: cors_policy
+type: cors_policy
 ---
 <!-- cors_policy authoring skeleton (spec-objects-security). Fill every part
      with substantive content. Contract (manifest body_extraction asserts):
-     - Frontmatter MUST carry id, title, artifact_type (artifact_type:
+     - Frontmatter MUST carry id, title, type (type:
        cors_policy).
      - An "Origins" section MUST enumerate the allowed origins and rules. -->
 # [CORS-001] Atlas public API CORS policy

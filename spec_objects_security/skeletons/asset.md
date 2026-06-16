@@ -1,11 +1,11 @@
 ---
 id: ASSET-001
 title: "Session store"
-artifact_type: asset
+type: asset
 ---
 <!-- asset authoring skeleton (spec-objects-security). Fill every part with
      substantive content. Contract (manifest body_extraction asserts):
-     - Frontmatter MUST carry id, title, artifact_type (artifact_type: asset).
+     - Frontmatter MUST carry id, title, type (type: asset).
      - A "Description" section MUST describe the asset and why it matters. -->
 # [ASSET-001] Session store
 

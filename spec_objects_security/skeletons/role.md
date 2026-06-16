@@ -1,11 +1,11 @@
 ---
 id: ROLE-001
 title: "Tenant Auditor role"
-artifact_type: role
+type: role
 ---
 <!-- role authoring skeleton (spec-objects-security). Fill every part with
      substantive content. Contract (manifest body_extraction asserts):
-     - Frontmatter MUST carry id, title, artifact_type (artifact_type: role).
+     - Frontmatter MUST carry id, title, type (type: role).
      - A "Permissions" section MUST list the permissions bound to the role. -->
 # [ROLE-001] Tenant Auditor role
 

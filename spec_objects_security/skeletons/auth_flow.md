@@ -1,11 +1,11 @@
 ---
 id: AUTHFLOW-001
 title: "Tenant user login via OIDC authorization code flow"
-artifact_type: auth_flow
+type: auth_flow
 ---
 <!-- auth_flow authoring skeleton (spec-objects-security). Fill every part with
      substantive content. Contract (manifest body_extraction asserts):
-     - Frontmatter MUST carry id, title, artifact_type (artifact_type: auth_flow).
+     - Frontmatter MUST carry id, title, type (type: auth_flow).
      - A "Flow" section MUST carry a ```mermaid code block describing the flow. -->
 # [AUTHFLOW-001] Tenant user login via OIDC authorization code flow
 

@@ -1,11 +1,11 @@
 ---
 id: CLASS-001
 title: "Confidential — tenant PII"
-artifact_type: data_classification
+type: data_classification
 ---
 <!-- data_classification authoring skeleton (spec-objects-security). Fill every
      part with substantive content. Contract (manifest body_extraction asserts):
-     - Frontmatter MUST carry id, title, artifact_type (artifact_type:
+     - Frontmatter MUST carry id, title, type (type:
        data_classification).
      - A "Handling" section MUST state the handling requirements for the class. -->
 # [CLASS-001] Confidential — tenant PII

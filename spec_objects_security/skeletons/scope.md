@@ -1,11 +1,11 @@
 ---
 id: SCOPE-001
 title: "documents:read OAuth scope"
-artifact_type: scope
+type: scope
 ---
 <!-- scope authoring skeleton (spec-objects-security). Fill every part with
      substantive content. Contract (manifest body_extraction asserts):
-     - Frontmatter MUST carry id, title, artifact_type (artifact_type: scope).
+     - Frontmatter MUST carry id, title, type (type: scope).
      - A "Grants" section MUST list the permissions this scope confers. -->
 # [SCOPE-001] documents:read OAuth scope
 

@@ -1,13 +1,13 @@
 ---
 id: MFA-001
 title: "TOTP authenticator app"
-artifact_type: mfa_method
+type: mfa_method
 kind: totp
 factor: possession
 ---
 <!-- mfa_method authoring skeleton (spec-objects-security). Fill every part with
      substantive content. Contract (manifest body_extraction asserts):
-     - Frontmatter MUST carry id, title, artifact_type (artifact_type:
+     - Frontmatter MUST carry id, title, type (type:
        mfa_method) and kind (the method kind); factor names the auth factor
        class it provides. -->
 # [MFA-001] TOTP authenticator app

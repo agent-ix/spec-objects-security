@@ -1,11 +1,11 @@
 ---
 id: CTRL-001
 title: "Refresh token rotation with reuse detection"
-artifact_type: control
+type: control
 ---
 <!-- control authoring skeleton (spec-objects-security). Fill every part with
      substantive content. Contract (manifest body_extraction asserts):
-     - Frontmatter MUST carry id, title, artifact_type (artifact_type: control).
+     - Frontmatter MUST carry id, title, type (type: control).
      - A "Mappings" section MUST map the control to threats, risks and
        standards it addresses. -->
 # [CTRL-001] Refresh token rotation with reuse detection

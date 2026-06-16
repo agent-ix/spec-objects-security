@@ -1,11 +1,11 @@
 ---
 id: FIND-001
 title: "Session store reachable with eval privileges"
-artifact_type: audit_finding
+type: audit_finding
 ---
 <!-- audit_finding authoring skeleton (spec-objects-security). Fill every part
      with substantive content. Contract (manifest body_extraction asserts):
-     - Frontmatter MUST carry id, title, artifact_type (artifact_type:
+     - Frontmatter MUST carry id, title, type (type:
        audit_finding).
      - A "Recommendation" section MUST state the remediation recommendation. -->
 # [FIND-001] Session store reachable with eval privileges

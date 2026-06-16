@@ -1,11 +1,11 @@
 ---
 id: BOUND-001
 title: "Edge to auth-service trust boundary"
-artifact_type: trust_boundary
+type: trust_boundary
 ---
 <!-- trust_boundary authoring skeleton (spec-objects-security). Fill every part
      with substantive content. Contract (manifest body_extraction asserts):
-     - Frontmatter MUST carry id, title, artifact_type (artifact_type:
+     - Frontmatter MUST carry id, title, type (type:
        trust_boundary).
      - A "Boundary" section MUST carry a ```mermaid code block drawing the
        boundary between zones. -->

@@ -1,11 +1,11 @@
 ---
 id: AUDIT-001
 title: "user.login.succeeded audit event"
-artifact_type: audit_event
+type: audit_event
 ---
 <!-- audit_event authoring skeleton (spec-objects-security). Fill every part
      with substantive content. Contract (manifest body_extraction asserts):
-     - Frontmatter MUST carry id, title, artifact_type (artifact_type:
+     - Frontmatter MUST carry id, title, type (type:
        audit_event).
      - An "Event Schema" section MUST carry a ```json code block with the
        event's payload schema. -->

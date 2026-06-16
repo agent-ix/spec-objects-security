@@ -1,11 +1,11 @@
 ---
 id: SURF-001
 title: "Atlas authentication attack surface"
-artifact_type: attack_surface
+type: attack_surface
 ---
 <!-- attack_surface authoring skeleton (spec-objects-security). Fill every part
      with substantive content. Contract (manifest body_extraction asserts):
-     - Frontmatter MUST carry id, title, artifact_type (artifact_type:
+     - Frontmatter MUST carry id, title, type (type:
        attack_surface).
      - An "Entry Points" section MUST enumerate the externally reachable
        entry points. -->

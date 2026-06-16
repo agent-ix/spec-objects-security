@@ -1,11 +1,11 @@
 ---
 id: PASSPOL-001
 title: "Atlas local-account password policy"
-artifact_type: password_policy
+type: password_policy
 ---
 <!-- password_policy authoring skeleton (spec-objects-security). Fill every part
      with substantive content. Contract (manifest body_extraction asserts):
-     - Frontmatter MUST carry id, title, artifact_type (artifact_type:
+     - Frontmatter MUST carry id, title, type (type:
        password_policy).
      - A "Rules" section MUST enumerate the enforced password rules. -->
 # [PASSPOL-001] Atlas local-account password policy
