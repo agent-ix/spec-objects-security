@@ -5,20 +5,20 @@ type: StR
 ---
 # [StR-001] Tier-2 security + identity objects
 
-## Stakeholder
+## Stakeholder Need
 
-Filament platform / spec authors / agent CLI generators.
+The Filament platform, its spec authors, and its agent CLI generators **SHALL** be able to extract graph entities from security and identity specifications — threats, controls, risks, vulnerabilities, auth flows, secrets, and policies — so that those concepts are first-class, queryable objects rather than free prose.
 
-## Need
+## Rationale
 
-Security and identity specs need extractable graph entities for threats, controls, risks, vulnerabilities, auth flows, secrets, and policies.
+Security and identity content is currently expressed as unstructured narrative, which cannot be traced, queried, or generated against. Without extractable object types for the tier-2 security domain, downstream consumers (editors, agent generators, the object graph) have no way to discover or reason about the threats, controls, risks, vulnerabilities, auth flows, secrets, and policies a spec declares. Providing this need as installable Module contributions makes the domain machine-addressable.
 
-## Acceptance Criteria
+## Validation Criteria
 
-| ID | Criteria |
-|----|----------|
-| StR-001-AC-1 | A Module activation against filament-core registers the contents this module declares. |
-| StR-001-AC-2 | Agent CLI generators (minijinja-cli) can produce valid artifacts using the templates and schemas this module ships. |
+This need is considered satisfied when:
+
+- A Module activation against filament-core registers the contents this module declares.
+- Agent CLI generators (minijinja-cli) can produce valid artifacts using the templates and schemas this module ships.
 
 ## Dependencies
 
