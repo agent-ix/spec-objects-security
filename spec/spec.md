@@ -59,5 +59,5 @@ The specification is organized into the standard requirement classes, each in it
 ## References
 
 - ISO/IEC/IEEE 29148 — Requirements engineering.
-- filament-core-service FR-035 — Module Manifest Schema.
+- filament-core-service [FR-035](ix://agent-ix/filament-core-service/FR-035) — Module Manifest Schema.
 - The component's source repository and README.
