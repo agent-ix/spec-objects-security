@@ -10,7 +10,7 @@ relationships:
 
 ## Objective
 
-Verify that this Module's manifest activates end to end against a clean filament-core-service instance, that every declared contribution lands in the database, and that re-activation is an idempotent no-op. This exercises FR-001 across the real activation boundary.
+Verify that this Module's manifest activates end to end against a clean filament-core-service instance, that every declared contribution lands in the database, and that re-activation is an idempotent no-op. This exercises [FR-001](../functional/FR-001-module-manifest-activates.md) across the real activation boundary.
 
 ## Target Integration
 
