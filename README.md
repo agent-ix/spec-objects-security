@@ -6,12 +6,7 @@
 
 ## Installing quire-cli
 
-This module is consumed by the `quire` binary from [`quire-cli`](https://github.com/agent-ix/quire-cli). Install the prebuilt binary from GitHub Packages — point the `@agent-ix` scope at GitHub Packages in `.npmrc`:
-
-```
-@agent-ix:registry=https://npm.pkg.github.com
-//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
-```
+This module is consumed by the `quire` binary from [`quire-cli`](https://github.com/agent-ix/quire-cli), published on the public npm registry, so no auth or registry config is needed:
 
 ```bash
 npm install -g @agent-ix/quire-cli   # or: npx @agent-ix/quire-cli --help
