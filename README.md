@@ -2,7 +2,7 @@
 
 > Filament Module: tier-2 security and identity ObjectTypes (threats, controls, auth flows, secrets, policies)
 
-`spec-objects-security` is an **Agent-IX Filament module**: a `manifest.yaml` plus per-kind authoring **skeletons** (and frontmatter schemas) that teach the spec tooling a vocabulary of object kinds. It is not a standalone app — it is loaded by [`quire-cli`](https://github.com/agent-ix/quire-cli) and [`ix-spec`](https://github.com/agent-ix/ix-spec) to author and validate Markdown spec artifacts.
+`spec-objects-security` is an **Agent-IX Filament module**: a `manifest.yaml` plus per-kind authoring **skeletons** (and frontmatter schemas) that teach the spec tooling a vocabulary of object kinds. It is not a standalone app — it is loaded by [`quire-cli`](https://github.com/agent-ix/quire-cli) and [`quoin`](https://github.com/agent-ix/quoin) to author and validate Markdown spec artifacts.
 
 ## Installing quire-cli
 
@@ -52,15 +52,15 @@ This module adds the following object kinds (frontmatter `type:` value in parent
 
 ## How this module is used
 
-### With ix-spec (recommended)
+### With quoin (recommended)
 
-[`ix-spec`](https://github.com/agent-ix/ix-spec) is the spec-domain authoring CLI. Install the module as a plugin, then author and validate:
+[`quoin`](https://github.com/agent-ix/quoin) is the spec-domain authoring CLI. Install the module as a plugin, then author and validate:
 
 ```bash
-ix-spec plugin install path:../spec-objects-security
-ix-spec catalog list                      # list the kinds this module adds
-ix-spec write . --types threat,control    # scaffold artifacts of these kinds
-ix-spec review                            # validate authored files
+quoin plugin install path:../spec-objects-security
+quoin catalog list                      # list the kinds this module adds
+quoin write . --types threat,control    # scaffold artifacts of these kinds
+quoin review                            # validate authored files
 ```
 
 ### With quire-cli directly
