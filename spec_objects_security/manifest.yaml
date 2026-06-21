@@ -14,6 +14,12 @@ artifact_types: []
 lint_rules: []
 object_types:
 - name: auth_flow
+  roles: [externally-exposed]
+  allowed_links:
+    requires: [mfa_method]
+    grants: [role]
+    protects: [externally-exposed]
+    references: [auth_flow]
   data_schema:
     type: object
   body_extraction:
@@ -40,6 +46,10 @@ object_types:
           required: true
           language: mermaid
 - name: permission
+  allowed_links:
+    grants: [scope]
+    guards: [externally-exposed]
+    references: [role]
   data_schema:
     type: object
   body_extraction:
@@ -59,6 +69,8 @@ object_types:
           - verb
           required: true
 - name: scope
+  allowed_links:
+    references: [permission]
   data_schema:
     type: object
   body_extraction:
@@ -72,6 +84,9 @@ object_types:
           after_heading: Grants
           required: true
 - name: role
+  allowed_links:
+    grants: [permission]
+    references: [role]
   data_schema:
     type: object
   body_extraction:
@@ -85,6 +100,9 @@ object_types:
           after_heading: Permissions
           required: true
 - name: secret
+  roles: [sensitive]
+  allowed_links:
+    references: [secret]
   data_schema:
     type: object
   body_extraction:
@@ -98,6 +116,9 @@ object_types:
           after_heading: Rotation
           required: true
 - name: encryption_key
+  roles: [sensitive]
+  allowed_links:
+    encrypts: [sensitive, data_classification]
   data_schema:
     type: object
   body_extraction:
@@ -117,6 +138,8 @@ object_types:
           - rotation
           required: false
 - name: session_config
+  allowed_links:
+    references: [auth_flow, jwt_claim]
   data_schema:
     type: object
   body_extraction:
@@ -130,6 +153,9 @@ object_types:
           after_heading: Settings
           required: true
 - name: data_classification
+  allowed_links:
+    classifies: [persistable, externally-exposed, sensitive]
+    references: [data_classification]
   data_schema:
     type: object
   body_extraction:
@@ -143,6 +169,9 @@ object_types:
           after_heading: Handling
           required: true
 - name: trust_boundary
+  allowed_links:
+    contains: [asset, api_endpoint]
+    references: [trust_boundary]
   data_schema:
     type: object
   body_extraction:
@@ -157,6 +186,9 @@ object_types:
           required: true
           language: mermaid
 - name: audit_event
+  roles: [event-like]
+  allowed_links:
+    references: [audit_event]
   data_schema:
     type: object
   body_extraction:
@@ -171,6 +203,9 @@ object_types:
           required: true
           language: json
 - name: csrf_token
+  roles: [sensitive]
+  allowed_links:
+    references: [csrf_token]
   data_schema:
     type: object
   body_extraction:
@@ -185,6 +220,8 @@ object_types:
           - rotation_window
           required: true
 - name: cors_policy
+  allowed_links:
+    references: [cors_policy]
   data_schema:
     type: object
   body_extraction:
@@ -198,6 +235,8 @@ object_types:
           after_heading: Origins
           required: true
 - name: password_policy
+  allowed_links:
+    references: [password_policy]
   data_schema:
     type: object
   body_extraction:
@@ -211,6 +250,8 @@ object_types:
           after_heading: Rules
           required: true
 - name: mfa_method
+  allowed_links:
+    references: [mfa_method]
   data_schema:
     type: object
   body_extraction:
@@ -230,6 +271,9 @@ object_types:
           - factor
           required: false
 - name: jwt_claim
+  roles: [sensitive]
+  allowed_links:
+    references: [jwt_claim]
   data_schema:
     type: object
   body_extraction:
@@ -244,6 +288,9 @@ object_types:
           required: true
           language: json
 - name: threat
+  allowed_links:
+    threatens: [asset, attack_surface]
+    exploits: [vulnerability]
   data_schema:
     type: object
   body_extraction:
@@ -275,6 +322,10 @@ object_types:
           - vector
           required: true
 - name: control
+  allowed_links:
+    mitigates: [threat, risk, vulnerability]
+    implements: [policy]
+    protects: [externally-exposed, asset]
   data_schema:
     type: object
   body_extraction:
@@ -288,6 +339,9 @@ object_types:
           after_heading: Mappings
           required: true
 - name: risk
+  allowed_links:
+    arises_from: [threat, vulnerability]
+    references: [asset]
   data_schema:
     type: object
   body_extraction:
@@ -307,6 +361,9 @@ object_types:
           - impact
           required: true
 - name: vulnerability
+  allowed_links:
+    affects: [asset, attack_surface]
+    references: [vulnerability]
   data_schema:
     type: object
   body_extraction:
@@ -326,6 +383,8 @@ object_types:
           - severity
           required: true
 - name: asset
+  allowed_links:
+    references: [data_classification, trust_boundary]
   data_schema:
     type: object
   body_extraction:
@@ -339,6 +398,9 @@ object_types:
           after_heading: Description
           required: true
 - name: attack_surface
+  roles: [externally-exposed]
+  allowed_links:
+    exposes: [asset, api_endpoint]
   data_schema:
     type: object
   body_extraction:
@@ -352,6 +414,8 @@ object_types:
           after_heading: Entry Points
           required: true
 - name: policy
+  allowed_links:
+    governs: [control, role, permission, data_classification]
   data_schema:
     type: object
   body_extraction:
@@ -365,6 +429,9 @@ object_types:
           after_heading: Policy
           required: true
 - name: audit_finding
+  allowed_links:
+    traces_to: [risk]
+    references: [control, vulnerability, asset]
   data_schema:
     type: object
   body_extraction:
