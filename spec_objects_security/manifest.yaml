@@ -444,3 +444,21 @@ object_types:
           from: section_body
           after_heading: Recommendation
           required: true
+
+# FR-043: concrete-term lexicon — security / identity / auth objects.
+lexicon:
+  token: {definition: a bearer credential representing identity or grant}
+  secret: {definition: a confidential value (key, password) kept out of code}
+  scope: {definition: a named permission boundary on a grant}
+  claim: {definition: an assertion carried in a token}
+  permission: {definition: an allowed action on a resource}
+  credential: {definition: data proving an identity}
+  certificate: {definition: a signed binding of identity to a public key}
+  signature: {definition: a cryptographic proof of integrity/origin}
+  principal: {definition: an authenticated identity (user/service)}
+  keypair: {definition: a public/private cryptographic key pair}
+  nonce: {definition: a single-use value preventing replay}
+  hash: {definition: a fixed-size digest of input}
+  cipher: {definition: an encryption/decryption algorithm}
+  audit: {definition: a recorded, tamper-evident event trail}
+  policy: {definition: a declarative rule governing access or behavior}
