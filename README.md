@@ -6,19 +6,31 @@
 
 ## Installing quire-cli
 
-This module is consumed by the `quire` binary from [`quire-cli`](https://github.com/agent-ix/quire-cli). Install the prebuilt binary from GitHub Packages — point the `@agent-ix` scope at GitHub Packages in `.npmrc`:
+`@agent-ix` packages are published to public npm. Install the CLI globally:
 
+```bash
+npm install -g @agent-ix/quire-cli
 ```
-@agent-ix:registry=https://npm.pkg.github.com
-//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
+
+See https://github.com/agent-ix/quire-cli#install for details.
+
+## Install this module via npm
+
+This module is also published as a config-only npm package: `@agent-ix/spec-objects-security`.
+The package root **is** the Filament module (`manifest.yaml` + schemas/skeletons),
+so it works directly as a `--module` target or via quoin's `package:` source.
+
+```bash
+npm install @agent-ix/spec-objects-security
 ```
 
 ```bash
-npm install -g @agent-ix/quire-cli   # or: npx @agent-ix/quire-cli --help
-quire --help
-```
+# quoin — resolve the module from npm by name
+quoin plugin install package:@agent-ix/spec-objects-security
 
-Prebuilt targets: linux-x64, linux-arm64, darwin-arm64, win32-x64. See the [quire-cli install docs](https://github.com/agent-ix/quire-cli#install) for tarball and from-source options.
+# or point any tool at the installed package root
+quire validate spec/**/*.md --module node_modules/@agent-ix/spec-objects-security
+```
 
 ## Object types provided
 
