@@ -448,7 +448,7 @@ object_types:
 # FR-043: concrete-term lexicon — security / identity / auth objects.
 lexicon:
   token: {definition: a bearer credential representing identity or grant}
-  secret: {definition: a confidential value (key, password) kept out of code}
+  secret: {definition: "a confidential value (key, password) kept out of code"}
   scope: {definition: a named permission boundary on a grant}
   claim: {definition: an assertion carried in a token}
   permission: {definition: an allowed action on a resource}
@@ -460,5 +460,5 @@ lexicon:
   nonce: {definition: a single-use value preventing replay}
   hash: {definition: a fixed-size digest of input}
   cipher: {definition: an encryption/decryption algorithm}
-  audit: {definition: a recorded, tamper-evident event trail}
+  audit: {definition: "a recorded, tamper-evident event trail"}
   policy: {definition: a declarative rule governing access or behavior}
