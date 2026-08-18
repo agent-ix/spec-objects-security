@@ -32,7 +32,7 @@ pytest-results = { version = "^0.2.0", python = ">=3.12" }
 # FR-035 module-manifest gate. The schema is package data on spec-artifacts-iso
 # — imported, not copied, so there is no second artifact to keep in sync and no
 # branch on which the gate can quietly not run (spec-artifacts-iso#15).
-spec-artifacts-iso = {version = "^0.12.0", source = "internal-pypi"}
+spec-artifacts-iso = {version = "^0.13.0", source = "internal-pypi"}
 jsonschema = "^4.25.0"
 
 [tool.poetry.scripts]

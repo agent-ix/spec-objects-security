@@ -446,6 +446,51 @@ object_types:
           required: true
 
 # FR-043: concrete-term lexicon — security / identity / auth objects.
+# FR-058 (quire-rs v0.31.0): upward-trace completeness — the second half of
+# agent-ix/spec-objects-security#5. Declaration, not code: the engine holds no
+# archetype name, no verb and no direction.
+#
+# A threat nobody controls and a risk nobody treats are both perfectly
+# well-formed documents that pass every schema and grammar check, and both are
+# evidence of an unaddressed exposure. Nothing that reads a document on its own
+# can see it; only reading the edge set upward can.
+traceability:
+  required_relations:
+  # STRIDE without coverage is a list. A threat with no inbound `mitigates` is
+  # one somebody enumerated and then left.
+  - name: threat-has-control
+    from: threat
+    edges: [mitigates]
+    to: []
+    direction: incoming
+    check: uncontrolled-threat
+  # The same statement about the scored artefact rather than the mechanism: a
+  # risk with no treatment was assessed and then dropped.
+  - name: risk-has-treatment
+    from: risk
+    edges: [mitigates]
+    to: []
+    direction: incoming
+    check: untreated-risk
+  # `direction: incoming` throughout, because the mitigation is authored from
+  # the control's or requirement's end — a control says what it mitigates. A
+  # threat listing its own controls would duplicate the fact and let the two
+  # drift.
+  #
+  # DELIBERATELY NOT DECLARED: `vulnerability`. #5 names "threat/hazard/risk"
+  # and a vulnerability is a property of an implementation rather than a thing
+  # the specification owes a response to. Adding it would widen the ticket.
+  #
+  # ALSO NOT DECLARED: the reverse direction, "every security-classified
+  # requirement traces to an upstream threat". It needs a way to say a
+  # requirement is security-classified, and no such axis exists — neither this
+  # module nor iso declares one. Filed rather than invented.
+  #
+  # A risk that transitively arises from itself states nothing, and no
+  # per-document check can see it: the defect is a property of the graph.
+  acyclic_edges:
+  - arises_from
+
 lexicon:
   token: {definition: a bearer credential representing identity or grant}
   secret: {definition: "a confidential value (key, password) kept out of code"}

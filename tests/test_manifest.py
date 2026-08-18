@@ -94,3 +94,48 @@ def test_lexicon_entries_are_whole() -> None:
         "extra keys is an unquoted comma inside a flow mapping, which silently "
         f"truncates the definition: {malformed}"
     )
+
+
+def test_threat_and_risk_coverage_is_declared_not_coded() -> None:
+    """agent-ix/spec-objects-security#5: upward coverage is manifest data.
+
+    Assumptions: quire-rs FR-058 (v0.31.0) reads
+    ``traceability.required_relations``; the engine holds no archetype name,
+    no verb and no direction.
+
+    Criteria:
+      * ``threat`` and ``risk`` each carry an obligation to be mitigated;
+      * each has its OWN ``trace:<check>`` key so it is independently tunable
+        (quire-rs FR-057) — a repository can promote uncontrolled threats to
+        ``error`` while risk treatment is still being backfilled;
+      * ``direction`` is ``incoming``: a control says what it mitigates, and a
+        threat listing its own controls would duplicate the fact;
+      * every ``from`` names an object type this module declares, and every
+        verb is one the module already permits — the relation must not invent
+        vocabulary (quire-rs CR-075 would report it as matching nothing).
+    """
+    manifest = yaml.safe_load(MANIFEST_PATH.read_text())
+    model = manifest["traceability"]
+    by_name = {r["name"]: r for r in model["required_relations"]}
+
+    assert set(by_name) == {"threat-has-control", "risk-has-treatment"}
+    assert by_name["threat-has-control"]["from"] == "threat"
+    assert by_name["risk-has-treatment"]["from"] == "risk"
+
+    checks = {r["check"] for r in by_name.values()}
+    assert checks == {"uncontrolled-threat", "untreated-risk"}
+    assert len(checks) == len(by_name), "each relation is independently tunable"
+
+    declared = {o["name"] for o in manifest["object_types"]}
+    permitted = {
+        verb
+        for o in manifest["object_types"]
+        for verb in (o.get("allowed_links") or {})
+    }
+    for relation in by_name.values():
+        assert relation["direction"] == "incoming"
+        assert relation["from"] in declared, relation["from"]
+        for verb in relation["edges"]:
+            assert verb in permitted, f"{verb} is not a verb this module permits"
+
+    assert model["acyclic_edges"] == ["arises_from"]
