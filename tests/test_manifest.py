@@ -14,6 +14,7 @@ MANIFEST_PATH = PKG_ROOT / "manifest.yaml"
 
 
 def test_manifest_loads() -> None:
+    """TC-002: FR-001-AC-1."""
     manifest = yaml.safe_load(MANIFEST_PATH.read_text())
     assert manifest["manifest_version"] == "1.0.0"
     assert manifest["name"] == "spec-objects-security"
@@ -27,18 +28,20 @@ def _object_types():
 
 @pytest.mark.parametrize("ot", _object_types(), ids=lambda ot: ot["name"])
 def test_object_type_has_name_and_data_schema(ot: dict) -> None:
+    """TC-003: FR-001-AC-1."""
     assert isinstance(ot["name"], str) and len(ot["name"]) > 0
     assert "data_schema" in ot
     assert isinstance(ot["data_schema"], dict)
 
 
 def test_no_duplicate_object_type_names() -> None:
+    """TC-004: FR-001-AC-1."""
     names = [ot["name"] for ot in _object_types()]
     assert len(names) == len(set(names)), f"duplicate names: {names}"
 
 
 def test_manifest_validates_against_fr035_schema() -> None:
-    """The manifest validates against the FR-035 module-manifest schema.
+    """TC-005: The manifest validates against the FR-035 module-manifest schema.
 
     Until this test, **nothing validated this module.** 23 object types, 23
     skeletons, a 15-term lexicon and a nav block — 464 lines of module data —
@@ -62,7 +65,7 @@ def test_manifest_validates_against_fr035_schema() -> None:
 
 
 def test_lexicon_entries_are_whole() -> None:
-    """Every lexicon entry is exactly `{definition: <non-empty string>}`.
+    """TC-006: Every lexicon entry is exactly `{definition: <non-empty string>}`.
 
     The regression this pins: `secret` and `audit` were written as YAML flow
     mappings whose definitions contained an unquoted comma —
@@ -97,7 +100,7 @@ def test_lexicon_entries_are_whole() -> None:
 
 
 def test_threat_and_risk_coverage_is_declared_not_coded() -> None:
-    """agent-ix/spec-objects-security#5: upward coverage is manifest data.
+    """TC-007: agent-ix/spec-objects-security#5: upward coverage is manifest data.
 
     Assumptions: quire-rs FR-058 (v0.31.0) reads
     ``traceability.required_relations``; the engine holds no archetype name,

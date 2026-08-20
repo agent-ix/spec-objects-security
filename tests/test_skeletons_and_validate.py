@@ -101,6 +101,7 @@ def _ot(name: str) -> dict:
 
 
 def test_every_object_type_ships_a_skeleton_and_nothing_extra() -> None:
+    """TC-008: FR-001-AC-1."""
     missing = [n for n in _NAMES if not _skeleton_path(n).exists()]
     assert not missing, f"object_types without skeletons: {missing}"
     extra = sorted(p.stem for p in SKELETONS_DIR.glob("*.md") if p.stem not in _NAMES)
@@ -109,7 +110,7 @@ def test_every_object_type_ships_a_skeleton_and_nothing_extra() -> None:
 
 @pytest.mark.parametrize("name", _NAMES, ids=lambda n: n)
 def test_frontmatter_matches_manifest_locators(name: str) -> None:
-    """Required frontmatter fields are present and non-empty; type is
+    """TC-009: Required frontmatter fields are present and non-empty; type is
     the object_type name; no undeclared frontmatter keys (reverse drift)."""
     fm = _frontmatter(_skeleton_text(name))
     fm_locators = {
@@ -132,7 +133,7 @@ def test_frontmatter_matches_manifest_locators(name: str) -> None:
 
 @pytest.mark.parametrize("name", _NAMES, ids=lambda n: n)
 def test_asserted_sections_and_code_blocks_present(name: str) -> None:
-    """Every section_body/code_block locator's heading exists at H2; code_block
+    """TC-010: Every section_body/code_block locator's heading exists at H2; code_block
     locators have a fence with the asserted language inside their section."""
     md = _skeleton_text(name)
     sections = _split_h2_sections(md)
@@ -153,7 +154,7 @@ def test_asserted_sections_and_code_blocks_present(name: str) -> None:
 
 @pytest.mark.parametrize("name", _NAMES, ids=lambda n: n)
 def test_no_skeleton_drift_beyond_manifest(name: str) -> None:
-    """Reverse direction: every H2 heading and fence language in the skeleton
+    """TC-011: Reverse direction: every H2 heading and fence language in the skeleton
     is asserted by the manifest, so skeletons can't drift ahead of contract."""
     md = _skeleton_text(name)
     locators = _locators(_ot(name))
@@ -175,7 +176,7 @@ def test_no_skeleton_drift_beyond_manifest(name: str) -> None:
 
 @pytest.mark.parametrize("name", _NAMES, ids=lambda n: n)
 def test_skeleton_is_substantive(name: str) -> None:
-    """Bodies are filled with real content: no placeholder tokens anywhere and
+    """TC-012: Bodies are filled with real content: no placeholder tokens anywhere and
     every asserted section carries a non-empty body."""
     md = _skeleton_text(name)
     lowered = md.lower()
@@ -211,7 +212,7 @@ def _quire_doc_validator():
 
 @pytest.mark.parametrize("name", _NAMES, ids=lambda n: n)
 def test_roundtrip_skeleton_validates(name: str) -> None:
-    """Each filled skeleton passes validate_document against this module.
+    """TC-013: Each filled skeleton passes validate_document against this module.
 
     Skips when the installed quire wheel predates the markdown-default
     validator; quire is intentionally not a dependency of this pack."""
@@ -223,7 +224,7 @@ def test_roundtrip_skeleton_validates(name: str) -> None:
 
 
 def test_roundtrip_mutation_fails() -> None:
-    """Deleting the required Schema code block from jwt_claim fails validation
+    """TC-014: Deleting the required Schema code block from jwt_claim fails validation
     with a reason naming the missing locator."""
     quire = _quire_doc_validator()
     if quire is None:
