@@ -111,6 +111,13 @@ This document specifies the requirements for `spec-objects-security`, a Filament
   stores the reference verbatim.
 - Editing any corpus repository or vendored fixture; the legacy-form sweep
   and corpus promotion (`agent-ix/quoin#291`).
+- Hosting the semantic-core schema bundle. Every module schema `$ref`s
+  `https://schemas.agent-ix.org/semantic-core/0.1.0/<Model>.json`, and nothing
+  in this repository serves that host; a consumer resolves it from the
+  `@agent-ix/semantic-core` package, and publishing the bundle is
+  `agent-ix/filament-core-data#11`. The module's own tests resolve every such
+  reference against the installed package rather than over the network, and
+  say so.
 - Runtime security enforcement: nothing here authenticates, authorizes, or
   encrypts anything. The module declares the vocabulary a specification uses
   to describe those mechanisms.

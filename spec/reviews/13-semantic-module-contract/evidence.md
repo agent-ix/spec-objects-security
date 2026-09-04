@@ -152,3 +152,9 @@ mismatch (FR-003-AC-5), 4 uncatalogued (FR-001-AC-1..AC-4), 0 inconclusive.
 | FND-192 | Open, implementation hygiene: move the three module-docstring ids onto the evidence symbols. |
 | FND-193 | Open, implementation hygiene, to be taken with FND-181. |
 | FND-194 | Recorded, no change; re-run the advisor when FR-005, FR-006 and NFR-001 land their rows. |
+
+### Round record (2026-09-04)
+
+Applied in the review-fix round: FND-180 (TC-112 and TC-113 added for StR-001-VC-1 and VC-2, each naming the environment it needs), FND-181 (FR-001's uncatalogued cells changed to `Test`), FND-183 (TC-111 retyped `Unit`, since it is a tagged pytest quire binds), FND-184 (TC-071 retyped `Unit`: it is ten named vocabularies with fixed records, not a generated property), FND-192 (the module-docstring ids moved off the containers that bind nothing — `quire coverage` now reports zero `tag-on-non-binding-symbol` and zero `marker-form-mismatch`).
+
+Recorded without change, and carried into the report rather than silently closed: FND-182, FND-185..FND-191, FND-193, FND-194.

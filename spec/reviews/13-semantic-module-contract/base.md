@@ -82,3 +82,9 @@ this review.
 | FND-104 | Add TC-050 to the StR-001-VC-3 evidence so the stakeholder criterion has automatable backing beside the manual row. |
 | FND-105 | Refresh the Status column against the tracking tags now present in `tests/` as part of the gap-analysis pass; not actioned here, since the implementation is still landing in this worktree. |
 | FND-106..FND-110 | Recorded, no change. |
+
+### Round record (2026-09-04)
+
+Applied in the review-fix round: FND-100 (TC-015..TC-019, TC-112 and TC-113 added, and the Coverage Gaps claim corrected to say which rows cannot be discharged and why), FND-101 (FR-001's four cells changed to the declared class `Test`), FND-103 (matrix rule 5 reworded to the two availability states the fixtures produce), FND-105 (every backed row's status refreshed against the tracking tags now in `tests/`).
+
+Recorded without change, and carried into the report rather than silently closed: FND-102, FND-104, FND-106..FND-110.

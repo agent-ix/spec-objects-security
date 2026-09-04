@@ -116,3 +116,9 @@ NFR-001 compatibility argument, all three of which hold.
 | FND-151 | Drop `params` from the FR-004 `$ref` sentence, or add "including `OperationDecl.params`" to make the nesting explicit |
 | FND-152 | Optional before tasking: split FR-002 into emission plus check (FR-002) and packaging plus staging (a new FR), moving AC-6, AC-7 and the `.gitattributes`/`stage-npm` behaviours across. If it is kept whole, FND-145's rows must land on FR-002 |
 | FND-153 | Keep the dependency, add the escape: state the Quoin version or tag that will replace `3e842ce` once released, and mark TC-110 `Manual` and exempt in Coverage Gaps rather than pending, since no automatable gate can run it today |
+
+### Round record (2026-09-04)
+
+Applied in the review-fix round: FND-140 (the seven obligations with no row now have one, and the Coverage Gaps claim is corrected), FND-141 (FR-005 states which gate runs this suite and why an automatic CI run would be red by construction), FND-142 (FR-004's graded-key claim narrowed to the eight keys that actually carry an item rule, with the other three stated as carrying none), FND-143 (the frozen baseline named as an FR-003 deliverable with its path), FND-144 (the textual digest rewrite stated, with the anchors-and-comments reason), FND-145 (FR-002-AC-10 and AC-11 added, with TC-034 and TC-035), FND-151 (the operations-parameter nesting made explicit in FR-004).
+
+Recorded without change, and carried into the report rather than silently closed: FND-146..FND-150, FND-152..FND-156.

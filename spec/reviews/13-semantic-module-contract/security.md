@@ -102,3 +102,9 @@ expressed in a way that a conforming-enough consumer reads backwards.
 | FND-168 | Either state in FR-006 that naming the locator is an obligation the day `agent-ix/quoin#335` publishes the mapping, with an FR-004 item rule over `fields` requiring a `material_ref` row today (the same device FR-004 already uses for the eight graded keys), or record deliberately that the module admits a secret declaration naming no locator, and why |
 | FND-169 | Either declare the graded enums unordered — one sentence in FR-006, since three of them place `unknown` at the high end — or order each vocabulary so the array index is meaningful and say that consumers may rely on it |
 | FND-170 | Add the "schema evidence, not extraction evidence" note to the TC-073 row of tests.md, matching the sentence already carried at tests.md line 182 |
+
+### Round record (2026-09-04)
+
+Applied in the review-fix round: FND-160 (the defaulted-field refusal extended to `operations[].params[]` on every guarded type that admits operations, in the schemas and in FR-004/FR-006), FND-161 (every negative predicate re-encoded as `items`/`not`; no shipped schema carries `minContains` or `maxContains`, and FR-006-AC-7 with TC-076 asserts it), FND-162 (the least-granting claim narrowed to the two ordered vocabularies, with the other eight stated as unordered), FND-163 and FND-164 (the free-text carriers allocated to the FR-005 credential-shape scan, since no schema can forbid a string), FND-165 (FR-006-AC-3 rewritten around schema position, and TC-072 names `DefaultedField.json` as the case that proves the discriminator), FND-166 (FR-006-AC-8), FND-167 (FR-003 states the interim posture for `quire-rs#394`).
+
+Recorded without change, and carried into the report rather than silently closed: FND-168, FND-169, FND-170.

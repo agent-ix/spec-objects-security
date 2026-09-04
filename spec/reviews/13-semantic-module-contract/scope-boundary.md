@@ -333,3 +333,9 @@ future safety import would `$ref` (FND-202).
 | FND-211 | Open — record the "security review before release" gate item against a named artifact. |
 | FND-212 | Open — state the advisory-only rule where FR-003 sets `legacy_forms`/`compatibility_posture`, citing `quoin#290`/`#291`. |
 | FND-213 | Open — measure the out-of-repo `object:`-declaring population once, or allocate it to `quoin#291` in NFR-001's Measurement table. |
+
+### Round record (2026-09-04)
+
+Applied in the review-fix round: FND-200 (the `quoin#335` scope gap recorded in spec.md and FR-004 rather than assumed away), FND-201 (the `spec-objects-safety` justification corrected in all five places: safety reads no field of this manifest, and the real coupling is the mirrored `traceability` shape and `control.allowed_links.mitigates`), FND-202 and FND-203 (the forward import coupling and the `Severity`/`Likelihood` name collision added to Out of Scope), FND-205 (`roles` and `lexicon` added to FR-003-AC-7 and NFR-001-AC-2), FND-206 ("byte-identical" replaced by parsed equality, which is what the tests assert and what a consumer reads), FND-210 (the generated-language backends renamed to `#21`/`#22`/`#23` over the `#19` frontend), FND-211 (FR-006-AC-8 makes the security-review gate an artifact), FND-213 (NFR-001 Scope names the out-of-repo population it deliberately does not measure).
+
+Recorded without change, and carried into the report rather than silently closed: FND-204, FND-207..FND-209, FND-212.

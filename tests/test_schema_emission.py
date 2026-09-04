@@ -206,6 +206,11 @@ def test_the_built_wheel_contains_every_exported_schema():
         for name in OBJECT_TYPES:
             member = f"spec_objects_security/schemas/{MODEL_OF[name]}.json"
             assert member in names, member
+        # Every shipped file, not only the twenty-three exports: a schema whose
+        # `$ref` names a marker or vocabulary sibling that did not ship is
+        # unresolvable at the consumer.
+        for shipped in toolchain()["files"] + ["toolchain.json"]:
+            assert f"spec_objects_security/schemas/{shipped}" in names, shipped
 
 
 @pytest.mark.trace("TC-026", "FR-002-AC-7")
@@ -226,6 +231,8 @@ def test_the_npm_tarball_ships_the_manifest_beside_its_schemas():
         for name in OBJECT_TYPES:
             member = f"package/schemas/{MODEL_OF[name]}.json"
             assert member in names, member
+        for shipped in toolchain()["files"] + ["toolchain.json"]:
+            assert f"package/schemas/{shipped}" in names, shipped
     assert not (REPO_ROOT / "manifest.yaml").exists(), "postpack left a staged manifest"
 
 

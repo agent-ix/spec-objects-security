@@ -78,7 +78,7 @@ and 0 skipped over the same tree.
 
 ### Functional Requirement Coverage
 
-| Functional Req | Acceptance Criteria | Test Cases | Status |
+| Functional Req | Acceptance Criteria | Test Cases | Coverage Status |
 |---|---|---|---|
 | FR-001 | FR-001-AC-1..4 | TC-001..TC-014, TC-015..TC-017 | 🚧 AC-2..AC-4 need a running filament-core |
 | FR-002 | FR-002-AC-1..11, FR-002-CON-1..5 | TC-020..TC-035 | ✅ |
@@ -215,6 +215,15 @@ be discharged in this repository and are `🚧` with the reason on the row:
 TC-015..TC-019 and TC-112 need a running `filament-core-service`, TC-046 and
 TC-110 need a Quoin built from `quoin` main at or after `3e842ce`, and TC-113
 needs a generator run against a released module.
+
+`quire coverage` additionally reports `status-column-matches-nothing` on the
+Functional Requirement Coverage table: the `TestMatrix` archetype asserts the
+header `Coverage Status` while `traceability.status.column` names `Status`, so
+status classification is skipped there and a complete-but-unbacked row cannot
+be caught. Renaming the column here fails structural validation, so the header
+stays as the archetype asserts and the defect is upstream —
+`agent-ix/spec-artifacts-process#81` and `#82` own it. The `Test Case Summary`
+table, which does use `Status`, is classified normally.
 
 Two evidence-plan artifacts are absent and are carried by the plan, not by this
 matrix: no `SuiteRegistry` document declares a producer for the `Unit`,

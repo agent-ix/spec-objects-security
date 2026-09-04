@@ -26,11 +26,16 @@ traceability rule keeps its meaning.
 ## Inputs
 
 - The emitted schemas and digests of [FR-002](./FR-002-emitted-json-schemas.md).
-- The module-manifest schema with the `semantic` block, as vendored by
-  `spec-artifacts-iso` (the FR-035 gate this repository already runs) and by
-  Quoin and Quire. All three consumers therefore judge this manifest against
-  one schema; a consumer vendoring an older copy is a skew defect on that
-  consumer, not a change here.
+- The module-manifest schema with the `semantic` block. Three consumers hold
+  their own copy — `spec-artifacts-iso` (the FR-035 gate this repository runs),
+  Quoin, and Quire — and they are **not** one byte set: the iso copy is a
+  superset that admits this module's top-level `traceability` and `lexicon`,
+  which the `filament-core-service` FR-035 copy does not. The parts this
+  requirement turns on, the `semantic` sub-schema and
+  `ObjectTypeEntry.data_schema`, are byte-identical across the three, so the
+  contract this ticket adds is judged the same way everywhere; the wider
+  divergence is real, is not this module's to reconcile, and is recorded rather
+  than papered over.
 
 ## Outputs
 
