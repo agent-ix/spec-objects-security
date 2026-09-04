@@ -1,20 +1,26 @@
 ---
 id: RISK-001
-title: "Tenant account takeover via token theft"
+title: "TenantDataExfiltration"
 type: risk
-likelihood: medium
-impact: high
+object: risk
+likelihood: possible
+impact: major
 ---
-<!-- risk authoring skeleton (spec-objects-security). Fill every part with
+<!-- risk authoring skeleton (spec-objects-security). Fill every section with
      substantive content. Contract (manifest body_extraction asserts):
-     - Frontmatter MUST carry id, title, type (type: risk),
-       likelihood and impact (qualitative ratings driving the risk score). -->
-# [RISK-001] Tenant account takeover via token theft
+     - Frontmatter MUST carry id, title, type: risk, object: risk,
+       likelihood and impact.
+     - "## Properties" (H2): the typed declaration. Risk.json requires both a
+       `likelihood` row and an `impact` row: a risk scored on one axis is
+       not scored. -->
+# [RISK-001] TenantDataExfiltration
 
-Business risk that an attacker realizes THREAT-001 and operates inside a
-tenant with the victim's permissions, exposing Confidential PII (CLASS-001)
-and enabling data exfiltration through the public API. Likelihood is rated
-medium given commodity infostealer malware; impact is high because a single
-takeover crosses into regulated personal data. Primary treatment is CTRL-001;
-residual risk after rotation and reuse detection is accepted at low/high and
-reviewed quarterly by the security council.
+## Properties
+
+| Field | Type | Multiplicity | Constraints |
+|---|---|---|---|
+| risk_id | UUID | 1..1 | identity |
+| likelihood | String | 1..1 | minLength: 1 |
+| impact | String | 1..1 | minLength: 1 |
+| assessed_at | Timestamp | 1..1 |  |
+| affected_asset | TenantDatabase | 0..1 |  |

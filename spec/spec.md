@@ -43,30 +43,52 @@ This document specifies the requirements for `spec-objects-security`, a Filament
 
 - The implementation of filament-core-service itself, referenced here only by relationship.
 - Deployment topology and infrastructure, which live in the operating environment rather than this specification.
-- Generated-language fixtures (Rust, TypeScript, Python) for the security
-  types: produced by the TypeSpec frontend and compiler core
-  (`agent-ix/filament-core-data#21`, `#22`, `#23`) and published only behind
-  the promotion gate (`agent-ix/quoin#290`); the semantic-core language
-  packages are `agent-ix/filament-core-data#11`. None is produced or faked
-  here.
+- Generated-language fixtures for the security types: the Rust, TypeScript and
+  Python backends are `agent-ix/filament-core-data#21`, `#22` and `#23` over
+  the TypeSpec frontend `agent-ix/filament-core-data#19`, and they are
+  published only behind the promotion gate (`agent-ix/quoin#290`); the
+  semantic-core language packages are `agent-ix/filament-core-data#11`. None is
+  produced or faked here.
 - Changing this module's `traceability` block or any `allowed_links` verb or
-  target list. `agent-ix/spec-objects-safety` declares its bidirectional
-  hazard coverage against them (its `5e1e016` references
-  `agent-ix/spec-objects-security#5`), so a change there is a
-  cross-repository contract change, reported rather than made here.
+  target list. Measured rather than assumed: `agent-ix/spec-objects-safety`
+  reads no field of this manifest today — its `hazard-has-mitigation` and
+  `failure-mode-has-mitigation` relations are declared in its own manifest over
+  its own archetypes, and the shared element is the verb `mitigates`, owned by
+  `spec-artifacts-iso` FR-004. What couples the two repositories is that safety
+  mirrored this module's `traceability` shape (its `5e1e016` references
+  `agent-ix/spec-objects-security#5`), and that this module's
+  `control.allowed_links.mitigates` list — `[threat, risk, vulnerability]` —
+  excludes `hazard` and `failure_mode`, so a security control cannot satisfy a
+  safety coverage check today. Widening or narrowing that list is a
+  cross-repository decision, reported rather than made here.
+- Reconciling this module's `Severity` and `Likelihood` vocabularies with
+  `agent-ix/spec-objects-safety`'s `hazard-severity` and `hazard-likelihood`
+  lint columns. The names collide and the member sets are disjoint; a shared
+  grading vocabulary is a decision for the two modules' common owner, and
+  nothing here depends on the other module's members.
+- Releasing a `spec-artifacts-iso` distribution carrying the CR-012
+  module-manifest schema: `agent-ix/spec-artifacts-iso#36`. Until it ships, the
+  FR-035 gate runs against a pinned copy of that revision and a second test
+  proves the pin differs from the newest release only at the CR-012 pointers,
+  so the gate is narrowed to one known key rather than skipped.
 - Extraction of the declared-but-not-yet-extracted keys (`severity`,
   `likelihood`, `impact`, `status`, `level`, `trust_level`,
   `stride_category`, `effectiveness`, `lifecycle`, `material_ref`, and the
-  cross-reference lists) from Markdown: the mapping is owned by
-  `agent-ix/quoin#335` and the extractor by `agent-ix/quire-rs` once the
-  mapping is published; the schemas declare the keys as optional so the
-  engine can fill them without a schema change, and the obligation each
-  carries is enforced today as an item rule over `fields`.
-- Widening the typed-table constraint reader. `pattern` and `format` are in
-  semantic-core's closed `ConstraintKeyword` set but the reader of the pinned
-  wheel rejects them, and a multi-valued `enumValues` is split or silently
-  truncated; both are reported upstream against `agent-ix/quire-rs` and
-  neither is worked around by inventing a cell form here.
+  cross-reference lists) from Markdown. `agent-ix/quoin#335` owns the mapping
+  question and the extractor is `agent-ix/quire-rs` once a mapping is
+  published, but that ticket's body scopes itself to the ten
+  `spec-objects-business` keys and names none of this module's — so these keys
+  are disclaimed here and claimed nowhere yet, which is recorded rather than
+  assumed away. The schemas declare them as optional so the engine can fill
+  them without a schema change, and eight of them carry an item rule over
+  `fields` that enforces the obligation today.
+- Widening the typed-table constraint reader. `pattern` is in semantic-core's
+  closed `ConstraintKeyword` set but the reader of the pinned wheel rejects it
+  (`agent-ix/quire-rs#397`), and a multi-valued `enumValues` is either split
+  into bogus keywords or silently truncated to its first member
+  (`agent-ix/quire-rs#401`, filed by this ticket). Neither is worked around by
+  inventing a cell form here; the closed vocabularies live in emitted enum
+  schemas instead, and FR-005 says why.
 - Naming what a module load refused: `agent-ix/quire-rs#221` (an unknown
   manifest key empties the model silently) and `agent-ix/quire-rs#394` (a
   `data_schema` digest mismatch drops the object type with no diagnostic).

@@ -1,25 +1,41 @@
 ---
 id: POL-001
-title: "Access token lifetime policy"
+title: "LeastPrivilegeAccessPolicy"
 type: policy
+object: policy
 ---
-<!-- policy authoring skeleton (spec-objects-security). Fill every part with
+<!-- policy authoring skeleton (spec-objects-security). Fill every section with
      substantive content. Contract (manifest body_extraction asserts):
-     - Frontmatter MUST carry id, title, type (type: policy).
-     - A "Policy" section MUST state the normative policy text. -->
-# [POL-001] Access token lifetime policy
-
-Platform-wide policy governing bearer token lifetimes for Atlas first-party
-and integration clients, owned by the security council.
+     - Frontmatter MUST carry id, title, type: policy, object: policy.
+     - "## Policy" (H2, required): the rule in prose.
+     - "## Invariants" (H2): Policy.json requires at least one clause — a
+       policy that constrains nothing is prose. -->
+# [POL-001] LeastPrivilegeAccessPolicy
 
 ## Policy
 
-- Access tokens SHALL expire no later than 15 minutes after issuance.
-- Refresh tokens SHALL be single-use and rotated on every exchange (CTRL-001),
-  with an absolute family lifetime of 30 days.
-- Integration tokens issued for SCOPE-001 SHALL be bound to the requesting
-  client via DPoP or mTLS sender constraint.
-- Token lifetimes SHALL NOT be extended per tenant without a documented risk
-  acceptance referencing the affected risk register entries (e.g. RISK-001).
-- Violations surface as audit findings (FIND-001 family) and block release
-  until remediated or formally accepted.
+Every principal holds the smallest set of permissions that lets it complete
+its task, for the shortest time that task takes. A grant that is not exercised
+within 90 days is revoked automatically, and every standing administrative
+grant is reviewed quarterly by the tenant owner.
+
+## Invariants
+
+The clauses this policy asserts. Each clause owns one `ocl` fence under its
+own `### <clauseId>` heading.
+
+### NoStandingAdministrativeGrant
+
+```ocl
+context LeastPrivilegeAccessPolicy
+inv NoStandingAdministrativeGrant:
+  TenantAdministrator.allInstances()->forAll(r | r.assignable_by_self_service = false)
+```
+
+### UnusedGrantsExpire
+
+```ocl
+context LeastPrivilegeAccessPolicy
+inv UnusedGrantsExpire:
+  TenantReadScope.allInstances()->forAll(s | s.includes_write = false)
+```

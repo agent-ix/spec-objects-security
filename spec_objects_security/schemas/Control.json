@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/Control.json",
+  "type": "object",
+  "properties": {
+    "clauses": {
+      "type": "array",
+      "items": {
+        "$ref": "https://schemas.agent-ix.org/semantic-core/0.1.0/ClauseRef.json"
+      },
+      "minItems": 1
+    },
+    "fields": {
+      "type": "array",
+      "items": {
+        "$ref": "https://schemas.agent-ix.org/semantic-core/0.1.0/FieldDecl.json"
+      },
+      "minItems": 1,
+      "contains": {
+        "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/EffectivenessField.json"
+      }
+    },
+    "operations": {
+      "type": "array",
+      "items": {
+        "$ref": "https://schemas.agent-ix.org/semantic-core/0.1.0/OperationDecl.json"
+      }
+    },
+    "effectiveness": {
+      "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/ControlEffectiveness.json"
+    },
+    "mitigates": {
+      "type": "array",
+      "items": {
+        "$ref": "https://schemas.agent-ix.org/semantic-core/0.1.0/SemanticId.json"
+      }
+    },
+    "mappings": {
+      "type": "array",
+      "items": {
+        "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/ControlMapping.json"
+      }
+    }
+  },
+  "required": [
+    "clauses",
+    "fields"
+  ],
+  "unevaluatedProperties": {
+    "not": {}
+  },
+  "description": "A mechanism that reduces an exposure. Effectiveness is always stated as a\nrow and never inferred. `relations` is forbidden by the seal."
+}

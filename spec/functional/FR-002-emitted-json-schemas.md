@@ -72,6 +72,7 @@ build.
 - If nothing differs, then the check SHALL exit zero.
 - The generator SHALL write files under `spec_objects_security/schemas/` only.
 - The generator SHALL edit `manifest.yaml` only at `data_schema.digest` values.
+- The generator SHALL rewrite those values textually, replacing the `digest:` line that follows each `schema:` line, rather than parsing and reserializing the file: the manifest carries YAML anchors and comments that a structural round trip would drop, while FR-003-CON-3 and NFR-001-AC-2 require the untouched blocks to stay equal.
 - The Python package SHALL include `spec_objects_security/schemas/*.json` in the wheel and sdist.
 - The repository SHALL mark `*.json`, `*.tsp`, `*.yaml` and `*.md` as `eol=lf` in `.gitattributes`, so a checkout with `autocrlf` cannot change the digested bytes.
 - `scripts/stage-npm.mjs` SHALL copy `schemas/` beside `manifest.yaml` at pack time, so the npm tarball ships the schemas the manifest references.
@@ -100,6 +101,8 @@ build.
 | FR-002-AC-7 | The npm tarball produced by `npm pack` contains `manifest.yaml` and a sibling `schemas/<Model>.json` for every exported model, so a manifest-relative `schema:` path resolves inside the tarball. | Test |
 | FR-002-AC-8 | Bumping the manifest `version` and the `@jsonSchema` base together and re-running the generator yields every `$id` and every sibling `$ref` at the new version, `toolchain.json` recording the new base, and manifest digests equal to the new bytes; `make schemas-check` then exits zero, while bumping only one of the pair exits non-zero. | Test |
 | FR-002-AC-9 | `make schemas-check` on a committed tree carrying an extra `spec_objects_security/schemas/Stale.json` with no emitted counterpart exits non-zero naming that file, and writes nothing. | Test |
+| FR-002-AC-10 | A generator run writes no file outside `spec_objects_security/schemas/` except `manifest.yaml`, and the only `manifest.yaml` lines it changes are `digest:` lines; every anchor, alias and comment is byte-identical afterwards. | Test |
+| FR-002-AC-11 | `.gitattributes` marks `*.json`, `*.tsp`, `*.yaml` and `*.md` `eol=lf`, and `npm pack` leaves no staged `manifest.yaml`, `schemas/` or `skeletons/` at the repository root. | Test |
 
 ## Dependencies
 

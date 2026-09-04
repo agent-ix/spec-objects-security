@@ -21,15 +21,26 @@ the population this NFR measures — validating against version 0.2.0 with at
 most warning-level semantic findings.
 
 The module SHALL keep every 0.1.0 `body_extraction` locator definition
-unchanged at 0.2.0, and SHALL keep the `traceability` block and every
-`allowed_links` map byte-identical, because `agent-ix/spec-objects-safety`
-declares its bidirectional hazard coverage against them. Yields of the 0.1.0
-locators other than the sections this change adds are unmeasured and are not
-claimed.
+unchanged at 0.2.0, and SHALL keep the `traceability` block, the `lexicon`, and
+every `allowed_links` and `roles` map equal to the frozen 0.1.0 baseline under
+`tests/fixtures/baseline-0.1.0/`. Equality is asserted over the parsed
+structures, which is what a consumer reads; byte-for-byte identity of the file
+is neither asserted nor needed, since the generator rewrites `digest:` lines in
+the same file. Yields of the 0.1.0 locators other than the sections this change
+adds are unmeasured and are not claimed.
 
 ## Scope
 
 - Applies to: `manifest.yaml`, the shipped schemas, and the skeletons.
+- Deliberately **not** measured: corpus artifacts outside this repository. At
+  0.1.0 every type carried `data_schema: {type: object}`, so a corpus artifact
+  declaring `object: threat` was validated against nothing; at 0.2.0 it is
+  validated against a sealed schema and can newly fail
+  `semantic.record-invalid` at error severity, which `legacy_forms: warning`
+  does not soften. That population is real and is the reason the change is
+  advisory until corpus promotion (`agent-ix/quoin#291`); this module measures
+  only what it ships, and says so rather than implying a guarantee it never
+  tested.
 - Operational context: existing corpus artifacts authored in legacy
   Properties forms under `legacy_forms: warning`; no corpus repository is
   edited.
@@ -47,7 +58,7 @@ repository's coverage checks silently.
 | Metric | Target | Threshold | Method |
 |--------|--------|-----------|--------|
 | 0.1.0 locators changed | 0 | 0 | Test |
-| `traceability` and `allowed_links` bytes changed | 0 | 0 | Test |
+| `traceability`, `lexicon`, `allowed_links`, `roles` entries changed | 0 | 0 | Test |
 | Checked-in 0.1.0 skeleton set under 0.2.0: error findings, per skeleton | 0 | 0 | Test |
 | Each 0.1.0 skeleton under 0.2.0: `semantic.record-invalid` findings | 0 | 0 | Test |
 
@@ -77,7 +88,7 @@ against the 0.2.0 manifest and validated under it.
 | ID | Criteria | Verification |
 |----|----------|--------------|
 | NFR-001-AC-1 | Every 0.1.0 `body_extraction` locator is present in 0.2.0 with identical facets (0 changed). | Test |
-| NFR-001-AC-2 | The `traceability` block and every object type's `allowed_links` and `roles` are equal to the 0.1.0 baseline (0 changed). | Test |
+| NFR-001-AC-2 | The `traceability` block, the `lexicon`, and every object type's `allowed_links` and `roles` are equal to the frozen 0.1.0 baseline (0 changed). | Test |
 | NFR-001-AC-3 | Every skeleton of the checked-in 0.1.0 set validates under 0.2.0 with 0 error findings. | Test |
 | NFR-001-AC-4 | No skeleton of the checked-in 0.1.0 set yields a `semantic.record-invalid` finding under 0.2.0. | Test |
 

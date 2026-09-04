@@ -1,26 +1,41 @@
 ---
-id: PASSPOL-001
-title: "Atlas local-account password policy"
+id: PWD-001
+title: "TenantPasswordPolicy"
 type: password_policy
+object: password_policy
 ---
-<!-- password_policy authoring skeleton (spec-objects-security). Fill every part
-     with substantive content. Contract (manifest body_extraction asserts):
-     - Frontmatter MUST carry id, title, type (type:
-       password_policy).
-     - A "Rules" section MUST enumerate the enforced password rules. -->
-# [PASSPOL-001] Atlas local-account password policy
-
-Applies to break-glass local accounts only; regular tenant users authenticate
-through their IdP (AUTHFLOW-001). Aligned with NIST SP 800-63B: length over
-composition, breach screening over forced rotation.
+<!-- password_policy authoring skeleton (spec-objects-security). Fill every section with
+     substantive content. Contract (manifest body_extraction asserts):
+     - Frontmatter MUST carry id, title, type: password_policy,
+       object: password_policy.
+     - "## Rules" (H2, required): the rules in prose.
+     - "## Invariants" (H2): PasswordPolicy.json requires at least one clause. -->
+# [PWD-001] TenantPasswordPolicy
 
 ## Rules
 
-- Minimum length 12 characters, maximum 128; all printable Unicode accepted
-- Candidate passwords are checked against the haveibeenpwned k-anonymity API
-  and rejected when previously breached
-- No mandatory periodic rotation; rotation is forced only on suspected
-  compromise
-- Hashing: argon2id with memory 64 MiB, iterations 3, parallelism 4
-- Rate limiting: 10 failed attempts per account per 15 minutes, then lockout
-  with audit event emission
+- At least 12 characters, with no composition rule beyond length.
+- Checked against the breached-password corpus at set time and at each login.
+- No forced periodic expiry; rotation is event-driven on suspected compromise.
+- Stored only as an Argon2id digest, never reversibly.
+
+## Invariants
+
+The clauses this policy asserts. Each clause owns one `ocl` fence under its
+own `### <clauseId>` heading.
+
+### MinimumLengthIsTwelve
+
+```ocl
+context TenantPasswordPolicy
+inv MinimumLengthIsTwelve:
+  self.minimum_length >= 12
+```
+
+### NoReversibleStorage
+
+```ocl
+context TenantPasswordPolicy
+inv NoReversibleStorage:
+  self.storage_scheme = 'argon2id'
+```

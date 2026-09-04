@@ -1,18 +1,24 @@
 ---
 id: PERM-001
-title: "Read tenant documents"
+title: "ExportTenantData"
 type: permission
-resource: document
-verb: read
+object: permission
+resource: "tenant/records"
+verb: export
 ---
-<!-- permission authoring skeleton (spec-objects-security). Fill every part with
+<!-- permission authoring skeleton (spec-objects-security). Fill every section with
      substantive content. Contract (manifest body_extraction asserts):
-     - Frontmatter MUST carry id, title, type (type: permission).
-     - Frontmatter MUST carry resource and verb (the protected resource kind and
-       the action this permission grants on it). -->
-# [PERM-001] Read tenant documents
+     - Frontmatter MUST carry id, title, type: permission, object: permission,
+       resource (what is acted on) and verb (the action).
+     - "## Properties" (H2): the typed declaration. Permission.json forbids
+       `operations` and `relations`. -->
+# [PERM-001] ExportTenantData
 
-Grants read access to `document` resources within the caller's tenant. Checked
-by the Atlas policy engine on every `GET /api/documents/*` request; the
-permission is satisfied only when the resource's `tenant_id` matches the
-caller's `tenant_id` claim.
+## Properties
+
+| Field | Type | Multiplicity | Constraints |
+|---|---|---|---|
+| permission_id | UUID | 1..1 | identity |
+| resource | String | 1..1 | minLength: 1 |
+| verb | String | 1..1 | minLength: 1 |
+| requires_reauthentication | Boolean | 1..1 |  |

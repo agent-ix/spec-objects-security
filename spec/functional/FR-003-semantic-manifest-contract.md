@@ -36,6 +36,12 @@ traceability rule keeps its meaning.
 
 - `manifest.yaml` with `version: 0.2.0`, a `semantic` block, and reference-form
   `data_schema` on every exported object type.
+- `tests/fixtures/baseline-0.1.0/`, the frozen 0.1.0 manifest and its
+  twenty-three skeletons. It is a deliverable of this requirement, not an
+  incidental copy: without it every locator, edge-vocabulary and additive
+  criterion compares the manifest against itself.
+- `tests/fixtures/module-manifest.cr-012.schema.json`, the pinned FR-035
+  schema revision, deleted when `agent-ix/spec-artifacts-iso#36` releases it.
 
 ## Behavior
 
@@ -45,7 +51,9 @@ traceability rule keeps its meaning.
 - No exported object type SHALL carry an inline `data_schema`.
 - The manifest `version` SHALL be `0.2.0`, because the emitted `$id` embeds it and the previous version was `0.1.0`.
 - Every `body_extraction` locator present at version 0.1.0 SHALL remain present with the same `from`, heading, `language`, `required`, `multiple`, and `assert` facets.
-- The manifest SHALL carry the `traceability` block (`required_relations`, `acyclic_edges`) and every object type's `allowed_links` and `roles` unchanged, because `agent-ix/spec-objects-safety` declares its bidirectional hazard coverage against this module's edge vocabulary and coverage checks; changing either is a cross-repository contract change and is out of scope here.
+- The manifest SHALL carry the `traceability` block (`required_relations`, `acyclic_edges`) and every object type's `allowed_links` and `roles` unchanged. `agent-ix/spec-objects-safety` reads no field of this manifest today; what it shares is the `traceability` shape it mirrored from here and the verb `mitigates`, which `spec-artifacts-iso` FR-004 owns. The field with cross-repository consequence is `control.allowed_links.mitigates` — `[threat, risk, vulnerability]`, which excludes `hazard` and `failure_mode` — so changing it decides whether a security control can ever satisfy a safety coverage check. That is a cross-repository decision and is out of scope here.
+- The `data_schema` reference form and the `semantic` block SHALL be judged against the FR-035 module-manifest schema at the CR-012 revision (`agent-ix/spec-artifacts-iso` `6686f11`, itself copied from `filament-core-service` FR-035 CR-003 revision `a77f31e` as vendored by quoin `3e842ce`), pinned in this repository until `agent-ix/spec-artifacts-iso#36` releases it.
+- Until `agent-ix/quire-rs#394` names a digest mismatch, the module SHALL assert digest equality against the shipped bytes at every build (FR-003-AC-2), so a mismatch cannot leave this repository even though a consumer would drop the object type silently.
 - Where an object type gains a locator after 0.1.0, that locator SHALL be `required: false`, so existing artifacts stay valid (the additions themselves are specified by FR-005).
 - The manifest SHALL load through Quire's registry loader with no `ArchetypeLoadFailure` for any object type and with the recorded schema digest equal to the manifest digest.
 - Measured against quire 0.46.0: a refused schema drops that object type alone, while a manifest key the loader cannot parse (an unknown `semantic` key) drops every object type of the module, so a consumer sees the module as absent. Both refusals are silent — no diagnostic names the offending key, path, or digest — which `agent-ix/quire-rs#221` and `agent-ix/quire-rs#394` record as engine defects; the naming half of FR-003-AC-6 is blocked on them and is verified as an explicit expected failure rather than dropped.
@@ -70,8 +78,8 @@ traceability rule keeps its meaning.
 | FR-003-AC-3 | Every 0.1.0 locator, compared against the checked-in 0.1.0 baseline, is present unchanged; every added locator is `required: false`. | Test |
 | FR-003-AC-4 | `quire.Registry.load_from([module dir])` lists all twenty-three archetypes and `validate_document` on each skeleton reports no `semantic.*` load failure. | Test |
 | FR-003-AC-5 | `quoin module install path:<module dir>` exits zero and `quoin module` lists `spec-objects-security`; the previously installed entry is restored afterwards. | Demonstration |
-| FR-003-AC-6 | A manifest copy whose `semantic` block gains a key `foo` is refused by Quire's loader naming `foo`; a copy whose digest is altered is refused naming the path. | Test |
-| FR-003-AC-7 | The `traceability` block and every `allowed_links` map are equal to the checked-in 0.1.0 baseline. | Test |
+| FR-003-AC-6 | A manifest copy whose `semantic` block gains a key `foo` is refused by Quire's loader; a copy whose digest is altered is refused. The refusal is verified; the half that requires the diagnostic to *name* `foo` or the path is an explicit expected failure while `agent-ix/quire-rs#221` and `agent-ix/quire-rs#394` are open. | Test |
+| FR-003-AC-7 | The `traceability` block, the `lexicon`, and every `allowed_links` and `roles` map are equal to the checked-in 0.1.0 baseline. | Test |
 
 ## Dependencies
 

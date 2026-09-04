@@ -12,6 +12,7 @@ packages = [{ include = "spec_objects_security" }]
 include = [
     { path = "spec_objects_security/manifest.yaml", format = ["sdist", "wheel"] },
     { path = "spec_objects_security/skeletons/*.md", format = ["sdist", "wheel"] },
+    { path = "spec_objects_security/schemas/*.json", format = ["sdist", "wheel"] },
 ]
 
 [tool.poetry.dependencies]
@@ -32,7 +33,7 @@ pytest-results = { version = "^0.2.0", python = ">=3.12" }
 # FR-035 module-manifest gate. The schema is package data on spec-artifacts-iso
 # — imported, not copied, so there is no second artifact to keep in sync and no
 # branch on which the gate can quietly not run (spec-artifacts-iso#15).
-spec-artifacts-iso = {version = "^0.13.0", source = "internal-pypi"}
+spec-artifacts-iso = {version = "^0.18.0", source = "internal-pypi"}
 jsonschema = "^4.25.0"
 
 [tool.poetry.scripts]
@@ -65,8 +66,20 @@ cmd = "pytest tests_integration/ -v -s --no-cov -m integration"
 help = "Run integration tests (requires Kind cluster)"
 
 [tool.poe.tasks.lint]
-sequence = ["ruff-check", "black-check"]
-help = "Run all linters (ruff + black)"
+sequence = ["ruff-check", "black-check", "schemas-check"]
+help = "Run all linters (ruff + black) and the schema drift gate"
+
+[tool.poe.tasks.schemas]
+cmd = "node scripts/generate-schemas.mjs"
+help = "Emit spec_objects_security/schemas/ from typespec/main.tsp (FR-002)"
+
+[tool.poe.tasks.schemas-check]
+cmd = "node scripts/generate-schemas.mjs --check"
+help = "Fail when the committed schemas or manifest digests differ from the source"
+
+[tool.poe.tasks.dev-quire]
+shell = "pip install --index-url http://pypi.ix/root/dev/+simple/ --trusted-host pypi.ix 'quire>=0.46.0'"
+help = "Install the Quire wheel the semantic tests need (see agent-ix/quire-rs#392)"
 
 [tool.poe.tasks.ruff-check]
 cmd = "ruff check ."
@@ -122,6 +135,7 @@ filterwarnings = ["error"]
 
 markers = [
     "integration: Integration tests (require Kind cluster)",
+    "trace: Bind a test to one or more spec ids (quire trace marker form)",
 ]
 
 [tool.ruff]

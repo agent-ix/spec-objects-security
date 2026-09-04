@@ -1,19 +1,23 @@
 ---
 id: CSRF-001
-title: "Atlas web CSRF token"
+title: "SessionAntiForgeryToken"
 type: csrf_token
-rotation_window: 30m
+object: csrf_token
+rotation_window: PT30M
 ---
-<!-- csrf_token authoring skeleton (spec-objects-security). Fill every part with
+<!-- csrf_token authoring skeleton (spec-objects-security). Fill every section with
      substantive content. Contract (manifest body_extraction asserts):
-     - Frontmatter MUST carry id, title, type (type:
-       csrf_token) and rotation_window (how often a fresh token is issued). -->
-# [CSRF-001] Atlas web CSRF token
+     - Frontmatter MUST carry id, title, type: csrf_token, object: csrf_token
+       and rotation_window.
+     - "## Properties" (H2): CsrfToken.json admits no field carrying a
+       default, so no token value appears in the declaration. -->
+# [CSRF-001] SessionAntiForgeryToken
 
-Double-submit CSRF token protecting all state-changing requests from the Atlas
-web client. The server issues an HMAC-signed token bound to the session id
-(SESSION-001); the client echoes it in the `X-Atlas-CSRF` header and the
-middleware rejects any mutation where header and cookie values disagree. A
-fresh token is minted every `30m` rotation window and on every login or
-privilege elevation, with the previous token honored for one overlapping
-window to avoid breaking in-flight forms.
+## Properties
+
+| Field | Type | Multiplicity | Constraints |
+|---|---|---|---|
+| token_id | UUID | 1..1 | identity |
+| locator | String | 1..1 | minLength: 1 |
+| bound_session_attribute | String | 1..1 | minLength: 1 |
+| rotation_window | Duration | 1..1 |  |

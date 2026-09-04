@@ -1,19 +1,25 @@
 ---
 id: MFA-001
-title: "TOTP authenticator app"
+title: "TimeBasedOneTimeCode"
 type: mfa_method
+object: mfa_method
 kind: totp
 factor: possession
 ---
-<!-- mfa_method authoring skeleton (spec-objects-security). Fill every part with
+<!-- mfa_method authoring skeleton (spec-objects-security). Fill every section with
      substantive content. Contract (manifest body_extraction asserts):
-     - Frontmatter MUST carry id, title, type (type:
-       mfa_method) and kind (the method kind); factor names the auth factor
-       class it provides. -->
-# [MFA-001] TOTP authenticator app
+     - Frontmatter MUST carry id, title, type: mfa_method, object: mfa_method
+       and kind; factor is optional.
+     - "## Properties" (H2): the typed declaration. MfaMethod.json admits no
+       field carrying a default, so no enrolment value can be embedded. -->
+# [MFA-001] TimeBasedOneTimeCode
 
-Time-based one-time password second factor (RFC 6238) for Atlas operator and
-break-glass accounts. Secrets are 160-bit, provisioned via QR code over an
-authenticated session, and stored encrypted under KEY-001. Codes are 6 digits
-on a 30-second step with one step of clock skew accepted; ten single-use
-recovery codes are issued at enrollment for device-loss fallback.
+## Properties
+
+| Field | Type | Multiplicity | Constraints |
+|---|---|---|---|
+| method_id | UUID | 1..1 | identity |
+| factor_kind | String | 1..1 | minLength: 1 |
+| code_digits | Integer | 1..1 | min: 6, max: 8 |
+| step_period | Duration | 1..1 |  |
+| seed_locator | String | 1..1 | minLength: 1 |

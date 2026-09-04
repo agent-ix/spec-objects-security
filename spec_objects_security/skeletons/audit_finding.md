@@ -1,25 +1,29 @@
 ---
 id: FIND-001
-title: "Session store reachable with eval privileges"
+title: "MissingTokenRotation"
 type: audit_finding
+object: audit_finding
 ---
-<!-- audit_finding authoring skeleton (spec-objects-security). Fill every part
-     with substantive content. Contract (manifest body_extraction asserts):
-     - Frontmatter MUST carry id, title, type (type:
-       audit_finding).
-     - A "Recommendation" section MUST state the remediation recommendation. -->
-# [FIND-001] Session store reachable with eval privileges
-
-Q2 security audit finding: the auth service connects to the session store
-(ASSET-001) with a credential that retains `EVAL`/`SCRIPT` privileges,
-unnecessarily exposing the Lua sandbox surface of VULN-001 to any service
-compromise. Severity high; affected component is the shared Redis ACL profile.
+<!-- audit_finding authoring skeleton (spec-objects-security). Fill every section with
+     substantive content. Contract (manifest body_extraction asserts):
+     - Frontmatter MUST carry id, title, type: audit_finding,
+       object: audit_finding.
+     - "## Recommendation" (H2, required): what the auditor asks for.
+     - "## Properties" (H2): the typed declaration. AuditFinding.json
+       requires a `status` row, so an untriaged finding is refused. -->
+# [FIND-001] MissingTokenRotation
 
 ## Recommendation
 
-Upgrade the session store to a release patched for CVE-2024-31449, then
-replace the shared ACL profile with a least-privilege profile that removes
-`EVAL`, `EVALSHA` and `SCRIPT` for application credentials. Verify with an
-integration test that script commands are rejected, and re-scan the cluster.
-Target closure within 30 days; interim compensating control is the mTLS
-restriction at BOUND-001.
+Enable refresh-token rotation with reuse detection on every tenant IdP
+integration, and fail the release gate while any integration is without it.
+Re-audit thirty days after the change lands.
+
+## Properties
+
+| Field | Type | Multiplicity | Constraints |
+|---|---|---|---|
+| finding_id | UUID | 1..1 | identity |
+| status | String | 1..1 | minLength: 1 |
+| observed_at | Timestamp | 1..1 |  |
+| traced_risk | TenantDataExfiltration | 0..1 |  |

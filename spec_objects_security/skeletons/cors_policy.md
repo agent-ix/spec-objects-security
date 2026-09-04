@@ -1,24 +1,40 @@
 ---
 id: CORS-001
-title: "Atlas public API CORS policy"
+title: "TenantApiCorsPolicy"
 type: cors_policy
+object: cors_policy
 ---
-<!-- cors_policy authoring skeleton (spec-objects-security). Fill every part
-     with substantive content. Contract (manifest body_extraction asserts):
-     - Frontmatter MUST carry id, title, type (type:
-       cors_policy).
-     - An "Origins" section MUST enumerate the allowed origins and rules. -->
-# [CORS-001] Atlas public API CORS policy
-
-Browser cross-origin policy enforced by the API gateway for `api.atlas.example`.
-Credentials are only honored for first-party app origins; integration origins
-get token-based access without cookies.
+<!-- cors_policy authoring skeleton (spec-objects-security). Fill every section with
+     substantive content. Contract (manifest body_extraction asserts):
+     - Frontmatter MUST carry id, title, type: cors_policy,
+       object: cors_policy.
+     - "## Origins" (H2, required): the allowed origins.
+     - "## Invariants" (H2): CorsPolicy.json requires at least one clause. -->
+# [CORS-001] TenantApiCorsPolicy
 
 ## Origins
 
-- `https://app.atlas.example` — first-party web client; credentials allowed
-- `https://admin.atlas.example` — operator console; credentials allowed
-- `https://*.integrations.atlas.example` — sandboxed integration iframes;
-  credentials disallowed, `Authorization` header only
-- All other origins are denied; no wildcard `*` is ever emitted, and preflight
-  responses are capped at `Access-Control-Max-Age: 600`
+- `https://app.example.com` — the first-party tenant console.
+- `https://*.tenant.example.com` — per-tenant vanity hosts, exact-suffix matched.
+- No wildcard origin, and no origin is echoed back unvalidated.
+
+## Invariants
+
+The clauses this policy asserts. Each clause owns one `ocl` fence under its
+own `### <clauseId>` heading.
+
+### NoWildcardOrigin
+
+```ocl
+context TenantApiCorsPolicy
+inv NoWildcardOrigin:
+  self.allowed_origins->excludes('*')
+```
+
+### CredentialsNeverWithWildcard
+
+```ocl
+context TenantApiCorsPolicy
+inv CredentialsNeverWithWildcard:
+  self.allow_credentials implies self.allowed_origins->size() > 0
+```
