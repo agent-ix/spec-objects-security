@@ -31,26 +31,30 @@ relationships:
 
 ## Requirements Summary
 
+`[x]` delivered and verified in this repository. `[~]` partly delivered: the
+remainder needs a running `filament-core-service`, a Quoin built from `quoin`
+main, or a human, and is owned by the two `blocked` tasks.
+
 ### Stakeholder Requirements
-- [ ] **StR-001**: Security and identity specifications yield extractable graph entities; every security object carries one typed structural contract downstream frontends can read (VC-1..VC-3).
+- [~] **StR-001**: Security and identity specifications yield extractable graph entities; every security object carries one typed structural contract downstream frontends can read (VC-1..VC-3).
 
 ### User Stories
-- [ ] **US-001**: Declare every security object type against the shared semantic-core grammar, so one declaration record per object validates identically in Quire, Quoin and the compiler.
+- [x] **US-001**: Declare every security object type against the shared semantic-core grammar, so one declaration record per object validates identically in Quire, Quoin and the compiler.
 
 ### Functional Requirements
-- [ ] **FR-001**: The manifest conforms to filament-core-service FR-035 and activates idempotently.
-- [ ] **FR-002**: Emit one JSON Schema 2020-12 document per model from `typespec/main.tsp` with the official emitter at a pinned toolchain; normalize `$id`/`$ref`; gate drift; package into the wheel and the npm tarball; version-embedded `$id` with an atomic bump procedure.
-- [ ] **FR-003**: `manifest.yaml` at 0.2.0 carries the quoin FR-070 `semantic` block and a reference-form `data_schema` per exported type, with every 0.1.0 locator, the `traceability` block, the `lexicon` and every `allowed_links`/`roles` map unchanged.
-- [ ] **FR-004**: One role-distinct model per security object type — required keys, sealed key set and item rules — with every grammar item by `$ref` to semantic-core 0.1.0.
-- [ ] **FR-005**: Every skeleton is an executable typed fixture in the quoin FR-071/FR-072 Markdown forms, with three `sysml` alternates and ten negative fixtures; the semantic suite fails rather than skips when the engine is absent.
-- [ ] **FR-006**: No embedded material, ten closed graded vocabularies each with an explicit unassessed member, and no schema default that grants permission, trust or control effectiveness.
+- [~] **FR-001**: The manifest conforms to filament-core-service FR-035 and activates idempotently.
+- [x] **FR-002**: Emit one JSON Schema 2020-12 document per model from `typespec/main.tsp` with the official emitter at a pinned toolchain; normalize `$id`/`$ref`; gate drift; package into the wheel and the npm tarball; version-embedded `$id` with an atomic bump procedure.
+- [x] **FR-003**: `manifest.yaml` at 0.2.0 carries the quoin FR-070 `semantic` block and a reference-form `data_schema` per exported type, with every 0.1.0 locator, the `traceability` block, the `lexicon` and every `allowed_links`/`roles` map unchanged.
+- [x] **FR-004**: One role-distinct model per security object type — required keys, sealed key set and item rules — with every grammar item by `$ref` to semantic-core 0.1.0.
+- [x] **FR-005**: Every skeleton is an executable typed fixture in the quoin FR-071/FR-072 Markdown forms, with three `sysml` alternates and ten negative fixtures; the semantic suite fails rather than skips when the engine is absent.
+- [x] **FR-006**: No embedded material, ten closed graded vocabularies each with an explicit unassessed member, and no schema default that grants permission, trust or control effectiveness.
 
 ### Non-Functional Requirements
-- [ ] **NFR-001**: Additive compatibility — the frozen 0.1.0 skeleton set still validates at 0.2.0 and every 0.1.0 locator and edge-vocabulary entry is unchanged.
+- [x] **NFR-001**: Additive compatibility — the frozen 0.1.0 skeleton set still validates at 0.2.0 and every 0.1.0 locator and edge-vocabulary entry is unchanged.
 
 ### Integration Test Requirements
-- [ ] **IT-001**: Activation roundtrip against a running filament-core-service.
-- [ ] **IT-002**: `quoin module install path:<dir>` accepts the semantic contract and the prior module state is restored unconditionally.
+- [~] **IT-001**: Activation roundtrip against a running filament-core-service.
+- [~] **IT-002**: `quoin module install path:<dir>` accepts the semantic contract and the prior module state is restored unconditionally.
 
 ## Dependency Graph
 

@@ -77,6 +77,8 @@ build.
 - The repository SHALL mark `*.json`, `*.tsp`, `*.yaml` and `*.md` as `eol=lf` in `.gitattributes`, so a checkout with `autocrlf` cannot change the digested bytes.
 - `scripts/stage-npm.mjs` SHALL copy `schemas/` beside `manifest.yaml` at pack time, so the npm tarball ships the schemas the manifest references.
 - `scripts/stage-npm.mjs` SHALL remove the staged copies again on `postpack`.
+- When `GITHUB_REF_NAME` names a `vX.Y.Z` tag, `scripts/stage-npm.mjs` SHALL stamp that version into `package.json` so the npm tarball is published at the tag version.
+- When `GITHUB_REF_NAME` is absent or does not name such a tag, `scripts/stage-npm.mjs` SHALL leave `package.json` untouched. That version is the npm package version and is deliberately independent of the manifest `version` the `$id` base embeds: the first names a distribution, the second names an immutable byte sequence, and coupling them would make every npm release rewrite forty-seven schemas.
 
 ## Constraints
 

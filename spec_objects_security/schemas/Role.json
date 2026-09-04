@@ -38,5 +38,18 @@
   "unevaluatedProperties": {
     "not": {}
   },
-  "description": "A named bundle of grants. `operations` is forbidden by the seal: a role is a grant set, not behaviour."
+  "description": "A named bundle of grants. `operations` is forbidden by the seal: a role is a grant set, not behaviour.",
+  "allOf": [
+    {
+      "properties": {
+        "fields": {
+          "items": {
+            "not": {
+              "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/DefaultedField.json"
+            }
+          }
+        }
+      }
+    }
+  ]
 }

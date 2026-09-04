@@ -232,6 +232,19 @@ model EffectivenessField {
 // ---------------------------------------------------------------------------
 
 /** A thing worth protecting. */
+@extension(
+  "allOf",
+  #[
+    #{ properties: #{ fields: #{ items: #{ not: #{ `$ref`: "DefaultedField.json" } } } } },
+    #{
+      properties: #{
+        operations: #{
+          items: #{ properties: #{ params: #{ items: #{ not: #{ `$ref`: "DefaultedField.json" } } } } },
+        },
+      },
+    }
+  ]
+)
 model Asset {
   @minItems(1)
   @contains(IdentityField)
@@ -246,6 +259,12 @@ model Asset {
 }
 
 /** A named bundle of grants. `operations` is forbidden by the seal: a role is a grant set, not behaviour. */
+@extension(
+  "allOf",
+  #[
+    #{ properties: #{ fields: #{ items: #{ not: #{ `$ref`: "DefaultedField.json" } } } } }
+  ]
+)
 model Role {
   @minItems(1)
   @contains(IdentityField)
@@ -258,6 +277,12 @@ model Role {
 }
 
 /** One allowed action on one resource. `operations` and `relations` are forbidden by the seal. */
+@extension(
+  "allOf",
+  #[
+    #{ properties: #{ fields: #{ items: #{ not: #{ `$ref`: "DefaultedField.json" } } } } }
+  ]
+)
 model Permission {
   @minItems(1)
   @contains(IdentityField)
@@ -270,6 +295,12 @@ model Permission {
 }
 
 /** A named permission boundary on a grant. `operations` and `relations` are forbidden by the seal. */
+@extension(
+  "allOf",
+  #[
+    #{ properties: #{ fields: #{ items: #{ not: #{ `$ref`: "DefaultedField.json" } } } } }
+  ]
+)
 model Scope {
   @minItems(1)
   @contains(IdentityField)
@@ -312,7 +343,10 @@ model MfaMethod {
 /** An adversary capability against this system. `operations` is forbidden by the seal. */
 @extension(
   "allOf",
-  #[#{ properties: #{ fields: #{ contains: #{ `$ref`: "StrideCategoryField.json" } } } }]
+  #[
+    #{ properties: #{ fields: #{ contains: #{ `$ref`: "StrideCategoryField.json" } } } },
+    #{ properties: #{ fields: #{ items: #{ not: #{ `$ref`: "DefaultedField.json" } } } } }
+  ]
 )
 model Threat {
   @minItems(1)
@@ -329,7 +363,10 @@ model Threat {
 /** A weakness an implementation carries. `operations` is forbidden by the seal. */
 @extension(
   "allOf",
-  #[#{ properties: #{ fields: #{ contains: #{ `$ref`: "SeverityField.json" } } } }]
+  #[
+    #{ properties: #{ fields: #{ contains: #{ `$ref`: "SeverityField.json" } } } },
+    #{ properties: #{ fields: #{ items: #{ not: #{ `$ref`: "DefaultedField.json" } } } } }
+  ]
 )
 model Vulnerability {
   @minItems(1)
@@ -349,7 +386,8 @@ model Vulnerability {
   "allOf",
   #[
     #{ properties: #{ fields: #{ contains: #{ `$ref`: "LikelihoodField.json" } } } },
-    #{ properties: #{ fields: #{ contains: #{ `$ref`: "ImpactField.json" } } } }
+    #{ properties: #{ fields: #{ contains: #{ `$ref`: "ImpactField.json" } } } },
+    #{ properties: #{ fields: #{ items: #{ not: #{ `$ref`: "DefaultedField.json" } } } } }
   ]
 )
 model Risk {
@@ -368,7 +406,10 @@ model Risk {
 /** One audit observation. `operations` is forbidden by the seal. */
 @extension(
   "allOf",
-  #[#{ properties: #{ fields: #{ contains: #{ `$ref`: "StatusField.json" } } } }]
+  #[
+    #{ properties: #{ fields: #{ contains: #{ `$ref`: "StatusField.json" } } } },
+    #{ properties: #{ fields: #{ items: #{ not: #{ `$ref`: "DefaultedField.json" } } } } }
+  ]
 )
 model AuditFinding {
   @minItems(1)
@@ -385,7 +426,10 @@ model AuditFinding {
 /** A handling class for data. `operations` and `relations` are forbidden by the seal. */
 @extension(
   "allOf",
-  #[#{ properties: #{ fields: #{ contains: #{ `$ref`: "LevelField.json" } } } }]
+  #[
+    #{ properties: #{ fields: #{ contains: #{ `$ref`: "LevelField.json" } } } },
+    #{ properties: #{ fields: #{ items: #{ not: #{ `$ref`: "DefaultedField.json" } } } } }
+  ]
 )
 model DataClassification {
   @minItems(1)
@@ -399,6 +443,12 @@ model DataClassification {
 }
 
 /** The reachable surface an attacker can address. `operations` is forbidden by the seal. */
+@extension(
+  "allOf",
+  #[
+    #{ properties: #{ fields: #{ items: #{ not: #{ `$ref`: "DefaultedField.json" } } } } }
+  ]
+)
 model AttackSurface {
   @minItems(1)
   @contains(IdentityField)
@@ -416,7 +466,10 @@ model AttackSurface {
  */
 @extension(
   "allOf",
-  #[#{ properties: #{ fields: #{ contains: #{ `$ref`: "TrustLevelField.json" } } } }]
+  #[
+    #{ properties: #{ fields: #{ contains: #{ `$ref`: "TrustLevelField.json" } } } },
+    #{ properties: #{ fields: #{ items: #{ not: #{ `$ref`: "DefaultedField.json" } } } } }
+  ]
 )
 model TrustBoundary {
   @minItems(1)
@@ -537,6 +590,12 @@ model CsrfToken {
 // ---------------------------------------------------------------------------
 
 /** A declarative rule governing access or behaviour. `operations` is forbidden by the seal. */
+@extension(
+  "allOf",
+  #[
+    #{ properties: #{ fields: #{ items: #{ not: #{ `$ref`: "DefaultedField.json" } } } } }
+  ]
+)
 model Policy {
   @minItems(1)
   clauses: ClauseRef[];
@@ -551,6 +610,19 @@ model Policy {
  * A mechanism that reduces an exposure. Effectiveness is always stated as a
  * row and never inferred. `relations` is forbidden by the seal.
  */
+@extension(
+  "allOf",
+  #[
+    #{ properties: #{ fields: #{ items: #{ not: #{ `$ref`: "DefaultedField.json" } } } } },
+    #{
+      properties: #{
+        operations: #{
+          items: #{ properties: #{ params: #{ items: #{ not: #{ `$ref`: "DefaultedField.json" } } } } },
+        },
+      },
+    }
+  ]
+)
 model Control {
   @minItems(1)
   clauses: ClauseRef[];
@@ -567,6 +639,12 @@ model Control {
 }
 
 /** The rules a password must satisfy. `operations` and `relations` are forbidden by the seal. */
+@extension(
+  "allOf",
+  #[
+    #{ properties: #{ fields: #{ items: #{ not: #{ `$ref`: "DefaultedField.json" } } } } }
+  ]
+)
 model PasswordPolicy {
   @minItems(1)
   clauses: ClauseRef[];
@@ -576,6 +654,12 @@ model PasswordPolicy {
 }
 
 /** The cross-origin rules a surface enforces. `operations` and `relations` are forbidden by the seal. */
+@extension(
+  "allOf",
+  #[
+    #{ properties: #{ fields: #{ items: #{ not: #{ `$ref`: "DefaultedField.json" } } } } }
+  ]
+)
 model CorsPolicy {
   @minItems(1)
   clauses: ClauseRef[];
@@ -586,6 +670,12 @@ model CorsPolicy {
 }
 
 /** The rules a session obeys. `operations` and `relations` are forbidden by the seal. */
+@extension(
+  "allOf",
+  #[
+    #{ properties: #{ fields: #{ items: #{ not: #{ `$ref`: "DefaultedField.json" } } } } }
+  ]
+)
 model SessionConfig {
   @minItems(1)
   clauses: ClauseRef[];

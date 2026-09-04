@@ -32,5 +32,18 @@
   "unevaluatedProperties": {
     "not": {}
   },
-  "description": "A named permission boundary on a grant. `operations` and `relations` are forbidden by the seal."
+  "description": "A named permission boundary on a grant. `operations` and `relations` are forbidden by the seal.",
+  "allOf": [
+    {
+      "properties": {
+        "fields": {
+          "items": {
+            "not": {
+              "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/DefaultedField.json"
+            }
+          }
+        }
+      }
+    }
+  ]
 }

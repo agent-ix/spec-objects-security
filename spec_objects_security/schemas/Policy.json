@@ -35,5 +35,18 @@
   "unevaluatedProperties": {
     "not": {}
   },
-  "description": "A declarative rule governing access or behaviour. `operations` is forbidden by the seal."
+  "description": "A declarative rule governing access or behaviour. `operations` is forbidden by the seal.",
+  "allOf": [
+    {
+      "properties": {
+        "fields": {
+          "items": {
+            "not": {
+              "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/DefaultedField.json"
+            }
+          }
+        }
+      }
+    }
+  ]
 }

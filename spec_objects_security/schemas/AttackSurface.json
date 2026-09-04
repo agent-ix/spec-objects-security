@@ -38,5 +38,18 @@
   "unevaluatedProperties": {
     "not": {}
   },
-  "description": "The reachable surface an attacker can address. `operations` is forbidden by the seal."
+  "description": "The reachable surface an attacker can address. `operations` is forbidden by the seal.",
+  "allOf": [
+    {
+      "properties": {
+        "fields": {
+          "items": {
+            "not": {
+              "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/DefaultedField.json"
+            }
+          }
+        }
+      }
+    }
+  ]
 }

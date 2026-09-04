@@ -26,5 +26,18 @@
   "unevaluatedProperties": {
     "not": {}
   },
-  "description": "The rules a session obeys. `operations` and `relations` are forbidden by the seal."
+  "description": "The rules a session obeys. `operations` and `relations` are forbidden by the seal.",
+  "allOf": [
+    {
+      "properties": {
+        "fields": {
+          "items": {
+            "not": {
+              "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/DefaultedField.json"
+            }
+          }
+        }
+      }
+    }
+  ]
 }

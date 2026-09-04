@@ -108,3 +108,13 @@ expressed in a way that a conforming-enough consumer reads backwards.
 Applied in the review-fix round: FND-160 (the defaulted-field refusal extended to `operations[].params[]` on every guarded type that admits operations, in the schemas and in FR-004/FR-006), FND-161 (every negative predicate re-encoded as `items`/`not`; no shipped schema carries `minContains` or `maxContains`, and FR-006-AC-7 with TC-076 asserts it), FND-162 (the least-granting claim narrowed to the two ordered vocabularies, with the other eight stated as unordered), FND-163 and FND-164 (the free-text carriers allocated to the FR-005 credential-shape scan, since no schema can forbid a string), FND-165 (FR-006-AC-3 rewritten around schema position, and TC-072 names `DefaultedField.json` as the case that proves the discriminator), FND-166 (FR-006-AC-8), FND-167 (FR-003 states the interim posture for `quire-rs#394`).
 
 Recorded without change, and carried into the report rather than silently closed: FND-168, FND-169, FND-170.
+
+### Count correction (2026-09-04)
+
+Two figures in this review are wrong against the tree and are corrected here
+rather than silently: the module emits **47** schema files plus
+`toolchain.json`, not 49, and ships **26** skeleton files (23 types plus 3
+`sysml` alternates) with 23 more frozen under
+`tests/fixtures/baseline-0.1.0/skeletons/`, not 22. Neither figure carries any
+finding in this review; the findings themselves were re-verified against the
+corrected counts and stand.

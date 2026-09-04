@@ -21,22 +21,17 @@ from tests.conftest import (
     CLAUSE,
     DEFAULT_REFUSING,
     MODEL_OF,
+    OBJECT_TYPES,
     REPO_ROOT,
     SCHEMAS_DIR,
+    SEMANTIC_CORE_DIR,
     VOCABULARIES,
     field,
 )
 
-# The minimal valid record per default-refusing type, before a default is added.
-BASE_RECORD = {
-    "secret": {"fields": [field("secret_id", "UUID", identity=True)]},
-    "encryption_key": {"fields": [field("key_id", "UUID", identity=True)]},
-    "jwt_claim": {"fields": [field("claim_id", "UUID", identity=True)]},
-    "csrf_token": {"fields": [field("token_id", "UUID", identity=True)]},
-    "mfa_method": {"fields": [field("method_id", "UUID", identity=True)]},
-    "auth_flow": {"operations": [{"name": "exchange", "params": []}]},
-    "audit_event": {"fields": [field("occurred_at", "Timestamp")]},
-}
+# The minimal valid record per type, before a default is added. Reused from the
+# role-schema suite so the two cannot drift.
+from tests.test_role_schemas import MINIMAL as BASE_RECORD  # noqa: E402
 
 # Where a vocabulary is carried, so an invented member can be shown to fail.
 VOCABULARY_CARRIER = {
@@ -192,18 +187,31 @@ def test_no_shipped_schema_carries_a_default_keyword():
 
 
 @pytest.mark.trace("TC-073", "FR-006-AC-4", "FR-006-CON-2")
-def test_no_sensitive_declaration_admits_a_defaulted_field_or_param(schema_registry):
+def test_no_declaration_admits_a_defaulted_field_or_param(schema_registry):
+    """Every one of the twenty-three types, not only the sensitive four.
+
+    The rule began on `secret`, `encryption_key`, `jwt_claim` and `csrf_token`,
+    which left it off exactly the rows that grant: a `Control` whose
+    `effectiveness` defaulted to `effective`, a `TrustBoundary` whose
+    `trust_level` defaulted to `trusted`, and defaulted grant rows on `role`,
+    `permission` and `scope` all validated. The ticket's merge gate reads "No
+    schema default grants permission, trust, or control effectiveness".
+    """
+    assert set(DEFAULT_REFUSING) == set(OBJECT_TYPES)
     for name in DEFAULT_REFUSING:
-        validator = schema_registry(MODEL_OF[name])
-        base = BASE_RECORD[name]
-        assert validator.is_valid(base), name
-        if "fields" in base:
+        model = MODEL_OF[name]
+        validator = schema_registry(model)
+        base = BASE_RECORD[model]
+        properties = schema(model).get("properties", {})
+        assert validator.is_valid(base), (name, "minimal record rejected")
+        if "fields" in properties:
             embedded = {
                 **base,
-                "fields": list(base["fields"]) + [field("material", default="hunter2")],
+                "fields": list(base.get("fields", []))
+                + [field("material", default="hunter2")],
             }
             assert not validator.is_valid(embedded), name
-        if "operations" in schema(MODEL_OF[name]).get("properties", {}):
+        if "operations" in properties:
             clean = {
                 **base,
                 "operations": [{"name": "rotate", "params": [field("reason")]}],
@@ -216,6 +224,34 @@ def test_no_sensitive_declaration_admits_a_defaulted_field_or_param(schema_regis
                 ],
             }
             assert not validator.is_valid(leaky), name
+
+
+@pytest.mark.trace("TC-073", "FR-006-AC-4")
+def test_the_defaulted_field_the_guard_refuses_is_valid_semantic_core():
+    """The canary the code review earned.
+
+    TC-073 used to pass for a reason unrelated to the rule: the fixture built
+    `default: {"kind": "literal"}`, and `literal` is outside semantic-core's
+    closed `DefaultKind`, so every "embedded" record was refused by `FieldDecl`
+    before the module's own guard was consulted. Deleting the whole `allOf`
+    from `Secret.json` left every assertion passing. This asserts the premise
+    the rest of TC-073 rests on: the defaulted field is a *valid* `FieldDecl`,
+    so the module's guard is what refuses it.
+    """
+    from jsonschema import Draft202012Validator
+    from referencing import Registry, Resource
+
+    resources = []
+    for path in sorted(SEMANTIC_CORE_DIR.glob("*.json")):
+        schema_doc = json.loads(path.read_text())
+        resources.append((schema_doc["$id"], Resource.from_contents(schema_doc)))
+    field_decl = Draft202012Validator(
+        json.loads((SEMANTIC_CORE_DIR / "FieldDecl.json").read_text()),
+        registry=Registry().with_resources(resources),
+    )
+    defaulted = field("material", default="hunter2")
+    assert not [e.message for e in field_decl.iter_errors(defaulted)], defaulted
+    assert defaulted["default"]["kind"] in ("semantic", "representation", "migration")
 
 
 @pytest.mark.trace("TC-076", "FR-006-AC-7")

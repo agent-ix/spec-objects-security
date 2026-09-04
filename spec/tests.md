@@ -33,16 +33,25 @@ ones whose evidence needs an environment this repository cannot provision — a
 running `filament-core-service`, a Quoin built from `quoin` main — or a human;
 every one of them says which.
 
-`quire coverage --scope .` reports **131 of 145 rows backed (90%)**. The 145 it
-counts are not the 85 rows of `## Test Case Summary`: a row there is one trace
+`quire coverage --scope .` reports **131 of 146 rows backed (89%)**. The 146 it
+counts are not the 86 rows of `## Test Case Summary`: a row there is one trace
 target, and so is every acceptance criterion, constraint and validation
 criterion a requirement document mints on its own, so the two numbers count
-different populations and neither is a test count. The 14 it cannot back are
-exactly the rows below that read `🚧`: TC-015..TC-019, TC-046, TC-110, TC-112
-and TC-113, and the criteria they carry (FR-001-AC-2..4, FR-003-AC-5,
-StR-001-VC-1..2). Every one needs a running `filament-core-service`, a Quoin
-built from `quoin` main, or a human. `make test` reports 211 passed, 2 xfailed
-and 0 skipped over the same tree.
+different populations and neither is a test count. Backed means at least one
+source symbol outside `spec/` carries a matching tag; on its own it does not
+say the tagged test asserts the row, which is what the code review and the gap
+analysis are for.
+
+The 15 it cannot back are exactly the fifteen targets below that read `🚧`: the
+nine rows TC-015..TC-019, TC-046, TC-110, TC-112 and TC-113, and the six
+criteria FR-001-AC-2..4, FR-003-AC-5 and StR-001-VC-1..2. Every one needs a
+running `filament-core-service`, a Quoin built from `quoin` main, or a human.
+
+`make test` reports **213 passed, 2 xfailed and 0 skipped** over the same tree.
+That counts pytest functions, not matrix rows, and the two numbers are not
+comparable. The 100% figure `make test` also prints is statement coverage over
+`spec_objects_security/__init__.py` — four statements — and is evidence about
+the Python package only: neither Node script is measured by it.
 
 ## Test Matrix Rules
 
@@ -189,6 +198,7 @@ and 0 skipped over the same tree.
 | TC-111 | Every object type ships a typed schema a fixture reader can consume; a secret and a risk record are distinguishable by schema alone | Unit | P2 | StR-001-VC-3 | ✅ |
 | TC-112 | A module activation against filament-core registers every declared contribution | Manual | P2 | StR-001-VC-1 | 🚧 needs a running filament-core |
 | TC-113 | A generator run (minijinja-cli) produces a valid artifact from a shipped skeleton and schema | Manual | P2 | StR-001-VC-2 | 🚧 needs a generator run against a released module |
+| TC-114 | The module directory a Quoin install would consume is complete and self-consistent: every export's schema file exists, carries its own `$id`, and hashes | Unit | P1 | IT-002-SC-01 | ✅ precondition only; the install roundtrip itself is TC-110 |
 
 ## Test Environment
 
@@ -210,11 +220,18 @@ say so; they are schema evidence, not extraction evidence.
 ## Coverage Gaps
 
 Every acceptance criterion, named constraint and NFR metric of FR-001..FR-006,
-NFR-001, IT-001, IT-002 and StR-001 now has at least one row. Seven rows cannot
+NFR-001, IT-001, IT-002 and StR-001 now has at least one row. Nine rows cannot
 be discharged in this repository and are `🚧` with the reason on the row:
 TC-015..TC-019 and TC-112 need a running `filament-core-service`, TC-046 and
 TC-110 need a Quoin built from `quoin` main at or after `3e842ce`, and TC-113
 needs a generator run against a released module.
+
+TC-114 is deliberately a row of its own rather than a tag on TC-110. A test
+that only checks the module directory is complete cannot back "the pre-install
+listing is captured", and tagging it `TC-110` made a blocked row report backed
+— which the gap analysis caught. Splitting it moved the headline from 131/145
+to 131/146 with TC-110 now correctly unbacked, which is a truer number rather
+than a better one.
 
 `quire coverage` additionally reports `status-column-matches-nothing` on the
 Functional Requirement Coverage table: the `TestMatrix` archetype asserts the

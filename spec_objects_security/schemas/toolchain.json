@@ -18,16 +18,26 @@
     "issue": "https://github.com/agent-ix/spec-objects-security/issues/13",
     "applied": true,
     "rewrittenFiles": [
+      "Asset.json",
+      "AttackSurface.json",
       "AuditEvent.json",
       "AuditFinding.json",
       "AuthFlow.json",
+      "Control.json",
+      "CorsPolicy.json",
       "CsrfToken.json",
       "DataClassification.json",
       "EncryptionKey.json",
       "JwtClaim.json",
       "MfaMethod.json",
+      "PasswordPolicy.json",
+      "Permission.json",
+      "Policy.json",
       "Risk.json",
+      "Role.json",
+      "Scope.json",
       "Secret.json",
+      "SessionConfig.json",
       "Threat.json",
       "TrustBoundary.json",
       "Vulnerability.json"
@@ -83,5 +93,5 @@
     "TrustLevelField.json",
     "Vulnerability.json"
   ],
-  "digest": "sha256:7b3825aba7e83aa643dc61bd365e62e621c467b7ffb433947939e108ee9b8ebc"
+  "digest": "sha256:6de8dd65c1436d820dd439597f88759c2c009c91cf4e508776594f8382f58274"
 }

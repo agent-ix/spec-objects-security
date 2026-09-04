@@ -173,15 +173,14 @@ VOCABULARIES = {
 }
 
 # The types whose schema admits no `FieldDecl` carrying a `default` (FR-006).
-DEFAULT_REFUSING = (
-    "secret",
-    "encryption_key",
-    "jwt_claim",
-    "csrf_token",
-    "mfa_method",
-    "auth_flow",
-    "audit_event",
-)
+# Every object type refuses a defaulted field. The rule started on the four
+# sensitive types, and the code review showed that left it off exactly the
+# granting rows: a `Control` whose `effectiveness` defaulted to `effective`, a
+# `TrustBoundary` whose `trust_level` defaulted to `trusted`, and defaulted
+# grant rows on `role`, `permission` and `scope` all validated. The ticket gate
+# reads "No schema default grants permission, trust, or control effectiveness",
+# so the guard is now on all twenty-three (FR-006).
+DEFAULT_REFUSING = OBJECT_TYPES
 
 FIELD_BEARING = (
     "asset",
@@ -398,7 +397,12 @@ def field(
     if identity:
         decl["identity"] = True
     if default is not None:
-        decl["default"] = {"kind": "literal", "value": default}
+        # `kind` must be a real `DefaultKind` member (`semantic`,
+        # `representation`, `migration`). A made-up kind makes the whole
+        # `FieldDecl` invalid inside semantic-core, so the record is refused
+        # before the module's own guard is ever consulted and the test passes
+        # for a reason that has nothing to do with the rule under test.
+        decl["default"] = {"kind": "semantic", "value": default}
     return decl
 
 

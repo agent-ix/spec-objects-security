@@ -44,5 +44,35 @@
   "unevaluatedProperties": {
     "not": {}
   },
-  "description": "A thing worth protecting."
+  "description": "A thing worth protecting.",
+  "allOf": [
+    {
+      "properties": {
+        "fields": {
+          "items": {
+            "not": {
+              "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/DefaultedField.json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "properties": {
+        "operations": {
+          "items": {
+            "properties": {
+              "params": {
+                "items": {
+                  "not": {
+                    "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/DefaultedField.json"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
 }

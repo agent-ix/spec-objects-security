@@ -79,7 +79,7 @@ def test_no_baseline_skeleton_yields_a_record_invalid_finding(quire_engine):
     That is asserted here rather than assumed."""
     for path in BASELINE_SKELETONS:
         text = path.read_text()
-        assert "object:" not in frontmatter(text), path.name
+        assert "object" not in frontmatter(text), path.name
         result = quire_engine.validate_document(
             frontmatter(text)["type"], str(PACKAGE_ROOT), text
         )
@@ -89,6 +89,7 @@ def test_no_baseline_skeleton_yields_a_record_invalid_finding(quire_engine):
 
 
 @pytest.mark.xfail(strict=True, reason="agent-ix/quire-rs#391")
+@pytest.mark.trace("TC-103", "NFR-001-AC-4")
 def test_a_legacy_form_declaring_object_is_not_an_error(quire_engine):
     """The engine defect NFR-001 carries rather than works around: once a
     legacy-form artifact declares `object:`, quire 0.46.0 assembles its record

@@ -49,5 +49,35 @@
   "unevaluatedProperties": {
     "not": {}
   },
-  "description": "A mechanism that reduces an exposure. Effectiveness is always stated as a\nrow and never inferred. `relations` is forbidden by the seal."
+  "description": "A mechanism that reduces an exposure. Effectiveness is always stated as a\nrow and never inferred. `relations` is forbidden by the seal.",
+  "allOf": [
+    {
+      "properties": {
+        "fields": {
+          "items": {
+            "not": {
+              "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/DefaultedField.json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "properties": {
+        "operations": {
+          "items": {
+            "properties": {
+              "params": {
+                "items": {
+                  "not": {
+                    "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/DefaultedField.json"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
 }
