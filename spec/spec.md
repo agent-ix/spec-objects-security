@@ -61,6 +61,17 @@ This document specifies the requirements for `spec-objects-security`, a Filament
   excludes `hazard` and `failure_mode`, so a security control cannot satisfy a
   safety coverage check today. Widening or narrowing that list is a
   cross-repository decision, reported rather than made here.
+- Widening `control.allowed_links.mitigates`. `agent-ix/spec-objects-safety#4`
+  reports that the incoming `mitigates` edge its `unmitigated-hazard` check
+  depends on is authorable nowhere: this module's `control` declares
+  `mitigates: [threat, risk, vulnerability]`, and the `spec-artifacts-iso`
+  `FR`/`NFR` archetypes declare no `mitigates` at all. The fix is a coordinated
+  change across at least two repositories and is not made here. Note the
+  interaction this ticket creates for whoever makes it: FR-003-CON-3 and
+  NFR-001-AC-2 now assert that list equal to the frozen 0.1.0 baseline, so the
+  coordinated change must update `tests/fixtures/baseline-0.1.0/manifest.yaml`
+  in the same commit or TC-047 and TC-101 turn red. That is the freeze working
+  as intended — the edge cannot move silently — not an obstacle to the fix.
 - Reconciling this module's `Severity` and `Likelihood` vocabularies with
   `agent-ix/spec-objects-safety`'s `hazard-severity` and `hazard-likelihood`
   lint columns. The names collide and the member sets are disjoint; a shared
