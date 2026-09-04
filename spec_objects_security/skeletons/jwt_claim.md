@@ -1,27 +1,38 @@
 ---
 id: CLAIM-001
-title: "tenant_id access-token claim"
+title: "TenantIdentifierClaim"
 type: jwt_claim
+object: jwt_claim
 ---
-<!-- jwt_claim authoring skeleton (spec-objects-security). Fill every part with
+<!-- jwt_claim authoring skeleton (spec-objects-security). Fill every section with
      substantive content. Contract (manifest body_extraction asserts):
-     - Frontmatter MUST carry id, title, type (type:
-       jwt_claim).
-     - A "Schema" section MUST carry a ```json code block with the claim's
-       JSON Schema. -->
-# [CLAIM-001] tenant_id access-token claim
+     - Frontmatter MUST carry id, title, type: jwt_claim, object: jwt_claim.
+     - "## Schema" (H2, required) holds a fenced `json` block. It is a
+       derived, human-facing view; the typed table is the authority.
+     - "## Properties" (H2): JwtClaim.json admits no field carrying a
+       default, so no claim value is written into the declaration. -->
+# [CLAIM-001] TenantIdentifierClaim
 
-Custom claim stamped into every Atlas access token at issuance. The policy
-engine uses it for row-level tenant isolation (see PERM-001); tokens without a
-valid `tenant_id` are rejected at the gateway before reaching any service.
+## Properties
+
+| Field | Type | Multiplicity | Constraints |
+|---|---|---|---|
+| claim_id | UUID | 1..1 | identity |
+| claim_name | String | 1..1 | minLength: 1, maxLength: 32 |
+| value_type | String | 1..1 | minLength: 1 |
+| required_in_access_token | Boolean | 1..1 |  |
 
 ## Schema
 
 ```json
 {
-  "title": "tenant_id",
-  "type": "string",
-  "format": "uuid",
-  "description": "UUID of the tenant the subject is acting within; immutable for the token lifetime"
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://specs.agent-ix.dev/claims/tenant-identifier.schema.json",
+  "title": "TenantIdentifierClaim",
+  "type": "object",
+  "required": ["tid"],
+  "properties": {
+    "tid": { "type": "string", "format": "uuid" }
+  }
 }
 ```

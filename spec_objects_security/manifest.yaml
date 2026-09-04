@@ -1,7 +1,40 @@
 manifest_version: 1.0.0
 name: spec-objects-security
-version: 0.1.0
+version: 0.2.0
 description: 'Filament Module: tier-2 security and identity ObjectTypes (threats, controls, auth flows, secrets, policies)'
+semantic:
+  contract_version: 1.0.0
+  semantic_core: 0.1.0
+  package: agent-ix/spec-objects-security
+  exports:
+  - auth_flow
+  - permission
+  - scope
+  - role
+  - secret
+  - encryption_key
+  - session_config
+  - data_classification
+  - trust_boundary
+  - audit_event
+  - csrf_token
+  - cors_policy
+  - password_policy
+  - mfa_method
+  - jwt_claim
+  - threat
+  - control
+  - risk
+  - vulnerability
+  - asset
+  - attack_surface
+  - policy
+  - audit_finding
+  imports: {}
+  targets: [json-schema, markdown]
+  mappings: [typed-table, sysml-fence, ocl-clause]
+  compatibility_posture: additive
+  legacy_forms: warning
 nav:
   category:
     slug: security
@@ -21,7 +54,8 @@ object_types:
     protects: [externally-exposed]
     references: [auth_flow]
   data_schema:
-    type: object
+    schema: schemas/AuthFlow.json
+    digest: sha256:e3030e70b3b0d2e31172f9fbc6871f3eaec7ef8507c209574894471be1cd53a4
   body_extraction:
     yield_pattern:
       match:
@@ -45,13 +79,19 @@ object_types:
           after_heading: Flow
           required: true
           language: mermaid
+        # Added at 0.2.0 (FR-005): the `## Operations` subsections.
+        operations:
+          from: section_body
+          after_heading: Operations
+          required: false
 - name: permission
   allowed_links:
     grants: [scope]
     guards: [externally-exposed]
     references: [role]
   data_schema:
-    type: object
+    schema: schemas/Permission.json
+    digest: sha256:287d9bacbd3c40a19f5b4901593afa9f32a08e1848278d5f263944f8428da13a
   body_extraction:
     yield_pattern:
       match:
@@ -68,11 +108,18 @@ object_types:
           path:
           - verb
           required: true
+        # Added at 0.2.0 (FR-005): the typed `## Properties` table the
+        # semantic layer reads. Optional, so every 0.1.0 artifact stays valid.
+        properties:
+          from: section_body
+          after_heading: Properties
+          required: false
 - name: scope
   allowed_links:
     references: [permission]
   data_schema:
-    type: object
+    schema: schemas/Scope.json
+    digest: sha256:21f2cd7658d053dbb4539d2baedb5ffb3cbc97b752cc76a21de8471a04327692
   body_extraction:
     yield_pattern:
       match:
@@ -83,12 +130,19 @@ object_types:
           from: section_body
           after_heading: Grants
           required: true
+        # Added at 0.2.0 (FR-005): the typed `## Properties` table the
+        # semantic layer reads. Optional, so every 0.1.0 artifact stays valid.
+        properties:
+          from: section_body
+          after_heading: Properties
+          required: false
 - name: role
   allowed_links:
     grants: [permission]
     references: [role]
   data_schema:
-    type: object
+    schema: schemas/Role.json
+    digest: sha256:69378f9251e51395401ade59f00ea5e326dcece128963cfa9664b25a02d8df28
   body_extraction:
     yield_pattern:
       match:
@@ -99,12 +153,19 @@ object_types:
           from: section_body
           after_heading: Permissions
           required: true
+        # Added at 0.2.0 (FR-005): the typed `## Properties` table the
+        # semantic layer reads. Optional, so every 0.1.0 artifact stays valid.
+        properties:
+          from: section_body
+          after_heading: Properties
+          required: false
 - name: secret
   roles: [sensitive]
   allowed_links:
     references: [secret]
   data_schema:
-    type: object
+    schema: schemas/Secret.json
+    digest: sha256:8db617e54367c6e747b83dbfedb480b6fa5e87b5e2a6584cd7bbf9b294e2d6f7
   body_extraction:
     yield_pattern:
       match:
@@ -115,12 +176,19 @@ object_types:
           from: section_body
           after_heading: Rotation
           required: true
+        # Added at 0.2.0 (FR-005): the typed `## Properties` table the
+        # semantic layer reads. Optional, so every 0.1.0 artifact stays valid.
+        properties:
+          from: section_body
+          after_heading: Properties
+          required: false
 - name: encryption_key
   roles: [sensitive]
   allowed_links:
     encrypts: [sensitive, data_classification]
   data_schema:
-    type: object
+    schema: schemas/EncryptionKey.json
+    digest: sha256:439e8b376d8e1dfb391d8e8533916bf0917f5d28f895d4c307b9e0cc37319f14
   body_extraction:
     yield_pattern:
       match:
@@ -137,11 +205,18 @@ object_types:
           path:
           - rotation
           required: false
+        # Added at 0.2.0 (FR-005): the typed `## Properties` table the
+        # semantic layer reads. Optional, so every 0.1.0 artifact stays valid.
+        properties:
+          from: section_body
+          after_heading: Properties
+          required: false
 - name: session_config
   allowed_links:
     references: [auth_flow, jwt_claim]
   data_schema:
-    type: object
+    schema: schemas/SessionConfig.json
+    digest: sha256:38352caf9b46e76230b971552c3352da5d750b4693fe3407137a1f5b68a4f8aa
   body_extraction:
     yield_pattern:
       match:
@@ -152,12 +227,18 @@ object_types:
           from: section_body
           after_heading: Settings
           required: true
+        # Added at 0.2.0 (FR-005): the `## Invariants` OCL clauses.
+        invariants:
+          from: section_body
+          after_heading: Invariants
+          required: false
 - name: data_classification
   allowed_links:
     classifies: [persistable, externally-exposed, sensitive]
     references: [data_classification]
   data_schema:
-    type: object
+    schema: schemas/DataClassification.json
+    digest: sha256:1bcec344709c697b79e3c179939a58f617e6cab68503e5054c79a6e83805173b
   body_extraction:
     yield_pattern:
       match:
@@ -168,12 +249,19 @@ object_types:
           from: section_body
           after_heading: Handling
           required: true
+        # Added at 0.2.0 (FR-005): the typed `## Properties` table the
+        # semantic layer reads. Optional, so every 0.1.0 artifact stays valid.
+        properties:
+          from: section_body
+          after_heading: Properties
+          required: false
 - name: trust_boundary
   allowed_links:
     contains: [asset, api_endpoint]
     references: [trust_boundary]
   data_schema:
-    type: object
+    schema: schemas/TrustBoundary.json
+    digest: sha256:0e43bff466cd6cf76ef460c8e35445eb58696c376ad03a1fd3272f62be33aa00
   body_extraction:
     yield_pattern:
       match:
@@ -185,12 +273,24 @@ object_types:
           after_heading: Boundary
           required: true
           language: mermaid
+        # Added at 0.2.0 (FR-005): the typed `## Properties` table the
+        # semantic layer reads. Optional, so every 0.1.0 artifact stays valid.
+        properties:
+          from: section_body
+          after_heading: Properties
+          required: false
+        # Added at 0.2.0 (FR-005): the `## Invariants` OCL clauses.
+        invariants:
+          from: section_body
+          after_heading: Invariants
+          required: false
 - name: audit_event
   roles: [event-like]
   allowed_links:
     references: [audit_event]
   data_schema:
-    type: object
+    schema: schemas/AuditEvent.json
+    digest: sha256:0bfa63622e3ab602a00f7e7668224b3590f8fa9e71a8bf4d997daf26c019e87b
   body_extraction:
     yield_pattern:
       match:
@@ -202,12 +302,19 @@ object_types:
           after_heading: Event Schema
           required: true
           language: json
+        # Added at 0.2.0 (FR-005): the typed `## Properties` table the
+        # semantic layer reads. Optional, so every 0.1.0 artifact stays valid.
+        properties:
+          from: section_body
+          after_heading: Properties
+          required: false
 - name: csrf_token
   roles: [sensitive]
   allowed_links:
     references: [csrf_token]
   data_schema:
-    type: object
+    schema: schemas/CsrfToken.json
+    digest: sha256:97867d6d36073d85da4e8cca1cb7fb578a3a5efc4bf8a1f0adf03af2b5f10725
   body_extraction:
     yield_pattern:
       match:
@@ -219,11 +326,18 @@ object_types:
           path:
           - rotation_window
           required: true
+        # Added at 0.2.0 (FR-005): the typed `## Properties` table the
+        # semantic layer reads. Optional, so every 0.1.0 artifact stays valid.
+        properties:
+          from: section_body
+          after_heading: Properties
+          required: false
 - name: cors_policy
   allowed_links:
     references: [cors_policy]
   data_schema:
-    type: object
+    schema: schemas/CorsPolicy.json
+    digest: sha256:9a03e440d1916807218aae2badda72caa048aa80a63ac94e0df2c749cf49c44e
   body_extraction:
     yield_pattern:
       match:
@@ -234,11 +348,17 @@ object_types:
           from: section_body
           after_heading: Origins
           required: true
+        # Added at 0.2.0 (FR-005): the `## Invariants` OCL clauses.
+        invariants:
+          from: section_body
+          after_heading: Invariants
+          required: false
 - name: password_policy
   allowed_links:
     references: [password_policy]
   data_schema:
-    type: object
+    schema: schemas/PasswordPolicy.json
+    digest: sha256:d7cd72b861eeabf44a7710620247f3ddb513a2081ebc8ae90032230514329048
   body_extraction:
     yield_pattern:
       match:
@@ -249,11 +369,17 @@ object_types:
           from: section_body
           after_heading: Rules
           required: true
+        # Added at 0.2.0 (FR-005): the `## Invariants` OCL clauses.
+        invariants:
+          from: section_body
+          after_heading: Invariants
+          required: false
 - name: mfa_method
   allowed_links:
     references: [mfa_method]
   data_schema:
-    type: object
+    schema: schemas/MfaMethod.json
+    digest: sha256:7ba44d012e50785e6a66cab42dc1a198e9813357e3577f5331f3819196a92dac
   body_extraction:
     yield_pattern:
       match:
@@ -270,12 +396,19 @@ object_types:
           path:
           - factor
           required: false
+        # Added at 0.2.0 (FR-005): the typed `## Properties` table the
+        # semantic layer reads. Optional, so every 0.1.0 artifact stays valid.
+        properties:
+          from: section_body
+          after_heading: Properties
+          required: false
 - name: jwt_claim
   roles: [sensitive]
   allowed_links:
     references: [jwt_claim]
   data_schema:
-    type: object
+    schema: schemas/JwtClaim.json
+    digest: sha256:9ebbffee53b0eb5842f713c2009228797674f21553530531ac3211cc3e4cfb91
   body_extraction:
     yield_pattern:
       match:
@@ -287,12 +420,19 @@ object_types:
           after_heading: Schema
           required: true
           language: json
+        # Added at 0.2.0 (FR-005): the typed `## Properties` table the
+        # semantic layer reads. Optional, so every 0.1.0 artifact stays valid.
+        properties:
+          from: section_body
+          after_heading: Properties
+          required: false
 - name: threat
   allowed_links:
     threatens: [asset, attack_surface]
     exploits: [vulnerability]
   data_schema:
-    type: object
+    schema: schemas/Threat.json
+    digest: sha256:307c314f8408465b026389cc59789422dcd860e09b118f819fbecdfc03178f99
   body_extraction:
     yield_pattern:
       match:
@@ -321,13 +461,20 @@ object_types:
           path:
           - vector
           required: true
+        # Added at 0.2.0 (FR-005): the typed `## Properties` table the
+        # semantic layer reads. Optional, so every 0.1.0 artifact stays valid.
+        properties:
+          from: section_body
+          after_heading: Properties
+          required: false
 - name: control
   allowed_links:
     mitigates: [threat, risk, vulnerability]
     implements: [policy]
     protects: [externally-exposed, asset]
   data_schema:
-    type: object
+    schema: schemas/Control.json
+    digest: sha256:8996df07a3fa77f1f22e061b083aecac33d5668c4d2696df908b5d592bb7d562
   body_extraction:
     yield_pattern:
       match:
@@ -338,12 +485,24 @@ object_types:
           from: section_body
           after_heading: Mappings
           required: true
+        # Added at 0.2.0 (FR-005): the typed `## Properties` table the
+        # semantic layer reads. Optional, so every 0.1.0 artifact stays valid.
+        properties:
+          from: section_body
+          after_heading: Properties
+          required: false
+        # Added at 0.2.0 (FR-005): the `## Invariants` OCL clauses.
+        invariants:
+          from: section_body
+          after_heading: Invariants
+          required: false
 - name: risk
   allowed_links:
     arises_from: [threat, vulnerability]
     references: [asset]
   data_schema:
-    type: object
+    schema: schemas/Risk.json
+    digest: sha256:58d0de94a7602f33442e8ead933655188a55fb1283927eeb2bda241502c3d046
   body_extraction:
     yield_pattern:
       match:
@@ -360,12 +519,19 @@ object_types:
           path:
           - impact
           required: true
+        # Added at 0.2.0 (FR-005): the typed `## Properties` table the
+        # semantic layer reads. Optional, so every 0.1.0 artifact stays valid.
+        properties:
+          from: section_body
+          after_heading: Properties
+          required: false
 - name: vulnerability
   allowed_links:
     affects: [asset, attack_surface]
     references: [vulnerability]
   data_schema:
-    type: object
+    schema: schemas/Vulnerability.json
+    digest: sha256:2d20c2810ebbd359208a6b320cdddff17f4f0c7f5f0e95f41d271bc354e70db7
   body_extraction:
     yield_pattern:
       match:
@@ -382,11 +548,18 @@ object_types:
           path:
           - severity
           required: true
+        # Added at 0.2.0 (FR-005): the typed `## Properties` table the
+        # semantic layer reads. Optional, so every 0.1.0 artifact stays valid.
+        properties:
+          from: section_body
+          after_heading: Properties
+          required: false
 - name: asset
   allowed_links:
     references: [data_classification, trust_boundary]
   data_schema:
-    type: object
+    schema: schemas/Asset.json
+    digest: sha256:a323ebb06d1eb1e3bd6f4d1a94113a59a8afe5978b272feb22ea515dc803250e
   body_extraction:
     yield_pattern:
       match:
@@ -397,12 +570,19 @@ object_types:
           from: section_body
           after_heading: Description
           required: true
+        # Added at 0.2.0 (FR-005): the typed `## Properties` table the
+        # semantic layer reads. Optional, so every 0.1.0 artifact stays valid.
+        properties:
+          from: section_body
+          after_heading: Properties
+          required: false
 - name: attack_surface
   roles: [externally-exposed]
   allowed_links:
     exposes: [asset, api_endpoint]
   data_schema:
-    type: object
+    schema: schemas/AttackSurface.json
+    digest: sha256:4a952ae0795db2fe2db68e2008876564588707dc9314a6fd4e146f7439c6cb15
   body_extraction:
     yield_pattern:
       match:
@@ -413,11 +593,18 @@ object_types:
           from: section_body
           after_heading: Entry Points
           required: true
+        # Added at 0.2.0 (FR-005): the typed `## Properties` table the
+        # semantic layer reads. Optional, so every 0.1.0 artifact stays valid.
+        properties:
+          from: section_body
+          after_heading: Properties
+          required: false
 - name: policy
   allowed_links:
     governs: [control, role, permission, data_classification]
   data_schema:
-    type: object
+    schema: schemas/Policy.json
+    digest: sha256:e71cf6b1e06859ad549412165af24d58ab3a49281a23c486305de36c0380836a
   body_extraction:
     yield_pattern:
       match:
@@ -428,12 +615,18 @@ object_types:
           from: section_body
           after_heading: Policy
           required: true
+        # Added at 0.2.0 (FR-005): the `## Invariants` OCL clauses.
+        invariants:
+          from: section_body
+          after_heading: Invariants
+          required: false
 - name: audit_finding
   allowed_links:
     traces_to: [risk]
     references: [control, vulnerability, asset]
   data_schema:
-    type: object
+    schema: schemas/AuditFinding.json
+    digest: sha256:7f0244a40ac0e5ce3146005a43770506ac768a2128eca019b246ebc49505975c
   body_extraction:
     yield_pattern:
       match:
@@ -444,6 +637,12 @@ object_types:
           from: section_body
           after_heading: Recommendation
           required: true
+        # Added at 0.2.0 (FR-005): the typed `## Properties` table the
+        # semantic layer reads. Optional, so every 0.1.0 artifact stays valid.
+        properties:
+          from: section_body
+          after_heading: Properties
+          required: false
 
 # FR-043: concrete-term lexicon — security / identity / auth objects.
 # FR-058 (quire-rs v0.31.0): upward-trace completeness — the second half of

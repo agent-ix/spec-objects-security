@@ -1,22 +1,30 @@
 ---
 id: ASSET-001
-title: "Session store"
+title: "TenantDatabase"
 type: asset
+object: asset
 ---
-<!-- asset authoring skeleton (spec-objects-security). Fill every part with
+<!-- asset authoring skeleton (spec-objects-security). Fill every section with
      substantive content. Contract (manifest body_extraction asserts):
-     - Frontmatter MUST carry id, title, type (type: asset).
-     - A "Description" section MUST describe the asset and why it matters. -->
-# [ASSET-001] Session store
-
-Redis cluster holding all active Atlas web sessions and CSRF token state.
+     - Frontmatter MUST carry id, title, type: asset, object: asset.
+     - "## Description" (H2, required): what the asset is and why it matters.
+     - "## Properties" (H2): one typed row per attribute, header exactly
+       `Field | Type | Multiplicity | Constraints`. At least one row carries
+       the `identity` constraint (Asset.json refuses a record without one). -->
+# [ASSET-001] TenantDatabase
 
 ## Description
 
-The session store is the authority for who is currently authenticated:
-compromise yields the ability to mint or hijack any active session across all
-tenants, bypassing AUTHFLOW-001 entirely. It runs in the trusted private
-subnet behind BOUND-001, accepts only mTLS connections from the auth service,
-and persists nothing to disk (RDB/AOF disabled) so session identifiers never
-reach backup media. Data it holds is classified Confidential (CLASS-001
-handling applies to the embedded user identifiers).
+The per-tenant PostgreSQL database holding customer records, order history and
+audit trails. It is the primary confidentiality and integrity asset of the
+platform: its compromise discloses every tenant's data at once.
+
+## Properties
+
+| Field | Type | Multiplicity | Constraints |
+|---|---|---|---|
+| asset_id | UUID | 1..1 | identity |
+| name | String | 1..1 | minLength: 1, maxLength: 128 |
+| classification | DataRestricted | 1..1 |  |
+| steward | String | 1..1 | minLength: 1 |
+| replica_count | Integer | 0..1 | min: 0 |

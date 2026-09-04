@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/ControlMapping.json",
+  "type": "object",
+  "properties": {
+    "framework": {
+      "type": "string",
+      "minLength": 1
+    },
+    "control_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "doc": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "framework",
+    "control_id"
+  ],
+  "unevaluatedProperties": {
+    "not": {}
+  },
+  "description": "One external framework a control maps to."
+}

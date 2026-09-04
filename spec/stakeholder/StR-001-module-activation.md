@@ -7,7 +7,7 @@ type: StR
 
 ## Stakeholder Need
 
-The Filament platform, its spec authors, and its agent CLI generators **SHALL** be able to extract graph entities from security and identity specifications — threats, controls, risks, vulnerabilities, auth flows, secrets, and policies — so that those concepts are first-class, queryable objects rather than free prose.
+The Filament platform, its spec authors, and its agent CLI generators **SHALL** extract graph entities from security and identity specifications — threats, controls, risks, vulnerabilities, auth flows, secrets, and policies — so that those concepts are first-class, queryable objects rather than free prose.
 
 ## Rationale
 
@@ -20,6 +20,7 @@ Security and identity content is currently expressed as unstructured narrative, 
 |----|----------|------------|
 | StR-001-VC-1 | A Module activation against filament-core registers the contents this module declares. | Demonstration |
 | StR-001-VC-2 | Agent CLI generators (minijinja-cli) can produce valid artifacts using the templates and schemas this module ships. | Demonstration |
+| StR-001-VC-3 | Every security object type ships a typed schema a fixture reader can consume, and two records of different types are distinguishable by schema alone. | Demonstration |
 
 ## Dependencies
 

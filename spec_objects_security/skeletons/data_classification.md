@@ -1,25 +1,30 @@
 ---
 id: CLASS-001
-title: "Confidential — tenant PII"
+title: "DataRestricted"
 type: data_classification
+object: data_classification
 ---
-<!-- data_classification authoring skeleton (spec-objects-security). Fill every
-     part with substantive content. Contract (manifest body_extraction asserts):
-     - Frontmatter MUST carry id, title, type (type:
-       data_classification).
-     - A "Handling" section MUST state the handling requirements for the class. -->
-# [CLASS-001] Confidential — tenant PII
-
-Classification applied to tenant member profile data (names, email addresses,
-phone numbers) and any document flagged as containing personal data. Sits one
-level below `Restricted` (secrets and key material) in the Atlas scheme.
+<!-- data_classification authoring skeleton (spec-objects-security). Fill every section with
+     substantive content. Contract (manifest body_extraction asserts):
+     - Frontmatter MUST carry id, title, type: data_classification,
+       object: data_classification.
+     - "## Handling" (H2, required): how data of this class is handled.
+     - "## Properties" (H2): the typed declaration. DataClassification.json
+       requires a `level` row. -->
+# [CLASS-001] DataRestricted
 
 ## Handling
 
-- Encrypted at rest with the tenant DEK (KEY-001) and in transit via TLS 1.3.
-- Access requires an explicit permission grant; reads are recorded in the
-  audit stream as `pii.accessed` events.
-- Never written to application logs; log scrubbing rejects payloads matching
-  the PII field allowlist.
-- Exported only through the GDPR export pipeline, with tenant-admin approval.
-- Retention: deleted within 30 days of tenant offboarding or subject request.
+- Encrypted at rest with TenantDataEncryptionKey and in transit with TLS 1.3.
+- Never written to application logs, traces, or error payloads.
+- Exported only under ExportTenantData, and only to the owning tenant.
+- Deleted within the retention period once the tenant contract ends.
+
+## Properties
+
+| Field | Type | Multiplicity | Constraints |
+|---|---|---|---|
+| classification_id | UUID | 1..1 | identity |
+| level | String | 1..1 | minLength: 1 |
+| retention | Duration | 1..1 |  |
+| logging_permitted | Boolean | 1..1 |  |
