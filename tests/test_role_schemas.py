@@ -182,6 +182,58 @@ def test_the_empty_record_fails_every_type(schema_registry):
         assert not schema_registry(model).is_valid({}), model
 
 
+# The smallest record each type admits. Used to prove the seal, which is the
+# mechanism every "forbidden key" claim in FR-004 rests on: without it, an
+# admitted-key difference between two types is not a refusal and FR-004-AC-1's
+# distinctness means nothing.
+MINIMAL = {
+    "Asset": {"fields": [field("a", "UUID", identity=True)]},
+    "Role": {"fields": [field("a", "UUID", identity=True)]},
+    "Permission": {"fields": [field("a", "UUID", identity=True)]},
+    "Scope": {"fields": [field("a", "UUID", identity=True)]},
+    "MfaMethod": {"fields": [field("a", "UUID", identity=True)]},
+    "AttackSurface": {"fields": [field("a", "UUID", identity=True)]},
+    "Secret": {"fields": [field("a", "UUID", identity=True)]},
+    "EncryptionKey": {"fields": [field("a", "UUID", identity=True)]},
+    "JwtClaim": {"fields": [field("a", "UUID", identity=True)]},
+    "CsrfToken": {"fields": [field("a", "UUID", identity=True)]},
+    "Threat": {"fields": [field("a", "UUID", identity=True), field("stride_category")]},
+    "Vulnerability": {"fields": [field("a", "UUID", identity=True), field("severity")]},
+    "Risk": {
+        "fields": [
+            field("a", "UUID", identity=True),
+            field("likelihood"),
+            field("impact"),
+        ]
+    },
+    "AuditFinding": {"fields": [field("a", "UUID", identity=True), field("status")]},
+    "DataClassification": {
+        "fields": [field("a", "UUID", identity=True), field("level")]
+    },
+    "TrustBoundary": {
+        "fields": [field("a", "UUID", identity=True), field("trust_level")],
+        "clauses": [CLAUSE],
+    },
+    "Policy": {"clauses": [CLAUSE]},
+    "PasswordPolicy": {"clauses": [CLAUSE]},
+    "CorsPolicy": {"clauses": [CLAUSE]},
+    "SessionConfig": {"clauses": [CLAUSE]},
+    "Control": {"clauses": [CLAUSE], "fields": [field("effectiveness")]},
+    "AuthFlow": {"operations": [OPERATION]},
+    "AuditEvent": {"fields": [field("occurred_at", "Timestamp")]},
+}
+
+
+@pytest.mark.trace("TC-050", "FR-004-AC-1")
+def test_every_seal_refuses_a_key_its_type_does_not_list(schema_registry):
+    assert set(MINIMAL) == set(MODELS)
+    for model in MODELS:
+        validator = schema_registry(model)
+        minimal = MINIMAL[model]
+        assert validator.is_valid(minimal), (model, "minimal record rejected")
+        assert not validator.is_valid({**minimal, "totally_unknown_key": 1}), model
+
+
 @pytest.mark.trace("TC-061", "FR-004-AC-12")
 def test_an_unresolved_placeholder_is_a_semantic_id_and_a_bare_token_is_not(
     schema_registry, quire_engine, semantic_module

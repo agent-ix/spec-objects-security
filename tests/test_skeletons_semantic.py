@@ -274,42 +274,79 @@ def test_no_skeleton_or_fixture_carries_a_credential_shaped_literal():
 
 
 @pytest.mark.trace("TC-089", "FR-005-CON-1")
-def test_the_change_edits_no_corpus_repository_or_vendored_fixture():
-    diff = subprocess.run(
-        ["git", "diff", "--name-only", "origin/main...HEAD"],
+def test_the_repository_holds_no_corpus_or_vendored_fixture():
+    """FR-005-CON-1 as a **tree** assertion, never as a diff against a moving ref.
+
+    The obvious form — `git diff --name-only origin/main...HEAD`, then check no
+    changed path is under `corpus/` or a vendor tree — degrades the moment the
+    branch merges. `origin/main...HEAD` then resolves to the empty set, so the
+    loops iterate over nothing and the guard passes while checking nothing; the
+    positive-diff variant of the same guard (`assert changed`) goes one worse
+    and turns main red for a branch that is no longer a branch. A merged
+    change's path set is a fixed historical fact, and an assertion about it must
+    not be computed against a ref that keeps moving.
+
+    The tree form says something stronger and merge-invariant: these paths are
+    absent from the repository at all, not merely untouched by one branch. It is
+    exactly equivalent in intent here because no `corpus/`,
+    `fixtures/semantic-module` or vendor path exists in this repository, on this
+    branch or on `main`. No `git diff` survives in this guard, so there is no
+    range whose rename detection could hide a deletion.
+    """
+    listing = subprocess.run(
+        ["git", "ls-files"],
         cwd=str(REPO_ROOT),
         capture_output=True,
         text=True,
     )
-    assert diff.returncode == 0, diff.stderr
-    changed = [line for line in diff.stdout.splitlines() if line]
-    for path in changed:
-        assert not path.startswith("corpus/"), path
-        assert "vendor" not in path, path
-    assert all(
-        path.startswith(
-            (
-                "spec/",
-                "spec_objects_security/",
-                "tests/",
-                "typespec/",
-                "scripts/",
-                "plan/",
-            )
-        )
-        or path
-        in (
-            "package.json",
-            "package-lock.json",
-            "pyproject.toml",
-            "poetry.lock",
-            "Makefile",
-            ".gitattributes",
-            ".gitignore",
-            "README.md",
-        )
-        for path in changed
-    ), changed
+    assert listing.returncode == 0, listing.stderr
+    tracked = [line for line in listing.stdout.splitlines() if line]
+    # Liveness: without this the guard passes vacuously in a tree git cannot
+    # read, which is the failure mode the diff form had after merge.
+    assert tracked, "the repository tracks no files, so this gate did not run"
+    assert len(tracked) > 100, len(tracked)
+
+    forbidden = [
+        path
+        for path in tracked
+        if path.startswith("corpus/")
+        or path.startswith("vendor/")
+        or "/vendor/" in path
+        or "fixtures/semantic-module" in path
+    ]
+    assert not forbidden, forbidden
+
+    # Every tracked path belongs to this module rather than to a corpus or a
+    # vendored copy of someone else's fixtures.
+    allowed_prefixes = (
+        "spec/",
+        "spec_objects_security/",
+        "tests/",
+        "typespec/",
+        "scripts/",
+        "plan/",
+        ".github/",
+        ".agent/",
+    )
+    allowed_files = {
+        "package.json",
+        "package-lock.json",
+        "pyproject.toml",
+        "poetry.lock",
+        "Makefile",
+        "README.md",
+        "AGENTS.md",
+        "CLAUDE.md",
+        "LICENSE",
+        ".gitattributes",
+        ".gitignore",
+    }
+    stray = [
+        path
+        for path in tracked
+        if not path.startswith(allowed_prefixes) and path not in allowed_files
+    ]
+    assert not stray, stray
 
 
 @pytest.mark.trace("TC-074", "FR-006-AC-5")
