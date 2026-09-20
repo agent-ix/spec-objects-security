@@ -1,5 +1,7 @@
 # spec-objects-security
 
+[![Discord](https://img.shields.io/badge/Discord-Join%20us-5865F2?logo=discord&logoColor=white)](https://discord.gg/6qsdhSPE)
+
 > Filament Module: tier-2 security and identity ObjectTypes (threats, controls, auth flows, secrets, policies)
 
 `spec-objects-security` is an **Agent-IX Filament module**: a `manifest.yaml` plus per-kind authoring **skeletons** (and frontmatter schemas) that teach the spec tooling a vocabulary of object kinds. It is not a standalone app — it is loaded by [`quire-cli`](https://github.com/agent-ix/quire-cli) and [`quoin`](https://github.com/agent-ix/quoin) to author and validate Markdown spec artifacts.
