@@ -33,8 +33,9 @@ ones whose evidence needs an environment this repository cannot provision — a
 running `filament-core-service`, a Quoin built from `quoin` main — or a human;
 every one of them says which.
 
-`quire coverage --scope .` reports **131 of 146 rows backed (89%)**. The 146 it
-counts are not the 86 rows of `## Test Case Summary`: a row there is one trace
+`quire coverage --scope .` reported **131 of 146 rows backed (89%)** before PLAT-902 deleted
+TC-005 and its two tests; the populations are now 145 and 85. The count is not
+the rows of `## Test Case Summary`: a row there is one trace
 target, and so is every acceptance criterion, constraint and validation
 criterion a requirement document mints on its own, so the two numbers count
 different populations and neither is a test count. Backed means at least one
@@ -47,7 +48,8 @@ nine rows TC-015..TC-019, TC-046, TC-110, TC-112 and TC-113, and the six
 criteria FR-001-AC-2..4, FR-003-AC-5 and StR-001-VC-1..2. Every one needs a
 running `filament-core-service`, a Quoin built from `quoin` main, or a human.
 
-`make test` reports **213 passed, 2 xfailed and 0 skipped** over the same tree.
+`make test` reported **213 passed, 2 xfailed and 0 skipped** over the tree that
+measurement was taken on; PLAT-902 removed two of those tests.
 That counts pytest functions, not matrix rows, and the two numbers are not
 comparable. The 100% figure `make test` also prints is statement coverage over
 `spec_objects_security/__init__.py` — four statements — and is evidence about
@@ -89,7 +91,7 @@ the Python package only: neither Node script is measured by it.
 
 | Functional Req | Acceptance Criteria | Test Cases | Coverage Status |
 |---|---|---|---|
-| FR-001 | FR-001-AC-1..4 | TC-001..TC-014, TC-015..TC-017 | 🚧 AC-2..AC-4 need a running filament-core |
+| FR-001 | FR-001-AC-1..4 | TC-001..TC-004, TC-006..TC-014, TC-015..TC-017 | 🚧 AC-2..AC-4 need a running filament-core |
 | FR-002 | FR-002-AC-1..11, FR-002-CON-1..5 | TC-020..TC-035 | ✅ |
 | FR-003 | FR-003-AC-1..7, FR-003-CON-1..3 | TC-040..TC-047 | ✅ AC-5 is a Demonstration nothing here can discharge; AC-6's naming half is an expected failure |
 | FR-004 | FR-004-AC-1..14, FR-004-CON-1..2 | TC-050..TC-063 | ✅ |
@@ -117,7 +119,6 @@ the Python package only: neither Node script is measured by it.
 | TC-002 | The manifest parses as YAML and carries the declared top-level keys | Unit | P0 | FR-001-AC-1 | ✅ |
 | TC-003 | Every `object_type` declares a name and a data schema | Unit | P0 | FR-001-AC-1 | ✅ |
 | TC-004 | No two `object_type` entries share a name | Unit | P0 | FR-001-AC-1 | ✅ |
-| TC-005 | The manifest validates against the FR-035 module-manifest schema imported from spec-artifacts-iso | Unit | P0 | FR-001-AC-1 | ✅ |
 | TC-006 | Every lexicon entry carries a whole definition | Unit | P0 | FR-001-AC-1 | ✅ |
 | TC-007 | Threat and risk coverage is declared as module data rather than encoded in the engine | Unit | P0 | FR-001-AC-1 | ✅ |
 | TC-008 | Every `object_type` ships a skeleton and the skeleton directory carries nothing extra | Unit | P0 | FR-001-AC-1 | ✅ |

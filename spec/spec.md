@@ -77,11 +77,14 @@ This document specifies the requirements for `spec-objects-security`, a Filament
   lint columns. The names collide and the member sets are disjoint; a shared
   grading vocabulary is a decision for the two modules' common owner, and
   nothing here depends on the other module's members.
-- Releasing a `spec-artifacts-iso` distribution carrying the CR-012
-  module-manifest schema: `agent-ix/spec-artifacts-iso#36`. Until it ships, the
-  FR-035 gate runs against a pinned copy of that revision and a second test
-  proves the pin differs from the newest release only at the CR-012 pointers,
-  so the gate is narrowed to one known key rather than skipped.
+- Applying `filament-core-service`'s FR-035 module-manifest schema to this
+  manifest as a document. That schema is filament-core-service's, and this
+  repository holds no copy of it and depends on no package that redistributes
+  one (PLAT-902). Conformance to it is settled where it is applied, at
+  activation (FR-001-AC-2) — `🚧` here, needing a running filament-core. What is
+  executed is what the consumers accept, which is narrower and stands in for
+  nothing: Quire's registry loader (FR-003-AC-4, FR-003-AC-6). `quoin module
+  install` (FR-003-AC-5) is a Demonstration this repository cannot run.
 - Extraction of the declared-but-not-yet-extracted keys (`severity`,
   `likelihood`, `impact`, `status`, `level`, `trust_level`,
   `stride_category`, `effectiveness`, `lifecycle`, `material_ref`, and the
