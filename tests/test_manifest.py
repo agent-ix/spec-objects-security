@@ -2,21 +2,13 @@
 
 from __future__ import annotations
 
-import json
 import pathlib
 
 import pytest
 import yaml
-from jsonschema import Draft202012Validator
-from spec_artifacts_iso import module_manifest_schema
 
 PKG_ROOT = pathlib.Path(__file__).resolve().parent.parent / "spec_objects_security"
 MANIFEST_PATH = PKG_ROOT / "manifest.yaml"
-_PINNED_SCHEMA_PATH = (
-    pathlib.Path(__file__).resolve().parent
-    / "fixtures"
-    / "module-manifest.cr-012.schema.json"
-)
 
 
 @pytest.mark.trace("TC-002", "FR-001-AC-1")
@@ -48,88 +40,6 @@ def test_no_duplicate_object_type_names() -> None:
     """TC-004: FR-001-AC-1."""
     names = [ot["name"] for ot in _object_types()]
     assert len(names) == len(set(names)), f"duplicate names: {names}"
-
-
-@pytest.mark.trace("TC-005", "FR-001-AC-1")
-def test_manifest_validates_against_fr035_schema() -> None:
-    """TC-005: The manifest validates against the FR-035 module-manifest schema.
-
-    Until this test, **nothing validated this module.** 23 object types, 23
-    skeletons, a 15-term lexicon and a nav block were checked by
-    `manifest_version == "1.0.0"`, the module name, and a per-type
-    `name`/`data_schema` presence check.
-
-    **No skip and no escape hatch.** Both were deleted upstream for cause: a
-    `pytest.skip` when the schema could not be found reported this gate green
-    while it ran nothing (spec-artifacts-iso#15).
-
-    The schema is normally imported from `spec-artifacts-iso` package data so
-    there is one source. No released `spec-artifacts-iso` yet carries the
-    CR-012 revision that admits the `semantic` block and the reference-form
-    `data_schema` (`agent-ix/spec-artifacts-iso#36`), so the gate runs against
-    a pinned copy of that revision instead. The pin is not a relaxation: the
-    test below proves the pinned copy differs from the released one only at the
-    CR-012 pointers, and every other rule still runs.
-    """
-    manifest = yaml.safe_load(MANIFEST_PATH.read_text())
-    errors = list(Draft202012Validator(_pinned_schema()).iter_errors(manifest))
-    assert not errors, [
-        f"{'.'.join(str(p) for p in e.absolute_path)}: {e.message}" for e in errors
-    ]
-
-
-# Every JSON pointer at which the pinned CR-012 schema is allowed to differ
-# from the newest released one. Anything else is drift in the pin itself.
-_ADMITTED_PIN_DELTA = {
-    "#/description",
-    "#/properties/semantic",
-    "#/$defs/ObjectTypeEntry/properties/data_schema/type",
-    "#/$defs/ObjectTypeEntry/properties/data_schema/oneOf",
-    "#/$defs/ObjectTypeEntry/properties/data_schema/description",
-    "#/$defs/ArtifactTypeEntry/properties/data_schema/type",
-    "#/$defs/ArtifactTypeEntry/properties/data_schema/oneOf",
-    "#/$defs/ArtifactTypeEntry/properties/data_schema/description",
-    "#/$defs/TraceabilityModel/properties/source_exclude/description",
-    "#/$defs/TraceabilityModel/properties/source_exclude/items/allOf",
-}
-
-
-def _pinned_schema() -> dict:
-    return json.loads(_PINNED_SCHEMA_PATH.read_text())
-
-
-def _differences(released, pinned, path="#"):
-    if type(released) is not type(pinned):
-        return [path]
-    if isinstance(released, dict):
-        out = []
-        for key in sorted(set(released) | set(pinned)):
-            if key not in released or key not in pinned:
-                out.append(f"{path}/{key}")
-            else:
-                out += _differences(released[key], pinned[key], f"{path}/{key}")
-        return out
-    return [] if released == pinned else [path]
-
-
-@pytest.mark.trace("TC-005", "FR-001-AC-1")
-def test_the_pinned_schema_differs_from_the_release_only_where_admitted() -> None:
-    """The pin is the gate, so the pin itself is gated.
-
-    `agent-ix/spec-artifacts-iso#36` asks that no consumer weaken or skip its
-    FR-035 gate while waiting for a release, and that a pinned revision copy
-    prove it differs from the released schema only at the CR-012 pointers.
-    This is that proof. When #36 ships, this test fails with an empty delta and
-    the pin is deleted.
-    """
-    released = module_manifest_schema()
-    delta = set(_differences(released, _pinned_schema()))
-    assert delta, (
-        "the released spec-artifacts-iso now equals the pin: "
-        "agent-ix/spec-artifacts-iso#36 has shipped. Delete "
-        f"{_PINNED_SCHEMA_PATH.name} and read the schema from the package."
-    )
-    assert delta <= _ADMITTED_PIN_DELTA, delta - _ADMITTED_PIN_DELTA
 
 
 @pytest.mark.trace("TC-006", "FR-001-AC-1")

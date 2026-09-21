@@ -26,16 +26,14 @@ traceability rule keeps its meaning.
 ## Inputs
 
 - The emitted schemas and digests of [FR-002](./FR-002-emitted-json-schemas.md).
-- The module-manifest schema with the `semantic` block. Three consumers hold
-  their own copy — `spec-artifacts-iso` (the FR-035 gate this repository runs),
-  Quoin, and Quire — and they are **not** one byte set: the iso copy is a
-  superset that admits this module's top-level `traceability` and `lexicon`,
-  which the `filament-core-service` FR-035 copy does not. The parts this
-  requirement turns on, the `semantic` sub-schema and
-  `ObjectTypeEntry.data_schema`, are byte-identical across the three, so the
-  contract this ticket adds is judged the same way everywhere; the wider
-  divergence is real, is not this module's to reconcile, and is recorded rather
-  than papered over.
+- The module-manifest schema with the `semantic` block, owned by
+  `filament-core-service` under its FR-035. Quoin and Quire each carry a copy
+  and apply it when they read this manifest, and the copies are **not** one byte
+  set — `spec-artifacts-iso` holds a third that is a superset admitting this
+  module's top-level `traceability` and `lexicon`. That divergence is the
+  carriers' to reconcile. This repository holds no copy of the schema and
+  depends on no package that redistributes one, so it states no criterion over
+  the schema as a document (PLAT-902).
 
 ## Outputs
 
@@ -45,8 +43,6 @@ traceability rule keeps its meaning.
   twenty-three skeletons. It is a deliverable of this requirement, not an
   incidental copy: without it every locator, edge-vocabulary and additive
   criterion compares the manifest against itself.
-- `tests/fixtures/module-manifest.cr-012.schema.json`, the pinned FR-035
-  schema revision, deleted when `agent-ix/spec-artifacts-iso#36` releases it.
 
 ## Behavior
 
@@ -57,7 +53,7 @@ traceability rule keeps its meaning.
 - The manifest `version` SHALL be `0.2.0`, because the emitted `$id` embeds it and the previous version was `0.1.0`.
 - Every `body_extraction` locator present at version 0.1.0 SHALL remain present with the same `from`, heading, `language`, `required`, `multiple`, and `assert` facets.
 - The manifest SHALL carry the `traceability` block (`required_relations`, `acyclic_edges`) and every object type's `allowed_links` and `roles` unchanged. `agent-ix/spec-objects-safety` reads no field of this manifest today; what it shares is the `traceability` shape it mirrored from here and the verb `mitigates`, which `spec-artifacts-iso` FR-004 owns. The field with cross-repository consequence is `control.allowed_links.mitigates` — `[threat, risk, vulnerability]`, which excludes `hazard` and `failure_mode` — so changing it decides whether a security control can ever satisfy a safety coverage check. That is a cross-repository decision and is out of scope here.
-- The `data_schema` reference form and the `semantic` block SHALL be judged against the FR-035 module-manifest schema at the CR-012 revision (`agent-ix/spec-artifacts-iso` `6686f11`, itself copied from `filament-core-service` FR-035 CR-003 revision `a77f31e` as vendored by quoin `3e842ce`), pinned in this repository until `agent-ix/spec-artifacts-iso#36` releases it.
+- The `data_schema` reference form and the `semantic` block SHALL be judged by the consumer that reads them today: Quire's registry loader accepts the block and drops the module's object types when it is mutated (FR-003-AC-4, FR-003-AC-6). `quoin module install` (FR-003-AC-5) is a Demonstration this repository cannot run. No test here applies `filament-core-service`'s FR-035 schema as a document; that conformance is observed only at activation (FR-001-AC-2), which needs a running service.
 - Until `agent-ix/quire-rs#394` names a digest mismatch, the module SHALL assert digest equality against the shipped bytes at every build (FR-003-AC-2), so a mismatch cannot leave this repository even though a consumer would drop the object type silently.
 - Where an object type gains a locator after 0.1.0, that locator SHALL be `required: false`, so existing artifacts stay valid (the additions themselves are specified by FR-005).
 - The manifest SHALL load through Quire's registry loader with no `ArchetypeLoadFailure` for any object type and with the recorded schema digest equal to the manifest digest.
