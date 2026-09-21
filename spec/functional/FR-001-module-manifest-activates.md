@@ -25,7 +25,7 @@ The system **SHALL** publish a Filament Module manifest (`spec_objects_security/
 
 ## Behavior
 
-The manifest **SHALL** conform to the module-manifest schema filament-core-service applies at activation. That schema belongs to filament-core-service; this module holds no copy of it and depends on no package that redistributes one, so conformance is observed at `POST /api/v1/modules/activate` (FR-001-AC-2) and, for the `semantic` contract, at the quire loader (FR-003). Re-activation **SHALL** be a no-op (idempotent by content hash per FR-026-AC-1).
+The manifest **SHALL** conform to the module-manifest schema filament-core-service applies at activation. That schema belongs to filament-core-service; this module holds no copy of it and depends on no package that redistributes one, so conformance is settled at `POST /api/v1/modules/activate` (FR-001-AC-2), which needs a running filament-core and is `🚧` in this repository's matrix. What is executed here is narrower and does not stand in for it: the quire loader accepts the `semantic` contract and refuses it when mutated (FR-003-AC-4, FR-003-AC-6). Re-activation **SHALL** be a no-op (idempotent by content hash per FR-026-AC-1).
 
 ## Acceptance Criteria
 

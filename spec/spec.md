@@ -80,10 +80,11 @@ This document specifies the requirements for `spec-objects-security`, a Filament
 - Applying `filament-core-service`'s FR-035 module-manifest schema to this
   manifest as a document. That schema is filament-core-service's, and this
   repository holds no copy of it and depends on no package that redistributes
-  one (PLAT-902). Conformance to it is observed where it is applied: at
-  activation (FR-001-AC-2), and at the consumers that carry it — Quire's
-  registry loader (FR-003-AC-4, FR-003-AC-6) and `quoin module install`
-  (FR-003-AC-5).
+  one (PLAT-902). Conformance to it is settled where it is applied, at
+  activation (FR-001-AC-2) — `🚧` here, needing a running filament-core. What is
+  executed is what the consumers accept, which is narrower and stands in for
+  nothing: Quire's registry loader (FR-003-AC-4, FR-003-AC-6). `quoin module
+  install` (FR-003-AC-5) is a Demonstration this repository cannot run.
 - Extraction of the declared-but-not-yet-extracted keys (`severity`,
   `likelihood`, `impact`, `status`, `level`, `trust_level`,
   `stride_category`, `effectiveness`, `lifecycle`, `material_ref`, and the
