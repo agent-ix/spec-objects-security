@@ -337,6 +337,8 @@ def test_the_repository_holds_no_corpus_or_vendored_fixture():
         "README.md",
         "AGENTS.md",
         "CLAUDE.md",
+        "CLA.md",
+        "CONTRIBUTING.md",
         "LICENSE",
         ".gitattributes",
         ".gitignore",
