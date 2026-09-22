@@ -34,7 +34,7 @@ engine refuse.
 - Negative fixtures `tests/fixtures/negative/<type>-<case>.md`, each with
   frontmatter `expect:` naming the diagnostic code or reason the fixture must
   produce.
-- The Quire wheel 0.47.1 or later, exposing `extract_semantic`,
+- The Quire wheel 0.47.x (0.47.1 or later), exposing `extract_semantic`,
   `validate_document`, and `Registry`, declared as a dev dependency resolved
   from `internal-pypi` (see Behavior).
 
@@ -64,7 +64,7 @@ engine refuse.
 - The module SHALL declare `quire` in `pyproject.toml` as a dev dependency pinned to the `internal-pypi` source, so `poetry install` provisions the engine and no lookup falls through to public PyPI, where `quire` names an unrelated package.
 - If the installed Quire wheel is absent or lacks `extract_semantic`, then every semantic test SHALL fail — not skip — with a message naming the missing function and `poetry install`, so that no matrix row can pass or be reported green without the engine under test. This is the disposition of `agent-ix/spec-objects-security#10`, which asked for exactly this and named the wrong blame in its skip message.
 - Only a criterion this specification names as blocked SHALL be exempt from the fail-rather-than-skip rule above, and then only as an explicit expected failure naming the blocking issue.
-- The gate that runs this suite SHALL be the `make test` and `make lint` targets, runnable both locally and by the shared `semantic-module-ci` workflow this repository's `ci.yml` now dispatches to, which installs the declared `quire` dependency and runs `pytest` with no side-installed engine.
+- The gate that runs this suite SHALL be the shared `semantic-module-ci` workflow this repository's `ci.yml` dispatches to, whose `pytest`, `schemas-check`, `black`, and `ruff` jobs run `poetry run pytest`, `make schemas-check`, `poetry run black --check .`, and `poetry run ruff check .` respectively against the declared `quire` dependency, with no side-installed engine.
 
 ## Constraints
 

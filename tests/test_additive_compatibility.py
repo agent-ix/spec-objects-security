@@ -92,7 +92,7 @@ def test_no_baseline_skeleton_yields_a_record_invalid_finding(quire_engine):
 @pytest.mark.trace("TC-103", "NFR-001-AC-4")
 def test_a_legacy_form_declaring_object_is_not_an_error(quire_engine):
     """The engine defect NFR-001 carries rather than works around: once a
-    legacy-form artifact declares `object:`, quire 0.46.0 assembles its record
+    legacy-form artifact declares `object:`, quire 0.47.1 assembles its record
     as `{}` and validates it unconditionally, so it fails
     `semantic.record-invalid` at error severity even under
     `legacy_forms: warning`. Strict xfail, so the day the engine changes this

@@ -330,9 +330,9 @@ def test_no_npmrc_no_local_refs_and_exact_pins():
 @pytest.mark.trace("TC-032", "FR-002-CON-4")
 def test_the_lockfile_resolves_public_packages_from_npmjs():
     """`@agent-ix/semantic-core` 0.3.0 is the first real, CI-reachable
-    release (GitHub Packages, mirrored through npm.ix for local dev); the
-    committed lockfile resolves it from `npm.pkg.github.com` directly, not
-    the private dev-only mirror `0.1.0`/`0.2.0` were confined to."""
+    release, published to GitHub Packages; the committed lockfile resolves
+    it from `npm.pkg.github.com` directly, not the private dev-only mirror
+    `0.1.0`/`0.2.0` were confined to."""
     lock = json.loads((REPO_ROOT / "package-lock.json").read_text())
     offenders = []
     for name, entry in lock["packages"].items():
