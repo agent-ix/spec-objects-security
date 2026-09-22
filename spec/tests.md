@@ -204,12 +204,10 @@ the Python package only: neither Node script is measured by it.
 ## Test Environment
 
 Every `Integration` row that names Quire runs against the Quire wheel FR-005
-Inputs pins, provisioned by `make dev-quire`. That wheel is not on any index
-this repository may commit a dependency against (`internal-pypi` serves 0.33.0
-at most); `agent-ix/quire-rs#392` is the blocking issue. The suite **fails**
-rather than skips when `extract_semantic` is absent, so no row here can be
-reported green without the engine under test. This is the disposition of
-`agent-ix/spec-objects-security#10`.
+Inputs pins, a dev dependency resolved from `internal-pypi` by `poetry install`.
+The suite **fails** rather than skips when `extract_semantic` is absent, so no
+row here can be reported green without the engine under test. This is the
+disposition of `agent-ix/spec-objects-security#10`.
 
 Rows over the record keys the extractor does not populate (`severity`,
 `likelihood`, `impact`, `status`, `level`, `trust_level`, `stride_category`,

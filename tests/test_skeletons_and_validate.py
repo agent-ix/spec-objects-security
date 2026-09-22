@@ -14,9 +14,10 @@ object_type:
 * required frontmatter fields are present, ``type`` equals the type
   name, and bodies are substantive (no placeholder tokens);
 * roundtrip: each skeleton passes ``quire.validate_document``. The wheel is
-  provisioned by ``make dev-quire`` and the tests **fail** without it; the old
-  ``pytest.skip`` reported this gate green while it ran nothing, which is the
-  defect agent-ix/spec-objects-security#10 named.
+  a dev dependency resolved from ``internal-pypi`` by ``poetry install``, and
+  the tests **fail** without it; the old ``pytest.skip`` reported this gate
+  green while it ran nothing, which is the defect
+  agent-ix/spec-objects-security#10 named.
 """
 
 from __future__ import annotations
@@ -27,7 +28,7 @@ import re
 import pytest
 import yaml
 
-from tests.conftest import require_quire, semantic_core_engine_xfail
+from tests.conftest import require_quire
 
 PKG_ROOT = pathlib.Path(__file__).resolve().parent.parent / "spec_objects_security"
 MANIFEST_PATH = PKG_ROOT / "manifest.yaml"
@@ -229,27 +230,21 @@ def _quire_doc_validator():
 
     agent-ix/spec-objects-security#10: this returned ``None`` and the callers
     skipped, so twenty-three unvalidated skeletons reported green. The wheel is
-    provisioned by ``make dev-quire`` (agent-ix/quire-rs#392 tracks publishing
-    it to an index this repository may depend on).
+    a dev dependency resolved from ``internal-pypi`` by ``poetry install``.
     """
     return require_quire()
 
 
 @pytest.mark.trace("TC-013", "FR-001-AC-1")
 @pytest.mark.parametrize("name", _NAMES, ids=lambda n: n)
-@semantic_core_engine_xfail()
 def test_roundtrip_skeleton_validates(name: str) -> None:
-    """TC-013: Each filled skeleton passes validate_document against this module.
-
-    Skips when the installed quire wheel predates the markdown-default
-    validator; quire is intentionally not a dependency of this pack."""
+    """TC-013: Each filled skeleton passes validate_document against this module."""
     quire = _quire_doc_validator()
     res = quire.validate_document(name, str(PKG_ROOT), _skeleton_text(name))
     assert res["is_valid"], res["errors"]
 
 
 @pytest.mark.trace("TC-014", "FR-001-AC-1")
-@semantic_core_engine_xfail()
 def test_roundtrip_mutation_fails() -> None:
     """TC-014: Deleting the required Schema code block from jwt_claim fails validation
     with a reason naming the missing locator."""

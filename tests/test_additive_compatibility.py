@@ -19,7 +19,6 @@ from tests.conftest import (
     load_manifest,
     locators,
     object_type,
-    semantic_core_engine_xfail,
 )
 
 BASELINE_MANIFEST = yaml.safe_load((BASELINE_DIR / "manifest.yaml").read_text())
@@ -64,7 +63,6 @@ def test_zero_traceability_or_edge_vocabulary_bytes_changed():
 
 
 @pytest.mark.trace("TC-102", "NFR-001-AC-3")
-@semantic_core_engine_xfail()
 def test_every_baseline_skeleton_validates_under_the_new_manifest(quire_engine):
     for path in BASELINE_SKELETONS:
         text = path.read_text()
@@ -75,7 +73,6 @@ def test_every_baseline_skeleton_validates_under_the_new_manifest(quire_engine):
 
 
 @pytest.mark.trace("TC-103", "NFR-001-AC-4")
-@semantic_core_engine_xfail()
 def test_no_baseline_skeleton_yields_a_record_invalid_finding(quire_engine):
     """It holds because no 0.1.0 skeleton declares frontmatter `object:`, so
     Quire runs headings-only validation and never assembles a typed record.

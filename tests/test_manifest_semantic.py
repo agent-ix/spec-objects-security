@@ -23,7 +23,6 @@ from tests.conftest import (
     locators,
     object_type,
     object_types,
-    semantic_core_engine_xfail,
     sha256_of,
 )
 
@@ -113,7 +112,6 @@ def test_the_edge_vocabulary_and_traceability_are_frozen():
 
 
 @pytest.mark.trace("TC-044", "FR-003-AC-4")
-@semantic_core_engine_xfail()
 def test_the_registry_lists_every_archetype_and_no_skeleton_fails_to_load(
     quire_engine,
 ):
