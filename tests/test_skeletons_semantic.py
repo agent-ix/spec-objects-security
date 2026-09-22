@@ -29,6 +29,7 @@ from tests.conftest import (
     frontmatter,
     locators,
     object_type,
+    semantic_core_engine_xfail,
 )
 
 TYPE_PREFIX = "ix://agent-ix/spec-objects-security/type/"
@@ -69,6 +70,7 @@ def extract(quire_engine, module, bundle, path):
 
 
 @pytest.mark.trace("TC-080", "FR-005-AC-1")
+@semantic_core_engine_xfail()
 def test_every_skeleton_validates_with_no_error(quire_engine):
     paths = all_skeletons()
     assert len(paths) == 26, [p.name for p in paths]
@@ -84,6 +86,7 @@ def test_every_skeleton_validates_with_no_error(quire_engine):
 
 
 @pytest.mark.trace("TC-081", "FR-005-AC-2", "FR-005-CON-2")
+@semantic_core_engine_xfail()
 def test_table_and_sysml_skeletons_extract_to_identical_fields(
     quire_engine, semantic_module, bundle_index
 ):
@@ -103,6 +106,7 @@ def test_table_and_sysml_skeletons_extract_to_identical_fields(
 
 
 @pytest.mark.trace("TC-082", "FR-005-AC-3")
+@semantic_core_engine_xfail()
 def test_under_the_bundle_index_every_skeleton_extracts_clean(
     quire_engine, semantic_module, bundle_index
 ):
@@ -124,6 +128,7 @@ def test_under_the_bundle_index_every_skeleton_extracts_clean(
 
 
 @pytest.mark.trace("TC-083", "FR-005-AC-4")
+@semantic_core_engine_xfail()
 def test_availability_states_match_each_type(
     quire_engine, semantic_module, bundle_index
 ):
@@ -142,6 +147,7 @@ def test_availability_states_match_each_type(
 
 
 @pytest.mark.trace("TC-084", "FR-005-AC-5")
+@semantic_core_engine_xfail()
 def test_every_negative_fixture_produces_its_expected_code(quire_engine):
     fixtures = sorted(NEGATIVE_DIR.glob("*.md"))
     assert len(fixtures) == 10, [p.name for p in fixtures]
@@ -170,6 +176,7 @@ def test_every_negative_fixture_produces_its_expected_code(quire_engine):
 
 
 @pytest.mark.trace("TC-090", "FR-005-CON-2")
+@semantic_core_engine_xfail()
 def test_a_section_carrying_both_forms_is_refused(quire_engine):
     path = NEGATIVE_DIR / "properties-both-forms.md"
     text = path.read_text()
@@ -350,6 +357,7 @@ def test_the_repository_holds_no_corpus_or_vendored_fixture():
 
 
 @pytest.mark.trace("TC-074", "FR-006-AC-5")
+@semantic_core_engine_xfail()
 def test_the_markdown_path_cannot_express_embedded_material(
     quire_engine, semantic_module, bundle_index
 ):

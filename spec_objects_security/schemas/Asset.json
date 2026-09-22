@@ -6,7 +6,7 @@
     "fields": {
       "type": "array",
       "items": {
-        "$ref": "https://schemas.agent-ix.org/semantic-core/0.1.0/FieldDecl.json"
+        "$ref": "https://schemas.agent-ix.org/semantic-core/0.3.0/FieldDecl.json"
       },
       "minItems": 1,
       "contains": {
@@ -16,26 +16,26 @@
     "relations": {
       "type": "array",
       "items": {
-        "$ref": "https://schemas.agent-ix.org/semantic-core/0.1.0/RelationDecl.json"
+        "$ref": "https://schemas.agent-ix.org/semantic-core/0.3.0/RelationDecl.json"
       }
     },
     "clauses": {
       "type": "array",
       "items": {
-        "$ref": "https://schemas.agent-ix.org/semantic-core/0.1.0/ClauseRef.json"
+        "$ref": "https://schemas.agent-ix.org/semantic-core/0.3.0/ClauseRef.json"
       }
     },
     "operations": {
       "type": "array",
       "items": {
-        "$ref": "https://schemas.agent-ix.org/semantic-core/0.1.0/OperationDecl.json"
+        "$ref": "https://schemas.agent-ix.org/semantic-core/0.3.0/OperationDecl.json"
       }
     },
     "classification": {
       "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/ConfidentialityLevel.json"
     },
     "owner": {
-      "$ref": "https://schemas.agent-ix.org/semantic-core/0.1.0/SemanticId.json"
+      "$ref": "https://schemas.agent-ix.org/semantic-core/0.3.0/SemanticId.json"
     }
   },
   "required": [

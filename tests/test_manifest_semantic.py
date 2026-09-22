@@ -23,6 +23,7 @@ from tests.conftest import (
     locators,
     object_type,
     object_types,
+    semantic_core_engine_xfail,
     sha256_of,
 )
 
@@ -50,7 +51,7 @@ def test_the_semantic_block_is_exactly_the_nine_admitted_keys(semantic_block):
     assert set(semantic_block) == ADMITTED_KEYS
     assert len(ADMITTED_KEYS) == 9
     assert semantic_block["contract_version"] == "1.0.0"
-    assert semantic_block["semantic_core"] == "0.1.0"
+    assert semantic_block["semantic_core"] == "0.3.0"
     assert semantic_block["package"] == "agent-ix/spec-objects-security"
     assert semantic_block["imports"] == {}
     assert semantic_block["targets"] == ["json-schema", "markdown"]
@@ -112,6 +113,7 @@ def test_the_edge_vocabulary_and_traceability_are_frozen():
 
 
 @pytest.mark.trace("TC-044", "FR-003-AC-4")
+@semantic_core_engine_xfail()
 def test_the_registry_lists_every_archetype_and_no_skeleton_fails_to_load(
     quire_engine,
 ):

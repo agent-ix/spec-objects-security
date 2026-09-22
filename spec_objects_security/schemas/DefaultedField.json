@@ -4,7 +4,7 @@
   "type": "object",
   "properties": {
     "default": {
-      "$ref": "https://schemas.agent-ix.org/semantic-core/0.1.0/DefaultDecl.json"
+      "$ref": "https://schemas.agent-ix.org/semantic-core/0.3.0/DefaultDecl.json"
     }
   },
   "required": [

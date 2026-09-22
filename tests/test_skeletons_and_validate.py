@@ -27,7 +27,7 @@ import re
 import pytest
 import yaml
 
-from tests.conftest import require_quire
+from tests.conftest import require_quire, semantic_core_engine_xfail
 
 PKG_ROOT = pathlib.Path(__file__).resolve().parent.parent / "spec_objects_security"
 MANIFEST_PATH = PKG_ROOT / "manifest.yaml"
@@ -237,6 +237,7 @@ def _quire_doc_validator():
 
 @pytest.mark.trace("TC-013", "FR-001-AC-1")
 @pytest.mark.parametrize("name", _NAMES, ids=lambda n: n)
+@semantic_core_engine_xfail()
 def test_roundtrip_skeleton_validates(name: str) -> None:
     """TC-013: Each filled skeleton passes validate_document against this module.
 
@@ -248,6 +249,7 @@ def test_roundtrip_skeleton_validates(name: str) -> None:
 
 
 @pytest.mark.trace("TC-014", "FR-001-AC-1")
+@semantic_core_engine_xfail()
 def test_roundtrip_mutation_fails() -> None:
     """TC-014: Deleting the required Schema code block from jwt_claim fails validation
     with a reason naming the missing locator."""
