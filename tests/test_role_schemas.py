@@ -21,7 +21,6 @@ from tests.conftest import (
     SCHEMAS_DIR,
     SEMANTIC_CORE_BASE,
     field,
-    semantic_core_engine_xfail,
 )
 
 MODELS = [MODEL_OF[name] for name in OBJECT_TYPES]
@@ -237,7 +236,6 @@ def test_every_seal_refuses_a_key_its_type_does_not_list(schema_registry):
 
 
 @pytest.mark.trace("TC-061", "FR-004-AC-12")
-@semantic_core_engine_xfail()
 def test_an_unresolved_placeholder_is_a_semantic_id_and_a_bare_token_is_not(
     schema_registry, quire_engine, semantic_module
 ):

@@ -26,8 +26,7 @@ build.
 - `typespec/main.tsp`: namespace `AgentIx.SpecObjects.Security`, decorated
   `@jsonSchema("https://schemas.agent-ix.org/agent-ix/spec-objects-security/<version>/")`
   where `<version>` is the manifest `version`.
-- `@agent-ix/semantic-core` 0.3.0 from GitHub Packages, mirrored through
-  npm.ix for local dev (`FieldDecl`, `TypeRef`,
+- `@agent-ix/semantic-core` 0.3.0 from GitHub Packages (`FieldDecl`, `TypeRef`,
   `Multiplicity`, `ConstraintDecl`, `DefaultDecl`, `RelationDecl`,
   `OperationDecl`, `ClauseRef`, `EnumValue`, `KernelScalar`, `Identifier`,
   `SemanticId`).
@@ -88,7 +87,7 @@ build.
 | FR-002-CON-1 | The build SHALL use the official `@typespec/json-schema` emitter only; no custom emitter and no hand-edited emitted file. | Architecture | Inspection |
 | FR-002-CON-2 | The repository SHALL carry no `.npmrc`, no `file:` or `link:` dependency, and no upper version bound on the TypeSpec toolchain beyond the exact pin. | Packaging | Inspection |
 | FR-002-CON-3 | Emission SHALL be deterministic: two runs over one source produce byte-identical files. | Integrity | Test |
-| FR-002-CON-4 | `package-lock.json` SHALL resolve every public package from `registry.npmjs.org`; `@agent-ix/semantic-core` resolves from `npm.pkg.github.com`, the real GitHub Packages registry `0.3.0` publishes to (`agent-ix/filament-core-data#11`) and the one CI actually authenticates against, so `make schemas`/`make schemas-check` run identically in the GitHub workflow and on a machine whose user-level npm config mirrors `@agent-ix` through npm.ix. | Packaging | Inspection |
+| FR-002-CON-4 | `package-lock.json` SHALL resolve every public package from `registry.npmjs.org`; `@agent-ix/semantic-core` resolves from `npm.pkg.github.com`, the real GitHub Packages registry `0.3.0` publishes to (`agent-ix/filament-core-data#11`) and the one CI actually authenticates against, so `make schemas`/`make schemas-check` run identically in the GitHub workflow and on a machine authenticated to GitHub Packages. | Packaging | Inspection |
 | FR-002-CON-5 | The `$id` base SHALL embed the manifest `version`, bumped as one atomic regeneration (source base, manifest version, schemas, digests, `toolchain.json` in one commit). | Compatibility | Test |
 
 ## Acceptance Criteria

@@ -34,9 +34,9 @@ engine refuse.
 - Negative fixtures `tests/fixtures/negative/<type>-<case>.md`, each with
   frontmatter `expect:` naming the diagnostic code or reason the fixture must
   produce.
-- The Quire wheel 0.46.0 or later, exposing `extract_semantic`,
-  `validate_document`, and `Registry`, installed into the module's Python
-  environment by `make dev-quire` (see Behavior).
+- The Quire wheel 0.47.x (0.47.1 or later), exposing `extract_semantic`,
+  `validate_document`, and `Registry`, declared as a dev dependency resolved
+  from `internal-pypi` (see Behavior).
 
 ## Outputs
 
@@ -61,11 +61,10 @@ engine refuse.
 - No skeleton SHALL carry material that is or resembles a live credential.
 - Every secret, key, token, and claim skeleton SHALL reference its material by locator only.
 - Each negative fixture SHALL fail with a diagnostic whose code equals the fixture's `expect:` value, covering at least: an asset without an identity row (`semantic.record-invalid`), an audit event without a `Timestamp` row (`semantic.record-invalid`), an audit event with an identity row (`semantic.record-invalid`), a threat without a `stride_category` row (`semantic.record-invalid`), a control without an `effectiveness` row (`semantic.record-invalid`), a policy whose `## Invariants` declares no clause (`semantic.record-invalid`), a secret attempting to embed material through a `default:` constraint cell (`semantic.unknown-constraint-keyword`), a `## Properties` section carrying both a table and a fence (`semantic.properties-both-forms`), an operation whose `Post:` names an undeclared clause (`semantic.dangling-clause-ref`), and a `Type` token that is not an `Identifier` (`semantic.invalid-type-token`); the last three re-check the engine's published diagnostics under this module's schemas rather than re-specify them.
-- The repository SHALL provide a `make dev-quire` target that installs the Quire wheel this requirement names into the module's Python environment, so the semantic test dependency is provisioned by a documented command rather than by an undeclared side install.
-- If the installed Quire wheel is absent or lacks `extract_semantic`, then every semantic test SHALL fail — not skip — with a message naming the missing function, the `make dev-quire` target, and `agent-ix/quire-rs#392`, so that no matrix row can pass or be reported green without the engine under test.
-- While no committable index carries Quire 0.46.0, the module SHALL NOT declare `quire` in `pyproject.toml`. `internal-pypi` (the index this repo's CI uses) serves 0.33.0 at most and no `quire-rs` tag carries the semantic layer, so the wheel exists only on the dev-only `pypi.ix`; `agent-ix/quire-rs#392` is the blocking issue, and its resolution replaces the `make dev-quire` target with a committed dev dependency. This is the disposition of `agent-ix/spec-objects-security#10`, which asked for exactly this and named the wrong blame in its skip message.
+- The module SHALL declare `quire` in `pyproject.toml` as a dev dependency pinned to the `internal-pypi` source, so `poetry install` provisions the engine and no lookup falls through to public PyPI, where `quire` names an unrelated package.
+- If the installed Quire wheel is absent or lacks `extract_semantic`, then every semantic test SHALL fail — not skip — with a message naming the missing function and `poetry install`, so that no matrix row can pass or be reported green without the engine under test. This is the disposition of `agent-ix/spec-objects-security#10`, which asked for exactly this and named the wrong blame in its skip message.
 - Only a criterion this specification names as blocked SHALL be exempt from the fail-rather-than-skip rule above, and then only as an explicit expected failure naming the blocking issue.
-- The gate that runs this suite SHALL be the local `make test` and `make lint` targets, which is a deliberate consequence rather than an oversight: this repository's GitHub workflows are manual-only, and the shared `lib-ci` workflow installs declared dependencies and runs `pytest` without `make dev-quire`, so an automatic CI run would be red by construction until `agent-ix/quire-rs#392` lands. Making the suite skip to keep CI green is the defect `agent-ix/spec-objects-security#10` names, and is refused.
+- The gate that runs this suite SHALL be the shared `semantic-module-ci` workflow this repository's `ci.yml` dispatches to, whose `pytest`, `schemas-check`, `black`, and `ruff` jobs run `poetry run pytest`, `make schemas-check`, `poetry run black --check .`, and `poetry run ruff check .` respectively against the declared `quire` dependency, with no side-installed engine.
 
 ## Constraints
 
@@ -93,5 +92,4 @@ engine refuse.
 
 - **Upstream**: [FR-003](./FR-003-semantic-manifest-contract.md), [FR-004](./FR-004-role-schemas.md), [FR-006](./FR-006-security-safe-declarations.md); quoin FR-071/FR-072 (`ix://agent-ix/quoin/FR-071`, `ix://agent-ix/quoin/FR-072`); quire-rs FR-070/FR-071/FR-072
 - **Upstream (unpinned neighbour contract)**: the `semantic.record-invalid` diagnostic this requirement's Outputs and FR-005-AC-1 depend on exists in quire-rs source but in no quire-rs acceptance criterion; `agent-ix/quire-rs#391` is where that record-validation contract, and the code naming it, are being settled.
-- **Upstream (provisioning)**: `agent-ix/quire-rs#392` — publish the 0.46.0 wheel to `internal-pypi` so `quire` can become a committed dev dependency.
 - **Downstream**: `agent-ix/quire-contract-ir#52` and `agent-ix/filament-core-data#36` consume the skeletons read-only
