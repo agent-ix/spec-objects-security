@@ -135,7 +135,7 @@ the Python package only: neither Node script is measured by it.
 | TC-019 | Re-activation produces the same SHA-256 content hash | Integration | P1 | IT-001-AC-2 | 🚧 needs a running filament-core |
 | TC-020 | Emitted set equals the twenty-three object-type models plus the declared support models; `toolchain.json` records compiler and emitter 1.15.0 | Unit | P0 | FR-002-AC-1 | ✅ |
 | TC-021 | Every shipped schema declares the 2020-12 `$schema` and the `$id` matching its file name under the manifest-version base | Unit | P0 | FR-002-AC-2 | ✅ |
-| TC-022 | Every `$ref` resolves to a shipped sibling or semantic-core 0.1.0 | Unit | P0 | FR-002-AC-3 | ✅ |
+| TC-022 | Every `$ref` resolves to a shipped sibling or semantic-core 0.3.0 | Unit | P0 | FR-002-AC-3 | ✅ |
 | TC-023 | `make schemas-check` exits zero on the committed tree and non-zero naming a mutated schema or digest | Integration | P1 | FR-002-AC-4 | ✅ |
 | TC-024 | A `@jsonSchema` base version differing from the manifest version fails the generator naming both | Integration | P1 | FR-002-AC-5 | ✅ |
 | TC-025 | The built wheel contains every exported schema file | Integration | P1 | FR-002-AC-6 | ✅ |
@@ -145,7 +145,7 @@ the Python package only: neither Node script is measured by it.
 | TC-029 | Two generator runs over one source are byte-identical | Integration | P1 | FR-002-CON-3 | ✅ |
 | TC-030 | The build uses the official `@typespec/json-schema` emitter only and no emitted file is hand-edited | Static | P2 | FR-002-CON-1 | ✅ |
 | TC-031 | No `.npmrc`, no `file:`/`link:` dependency, exact toolchain pins in `package.json` | Static | P2 | FR-002-CON-2 | ✅ |
-| TC-032 | `package-lock.json` resolves every package from npmjs except `@agent-ix/semantic-core` (npm.ix) | Unit | P2 | FR-002-CON-4 | ✅ |
+| TC-032 | `package-lock.json` resolves every package from npmjs except `@agent-ix/semantic-core` (GitHub Packages, `npm.pkg.github.com`) | Unit | P2 | FR-002-CON-4 | ✅ |
 | TC-033 | No acceptance test hard-codes the `$id` version segment; each reads it from the manifest `version` | Static | P2 | FR-002-CON-5 | ✅ |
 | TC-034 | A generator run changes only `digest:` lines in `manifest.yaml` and writes nothing outside `schemas/` | Integration | P1 | FR-002-AC-10 | ✅ |
 | TC-035 | `.gitattributes` pins `eol=lf` and `npm pack` leaves nothing staged at the repository root | Unit | P1 | FR-002-AC-11 | ✅ |

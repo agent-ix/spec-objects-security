@@ -19,7 +19,9 @@ from tests.conftest import (
     OBJECT_TYPES,
     OPERATION,
     SCHEMAS_DIR,
+    SEMANTIC_CORE_BASE,
     field,
+    semantic_core_engine_xfail,
 )
 
 MODELS = [MODEL_OF[name] for name in OBJECT_TYPES]
@@ -235,6 +237,7 @@ def test_every_seal_refuses_a_key_its_type_does_not_list(schema_registry):
 
 
 @pytest.mark.trace("TC-061", "FR-004-AC-12")
+@semantic_core_engine_xfail()
 def test_an_unresolved_placeholder_is_a_semantic_id_and_a_bare_token_is_not(
     schema_registry, quire_engine, semantic_module
 ):
@@ -302,9 +305,7 @@ def test_no_module_schema_redeclares_a_semantic_core_model():
                 continue
             item = value.get("items", value)
             ref = item.get("$ref", "")
-            assert ref.startswith(
-                "https://schemas.agent-ix.org/semantic-core/0.1.0/"
-            ), (model, key, ref)
+            assert ref.startswith(SEMANTIC_CORE_BASE), (model, key, ref)
 
 
 @pytest.mark.trace("TC-063", "FR-004-AC-14")

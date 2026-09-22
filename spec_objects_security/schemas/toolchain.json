@@ -9,7 +9,7 @@
   },
   "semanticCore": {
     "name": "@agent-ix/semantic-core",
-    "version": "0.1.0"
+    "version": "0.3.0"
   },
   "base": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/",
   "normalization": {
@@ -42,7 +42,7 @@
       "TrustBoundary.json",
       "Vulnerability.json"
     ],
-    "note": "rewrote relative $id/$ref to the module base or semantic-core 0.1.0"
+    "note": "rewrote relative $id/$ref to the module base or semantic-core 0.3.0"
   },
   "files": [
     "Asset.json",
@@ -93,5 +93,5 @@
     "TrustLevelField.json",
     "Vulnerability.json"
   ],
-  "digest": "sha256:6de8dd65c1436d820dd439597f88759c2c009c91cf4e508776594f8382f58274"
+  "digest": "sha256:cf9cc6011a068155fac6918c69f5f7ea54805650a5812e9e63633d1cdff2c839"
 }

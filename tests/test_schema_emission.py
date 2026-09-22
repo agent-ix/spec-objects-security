@@ -25,6 +25,7 @@ from tests.conftest import (
     REPO_ROOT,
     SCHEMAS_DIR,
     SEMANTIC_CORE_BASE,
+    load_manifest,
     manifest_version,
     module_base,
 )
@@ -111,7 +112,11 @@ def test_emitted_set_equals_the_declared_models():
     ]
     assert record["compiler"]["version"] == "1.15.0"
     assert record["emitter"]["version"] == "1.15.0"
-    assert record["semanticCore"]["version"] == "0.1.0"
+    # Read from the manifest rather than hard-coded, so a semantic-core bump
+    # churns no test (the same principle FR-002-CON-5 states for the $id
+    # version segment).
+    expected = load_manifest()["semantic"]["semantic_core"]
+    assert record["semanticCore"]["version"] == expected
 
 
 @pytest.mark.trace("TC-021", "FR-002-AC-2")
@@ -324,6 +329,10 @@ def test_no_npmrc_no_local_refs_and_exact_pins():
 
 @pytest.mark.trace("TC-032", "FR-002-CON-4")
 def test_the_lockfile_resolves_public_packages_from_npmjs():
+    """`@agent-ix/semantic-core` 0.3.0 is the first real, CI-reachable
+    release (GitHub Packages, mirrored through npm.ix for local dev); the
+    committed lockfile resolves it from `npm.pkg.github.com` directly, not
+    the private dev-only mirror `0.1.0`/`0.2.0` were confined to."""
     lock = json.loads((REPO_ROOT / "package-lock.json").read_text())
     offenders = []
     for name, entry in lock["packages"].items():
@@ -331,7 +340,7 @@ def test_the_lockfile_resolves_public_packages_from_npmjs():
         if not resolved:
             continue
         if "@agent-ix/" in name:
-            assert resolved.startswith("http://npm.ix/"), name
+            assert resolved.startswith("https://npm.pkg.github.com/"), name
         elif not resolved.startswith("https://registry.npmjs.org/"):
             offenders.append((name, resolved))
     assert not offenders, offenders

@@ -6,7 +6,7 @@
     "fields": {
       "type": "array",
       "items": {
-        "$ref": "https://schemas.agent-ix.org/semantic-core/0.1.0/FieldDecl.json"
+        "$ref": "https://schemas.agent-ix.org/semantic-core/0.3.0/FieldDecl.json"
       },
       "minItems": 1,
       "contains": {
@@ -16,26 +16,26 @@
     "clauses": {
       "type": "array",
       "items": {
-        "$ref": "https://schemas.agent-ix.org/semantic-core/0.1.0/ClauseRef.json"
+        "$ref": "https://schemas.agent-ix.org/semantic-core/0.3.0/ClauseRef.json"
       }
     },
     "operations": {
       "type": "array",
       "items": {
-        "$ref": "https://schemas.agent-ix.org/semantic-core/0.1.0/OperationDecl.json"
+        "$ref": "https://schemas.agent-ix.org/semantic-core/0.3.0/OperationDecl.json"
       }
     },
     "lifecycle": {
       "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/SecretLifecycle.json"
     },
     "material_ref": {
-      "$ref": "https://schemas.agent-ix.org/semantic-core/0.1.0/SemanticId.json"
+      "$ref": "https://schemas.agent-ix.org/semantic-core/0.3.0/SemanticId.json"
     },
     "custodian": {
-      "$ref": "https://schemas.agent-ix.org/semantic-core/0.1.0/SemanticId.json"
+      "$ref": "https://schemas.agent-ix.org/semantic-core/0.3.0/SemanticId.json"
     },
     "algorithm": {
-      "$ref": "https://schemas.agent-ix.org/semantic-core/0.1.0/Identifier.json"
+      "$ref": "https://schemas.agent-ix.org/semantic-core/0.3.0/Identifier.json"
     }
   },
   "required": [

@@ -4,7 +4,7 @@ version: 0.2.0
 description: 'Filament Module: tier-2 security and identity ObjectTypes (threats, controls, auth flows, secrets, policies)'
 semantic:
   contract_version: 1.0.0
-  semantic_core: 0.1.0
+  semantic_core: 0.3.0
   package: agent-ix/spec-objects-security
   exports:
   - auth_flow
@@ -55,7 +55,7 @@ object_types:
     references: [auth_flow]
   data_schema:
     schema: schemas/AuthFlow.json
-    digest: sha256:e3030e70b3b0d2e31172f9fbc6871f3eaec7ef8507c209574894471be1cd53a4
+    digest: sha256:3e0bf1f277ead76fe354693c49563ffd73c990086822ac8b8ad91225589d9e49
   body_extraction:
     yield_pattern:
       match:
@@ -91,7 +91,7 @@ object_types:
     references: [role]
   data_schema:
     schema: schemas/Permission.json
-    digest: sha256:287d9bacbd3c40a19f5b4901593afa9f32a08e1848278d5f263944f8428da13a
+    digest: sha256:fbe12967f34580936a83f496ca51f7f879c01affaa39c66988d724de169e1220
   body_extraction:
     yield_pattern:
       match:
@@ -119,7 +119,7 @@ object_types:
     references: [permission]
   data_schema:
     schema: schemas/Scope.json
-    digest: sha256:21f2cd7658d053dbb4539d2baedb5ffb3cbc97b752cc76a21de8471a04327692
+    digest: sha256:8d68d19fc7950d9a17b3d0e757e276689a002d15316133e9d774f220c0af52d2
   body_extraction:
     yield_pattern:
       match:
@@ -142,7 +142,7 @@ object_types:
     references: [role]
   data_schema:
     schema: schemas/Role.json
-    digest: sha256:69378f9251e51395401ade59f00ea5e326dcece128963cfa9664b25a02d8df28
+    digest: sha256:407a81699de5fea5f1a7868b456216afa99201f82bbe11f1c6203784c1ee7e33
   body_extraction:
     yield_pattern:
       match:
@@ -165,7 +165,7 @@ object_types:
     references: [secret]
   data_schema:
     schema: schemas/Secret.json
-    digest: sha256:8db617e54367c6e747b83dbfedb480b6fa5e87b5e2a6584cd7bbf9b294e2d6f7
+    digest: sha256:2d06ce2ad6ea0a23014a301529a4caa1691a3757ed9f4b4b5dc3f9b559fd1586
   body_extraction:
     yield_pattern:
       match:
@@ -188,7 +188,7 @@ object_types:
     encrypts: [sensitive, data_classification]
   data_schema:
     schema: schemas/EncryptionKey.json
-    digest: sha256:439e8b376d8e1dfb391d8e8533916bf0917f5d28f895d4c307b9e0cc37319f14
+    digest: sha256:171b8ffdececb9061db539f4a4bbc410df6f76494bb53819728cc610f41eb54c
   body_extraction:
     yield_pattern:
       match:
@@ -216,7 +216,7 @@ object_types:
     references: [auth_flow, jwt_claim]
   data_schema:
     schema: schemas/SessionConfig.json
-    digest: sha256:38352caf9b46e76230b971552c3352da5d750b4693fe3407137a1f5b68a4f8aa
+    digest: sha256:125c2d9668ecc9cc031950916069754a33a315b33c6c9069151da8c651def4fd
   body_extraction:
     yield_pattern:
       match:
@@ -238,7 +238,7 @@ object_types:
     references: [data_classification]
   data_schema:
     schema: schemas/DataClassification.json
-    digest: sha256:1bcec344709c697b79e3c179939a58f617e6cab68503e5054c79a6e83805173b
+    digest: sha256:32e1217369954ee17b09fa4aba8b02a062fa2a432f124dd99f87db468f87b9ec
   body_extraction:
     yield_pattern:
       match:
@@ -261,7 +261,7 @@ object_types:
     references: [trust_boundary]
   data_schema:
     schema: schemas/TrustBoundary.json
-    digest: sha256:0e43bff466cd6cf76ef460c8e35445eb58696c376ad03a1fd3272f62be33aa00
+    digest: sha256:0069a8d8e1dae0353bbb5446983138a6ac6be2aba5cb0bc93e195d284372ef84
   body_extraction:
     yield_pattern:
       match:
@@ -290,7 +290,7 @@ object_types:
     references: [audit_event]
   data_schema:
     schema: schemas/AuditEvent.json
-    digest: sha256:0bfa63622e3ab602a00f7e7668224b3590f8fa9e71a8bf4d997daf26c019e87b
+    digest: sha256:bd4fed5dc4d80f9041b368d151789d9b2c2a39b4c72f1c1c71a30820b70f52ec
   body_extraction:
     yield_pattern:
       match:
@@ -314,7 +314,7 @@ object_types:
     references: [csrf_token]
   data_schema:
     schema: schemas/CsrfToken.json
-    digest: sha256:97867d6d36073d85da4e8cca1cb7fb578a3a5efc4bf8a1f0adf03af2b5f10725
+    digest: sha256:7abfff62af262c21376408e97faa1fc1546df2a9954c59aae5af25ee9469c254
   body_extraction:
     yield_pattern:
       match:
@@ -337,7 +337,7 @@ object_types:
     references: [cors_policy]
   data_schema:
     schema: schemas/CorsPolicy.json
-    digest: sha256:9a03e440d1916807218aae2badda72caa048aa80a63ac94e0df2c749cf49c44e
+    digest: sha256:55b8cb1c09cc43d8daa6aa7c461d3ede2f8c600d51f5c74cff0facfed0fe1af3
   body_extraction:
     yield_pattern:
       match:
@@ -358,7 +358,7 @@ object_types:
     references: [password_policy]
   data_schema:
     schema: schemas/PasswordPolicy.json
-    digest: sha256:d7cd72b861eeabf44a7710620247f3ddb513a2081ebc8ae90032230514329048
+    digest: sha256:3deb79e250c2ee75b380a5c50c0f2942b9fa4d7207c8b2b5b2bce1bd8aad408f
   body_extraction:
     yield_pattern:
       match:
@@ -379,7 +379,7 @@ object_types:
     references: [mfa_method]
   data_schema:
     schema: schemas/MfaMethod.json
-    digest: sha256:7ba44d012e50785e6a66cab42dc1a198e9813357e3577f5331f3819196a92dac
+    digest: sha256:89797c934801cba2523b6d79c2ec746cdb79d18b3e071a3693e37fb0fea04064
   body_extraction:
     yield_pattern:
       match:
@@ -408,7 +408,7 @@ object_types:
     references: [jwt_claim]
   data_schema:
     schema: schemas/JwtClaim.json
-    digest: sha256:9ebbffee53b0eb5842f713c2009228797674f21553530531ac3211cc3e4cfb91
+    digest: sha256:7c38c084af9264b74dfa135e11825a0f09211664b325093e632521155c006321
   body_extraction:
     yield_pattern:
       match:
@@ -432,7 +432,7 @@ object_types:
     exploits: [vulnerability]
   data_schema:
     schema: schemas/Threat.json
-    digest: sha256:307c314f8408465b026389cc59789422dcd860e09b118f819fbecdfc03178f99
+    digest: sha256:7103325eae471a7d8f8cf345b91297e89a169eaf9ee6f69b9925badc07b74046
   body_extraction:
     yield_pattern:
       match:
@@ -474,7 +474,7 @@ object_types:
     protects: [externally-exposed, asset]
   data_schema:
     schema: schemas/Control.json
-    digest: sha256:8996df07a3fa77f1f22e061b083aecac33d5668c4d2696df908b5d592bb7d562
+    digest: sha256:1ae3e01ec7d15725eb6bc179d75b583ebe5794a8724c08811cfaa8b0a013eacd
   body_extraction:
     yield_pattern:
       match:
@@ -502,7 +502,7 @@ object_types:
     references: [asset]
   data_schema:
     schema: schemas/Risk.json
-    digest: sha256:58d0de94a7602f33442e8ead933655188a55fb1283927eeb2bda241502c3d046
+    digest: sha256:08424445bfb977cd7f407dc2221b3728eb69d90e7ff94398781dc1105d4e6597
   body_extraction:
     yield_pattern:
       match:
@@ -531,7 +531,7 @@ object_types:
     references: [vulnerability]
   data_schema:
     schema: schemas/Vulnerability.json
-    digest: sha256:2d20c2810ebbd359208a6b320cdddff17f4f0c7f5f0e95f41d271bc354e70db7
+    digest: sha256:9c1f1e726faf41be9d6547bb2c84588c6339d0eb468d22e79b8a631ef11266b3
   body_extraction:
     yield_pattern:
       match:
@@ -559,7 +559,7 @@ object_types:
     references: [data_classification, trust_boundary]
   data_schema:
     schema: schemas/Asset.json
-    digest: sha256:a323ebb06d1eb1e3bd6f4d1a94113a59a8afe5978b272feb22ea515dc803250e
+    digest: sha256:d41e5f5acc58187e9237ee8ee0e3d173c403e24a557d053c1fbed8c9eebf7a37
   body_extraction:
     yield_pattern:
       match:
@@ -582,7 +582,7 @@ object_types:
     exposes: [asset, api_endpoint]
   data_schema:
     schema: schemas/AttackSurface.json
-    digest: sha256:4a952ae0795db2fe2db68e2008876564588707dc9314a6fd4e146f7439c6cb15
+    digest: sha256:fd36db8ffc5df3b4dda5175b1bb14f1cf67b9e0c76a3a3fdf626bcea9961ccf3
   body_extraction:
     yield_pattern:
       match:
@@ -604,7 +604,7 @@ object_types:
     governs: [control, role, permission, data_classification]
   data_schema:
     schema: schemas/Policy.json
-    digest: sha256:e71cf6b1e06859ad549412165af24d58ab3a49281a23c486305de36c0380836a
+    digest: sha256:824bb21f2689ed75c5cd33e361b56baa5a28555bbd3fe387510195982ef0c299
   body_extraction:
     yield_pattern:
       match:
@@ -626,7 +626,7 @@ object_types:
     references: [control, vulnerability, asset]
   data_schema:
     schema: schemas/AuditFinding.json
-    digest: sha256:7f0244a40ac0e5ce3146005a43770506ac768a2128eca019b246ebc49505975c
+    digest: sha256:e5c166f8dea995a7babd81f9f2d93ea14570965a7fe0dc3042135ab0924688a7
   body_extraction:
     yield_pattern:
       match:

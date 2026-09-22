@@ -32,7 +32,7 @@ This document specifies the requirements for `spec-objects-security`, a Filament
 - The 23 tier-2 ObjectTypes the module contributes, covering threats/controls and authentication/authorization (identity folded in per ADR; revisit if identity grows past ~12 types).
 - The templates, schemas, and grammars the module ships for those object types.
 - The semantic-module contract (issue #13): a TypeSpec source importing
-  `@agent-ix/semantic-core` 0.1.0, the emitted JSON Schema per object type
+  `@agent-ix/semantic-core` 0.3.0, the emitted JSON Schema per object type
   shipped under `spec_objects_security/schemas/`, the manifest `semantic`
   block with reference-form `data_schema`, the skeletons rewritten as
   executable typed fixtures with negative counterparts, and the
@@ -126,7 +126,7 @@ This document specifies the requirements for `spec-objects-security`, a Filament
 - Editing any corpus repository or vendored fixture; the legacy-form sweep
   and corpus promotion (`agent-ix/quoin#291`).
 - Hosting the semantic-core schema bundle. Every module schema `$ref`s
-  `https://schemas.agent-ix.org/semantic-core/0.1.0/<Model>.json`, and nothing
+  `https://schemas.agent-ix.org/semantic-core/0.3.0/<Model>.json`, and nothing
   in this repository serves that host; a consumer resolves it from the
   `@agent-ix/semantic-core` package, and publishing the bundle is
   `agent-ix/filament-core-data#11`. The module's own tests resolve every such

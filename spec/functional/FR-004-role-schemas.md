@@ -21,7 +21,7 @@ rules.
 
 ## Inputs
 
-- semantic-core 0.1.0 grammar models: `FieldDecl`, `RelationDecl`,
+- semantic-core 0.3.0 grammar models: `FieldDecl`, `RelationDecl`,
   `OperationDecl`, `ClauseRef`, `EnumValue`, `DefaultDecl`, `Identifier`,
   `SemanticId`, `KernelScalar`.
 - The declaration record Quire assembles per artifact: `fields` from
@@ -48,7 +48,7 @@ Each model SHALL enforce its row of the following table. "Identity field"
 means a `FieldDecl` with `identity: true`; "occurrence field" a `FieldDecl`
 whose `type.target` is `Timestamp`; "defaulted field" a `FieldDecl` carrying a
 `default`; "a `<name>` field" a `FieldDecl` whose `name` is that literal.
-These readings are semantic-core 0.1.0 reader conventions (the identity flag
+These readings are semantic-core 0.3.0 reader conventions (the identity flag
 is set only by a bare `identity` keyword in a Constraints cell and is absent,
 not `false`, otherwise; the kernel scalar is the bare token `Timestamp`), so a
 semantic-core release that renders `identity: false` or namespaces kernel
@@ -84,7 +84,7 @@ with a manifest version bump rather than by widening a rule.
 - `ControlMapping` SHALL be `{ framework: string (minLength 1), control_id: string (minLength 1), doc?: string }`.
 - `FlowStep` SHALL be `{ name: Identifier, actor: Identifier, doc?: string }`.
 - Each graded vocabulary SHALL be a closed enum whose members are exactly those listed in [FR-006](./FR-006-security-safe-declarations.md), including its explicit unassessed member.
-- Every `fields`, `params`, `clauses`, `operations`, and `relations` item SHALL be validated by `$ref` to the semantic-core 0.1.0 model, never by a copied definition.
+- Every `fields`, `params`, `clauses`, `operations`, and `relations` item SHALL be validated by `$ref` to the semantic-core 0.3.0 model, never by a copied definition.
 - Every row above SHALL additionally carry the "0 defaulted fields" rule of [FR-006](./FR-006-security-safe-declarations.md), whether or not its Item rules column repeats it.
 - That rule SHALL extend to `operations[].params[]` wherever the type admits `operations`, because a parameter is a `FieldDecl` too.
 - The TypeSpec source SHALL express every positive item rule through the official emitter's `@contains` decorator over an open marker model: `@contains(IdentityField)` for "≥ 1 identity field", `@contains(OccurrenceField)` for "≥ 1 occurrence field".
@@ -122,7 +122,7 @@ with a manifest version bump rather than by widening a rule.
 | FR-004-AC-10 | A trust-boundary record with one clause and a `trust_level` field validates; the same record without `clauses` fails; a `trust_level` outside `TrustLevel` fails. | Test |
 | FR-004-AC-11 | The empty record `{}` fails against all twenty-three schemas. | Test |
 | FR-004-AC-12 | A `type.target` of `ix://agent-ix/spec-objects-security/unresolved/Mystery` is accepted by the schema (it is a `SemanticId`) and reported by the extractor as `semantic.unresolved-type`; a bare `Mystery` string is rejected by the schema. | Test |
-| FR-004-AC-13 | No module schema redeclares a semantic-core model; every grammar item is a `$ref` to semantic-core 0.1.0. | Test |
+| FR-004-AC-13 | No module schema redeclares a semantic-core model; every grammar item is a `$ref` to semantic-core 0.3.0. | Test |
 | FR-004-AC-14 | A data-classification record with a `level` field validates; one without it fails; a record carrying `relations` fails. | Test |
 
 ## Dependencies
