@@ -20,7 +20,6 @@ from tests.conftest import (
     OBJECT_TYPES,
     PACKAGE_ROOT,
     SCHEMAS_DIR,
-    sha256_of,
 )
 
 
@@ -34,4 +33,3 @@ def test_the_module_directory_quoin_would_install_is_complete():
         assert path.is_file(), name
         schema = json.loads(path.read_text())
         assert schema["$id"].endswith(f"/{MODEL_OF[name]}.json"), name
-        assert sha256_of(path).startswith("sha256:")

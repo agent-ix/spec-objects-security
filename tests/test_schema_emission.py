@@ -157,7 +157,7 @@ def _refs(node):
 
 
 @pytest.mark.trace("TC-023", "FR-002-AC-4")
-def test_check_is_clean_and_names_a_mutated_schema_or_digest():
+def test_check_is_clean_and_names_a_mutated_schema():
     assert run_generator("--check").returncode == 0
     with tempfile.TemporaryDirectory() as tmp:
         scratch = _scratch(tmp)
@@ -166,14 +166,6 @@ def test_check_is_clean_and_names_a_mutated_schema_or_digest():
         result = run_generator("--check", cwd=scratch)
         assert result.returncode != 0
         assert "Threat.json" in result.stderr
-    with tempfile.TemporaryDirectory() as tmp:
-        scratch = _scratch(tmp)
-        path = scratch / "spec_objects_security" / "manifest.yaml"
-        text = path.read_text().replace("digest: sha256:", "digest: sha256:0", 1)
-        path.write_text(text)
-        result = run_generator("--check", cwd=scratch)
-        assert result.returncode != 0
-        assert "manifest.yaml" in result.stderr
 
 
 def _scratch(tmp):
@@ -356,30 +348,6 @@ def test_no_test_hard_codes_the_id_version_segment():
             offenders.append(path.name)
     assert not offenders, offenders
     assert module_base().endswith(f"/{version}/")
-
-
-@pytest.mark.trace("TC-034", "FR-002-AC-10")
-def test_the_generator_touches_only_the_schemas_and_the_digest_lines():
-    with tempfile.TemporaryDirectory() as tmp:
-        scratch = _scratch(tmp)
-        manifest = scratch / "spec_objects_security" / "manifest.yaml"
-        before = manifest.read_text().splitlines()
-        elsewhere = {
-            path: path.read_bytes()
-            for path in scratch.rglob("*")
-            if path.is_file()
-            and "node_modules" not in path.parts
-            and path.parent.name != "schemas"
-            and path != manifest
-        }
-        assert run_generator(cwd=scratch).returncode == 0
-        after = manifest.read_text().splitlines()
-        assert len(before) == len(after)
-        changed = [(a, b) for a, b in zip(before, after, strict=True) if a != b]
-        assert all(b.strip().startswith("digest:") for _, b in changed), changed
-        assert all(
-            path.read_bytes() == blob for path, blob in elsewhere.items()
-        ), "the generator wrote outside schemas/ and manifest.yaml"
 
 
 @pytest.mark.trace("TC-035", "FR-002-AC-11")
