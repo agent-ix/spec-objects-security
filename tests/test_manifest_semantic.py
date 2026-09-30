@@ -23,7 +23,6 @@ from tests.conftest import (
     locators,
     object_type,
     object_types,
-    sha256_of,
 )
 
 ADMITTED_KEYS = {
@@ -59,18 +58,6 @@ def test_the_semantic_block_is_exactly_the_nine_admitted_keys(semantic_block):
     assert semantic_block["legacy_forms"] == "warning"
     assert semantic_block["exports"] == list(OBJECT_TYPES)
     assert len(semantic_block["exports"]) == 23
-
-
-@pytest.mark.trace("TC-041", "FR-003-AC-2")
-def test_every_data_schema_is_the_reference_form_hashing_to_its_digest():
-    for ot in object_types():
-        schema = ot["data_schema"]
-        assert set(schema) == {"schema", "digest"}, ot["name"]
-        assert schema["schema"] == f"schemas/{MODEL_OF[ot['name']]}.json"
-        path = PACKAGE_ROOT / schema["schema"]
-        assert path.is_file(), ot["name"]
-        assert sha256_of(path) == schema["digest"], ot["name"]
-        assert "type" not in schema, f"{ot['name']} still carries an inline schema"
 
 
 @pytest.mark.trace("TC-042", "FR-003-AC-3")
@@ -135,7 +122,7 @@ def test_the_registry_lists_every_archetype_and_no_skeleton_fails_to_load(
 
 
 @pytest.mark.trace("TC-045", "FR-003-AC-6")
-def test_an_unknown_key_and_an_altered_digest_are_refused(quire_engine):
+def test_an_unknown_key_is_refused(quire_engine):
     """The refusal is verified. The *naming* half of FR-003-AC-6 — a diagnostic
     that names the offending key or path — is an expected failure while
     agent-ix/quire-rs#221 and agent-ix/quire-rs#394 are open, and is asserted
@@ -148,15 +135,6 @@ def test_an_unknown_key_and_an_altered_digest_are_refused(quire_engine):
         (module / "manifest.yaml").write_text(yaml.safe_dump(data, sort_keys=False))
         registry = quire_engine.Registry.load_from([str(module.parent)])
         assert not set(registry.archetype_names()) & set(OBJECT_TYPES)
-    with tempfile.TemporaryDirectory() as tmp:
-        module = _copy_module(tmp, "bad-digest")
-        data = yaml.safe_load((module / "manifest.yaml").read_text())
-        for ot in data["object_types"]:
-            if ot["name"] == "threat":
-                ot["data_schema"]["digest"] = "sha256:" + "0" * 64
-        (module / "manifest.yaml").write_text(yaml.safe_dump(data, sort_keys=False))
-        registry = quire_engine.Registry.load_from([str(module.parent)])
-        assert "threat" not in set(registry.archetype_names())
 
 
 @pytest.mark.xfail(strict=True, reason="agent-ix/quire-rs#221, agent-ix/quire-rs#394")

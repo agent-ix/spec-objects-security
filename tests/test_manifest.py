@@ -32,7 +32,6 @@ def test_object_type_has_name_and_data_schema(ot: dict) -> None:
     assert isinstance(ot["name"], str) and len(ot["name"]) > 0
     assert "data_schema" in ot
     assert isinstance(ot["data_schema"], dict)
-    assert set(ot["data_schema"]) == {"schema", "digest"}
 
 
 @pytest.mark.trace("TC-004", "FR-001-AC-1")

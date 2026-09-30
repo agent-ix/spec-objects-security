@@ -104,8 +104,7 @@ This document specifies the requirements for `spec-objects-security`, a Filament
   inventing a cell form here; the closed vocabularies live in emitted enum
   schemas instead, and FR-005 says why.
 - Naming what a module load refused: `agent-ix/quire-rs#221` (an unknown
-  manifest key empties the model silently) and `agent-ix/quire-rs#394` (a
-  `data_schema` digest mismatch drops the object type with no diagnostic).
+  manifest key empties the model silently) and `agent-ix/quire-rs#394`.
   FR-003-AC-6's "naming the key or the path" half is blocked on them and is
   carried as an explicit expected failure.
 - Record validation of a legacy-form artifact that declares `object:`:
@@ -170,7 +169,7 @@ Inputs.
 - `agent-ix/filament-core-data` FR-031..FR-034 (semantic-core grammar,
   scalars, JSON Schema projection, lowering) and ADR-0005 (TypeSpec source).
 - `agent-ix/quoin` FR-070..FR-075 (semantic-module contract, mappings,
-  `data_schema` by digest, legacy forms, package manifests).
+  `data_schema`, legacy forms, package manifests).
 - `agent-ix/quire-rs` FR-069..FR-072 (contract at load, typed Properties,
   clauses and operations, extraction surface).
 - `agent-ix/spec-objects-business#4`, the reference migration this module follows.

@@ -25,8 +25,7 @@ unchanged at 0.2.0, and SHALL keep the `traceability` block, the `lexicon`, and
 every `allowed_links` and `roles` map equal to the frozen 0.1.0 baseline under
 `tests/fixtures/baseline-0.1.0/`. Equality is asserted over the parsed
 structures, which is what a consumer reads; byte-for-byte identity of the file
-is neither asserted nor needed, since the generator rewrites `digest:` lines in
-the same file. Yields of the 0.1.0 locators other than the sections this change
+is neither asserted nor needed. Yields of the 0.1.0 locators other than the sections this change
 adds are unmeasured and are not claimed.
 
 ## Scope
