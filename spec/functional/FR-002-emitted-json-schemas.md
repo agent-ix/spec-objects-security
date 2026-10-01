@@ -45,7 +45,7 @@ build.
 
 - `make schemas` SHALL run `node scripts/generate-schemas.mjs`.
 - The generator SHALL compile `typespec/` with `tsp compile`, keep only the emitted files whose `$id` starts with the module base, and discard the re-emitted semantic-core files.
-- If the emitter leaves any `$id` or `$ref` relative, then the generator SHALL rewrite it to `<base><file>` (module models) or `https://schemas.agent-ix.org/semantic-core/0.3.0/<file>` (semantic-core models).
+- If the emitter leaves any `$id` or `$ref` relative, then the generator SHALL rewrite it to `<base><file>` (module models) or `https://schemas.agent-ix.org/semantic-core/<declared version>/<file>` (semantic-core models).
 - If `tsp compile` fails or emits no module model, then the generator SHALL exit non-zero without touching the committed output.
 - If `node` is older than 20 or `tsp` is not resolvable, then the generator SHALL exit non-zero naming the required Node version or the missing binary.
 - In `--check` mode the generator SHALL write no file, neither under `spec_objects_security/schemas/` nor in `manifest.yaml`.
