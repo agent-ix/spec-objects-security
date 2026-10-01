@@ -22,7 +22,6 @@ from tests.conftest import (
     load_manifest,
     locators,
     object_type,
-    object_types,
 )
 
 ADMITTED_KEYS = {
