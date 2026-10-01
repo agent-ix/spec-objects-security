@@ -78,7 +78,7 @@ object_types:
           after_heading: Flow
           required: true
           language: mermaid
-        # Added at 0.2.0 (FR-005): the `## Operations` subsections.
+        # FR-005: the `## Operations` subsections.
         operations:
           from: section_body
           after_heading: Operations
@@ -106,8 +106,8 @@ object_types:
           path:
           - verb
           required: true
-        # Added at 0.2.0 (FR-005): the typed `## Properties` table the
-        # semantic layer reads. Optional, so every 0.1.0 artifact stays valid.
+        # FR-005: the typed `## Properties` table the
+        # semantic layer reads. Optional, so existing artifacts stay valid.
         properties:
           from: section_body
           after_heading: Properties
@@ -127,8 +127,8 @@ object_types:
           from: section_body
           after_heading: Grants
           required: true
-        # Added at 0.2.0 (FR-005): the typed `## Properties` table the
-        # semantic layer reads. Optional, so every 0.1.0 artifact stays valid.
+        # FR-005: the typed `## Properties` table the
+        # semantic layer reads. Optional, so existing artifacts stay valid.
         properties:
           from: section_body
           after_heading: Properties
@@ -149,8 +149,8 @@ object_types:
           from: section_body
           after_heading: Permissions
           required: true
-        # Added at 0.2.0 (FR-005): the typed `## Properties` table the
-        # semantic layer reads. Optional, so every 0.1.0 artifact stays valid.
+        # FR-005: the typed `## Properties` table the
+        # semantic layer reads. Optional, so existing artifacts stay valid.
         properties:
           from: section_body
           after_heading: Properties
@@ -171,8 +171,8 @@ object_types:
           from: section_body
           after_heading: Rotation
           required: true
-        # Added at 0.2.0 (FR-005): the typed `## Properties` table the
-        # semantic layer reads. Optional, so every 0.1.0 artifact stays valid.
+        # FR-005: the typed `## Properties` table the
+        # semantic layer reads. Optional, so existing artifacts stay valid.
         properties:
           from: section_body
           after_heading: Properties
@@ -199,8 +199,8 @@ object_types:
           path:
           - rotation
           required: false
-        # Added at 0.2.0 (FR-005): the typed `## Properties` table the
-        # semantic layer reads. Optional, so every 0.1.0 artifact stays valid.
+        # FR-005: the typed `## Properties` table the
+        # semantic layer reads. Optional, so existing artifacts stay valid.
         properties:
           from: section_body
           after_heading: Properties
@@ -220,7 +220,7 @@ object_types:
           from: section_body
           after_heading: Settings
           required: true
-        # Added at 0.2.0 (FR-005): the `## Invariants` OCL clauses.
+        # FR-005: the `## Invariants` OCL clauses.
         invariants:
           from: section_body
           after_heading: Invariants
@@ -241,8 +241,8 @@ object_types:
           from: section_body
           after_heading: Handling
           required: true
-        # Added at 0.2.0 (FR-005): the typed `## Properties` table the
-        # semantic layer reads. Optional, so every 0.1.0 artifact stays valid.
+        # FR-005: the typed `## Properties` table the
+        # semantic layer reads. Optional, so existing artifacts stay valid.
         properties:
           from: section_body
           after_heading: Properties
@@ -264,13 +264,13 @@ object_types:
           after_heading: Boundary
           required: true
           language: mermaid
-        # Added at 0.2.0 (FR-005): the typed `## Properties` table the
-        # semantic layer reads. Optional, so every 0.1.0 artifact stays valid.
+        # FR-005: the typed `## Properties` table the
+        # semantic layer reads. Optional, so existing artifacts stay valid.
         properties:
           from: section_body
           after_heading: Properties
           required: false
-        # Added at 0.2.0 (FR-005): the `## Invariants` OCL clauses.
+        # FR-005: the `## Invariants` OCL clauses.
         invariants:
           from: section_body
           after_heading: Invariants
@@ -292,8 +292,8 @@ object_types:
           after_heading: Event Schema
           required: true
           language: json
-        # Added at 0.2.0 (FR-005): the typed `## Properties` table the
-        # semantic layer reads. Optional, so every 0.1.0 artifact stays valid.
+        # FR-005: the typed `## Properties` table the
+        # semantic layer reads. Optional, so existing artifacts stay valid.
         properties:
           from: section_body
           after_heading: Properties
@@ -315,8 +315,8 @@ object_types:
           path:
           - rotation_window
           required: true
-        # Added at 0.2.0 (FR-005): the typed `## Properties` table the
-        # semantic layer reads. Optional, so every 0.1.0 artifact stays valid.
+        # FR-005: the typed `## Properties` table the
+        # semantic layer reads. Optional, so existing artifacts stay valid.
         properties:
           from: section_body
           after_heading: Properties
@@ -336,7 +336,7 @@ object_types:
           from: section_body
           after_heading: Origins
           required: true
-        # Added at 0.2.0 (FR-005): the `## Invariants` OCL clauses.
+        # FR-005: the `## Invariants` OCL clauses.
         invariants:
           from: section_body
           after_heading: Invariants
@@ -356,7 +356,7 @@ object_types:
           from: section_body
           after_heading: Rules
           required: true
-        # Added at 0.2.0 (FR-005): the `## Invariants` OCL clauses.
+        # FR-005: the `## Invariants` OCL clauses.
         invariants:
           from: section_body
           after_heading: Invariants
@@ -382,8 +382,8 @@ object_types:
           path:
           - factor
           required: false
-        # Added at 0.2.0 (FR-005): the typed `## Properties` table the
-        # semantic layer reads. Optional, so every 0.1.0 artifact stays valid.
+        # FR-005: the typed `## Properties` table the
+        # semantic layer reads. Optional, so existing artifacts stay valid.
         properties:
           from: section_body
           after_heading: Properties
@@ -405,8 +405,8 @@ object_types:
           after_heading: Schema
           required: true
           language: json
-        # Added at 0.2.0 (FR-005): the typed `## Properties` table the
-        # semantic layer reads. Optional, so every 0.1.0 artifact stays valid.
+        # FR-005: the typed `## Properties` table the
+        # semantic layer reads. Optional, so existing artifacts stay valid.
         properties:
           from: section_body
           after_heading: Properties
@@ -445,8 +445,8 @@ object_types:
           path:
           - vector
           required: true
-        # Added at 0.2.0 (FR-005): the typed `## Properties` table the
-        # semantic layer reads. Optional, so every 0.1.0 artifact stays valid.
+        # FR-005: the typed `## Properties` table the
+        # semantic layer reads. Optional, so existing artifacts stay valid.
         properties:
           from: section_body
           after_heading: Properties
@@ -468,13 +468,13 @@ object_types:
           from: section_body
           after_heading: Mappings
           required: true
-        # Added at 0.2.0 (FR-005): the typed `## Properties` table the
-        # semantic layer reads. Optional, so every 0.1.0 artifact stays valid.
+        # FR-005: the typed `## Properties` table the
+        # semantic layer reads. Optional, so existing artifacts stay valid.
         properties:
           from: section_body
           after_heading: Properties
           required: false
-        # Added at 0.2.0 (FR-005): the `## Invariants` OCL clauses.
+        # FR-005: the `## Invariants` OCL clauses.
         invariants:
           from: section_body
           after_heading: Invariants
@@ -501,8 +501,8 @@ object_types:
           path:
           - impact
           required: true
-        # Added at 0.2.0 (FR-005): the typed `## Properties` table the
-        # semantic layer reads. Optional, so every 0.1.0 artifact stays valid.
+        # FR-005: the typed `## Properties` table the
+        # semantic layer reads. Optional, so existing artifacts stay valid.
         properties:
           from: section_body
           after_heading: Properties
@@ -529,8 +529,8 @@ object_types:
           path:
           - severity
           required: true
-        # Added at 0.2.0 (FR-005): the typed `## Properties` table the
-        # semantic layer reads. Optional, so every 0.1.0 artifact stays valid.
+        # FR-005: the typed `## Properties` table the
+        # semantic layer reads. Optional, so existing artifacts stay valid.
         properties:
           from: section_body
           after_heading: Properties
@@ -550,8 +550,8 @@ object_types:
           from: section_body
           after_heading: Description
           required: true
-        # Added at 0.2.0 (FR-005): the typed `## Properties` table the
-        # semantic layer reads. Optional, so every 0.1.0 artifact stays valid.
+        # FR-005: the typed `## Properties` table the
+        # semantic layer reads. Optional, so existing artifacts stay valid.
         properties:
           from: section_body
           after_heading: Properties
@@ -572,8 +572,8 @@ object_types:
           from: section_body
           after_heading: Entry Points
           required: true
-        # Added at 0.2.0 (FR-005): the typed `## Properties` table the
-        # semantic layer reads. Optional, so every 0.1.0 artifact stays valid.
+        # FR-005: the typed `## Properties` table the
+        # semantic layer reads. Optional, so existing artifacts stay valid.
         properties:
           from: section_body
           after_heading: Properties
@@ -593,7 +593,7 @@ object_types:
           from: section_body
           after_heading: Policy
           required: true
-        # Added at 0.2.0 (FR-005): the `## Invariants` OCL clauses.
+        # FR-005: the `## Invariants` OCL clauses.
         invariants:
           from: section_body
           after_heading: Invariants
@@ -614,15 +614,15 @@ object_types:
           from: section_body
           after_heading: Recommendation
           required: true
-        # Added at 0.2.0 (FR-005): the typed `## Properties` table the
-        # semantic layer reads. Optional, so every 0.1.0 artifact stays valid.
+        # FR-005: the typed `## Properties` table the
+        # semantic layer reads. Optional, so existing artifacts stay valid.
         properties:
           from: section_body
           after_heading: Properties
           required: false
 
 # FR-043: concrete-term lexicon — security / identity / auth objects.
-# FR-058 (quire-rs v0.31.0): upward-trace completeness — the second half of
+# FR-058 (quire-rs): upward-trace completeness — the second half of
 # agent-ix/spec-objects-security#5. Declaration, not code: the engine holds no
 # archetype name, no verb and no direction.
 #

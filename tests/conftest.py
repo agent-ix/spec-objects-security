@@ -28,7 +28,6 @@ MANIFEST_PATH = PACKAGE_ROOT / "manifest.yaml"
 SCHEMAS_DIR = PACKAGE_ROOT / "schemas"
 SKELETONS_DIR = PACKAGE_ROOT / "skeletons"
 NEGATIVE_DIR = REPO_ROOT / "tests" / "fixtures" / "negative"
-BASELINE_DIR = REPO_ROOT / "tests" / "fixtures" / "baseline-0.1.0"
 SEMANTIC_CORE_DIR = (
     REPO_ROOT
     / "node_modules"

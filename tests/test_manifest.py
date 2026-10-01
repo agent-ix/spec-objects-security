@@ -84,7 +84,7 @@ def test_lexicon_entries_are_whole() -> None:
 def test_threat_and_risk_coverage_is_declared_not_coded() -> None:
     """TC-007: agent-ix/spec-objects-security#5: upward coverage is manifest data.
 
-    Assumptions: quire-rs FR-058 (v0.31.0) reads
+    Assumptions: quire-rs FR-058 reads
     ``traceability.required_relations``; the engine holds no archetype name,
     no verb and no direction.
 

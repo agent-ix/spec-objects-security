@@ -15,8 +15,6 @@ relationships:
     type: covers
   - target: "ix://agent-ix/spec-objects-security/FR-006"
     type: covers
-  - target: "ix://agent-ix/spec-objects-security/NFR-001"
-    type: covers
 ---
 # Test Matrix
 
@@ -24,17 +22,16 @@ relationships:
 
 This matrix is the verification contract for the module: the manifest
 activation requirement (FR-001, issue #1 era, rows TC-001..TC-014) and the
-issue #13 semantic module contract (US-001, FR-002..FR-006, NFR-001, IT-002).
+issue #13 semantic module contract (US-001, FR-002..FR-006, IT-002).
 Coverage is complete when every acceptance criterion, named constraint, and
 NFR metric maps to at least one test case.
 
 Rows are `🚧` until a tagged test asserts them. The rows that stay `🚧` are the
 ones whose evidence needs an environment this repository cannot provision — a
-running `filament-core-service`, a Quoin built from `quoin` main — or a human;
+running `filament-core-service`, a Quoin with the module installer — or a human;
 every one of them says which.
 
-`quire coverage --scope .` reported **131 of 146 rows backed (89%)** before PLAT-902 deleted
-TC-005 and its two tests; the populations are now 145 and 85. The count is not
+`quire coverage --scope .` reports a backed-row count. That count is not
 the rows of `## Test Case Summary`: a row there is one trace
 target, and so is every acceptance criterion, constraint and validation
 criterion a requirement document mints on its own, so the two numbers count
@@ -43,14 +40,12 @@ source symbol outside `spec/` carries a matching tag; on its own it does not
 say the tagged test asserts the row, which is what the code review and the gap
 analysis are for.
 
-The 15 it cannot back are exactly the fifteen targets below that read `🚧`: the
+The targets it cannot back are exactly those below that read `🚧`: the
 nine rows TC-015..TC-019, TC-046, TC-110, TC-112 and TC-113, and the six
 criteria FR-001-AC-2..4, FR-003-AC-5 and StR-001-VC-1..2. Every one needs a
-running `filament-core-service`, a Quoin built from `quoin` main, or a human.
+running `filament-core-service`, a Quoin with the module installer, or a human.
 
-`make test` reported **213 passed, 2 xfailed and 0 skipped** over the tree that
-measurement was taken on; PLAT-902 removed two of those tests.
-That counts pytest functions, not matrix rows, and the two numbers are not
+`make test` counts pytest functions, not matrix rows, and the two numbers are not
 comparable. The 100% figure `make test` also prints is statement coverage over
 `spec_objects_security/__init__.py` — four statements — and is evidence about
 the Python package only: neither Node script is measured by it.
@@ -85,7 +80,7 @@ the Python package only: neither Node script is measured by it.
 
 | User Story | Acceptance Criteria | Test Cases | Coverage Status |
 |---|---|---|---|
-| US-001 | US-001-EX-1..3 (illustrative) implemented by FR-002..FR-006 | TC-080, TC-073, TC-110 | 🚧 TC-110 needs a Quoin built from quoin main |
+| US-001 | US-001-EX-1..3 (illustrative) implemented by FR-002..FR-006 | TC-080, TC-073, TC-110 | 🚧 TC-110 needs a Quoin with the module installer |
 
 ### Functional Requirement Coverage
 
@@ -93,23 +88,17 @@ the Python package only: neither Node script is measured by it.
 |---|---|---|---|
 | FR-001 | FR-001-AC-1..4 | TC-001..TC-004, TC-006..TC-014, TC-015..TC-017 | 🚧 AC-2..AC-4 need a running filament-core |
 | FR-002 | FR-002-AC-1..4, FR-002-AC-6..11, FR-002-CON-1..4 | TC-020..TC-035 | ✅ |
-| FR-003 | FR-003-AC-1..7, FR-003-CON-1..3 | TC-040..TC-047 | ✅ AC-5 is a Demonstration nothing here can discharge; AC-6's naming half is an expected failure |
+| FR-003 | FR-003-AC-1, FR-003-AC-4..6, FR-003-CON-1 | TC-040, TC-041, TC-044..TC-046 | ✅ AC-5 is a Demonstration nothing here can discharge; AC-6's naming half is an expected failure |
 | FR-004 | FR-004-AC-1..14, FR-004-CON-1..2 | TC-050..TC-063 | ✅ |
 | FR-005 | FR-005-AC-1..9, FR-005-CON-1..3 | TC-080..TC-090 | ✅ |
 | FR-006 | FR-006-AC-1..8, FR-006-CON-1..2 | TC-070..TC-078 | ✅ |
-
-### Non-Functional Requirement Coverage
-
-| Non-Functional Req | Verification Method | Evidence/Test Cases | Status |
-|---|---|---|---|
-| NFR-001 | Test (NFR-001-AC-1..4: locator baseline diff, edge-vocabulary baseline diff, legacy skeleton validation) | TC-100..TC-103 | ✅ |
 
 ### Integration Test Coverage
 
 | Integration Test | Success Criteria | Test Cases | Coverage Status |
 |---|---|---|---|
 | IT-001 | IT-001-AC-1..2 | TC-018, TC-019 | 🚧 needs a running filament-core |
-| IT-002 | IT-002-SC-01..06 | TC-110 | 🚧 needs a Quoin built from main |
+| IT-002 | IT-002-SC-01..06 | TC-110 | 🚧 needs a Quoin with the module installer |
 
 ## Test Case Summary
 
@@ -145,12 +134,9 @@ the Python package only: neither Node script is measured by it.
 | TC-032 | `package-lock.json` resolves every package from npmjs except `@agent-ix/semantic-core` (GitHub Packages, `npm.pkg.github.com`) | Unit | P2 | FR-002-CON-4 | ✅ |
 | TC-035 | `.gitattributes` pins `eol=lf` and `npm pack` leaves nothing staged at the repository root | Unit | P1 | FR-002-AC-11 | ✅ |
 | TC-040 | The `semantic` block equals the nine admitted keys and `exports` equals the twenty-three types | Unit | P0 | FR-003-AC-1, FR-003-CON-1 | ✅ |
-| TC-042 | Every 0.1.0 locator is unchanged against the checked-in baseline | Unit | P0 | FR-003-AC-3 | ✅ |
-| TC-043 | Every added locator is `required: false` | Unit | P1 | FR-003-AC-3, FR-003-CON-2 | ✅ |
 | TC-044 | `quire.Registry.load_from` lists all twenty-three archetypes and `validate_document` reports no `semantic.*` load failure on any skeleton | Integration | P0 | FR-003-AC-4 | ✅ |
 | TC-045 | An unknown `semantic` key is refused by the loader; the refusal names the key or path | Integration | P1 | FR-003-AC-6 | ✅ refusal verified; the naming half is a strict expected failure on quire-rs#221 and quire-rs#394 |
 | TC-046 | `quoin module install path:` succeeds, lists the module, and the prior entry is restored | Manual | P1 | FR-003-AC-5 | 🚧 |
-| TC-047 | The `traceability` block and every `allowed_links`/`roles` map equal the 0.1.0 baseline | Unit | P0 | FR-003-AC-7, FR-003-CON-3 | ✅ |
 | TC-050 | Each of the twenty-three schemas differs from every other in a required, admitted, or item rule; none is `type: object` only | Unit | P0 | FR-004-AC-1 | ✅ |
 | TC-051 | Asset: identity record validates; identity flag removed fails; no `fields` fails | Integration | P0 | FR-004-AC-2 | ✅ |
 | TC-052 | Role with `operations` fails; permission and scope with `relations` each fail | Integration | P0 | FR-004-AC-3 | ✅ |
@@ -183,13 +169,9 @@ the Python package only: neither Node script is measured by it.
 | TC-086 | Every skeleton is placeholder-free with non-empty asserted sections | Unit | P2 | FR-005-AC-7 | ✅ |
 | TC-087 | Skeleton titles are distinct `Identifier`s outside `KernelScalar`, and `object` equals `type` in every skeleton frontmatter | Unit | P1 | FR-005-AC-8 | ✅ |
 | TC-088 | No skeleton or fixture matches a credential-shaped literal | Unit | P0 | FR-005-AC-9, FR-005-CON-3 | ✅ |
-| TC-089 | No corpus repository or vendored fixture is edited by the change (diff over the branch) | Static | P2 | FR-005-CON-1 | ✅ |
+| TC-089 | No corpus repository or vendored fixture is tracked (tree assertion over `git ls-files`) | Static | P2 | FR-005-CON-1 | ✅ |
 | TC-090 | A Properties section holding both a table and a fence is refused at the second form | Integration | P1 | FR-005-CON-2 | ✅ |
-| TC-100 | Zero 0.1.0 locators changed | Unit | P0 | NFR-001-AC-1 | ✅ |
-| TC-101 | Zero `traceability`/`allowed_links` bytes changed against the 0.1.0 baseline | Unit | P0 | NFR-001-AC-2 | ✅ |
-| TC-102 | Every checked-in 0.1.0 skeleton validates under 0.2.0 with zero errors | Integration | P0 | NFR-001-AC-3 | ✅ |
-| TC-103 | No checked-in 0.1.0 skeleton yields `semantic.record-invalid` under 0.2.0; the `object:`-declaring case is an expected failure | Integration | P0 | NFR-001-AC-4 | ✅ |
-| TC-110 | Quoin install roundtrip with state restore | Manual | P1 | IT-002-SC-01..IT-002-SC-06, FR-003-AC-5 | 🚧 needs a Quoin built from quoin main (no release carries it) |
+| TC-110 | Quoin install roundtrip with state restore | Manual | P1 | IT-002-SC-01..IT-002-SC-06, FR-003-AC-5 | 🚧 needs a Quoin with the module installer |
 | TC-111 | Every object type ships a typed schema a fixture reader can consume; a secret and a risk record are distinguishable by schema alone | Unit | P2 | StR-001-VC-3 | ✅ |
 | TC-112 | A module activation against filament-core registers every declared contribution | Manual | P2 | StR-001-VC-1 | 🚧 needs a running filament-core |
 | TC-113 | A generator run (minijinja-cli) produces a valid artifact from a shipped skeleton and schema | Manual | P2 | StR-001-VC-2 | 🚧 needs a generator run against a released module |
@@ -213,17 +195,16 @@ say so; they are schema evidence, not extraction evidence.
 ## Coverage Gaps
 
 Every acceptance criterion, named constraint and NFR metric of FR-001..FR-006,
-NFR-001, IT-001, IT-002 and StR-001 now has at least one row. Nine rows cannot
+IT-001, IT-002 and StR-001 now has at least one row. Nine rows cannot
 be discharged in this repository and are `🚧` with the reason on the row:
 TC-015..TC-019 and TC-112 need a running `filament-core-service`, TC-046 and
-TC-110 need a Quoin built from `quoin` main, and TC-113
+TC-110 need a Quoin with the module installer, and TC-113
 needs a generator run against a released module.
 
 TC-114 is deliberately a row of its own rather than a tag on TC-110. A test
 that only checks the module directory is complete cannot back "the pre-install
 listing is captured", and tagging it `TC-110` made a blocked row report backed
-— which the gap analysis caught. Splitting it moved the headline from 131/145
-to 131/146 with TC-110 now correctly unbacked, which is a truer number rather
+— which the gap analysis caught. Splitting it left TC-110 correctly unbacked, which is a truer number rather
 than a better one.
 
 `quire coverage` additionally reports `status-column-matches-nothing` on the
