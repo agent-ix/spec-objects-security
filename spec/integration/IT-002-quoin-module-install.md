@@ -25,10 +25,9 @@ no network read is involved.
 
 ## Preconditions
 
-A Quoin built from `agent-ix/quoin` main is on `PATH`
-(from a checkout: `make build && npm i -g .`; no release tag carries the
-semantic module yet). The current `quoin module` listing is recorded so the
-prior `spec-objects-security` entry (source, ref, sha) can be restored.
+A Quoin with the module installer is on `PATH`. The current `quoin module`
+listing is recorded so the prior `spec-objects-security` entry can be
+restored.
 
 ## Inputs
 

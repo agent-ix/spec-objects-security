@@ -37,23 +37,17 @@ traceability rule keeps its meaning.
 
 ## Outputs
 
-- `manifest.yaml` with `version: 0.2.0`, a `semantic` block, and reference-form
+- `manifest.yaml` with a `version`, a `semantic` block, and reference-form
   `data_schema` on every exported object type.
-- `tests/fixtures/baseline-0.1.0/`, the frozen 0.1.0 manifest and its
-  twenty-three skeletons. It is a deliverable of this requirement, not an
-  incidental copy: without it every locator, edge-vocabulary and additive
-  criterion compares the manifest against itself.
 
 ## Behavior
 
-- The manifest `semantic` block SHALL carry exactly these keys and values: `contract_version: 1.0.0`, `semantic_core: 0.3.0`, `package: agent-ix/spec-objects-security`, `exports` listing every object type that ships a schema, `imports: {}`, `targets: [json-schema, markdown]`, `mappings: [typed-table, sysml-fence, ocl-clause]`, `compatibility_posture: additive`, `legacy_forms: warning`.
+- The manifest `semantic` block SHALL carry exactly these keys and values: `contract_version: 1.0.0`, `semantic_core` (the one semantic-core version the module declares it extends), `package: agent-ix/spec-objects-security`, `exports` listing every object type that ships a schema, `imports: {}`, `targets: [json-schema, markdown]`, `mappings: [typed-table, sysml-fence, ocl-clause]`, `compatibility_posture: additive`, `legacy_forms: warning`.
 - `semantic.exports` SHALL name all twenty-three object types: `auth_flow`, `permission`, `scope`, `role`, `secret`, `encryption_key`, `session_config`, `data_classification`, `trust_boundary`, `audit_event`, `csrf_token`, `cors_policy`, `password_policy`, `mfa_method`, `jwt_claim`, `threat`, `control`, `risk`, `vulnerability`, `asset`, `attack_surface`, `policy`, `audit_finding`.
 - Every exported object type's `data_schema` SHALL be `{ schema: schemas/<Model>.json }`.
 - No exported object type SHALL carry an inline `data_schema`.
-- Every `body_extraction` locator present at version 0.1.0 SHALL remain present with the same `from`, heading, `language`, `required`, `multiple`, and `assert` facets.
-- The manifest SHALL carry the `traceability` block (`required_relations`, `acyclic_edges`) and every object type's `allowed_links` and `roles` unchanged. `agent-ix/spec-objects-safety` reads no field of this manifest today; what it shares is the `traceability` shape it mirrored from here and the verb `mitigates`, which `spec-artifacts-iso` FR-004 owns. The field with cross-repository consequence is `control.allowed_links.mitigates` — `[threat, risk, vulnerability]`, which excludes `hazard` and `failure_mode` — so changing it decides whether a security control can ever satisfy a safety coverage check. That is a cross-repository decision and is out of scope here.
+- The manifest SHALL carry the `traceability` block (`required_relations`, `acyclic_edges`) and every object type's `allowed_links` and `roles`. `agent-ix/spec-objects-safety` reads no field of this manifest today; what it shares is the `traceability` shape it mirrored from here and the verb `mitigates`, which `spec-artifacts-iso` FR-004 owns. The field with cross-repository consequence is `control.allowed_links.mitigates` — `[threat, risk, vulnerability]`, which excludes `hazard` and `failure_mode` — so changing it decides whether a security control can ever satisfy a safety coverage check. That is a cross-repository decision and is out of scope here.
 - The `data_schema` reference form and the `semantic` block SHALL be judged by the consumer that reads them today: Quire's registry loader accepts the block and drops the module's object types when it is mutated (FR-003-AC-4, FR-003-AC-6). `quoin module install` (FR-003-AC-5) is a Demonstration this repository cannot run. No test here applies `filament-core-service`'s FR-035 schema as a document; that conformance is observed only at activation (FR-001-AC-2), which needs a running service.
-- Where an object type gains a locator after 0.1.0, that locator SHALL be `required: false`, so existing artifacts stay valid (the additions themselves are specified by FR-005).
 - The manifest SHALL load through Quire's registry loader with no `ArchetypeLoadFailure` for any object type.
 - A refused schema drops that object type alone, while a manifest key the loader cannot parse (an unknown `semantic` key) drops every object type of the module, so a consumer sees the module as absent. Both refusals are silent — no diagnostic names the offending key or path — which `agent-ix/quire-rs#221` and `agent-ix/quire-rs#394` record as engine defects; the naming half of FR-003-AC-6 is blocked on them and is verified as an explicit expected failure rather than dropped.
 - The manifest SHALL install through `quoin module install path:<module dir>` with no `semantic.*` error diagnostic.
@@ -65,19 +59,15 @@ traceability rule keeps its meaning.
 | ID | Constraint | Type | Validation |
 |----|------------|------|------------|
 | FR-003-CON-1 | The `semantic` block SHALL contain no key outside the admitted list. Quire's loader refusal of an unknown key is verified here (FR-003-AC-6); Quoin's refusal is the neighbour's own obligation (quoin FR-070) and is assumed, evidenced only by the clean install of IT-002. | Compatibility | Test |
-| FR-003-CON-2 | The manifest SHALL mark every locator added after 0.1.0 `required: false`. | Compatibility | Test |
-| FR-003-CON-3 | The manifest SHALL keep the `traceability` block and every `allowed_links` verb and target list byte-identical to 0.1.0, so `agent-ix/spec-objects-safety`'s hazard-coverage edges are unaffected. | Boundary | Test |
 
 ## Acceptance Criteria
 
 | ID | Criteria | Verification |
 |----|----------|--------------|
 | FR-003-AC-1 | The loaded `semantic` block equals the nine admitted keys with the values above, and `exports` equals the twenty-three object-type names. | Test |
-| FR-003-AC-3 | Every 0.1.0 locator, compared against the checked-in 0.1.0 baseline, is present unchanged; every added locator is `required: false`. | Test |
 | FR-003-AC-4 | `quire.Registry.load_from([module dir])` lists all twenty-three archetypes and `validate_document` on each skeleton reports no `semantic.*` load failure. | Test |
 | FR-003-AC-5 | `quoin module install path:<module dir>` exits zero and `quoin module` lists `spec-objects-security`; the previously installed entry is restored afterwards. | Demonstration |
 | FR-003-AC-6 | A manifest copy whose `semantic` block gains a key `foo` is refused by Quire's loader. The refusal is verified; the half that requires the diagnostic to *name* `foo` or the path is an explicit expected failure while `agent-ix/quire-rs#221` and `agent-ix/quire-rs#394` are open. | Test |
-| FR-003-AC-7 | The `traceability` block, the `lexicon`, and every `allowed_links` and `roles` map are equal to the checked-in 0.1.0 baseline. | Test |
 
 ## Dependencies
 

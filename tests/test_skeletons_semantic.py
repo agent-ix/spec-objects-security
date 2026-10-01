@@ -275,23 +275,9 @@ def test_no_skeleton_or_fixture_carries_a_credential_shaped_literal():
 
 @pytest.mark.trace("TC-089", "FR-005-CON-1")
 def test_the_repository_holds_no_corpus_or_vendored_fixture():
-    """FR-005-CON-1 as a **tree** assertion, never as a diff against a moving ref.
-
-    The obvious form — `git diff --name-only origin/main...HEAD`, then check no
-    changed path is under `corpus/` or a vendor tree — degrades the moment the
-    branch merges. `origin/main...HEAD` then resolves to the empty set, so the
-    loops iterate over nothing and the guard passes while checking nothing; the
-    positive-diff variant of the same guard (`assert changed`) goes one worse
-    and turns main red for a branch that is no longer a branch. A merged
-    change's path set is a fixed historical fact, and an assertion about it must
-    not be computed against a ref that keeps moving.
-
-    The tree form says something stronger and merge-invariant: these paths are
-    absent from the repository at all, not merely untouched by one branch. It is
-    exactly equivalent in intent here because no `corpus/`,
-    `fixtures/semantic-module` or vendor path exists in this repository, on this
-    branch or on `main`. No `git diff` survives in this guard, so there is no
-    range whose rename detection could hide a deletion.
+    """FR-005-CON-1 as a **tree** assertion: no `corpus/`, `fixtures/semantic-module`
+    or vendor path is tracked anywhere in this repository. `git ls-files`
+    answers the same question on any branch.
     """
     listing = subprocess.run(
         ["git", "ls-files"],

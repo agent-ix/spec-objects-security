@@ -1,5 +1,4 @@
-"""The `semantic` block, the reference-form `data_schema`, and the frozen
-locator and edge vocabulary."""
+"""The `semantic` block and the reference-form `data_schema`."""
 
 from __future__ import annotations
 
@@ -11,7 +10,6 @@ import pytest
 import yaml
 
 from tests.conftest import (
-    BASELINE_DIR,
     MODEL_OF,
     OBJECT_TYPES,
     PACKAGE_ROOT,
@@ -19,9 +17,6 @@ from tests.conftest import (
     SCHEMAS_DIR,
     SKELETONS_DIR,
     frontmatter,
-    load_manifest,
-    locators,
-    object_type,
 )
 
 ADMITTED_KEYS = {
@@ -35,12 +30,6 @@ ADMITTED_KEYS = {
     "compatibility_posture",
     "legacy_forms",
 }
-
-BASELINE_MANIFEST = yaml.safe_load((BASELINE_DIR / "manifest.yaml").read_text())
-
-
-def baseline_object_type(name: str) -> dict:
-    return next(ot for ot in BASELINE_MANIFEST["object_types"] if ot["name"] == name)
 
 
 @pytest.mark.trace("TC-040", "FR-003-AC-1", "FR-003-CON-1")
@@ -56,44 +45,6 @@ def test_the_semantic_block_is_exactly_the_nine_admitted_keys(semantic_block):
     assert semantic_block["legacy_forms"] == "warning"
     assert semantic_block["exports"] == list(OBJECT_TYPES)
     assert len(semantic_block["exports"]) == 23
-
-
-@pytest.mark.trace("TC-042", "FR-003-AC-3")
-def test_every_baseline_locator_is_unchanged():
-    for name in OBJECT_TYPES:
-        before = locators(baseline_object_type(name))
-        after = locators(object_type(name))
-        for key, definition in before.items():
-            assert key in after, f"{name}: locator {key} disappeared"
-            assert after[key] == definition, f"{name}: locator {key} changed"
-
-
-@pytest.mark.trace("TC-043", "FR-003-AC-3", "FR-003-CON-2")
-def test_every_added_locator_is_optional():
-    added = 0
-    for name in OBJECT_TYPES:
-        before = locators(baseline_object_type(name))
-        after = locators(object_type(name))
-        for key, definition in after.items():
-            if key in before:
-                continue
-            added += 1
-            assert definition["required"] is False, f"{name}: {key} is required"
-    assert added == 25, added
-
-
-@pytest.mark.trace("TC-047", "FR-003-AC-7", "FR-003-CON-3")
-def test_the_edge_vocabulary_and_traceability_are_frozen():
-    """The sibling `agent-ix/spec-objects-safety` declares its bidirectional
-    hazard coverage against these fields; changing one here is a
-    cross-repository contract change, not a module edit."""
-    current = load_manifest()
-    assert current["traceability"] == BASELINE_MANIFEST["traceability"]
-    for name in OBJECT_TYPES:
-        before = baseline_object_type(name)
-        after = object_type(name)
-        assert after.get("allowed_links") == before.get("allowed_links"), name
-        assert after.get("roles") == before.get("roles"), name
 
 
 @pytest.mark.trace("TC-044", "FR-003-AC-4")

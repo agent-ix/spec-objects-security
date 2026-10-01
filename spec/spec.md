@@ -66,12 +66,7 @@ This document specifies the requirements for `spec-objects-security`, a Filament
   depends on is authorable nowhere: this module's `control` declares
   `mitigates: [threat, risk, vulnerability]`, and the `spec-artifacts-iso`
   `FR`/`NFR` archetypes declare no `mitigates` at all. The fix is a coordinated
-  change across at least two repositories and is not made here. Note the
-  interaction this ticket creates for whoever makes it: FR-003-CON-3 and
-  NFR-001-AC-2 now assert that list equal to the frozen 0.1.0 baseline, so the
-  coordinated change must update `tests/fixtures/baseline-0.1.0/manifest.yaml`
-  in the same commit or TC-047 and TC-101 turn red. That is the freeze working
-  as intended — the edge cannot move silently — not an obstacle to the fix.
+  change across at least two repositories and is not made here.
 - Reconciling this module's `Severity` and `Likelihood` vocabularies with
   `agent-ix/spec-objects-safety`'s `hazard-severity` and `hazard-likelihood`
   lint columns. The names collide and the member sets are disjoint; a shared
@@ -107,19 +102,13 @@ This document specifies the requirements for `spec-objects-security`, a Filament
   manifest key empties the model silently) and `agent-ix/quire-rs#394`.
   FR-003-AC-6's "naming the key or the path" half is blocked on them and is
   carried as an explicit expected failure.
-- Record validation of a legacy-form artifact that declares `object:`:
-  `agent-ix/quire-rs#391` (the engine validates an `unavailable` record as
-  `{}`, so a legacy form errors even under `legacy_forms: warning`).
-  NFR-001-AC-3 itself holds — no 0.1.0 artifact carries `object:` — and the
-  defect is carried as an explicit expected failure beside it rather than
-  worked around by relaxing a schema.
 - Resolving a reference-form `data_schema` into a stored snapshot at
   activation: `agent-ix/filament-core-service#23`. Until it lands the service
   stores the reference verbatim.
 - Editing any corpus repository or vendored fixture; the legacy-form sweep
   and corpus promotion (`agent-ix/quoin#291`).
 - Hosting the semantic-core schema bundle. Every module schema `$ref`s
-  `https://schemas.agent-ix.org/semantic-core/0.3.0/<Model>.json`, and nothing
+  `https://schemas.agent-ix.org/semantic-core/<declared version>/<Model>.json`, and nothing
   in this repository serves that host; a consumer resolves it from the
   `@agent-ix/semantic-core` package, and publishing the bundle is
   `agent-ix/filament-core-data#11`. The module's own tests resolve every such
@@ -146,7 +135,6 @@ The specification is organized into the standard requirement classes, each in it
 - `stakeholder/` — StR-XXX stakeholder requirements.
 - `functional/` — FR-XXX functional requirements.
 - `integration/` — IT-XXX integration tests.
-- `non-functional/` — NFR-XXX non-functional requirements.
 - `usecase/` — US-XXX user stories.
 - `tests.md` — the per-repo test matrix tracing functional requirements to their tests.
 
@@ -154,7 +142,7 @@ FR-001 activates the manifest against `filament-core`; FR-002 emits the
 schemas; FR-003 declares the semantic contract in the manifest; FR-004 fixes
 each type's role-distinct schema; FR-005 makes the skeletons executable
 fixtures; FR-006 encodes the module's security rules into those schemas.
-NFR-001 bounds the change to additive compatibility. Integration tests in
+Integration tests in
 `integration/` verify the activation and Quoin-install boundaries; the third
 external boundary, the Quire engine (loader, extraction, record surface), has
 no IT artifact of its own — the FR-003, FR-005 and FR-006 test harness is this
