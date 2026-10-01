@@ -140,7 +140,9 @@ def test_the_built_wheel_contains_every_exported_schema():
         # `$ref` names a marker or vocabulary sibling that did not ship is
         # unresolvable at the consumer.
         for shipped in shipped_schemas():
-            assert f"spec_objects_security/schemas/{shipped.name}" in names, shipped.name
+            assert (
+                f"spec_objects_security/schemas/{shipped.name}" in names
+            ), shipped.name
 
 
 @pytest.mark.trace("TC-026", "FR-002-AC-7")
