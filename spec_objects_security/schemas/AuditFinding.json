@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/AuditFinding.json",
+  "$id": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/AuditFinding.json",
   "type": "object",
   "properties": {
     "fields": {
@@ -10,7 +10,7 @@
       },
       "minItems": 1,
       "contains": {
-        "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/IdentityField.json"
+        "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/IdentityField.json"
       }
     },
     "clauses": {
@@ -26,7 +26,7 @@
       }
     },
     "status": {
-      "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/FindingStatus.json"
+      "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/FindingStatus.json"
     },
     "traces_to": {
       "type": "array",
@@ -47,7 +47,7 @@
       "properties": {
         "fields": {
           "contains": {
-            "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/StatusField.json"
+            "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/StatusField.json"
           }
         }
       }
@@ -57,7 +57,7 @@
         "fields": {
           "items": {
             "not": {
-              "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/DefaultedField.json"
+              "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/DefaultedField.json"
             }
           }
         }

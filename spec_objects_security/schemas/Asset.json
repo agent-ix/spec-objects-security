@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/Asset.json",
+  "$id": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/Asset.json",
   "type": "object",
   "properties": {
     "fields": {
@@ -10,7 +10,7 @@
       },
       "minItems": 1,
       "contains": {
-        "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/IdentityField.json"
+        "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/IdentityField.json"
       }
     },
     "relations": {
@@ -32,7 +32,7 @@
       }
     },
     "classification": {
-      "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/ConfidentialityLevel.json"
+      "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/ConfidentialityLevel.json"
     },
     "owner": {
       "$ref": "https://schemas.agent-ix.org/semantic-core/0.3.0/SemanticId.json"
@@ -51,7 +51,7 @@
         "fields": {
           "items": {
             "not": {
-              "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/DefaultedField.json"
+              "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/DefaultedField.json"
             }
           }
         }
@@ -65,7 +65,7 @@
               "params": {
                 "items": {
                   "not": {
-                    "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/DefaultedField.json"
+                    "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/DefaultedField.json"
                   }
                 }
               }

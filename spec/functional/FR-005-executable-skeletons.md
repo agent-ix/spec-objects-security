@@ -34,7 +34,7 @@ engine refuse.
 - Negative fixtures `tests/fixtures/negative/<type>-<case>.md`, each with
   frontmatter `expect:` naming the diagnostic code or reason the fixture must
   produce.
-- The Quire wheel 0.47.x (0.47.1 or later), exposing `extract_semantic`,
+- The Quire wheel exposing `extract_semantic`,
   `validate_document`, and `Registry`, declared as a dev dependency resolved
   from `internal-pypi` (see Behavior).
 
@@ -53,7 +53,7 @@ engine refuse.
 - The `asset`, `secret`, and `threat` alternate skeletons SHALL author the same declarations as one ```` ```sysml ```` fence of `attribute <name> : <Type>[<mult>] { <constraints> }` lines, under that skeleton's frontmatter `id` and `title`; the module therefore ships two files under one id by intent, and the identity of their extracted `FieldDecl[]` is the obligation FR-005-AC-2 tests.
 - Each skeleton's frontmatter SHALL carry `object: <type name>` beside `type: <type name>`, because Quire runs the semantic layer (extraction and record validation) on the `object:` archetype of a document; a skeleton without it validates its headings only.
 - The manifest SHALL gain a `required: false` `section_body` locator for every `## Properties`, `## Invariants`, and `## Operations` section a skeleton introduces, so the section is asserted by the manifest and remains optional for existing artifacts.
-- Every `Constraints` cell SHALL use only the constraint keywords the typed-table reader of Quire 0.46.0 accepts (`identity`, `min`, `max`, `exclusiveMin`, `exclusiveMax`, `minLength`, `maxLength`, `nonEmpty`, `unique`, and single-valued `enumValues`). `pattern` is a member of semantic-core's closed `ConstraintKeyword` set that the reader rejects (`agent-ix/quire-rs#397`), and a multi-valued `enumValues` is either split by the constraint separator into bogus keywords or silently truncated to its first member (`agent-ix/quire-rs#401`). Both are engine defects reported upstream and neither is worked around by inventing a cell form.
+- Every `Constraints` cell SHALL use only the constraint keywords the typed-table reader of Quire accepts (`identity`, `min`, `max`, `exclusiveMin`, `exclusiveMax`, `minLength`, `maxLength`, `nonEmpty`, `unique`, and single-valued `enumValues`). `pattern` is a member of semantic-core's closed `ConstraintKeyword` set that the reader rejects (`agent-ix/quire-rs#397`), and a multi-valued `enumValues` is either split by the constraint separator into bogus keywords or silently truncated to its first member (`agent-ix/quire-rs#401`). Both are engine defects reported upstream and neither is worked around by inventing a cell form.
 - Because a closed vocabulary cannot be written into a `Constraints` cell today, each graded value SHALL be authored as a named field row (`severity`, `likelihood`, `impact`, `status`, `level`, `trust_level`, `stride_category`, `effectiveness`) whose closed set is carried by the emitted enum schema of [FR-006](./FR-006-security-safe-declarations.md); the item rules of FR-004 enforce the row's presence, and the enum enforces the value the day the extractor populates the typed key.
 - Every skeleton `title` SHALL be an `Identifier` (`^[A-Za-z_][A-Za-z0-9_]*$`), distinct across all skeletons and outside the `KernelScalar` names, so a `Type` cell can name it.
 - Every `Type` cell that names another skeleton SHALL use that skeleton's `title`, so that under a bundle index built from the skeletons every non-kernel token resolves to `ix://agent-ix/spec-objects-security/type/<Title>` with no `semantic.unresolved-type` finding.

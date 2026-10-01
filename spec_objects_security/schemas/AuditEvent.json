@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/AuditEvent.json",
+  "$id": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/AuditEvent.json",
   "type": "object",
   "properties": {
     "fields": {
@@ -10,7 +10,7 @@
       },
       "minItems": 1,
       "contains": {
-        "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/OccurrenceField.json"
+        "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/OccurrenceField.json"
       }
     },
     "clauses": {
@@ -36,7 +36,7 @@
         "fields": {
           "items": {
             "not": {
-              "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/IdentityField.json"
+              "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/IdentityField.json"
             }
           }
         }
@@ -47,7 +47,7 @@
         "fields": {
           "items": {
             "not": {
-              "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/DefaultedField.json"
+              "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/DefaultedField.json"
             }
           }
         }

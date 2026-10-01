@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/ControlEffectiveness.json",
+  "$id": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/ControlEffectiveness.json",
   "type": "string",
   "enum": [
     "not_assessed",

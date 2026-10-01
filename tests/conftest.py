@@ -38,7 +38,6 @@ SEMANTIC_CORE_DIR = (
     / "json-schema"
 )
 
-SEMANTIC_CORE_BASE = "https://schemas.agent-ix.org/semantic-core/0.3.0/"
 
 QUIRE_MISSING = (
     "the Quire wheel exposing `extract_semantic` is not installed in this "
@@ -233,17 +232,11 @@ def load_manifest() -> dict[str, Any]:
     return yaml.safe_load(MANIFEST_PATH.read_text())
 
 
-def manifest_version() -> str:
-    return load_manifest()["version"]
-
-
-def module_base() -> str:
-    """The `$id` base, read from the manifest version — never hard-coded
-    (FR-002-CON-5)."""
-    return (
-        "https://schemas.agent-ix.org/agent-ix/spec-objects-security/"
-        f"{manifest_version()}/"
-    )
+MODULE_BASE = "https://schemas.agent-ix.org/agent-ix/spec-objects-security/"
+SEMANTIC_CORE_BASE = (
+    "https://schemas.agent-ix.org/semantic-core/"
+    f"{load_manifest()['semantic']['semantic_core']}/"
+)
 
 
 def object_types() -> list[dict[str, Any]]:
@@ -380,7 +373,7 @@ def field(
     not populate is verified (FR-004): they are schema evidence, never
     extraction evidence, and the tests that use them say so.
     """
-    # Multiplicity.json (semantic-core 0.3.0) requires `ordered`/`unique`; a
+    # Multiplicity.json (semantic-core) requires `ordered`/`unique`; a
     # producer clamps both `false` on a singular multiplicity (`upper` at
     # most one). Every caller of this helper passes the default `upper=1`, so
     # both are `false` here.

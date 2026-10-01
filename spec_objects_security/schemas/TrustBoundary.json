@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/TrustBoundary.json",
+  "$id": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/TrustBoundary.json",
   "type": "object",
   "properties": {
     "fields": {
@@ -10,7 +10,7 @@
       },
       "minItems": 1,
       "contains": {
-        "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/IdentityField.json"
+        "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/IdentityField.json"
       }
     },
     "clauses": {
@@ -27,7 +27,7 @@
       }
     },
     "trust_level": {
-      "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/TrustLevel.json"
+      "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/TrustLevel.json"
     },
     "crosses": {
       "type": "array",
@@ -49,7 +49,7 @@
       "properties": {
         "fields": {
           "contains": {
-            "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/TrustLevelField.json"
+            "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/TrustLevelField.json"
           }
         }
       }
@@ -59,7 +59,7 @@
         "fields": {
           "items": {
             "not": {
-              "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/DefaultedField.json"
+              "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/DefaultedField.json"
             }
           }
         }

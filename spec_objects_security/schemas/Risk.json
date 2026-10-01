@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/Risk.json",
+  "$id": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/Risk.json",
   "type": "object",
   "properties": {
     "fields": {
@@ -10,7 +10,7 @@
       },
       "minItems": 1,
       "contains": {
-        "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/IdentityField.json"
+        "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/IdentityField.json"
       }
     },
     "clauses": {
@@ -26,10 +26,10 @@
       }
     },
     "likelihood": {
-      "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/Likelihood.json"
+      "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/Likelihood.json"
     },
     "impact": {
-      "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/Impact.json"
+      "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/Impact.json"
     },
     "arises_from": {
       "type": "array",
@@ -50,7 +50,7 @@
       "properties": {
         "fields": {
           "contains": {
-            "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/LikelihoodField.json"
+            "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/LikelihoodField.json"
           }
         }
       }
@@ -59,7 +59,7 @@
       "properties": {
         "fields": {
           "contains": {
-            "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/ImpactField.json"
+            "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/ImpactField.json"
           }
         }
       }
@@ -69,7 +69,7 @@
         "fields": {
           "items": {
             "not": {
-              "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/DefaultedField.json"
+              "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/DefaultedField.json"
             }
           }
         }
