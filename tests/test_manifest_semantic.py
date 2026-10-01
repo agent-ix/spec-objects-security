@@ -49,7 +49,6 @@ def test_the_semantic_block_is_exactly_the_nine_admitted_keys(semantic_block):
     assert set(semantic_block) == ADMITTED_KEYS
     assert len(ADMITTED_KEYS) == 9
     assert semantic_block["contract_version"] == "1.0.0"
-    assert semantic_block["semantic_core"] == "0.3.0"
     assert semantic_block["package"] == "agent-ix/spec-objects-security"
     assert semantic_block["imports"] == {}
     assert semantic_block["targets"] == ["json-schema", "markdown"]

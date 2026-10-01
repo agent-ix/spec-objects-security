@@ -26,18 +26,16 @@ build.
 - `typespec/main.tsp`: namespace `AgentIx.SpecObjects.Security`, decorated
   `@jsonSchema("https://schemas.agent-ix.org/agent-ix/spec-objects-security/<version>/")`
   where `<version>` is the manifest `version`.
-- `@agent-ix/semantic-core` 0.3.0 from GitHub Packages (`FieldDecl`, `TypeRef`,
+- `@agent-ix/semantic-core` from GitHub Packages (`FieldDecl`, `TypeRef`,
   `Multiplicity`, `ConstraintDecl`, `DefaultDecl`, `RelationDecl`,
   `OperationDecl`, `ClauseRef`, `EnumValue`, `KernelScalar`, `Identifier`,
   `SemanticId`).
-- `@typespec/compiler` 1.15.0, `@typespec/json-schema` 1.15.0 and
-  `@agent-ix/semantic-core` 0.3.0 as exact `devDependencies` in `package.json`,
-  resolved through `package-lock.json`: all three are build inputs of the
+- `@typespec/compiler`, `@typespec/json-schema` and `@agent-ix/semantic-core`
+  as `devDependencies` in `package.json`: all three are build inputs of the
   emission step, and the published artifact is Markdown and JSON, so none is a
   runtime dependency of a consumer.
 - `scripts/generate-schemas.mjs` (the generator) and `scripts/stage-npm.mjs`
   (the npm staging script), both Node built-ins only.
-- Node 20 or later, the runtime `@typespec/compiler` 1.15.0 requires.
 
 ## Outputs
 
