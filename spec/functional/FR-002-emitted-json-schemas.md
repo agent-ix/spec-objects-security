@@ -89,6 +89,8 @@ build.
 | FR-002-AC-3 | Every `$ref` across the shipped schemas resolves to a shipped sibling or to semantic-core `0.3.0`; a `$ref` to any other host or version is absent. | Test |
 | FR-002-AC-4 | `make schemas-check` on the committed tree exits zero; after one byte of any shipped schema is changed, it exits non-zero naming that file. | Test |
 | FR-002-AC-5 | A `@jsonSchema` base whose version segment differs from the manifest `version` makes the generator fail naming both versions. | Test |
+| FR-002-AC-6 | The wheel built by `make build` contains every emitted schema, not only the exported models: a schema whose `$ref` names a sibling that did not ship is unresolvable at the consumer. | Test |
+| FR-002-AC-7 | The npm tarball produced by `npm pack` contains `manifest.yaml` and a sibling `schemas/<File>` for every emitted schema, so a manifest-relative `schema:` path and every `$ref` it reaches resolve inside the tarball. | Test |
 | FR-002-AC-8 | Bumping the manifest `version` and the `@jsonSchema` base together and re-running the generator yields every `$id` and every sibling `$ref` at the new version; `make schemas-check` then exits zero, while bumping only one of the pair exits non-zero. | Test |
 | FR-002-AC-9 | `make schemas-check` on a committed tree carrying an extra `spec_objects_security/schemas/Stale.json` with no emitted counterpart exits non-zero naming that file, and writes nothing. | Test |
 | FR-002-AC-11 | `.gitattributes` marks `*.json`, `*.tsp`, `*.yaml` and `*.md` `eol=lf`, and `npm pack` leaves no staged `manifest.yaml`, `schemas/` or `skeletons/` at the repository root. | Test |

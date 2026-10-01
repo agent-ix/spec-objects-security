@@ -8,15 +8,20 @@ test.
 from __future__ import annotations
 
 import json
+import os
 import pathlib
 import shutil
 import subprocess
+import tarfile
 import tempfile
+import zipfile
 
 import pytest
 
 from tests.conftest import (
     MANIFEST_PATH,
+    MODEL_OF,
+    OBJECT_TYPES,
     REPO_ROOT,
     SCHEMAS_DIR,
     SEMANTIC_CORE_BASE,
@@ -25,6 +30,7 @@ from tests.conftest import (
 )
 
 GENERATOR = REPO_ROOT / "scripts" / "generate-schemas.mjs"
+
 
 def run_generator(*args: str, cwd=None) -> subprocess.CompletedProcess:
     """Run the generator that belongs to `cwd`.
@@ -127,6 +133,52 @@ def test_a_base_version_differing_from_the_manifest_fails_naming_both():
         result = run_generator("--check", cwd=scratch)
         assert result.returncode != 0
         assert "9.9.9" in result.stderr and version in result.stderr
+
+
+@pytest.mark.trace("TC-025", "FR-002-AC-6")
+def test_the_built_wheel_contains_every_exported_schema():
+    with tempfile.TemporaryDirectory() as tmp:
+        build = subprocess.run(
+            ["poetry", "build", "-f", "wheel", "-o", tmp],
+            cwd=str(REPO_ROOT),
+            capture_output=True,
+            text=True,
+        )
+        assert build.returncode == 0, build.stderr
+        wheel = next(pathlib.Path(tmp).glob("*.whl"))
+        with zipfile.ZipFile(wheel) as archive:
+            names = set(archive.namelist())
+        for name in OBJECT_TYPES:
+            member = f"spec_objects_security/schemas/{MODEL_OF[name]}.json"
+            assert member in names, member
+        # Every shipped file, not only the twenty-three exports: a schema whose
+        # `$ref` names a marker or vocabulary sibling that did not ship is
+        # unresolvable at the consumer.
+        for shipped in shipped_schemas():
+            assert f"spec_objects_security/schemas/{shipped.name}" in names, shipped.name
+
+
+@pytest.mark.trace("TC-026", "FR-002-AC-7")
+def test_the_npm_tarball_ships_the_manifest_beside_its_schemas():
+    with tempfile.TemporaryDirectory() as tmp:
+        pack = subprocess.run(
+            ["npm", "pack", "--pack-destination", tmp],
+            cwd=str(REPO_ROOT),
+            capture_output=True,
+            text=True,
+            env={**os.environ, "npm_config_registry": "https://registry.npmjs.org/"},
+        )
+        assert pack.returncode == 0, pack.stderr
+        tarball = next(pathlib.Path(tmp).glob("*.tgz"))
+        with tarfile.open(tarball) as archive:
+            names = set(archive.getnames())
+        assert "package/manifest.yaml" in names
+        for name in OBJECT_TYPES:
+            member = f"package/schemas/{MODEL_OF[name]}.json"
+            assert member in names, member
+        for shipped in shipped_schemas():
+            assert f"package/schemas/{shipped.name}" in names, shipped.name
+    assert not (REPO_ROOT / "manifest.yaml").exists(), "postpack left a staged manifest"
 
 
 @pytest.mark.trace("TC-027", "FR-002-AC-8", "FR-002-CON-5")
