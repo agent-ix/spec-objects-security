@@ -293,7 +293,7 @@ def test_no_module_schema_redeclares_a_semantic_core_model():
             / "json-schema"
         ).glob("*.json")
     }
-    shipped = {p.stem for p in SCHEMAS_DIR.glob("*.json") if p.name != "toolchain.json"}
+    shipped = {p.stem for p in SCHEMAS_DIR.glob("*.json")}
     assert not (core & shipped), core & shipped
     grammar_keys = {"fields", "clauses", "operations", "relations", "params", "values"}
     for model in MODELS:
