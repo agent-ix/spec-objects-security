@@ -172,8 +172,6 @@ def test_the_unassessed_member_validates_and_an_invented_member_fails(
 def test_no_shipped_schema_carries_a_default_keyword():
     offenders = {}
     for path in sorted(SCHEMAS_DIR.glob("*.json")):
-        if path.name == "toolchain.json":
-            continue
         hits = default_keywords(json.loads(path.read_text()))
         if hits:
             offenders[path.name] = hits
@@ -266,8 +264,6 @@ def test_no_negative_rule_depends_on_a_counting_keyword():
     "must carry a defaulted field". `items`/`not` cannot invert.
     """
     for path in sorted(SCHEMAS_DIR.glob("*.json")):
-        if path.name == "toolchain.json":
-            continue
         text = path.read_text()
         assert "minContains" not in text, path.name
         assert "maxContains" not in text, path.name

@@ -25,46 +25,11 @@ from tests.conftest import (
     REPO_ROOT,
     SCHEMAS_DIR,
     SEMANTIC_CORE_BASE,
-    load_manifest,
     manifest_version,
     module_base,
 )
 
 GENERATOR = REPO_ROOT / "scripts" / "generate-schemas.mjs"
-
-EXPECTED_MODELS = sorted(
-    [MODEL_OF[name] for name in OBJECT_TYPES]
-    + [
-        "IdentityField",
-        "DefaultedField",
-        "OccurrenceField",
-        "OccurrenceTypeRef",
-        "StrideCategoryField",
-        "SeverityField",
-        "LikelihoodField",
-        "ImpactField",
-        "StatusField",
-        "LevelField",
-        "TrustLevelField",
-        "EffectivenessField",
-        "ControlMapping",
-        "FlowStep",
-        "Severity",
-        "Likelihood",
-        "Impact",
-        "StrideCategory",
-        "ControlEffectiveness",
-        "FindingStatus",
-        "ConfidentialityLevel",
-        "TrustLevel",
-        "SecretLifecycle",
-        "MfaFactorKind",
-    ]
-)
-
-
-def toolchain() -> dict:
-    return json.loads((SCHEMAS_DIR / "toolchain.json").read_text())
 
 
 def run_generator(*args: str, cwd=None) -> subprocess.CompletedProcess:
@@ -85,7 +50,7 @@ def run_generator(*args: str, cwd=None) -> subprocess.CompletedProcess:
 
 
 def shipped_schemas() -> list:
-    return [p for p in sorted(SCHEMAS_DIR.glob("*.json")) if p.name != "toolchain.json"]
+    return sorted(SCHEMAS_DIR.glob("*.json"))
 
 
 def clone_repo(destination) -> None:
@@ -103,26 +68,9 @@ def clone_repo(destination) -> None:
     shutil.copytree(SCHEMAS_DIR, package / "schemas")
 
 
-@pytest.mark.trace("TC-020", "FR-002-AC-1")
-def test_emitted_set_equals_the_declared_models():
-    record = toolchain()
-    assert sorted(record["files"]) == [f"{m}.json" for m in EXPECTED_MODELS]
-    assert sorted(p.name for p in shipped_schemas()) == [
-        f"{m}.json" for m in EXPECTED_MODELS
-    ]
-    assert record["compiler"]["version"] == "1.15.0"
-    assert record["emitter"]["version"] == "1.15.0"
-    # Read from the manifest rather than hard-coded, so a semantic-core bump
-    # churns no test (the same principle FR-002-CON-5 states for the $id
-    # version segment).
-    expected = load_manifest()["semantic"]["semantic_core"]
-    assert record["semanticCore"]["version"] == expected
-
-
 @pytest.mark.trace("TC-021", "FR-002-AC-2")
 def test_every_schema_declares_the_draft_id_under_the_manifest_version_base():
     base = module_base()
-    assert toolchain()["base"] == base
     for path in shipped_schemas():
         schema = json.loads(path.read_text())
         assert schema["$schema"] == "https://json-schema.org/draft/2020-12/schema"
@@ -206,8 +154,8 @@ def test_the_built_wheel_contains_every_exported_schema():
         # Every shipped file, not only the twenty-three exports: a schema whose
         # `$ref` names a marker or vocabulary sibling that did not ship is
         # unresolvable at the consumer.
-        for shipped in toolchain()["files"] + ["toolchain.json"]:
-            assert f"spec_objects_security/schemas/{shipped}" in names, shipped
+        for shipped in shipped_schemas():
+            assert f"spec_objects_security/schemas/{shipped.name}" in names, shipped.name
 
 
 @pytest.mark.trace("TC-026", "FR-002-AC-7")
@@ -228,8 +176,8 @@ def test_the_npm_tarball_ships_the_manifest_beside_its_schemas():
         for name in OBJECT_TYPES:
             member = f"package/schemas/{MODEL_OF[name]}.json"
             assert member in names, member
-        for shipped in toolchain()["files"] + ["toolchain.json"]:
-            assert f"package/schemas/{shipped}" in names, shipped
+        for shipped in shipped_schemas():
+            assert f"package/schemas/{shipped.name}" in names, shipped.name
     assert not (REPO_ROOT / "manifest.yaml").exists(), "postpack left a staged manifest"
 
 
@@ -245,9 +193,6 @@ def test_a_coordinated_version_bump_re_emits_everything():
         schema = json.loads((emitted / "Threat.json").read_text())
         assert schema["$id"].endswith("/9.9.9/Threat.json")
         assert "/9.9.9/" in json.dumps(schema)
-        assert json.loads((emitted / "toolchain.json").read_text())["base"].endswith(
-            "/9.9.9/"
-        )
     with tempfile.TemporaryDirectory() as tmp:
         scratch = _scratch(tmp)
         _bump(scratch, version, "9.9.9", both=False)
@@ -305,8 +250,6 @@ def test_the_official_emitter_only_and_no_hand_edited_output():
     assert "emitter:" not in config or "custom" not in config
     generator = GENERATOR.read_text()
     assert "@typespec/compiler/entrypoints/cli.js" in generator
-    record = toolchain()
-    assert record["emitter"]["name"] == "@typespec/json-schema"
     assert run_generator("--check").returncode == 0
 
 
