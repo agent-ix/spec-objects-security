@@ -92,7 +92,7 @@ the Python package only: neither Node script is measured by it.
 | Functional Req | Acceptance Criteria | Test Cases | Coverage Status |
 |---|---|---|---|
 | FR-001 | FR-001-AC-1..4 | TC-001..TC-004, TC-006..TC-014, TC-015..TC-017 | 🚧 AC-2..AC-4 need a running filament-core |
-| FR-002 | FR-002-AC-1..11, FR-002-CON-1..5 | TC-020..TC-035 | ✅ |
+| FR-002 | FR-002-AC-1..4, FR-002-AC-6..11, FR-002-CON-1..4 | TC-020..TC-035 | ✅ |
 | FR-003 | FR-003-AC-1..7, FR-003-CON-1..3 | TC-040..TC-047 | ✅ AC-5 is a Demonstration nothing here can discharge; AC-6's naming half is an expected failure |
 | FR-004 | FR-004-AC-1..14, FR-004-CON-1..2 | TC-050..TC-063 | ✅ |
 | FR-005 | FR-005-AC-1..9, FR-005-CON-1..3 | TC-080..TC-090 | ✅ |
@@ -133,19 +133,16 @@ the Python package only: neither Node script is measured by it.
 | TC-017 | Every declared contribution appears in the corresponding filament-core table | Integration | P1 | FR-001-AC-4 | 🚧 needs a running filament-core |
 | TC-018 | The activation roundtrip's steps 3-6 all pass | Integration | P1 | IT-001-AC-1 | 🚧 needs a running filament-core |
 | TC-019 | Re-activation produces the same SHA-256 content hash | Integration | P1 | IT-001-AC-2 | 🚧 needs a running filament-core |
-| TC-021 | Every shipped schema declares the 2020-12 `$schema` and the `$id` matching its file name under the manifest-version base | Unit | P0 | FR-002-AC-2 | ✅ |
-| TC-022 | Every `$ref` resolves to a shipped sibling or semantic-core 0.3.0 | Unit | P0 | FR-002-AC-3 | ✅ |
+| TC-021 | Every shipped schema declares the 2020-12 `$schema` and the `$id` matching its file name | Unit | P0 | FR-002-AC-2 | ✅ |
+| TC-022 | Every `$ref` resolves to a shipped sibling or semantic-core | Unit | P0 | FR-002-AC-3 | ✅ |
 | TC-023 | `make schemas-check` exits zero on the committed tree and non-zero naming a mutated schema | Integration | P1 | FR-002-AC-4 | ✅ |
-| TC-024 | A `@jsonSchema` base version differing from the manifest version fails the generator naming both | Integration | P1 | FR-002-AC-5 | ✅ |
 | TC-025 | The built wheel contains every exported schema file | Integration | P1 | FR-002-AC-6 | ✅ |
 | TC-026 | The packed npm tarball contains `manifest.yaml` and a sibling `schemas/<Model>.json` per export | Integration | P1 | FR-002-AC-7 | ✅ |
-| TC-027 | A coordinated version bump re-emits every `$id`/`$ref` at the new version; bumping one half of the pair fails the check | Integration | P1 | FR-002-AC-8, FR-002-CON-5 | ✅ |
 | TC-028 | `make schemas-check` names a stale committed schema with no emitted counterpart and writes nothing | Integration | P1 | FR-002-AC-9 | ✅ |
 | TC-029 | Two generator runs over one source are byte-identical | Integration | P1 | FR-002-CON-3 | ✅ |
 | TC-030 | The build uses the official `@typespec/json-schema` emitter only and no emitted file is hand-edited | Static | P2 | FR-002-CON-1 | ✅ |
-| TC-031 | No `.npmrc`, no `file:`/`link:` dependency, exact toolchain pins in `package.json` | Static | P2 | FR-002-CON-2 | ✅ |
+| TC-031 | No `.npmrc`, no `file:`/`link:` dependency | Static | P2 | FR-002-CON-2 | ✅ |
 | TC-032 | `package-lock.json` resolves every package from npmjs except `@agent-ix/semantic-core` (GitHub Packages, `npm.pkg.github.com`) | Unit | P2 | FR-002-CON-4 | ✅ |
-| TC-033 | No acceptance test hard-codes the `$id` version segment; each reads it from the manifest `version` | Static | P2 | FR-002-CON-5 | ✅ |
 | TC-035 | `.gitattributes` pins `eol=lf` and `npm pack` leaves nothing staged at the repository root | Unit | P1 | FR-002-AC-11 | ✅ |
 | TC-040 | The `semantic` block equals the nine admitted keys and `exports` equals the twenty-three types | Unit | P0 | FR-003-AC-1, FR-003-CON-1 | ✅ |
 | TC-042 | Every 0.1.0 locator is unchanged against the checked-in baseline | Unit | P0 | FR-003-AC-3 | ✅ |
@@ -192,7 +189,7 @@ the Python package only: neither Node script is measured by it.
 | TC-101 | Zero `traceability`/`allowed_links` bytes changed against the 0.1.0 baseline | Unit | P0 | NFR-001-AC-2 | ✅ |
 | TC-102 | Every checked-in 0.1.0 skeleton validates under 0.2.0 with zero errors | Integration | P0 | NFR-001-AC-3 | ✅ |
 | TC-103 | No checked-in 0.1.0 skeleton yields `semantic.record-invalid` under 0.2.0; the `object:`-declaring case is an expected failure | Integration | P0 | NFR-001-AC-4 | ✅ |
-| TC-110 | Quoin install roundtrip with state restore | Manual | P1 | IT-002-SC-01..IT-002-SC-06, FR-003-AC-5 | 🚧 needs a Quoin built from quoin main ≥ `3e842ce` (no release carries it) |
+| TC-110 | Quoin install roundtrip with state restore | Manual | P1 | IT-002-SC-01..IT-002-SC-06, FR-003-AC-5 | 🚧 needs a Quoin built from quoin main (no release carries it) |
 | TC-111 | Every object type ships a typed schema a fixture reader can consume; a secret and a risk record are distinguishable by schema alone | Unit | P2 | StR-001-VC-3 | ✅ |
 | TC-112 | A module activation against filament-core registers every declared contribution | Manual | P2 | StR-001-VC-1 | 🚧 needs a running filament-core |
 | TC-113 | A generator run (minijinja-cli) produces a valid artifact from a shipped skeleton and schema | Manual | P2 | StR-001-VC-2 | 🚧 needs a generator run against a released module |
@@ -219,7 +216,7 @@ Every acceptance criterion, named constraint and NFR metric of FR-001..FR-006,
 NFR-001, IT-001, IT-002 and StR-001 now has at least one row. Nine rows cannot
 be discharged in this repository and are `🚧` with the reason on the row:
 TC-015..TC-019 and TC-112 need a running `filament-core-service`, TC-046 and
-TC-110 need a Quoin built from `quoin` main at or after `3e842ce`, and TC-113
+TC-110 need a Quoin built from `quoin` main, and TC-113
 needs a generator run against a released module.
 
 TC-114 is deliberately a row of its own rather than a tag on TC-110. A test

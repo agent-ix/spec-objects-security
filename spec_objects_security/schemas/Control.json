@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/Control.json",
+  "$id": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/Control.json",
   "type": "object",
   "properties": {
     "clauses": {
@@ -17,7 +17,7 @@
       },
       "minItems": 1,
       "contains": {
-        "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/EffectivenessField.json"
+        "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/EffectivenessField.json"
       }
     },
     "operations": {
@@ -27,7 +27,7 @@
       }
     },
     "effectiveness": {
-      "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/ControlEffectiveness.json"
+      "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/ControlEffectiveness.json"
     },
     "mitigates": {
       "type": "array",
@@ -38,7 +38,7 @@
     "mappings": {
       "type": "array",
       "items": {
-        "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/ControlMapping.json"
+        "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/ControlMapping.json"
       }
     }
   },
@@ -56,7 +56,7 @@
         "fields": {
           "items": {
             "not": {
-              "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/DefaultedField.json"
+              "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/DefaultedField.json"
             }
           }
         }
@@ -70,7 +70,7 @@
               "params": {
                 "items": {
                   "not": {
-                    "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/DefaultedField.json"
+                    "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/DefaultedField.json"
                   }
                 }
               }

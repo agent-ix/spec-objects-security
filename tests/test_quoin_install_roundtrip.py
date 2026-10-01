@@ -1,7 +1,7 @@
 """The Quoin install roundtrip.
 
 TC-110 and its IT-002 success criteria stay `Manual` and `🚧`: they need a
-Quoin built from `agent-ix/quoin` main at or after `3e842ce`, and no release
+Quoin built from `agent-ix/quoin` main, and no release
 tag carries the semantic module installer. This file does **not** bind them —
 a test that only checks files exist cannot claim "the pre-install listing is
 captured". What it binds is TC-114, its own row: the module directory the

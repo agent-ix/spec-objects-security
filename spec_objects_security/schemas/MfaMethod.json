@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/MfaMethod.json",
+  "$id": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/MfaMethod.json",
   "type": "object",
   "properties": {
     "fields": {
@@ -10,7 +10,7 @@
       },
       "minItems": 1,
       "contains": {
-        "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/IdentityField.json"
+        "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/IdentityField.json"
       }
     },
     "clauses": {
@@ -26,7 +26,7 @@
       }
     },
     "factor_kind": {
-      "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/MfaFactorKind.json"
+      "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/MfaFactorKind.json"
     }
   },
   "required": [
@@ -42,7 +42,7 @@
         "fields": {
           "items": {
             "not": {
-              "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/DefaultedField.json"
+              "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/DefaultedField.json"
             }
           }
         }
@@ -56,7 +56,7 @@
               "params": {
                 "items": {
                   "not": {
-                    "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/DefaultedField.json"
+                    "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/DefaultedField.json"
                   }
                 }
               }

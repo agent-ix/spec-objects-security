@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/SessionConfig.json",
+  "$id": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/SessionConfig.json",
   "type": "object",
   "properties": {
     "clauses": {
@@ -33,7 +33,7 @@
         "fields": {
           "items": {
             "not": {
-              "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/0.2.0/DefaultedField.json"
+              "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/DefaultedField.json"
             }
           }
         }
