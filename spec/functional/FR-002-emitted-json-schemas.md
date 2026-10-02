@@ -50,7 +50,7 @@ build.
 - If `node` is older than 20 or `tsp` is not resolvable, then the generator SHALL exit non-zero naming the required Node version or the missing binary.
 - In `--check` mode the generator SHALL write no file, neither under `spec_objects_security/schemas/` nor in `manifest.yaml`.
 - Every emitted schema SHALL declare `$schema: https://json-schema.org/draft/2020-12/schema` and `$id: https://schemas.agent-ix.org/agent-ix/spec-objects-security/<Model>.json`.
-- Every `$ref` in an emitted schema SHALL name either a sibling `https://schemas.agent-ix.org/agent-ix/spec-objects-security/<File>.json` that ships in `schemas/`, or `https://schemas.agent-ix.org/semantic-core/0.3.0/<Model>.json`.
+- Every `$ref` in an emitted schema SHALL name either a sibling `https://schemas.agent-ix.org/agent-ix/spec-objects-security/<File>.json` that ships in `schemas/`, or `https://schemas.agent-ix.org/semantic-core/<declared version>/<Model>.json`.
 - `make schemas-check` SHALL run the generator with `--check`.
 - `make lint` SHALL run `make schemas-check`, so a `typespec/` edit that was never regenerated fails before push rather than at review.
 - If any emitted file differs from the committed output, a committed file under `spec_objects_security/schemas/` is stale (it has no emitted counterpart in this run), then the check SHALL exit non-zero naming each such file.
