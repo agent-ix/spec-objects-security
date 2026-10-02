@@ -55,8 +55,7 @@ This document specifies the requirements for `spec-objects-security`, a Filament
   `failure-mode-has-mitigation` relations are declared in its own manifest over
   its own archetypes, and the shared element is the verb `mitigates`, owned by
   `spec-artifacts-iso` FR-004. What couples the two repositories is that safety
-  mirrored this module's `traceability` shape (its `5e1e016` references
-  `agent-ix/spec-objects-security#5`), and that this module's
+  mirrored this module's `traceability` shape, and that this module's
   `control.allowed_links.mitigates` list — `[threat, risk, vulnerability]` —
   excludes `hazard` and `failure_mode`, so a security control cannot satisfy a
   safety coverage check today. Widening or narrowing that list is a
