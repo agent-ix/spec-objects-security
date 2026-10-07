@@ -20,4 +20,3 @@ okf_version: "0.1"
 * [Task-008](./tasks/Task-008-nfr-additive-compatibility.md) - NFR-001 additive-compatibility verification.
 * [Task-009](./tasks/Task-009-quoin-install-roundtrip.md) - IT-002 Quoin install roundtrip with unconditional restore.
 * [Task-010](./tasks/Task-010-activation-reverification.md) - Activation re-verification and the rows a human owns.
-* [Update Log](./log.md) - Chronological log of changes to this bundle.
