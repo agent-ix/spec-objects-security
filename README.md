@@ -109,3 +109,5 @@ make use-local p=<name> / make use-upstream p=<name>   # swap a dep source
 ## License
 
 AGPL-3.0-or-later — see [LICENSE](./LICENSE).
+
+<!-- STD-30 language-boundary canary: inert README change. -->
