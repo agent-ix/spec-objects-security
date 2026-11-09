@@ -133,7 +133,7 @@ the Python package only: neither Node script is measured by it.
 | TC-031 | No `.npmrc`, no `file:`/`link:` dependency | Static | P2 | FR-002-CON-2 | ✅ |
 | TC-032 | `package-lock.json` resolves every package from npmjs except `@agent-ix/semantic-core` (GitHub Packages, `npm.pkg.github.com`) | Unit | P2 | FR-002-CON-4 | ✅ |
 | TC-035 | `.gitattributes` pins `eol=lf` and `npm pack` leaves nothing staged at the repository root | Unit | P1 | FR-002-AC-11 | ✅ |
-| TC-040 | The `semantic` block equals the nine admitted keys and `exports` equals the twenty-three types | Unit | P0 | FR-003-AC-1, FR-003-CON-1 | ✅ |
+| TC-040 | The `semantic` block equals the eight admitted keys and `exports` equals the twenty-three types | Unit | P0 | FR-003-AC-1, FR-003-CON-1 | ✅ |
 | TC-044 | `quire.Registry.load_from` lists all twenty-three archetypes and `validate_document` reports no `semantic.*` load failure on any skeleton | Integration | P0 | FR-003-AC-4 | ✅ |
 | TC-045 | An unknown `semantic` key is refused by the loader; the refusal names the key or path | Integration | P1 | FR-003-AC-6 | ✅ refusal verified; the naming half is a strict expected failure on quire-rs#221 and quire-rs#394 |
 | TC-046 | `quoin module install path:` succeeds, lists the module, and the prior entry is restored | Manual | P1 | FR-003-AC-5 | 🚧 |

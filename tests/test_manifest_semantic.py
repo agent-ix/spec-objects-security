@@ -21,7 +21,6 @@ from tests.conftest import (
 
 ADMITTED_KEYS = {
     "contract_version",
-    "semantic_core",
     "package",
     "exports",
     "imports",
@@ -33,9 +32,9 @@ ADMITTED_KEYS = {
 
 
 @pytest.mark.trace("TC-040", "FR-003-AC-1", "FR-003-CON-1")
-def test_the_semantic_block_is_exactly_the_nine_admitted_keys(semantic_block):
+def test_the_semantic_block_is_exactly_the_eight_admitted_keys(semantic_block):
     assert set(semantic_block) == ADMITTED_KEYS
-    assert len(ADMITTED_KEYS) == 9
+    assert len(ADMITTED_KEYS) == 8
     assert semantic_block["contract_version"] == "1.0.0"
     assert semantic_block["package"] == "agent-ix/spec-objects-security"
     assert semantic_block["imports"] == {}
