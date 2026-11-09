@@ -25,13 +25,13 @@ relationships:
 
 ## Scope
 
-The manifest at version 0.2.0: the nine-key `semantic` block, a reference-form
+The manifest at version 0.2.0: the eight-key `semantic` block, a reference-form
 `data_schema` per exported type, and the freeze that protects the sibling
 safety module.
 
 ## Subtasks
 
-- [x] `semantic` block with exactly the nine admitted keys and all twenty-three
+- [x] `semantic` block with exactly the eight admitted keys and all twenty-three
       exports.
 - [x] Reference-form `data_schema` per type; no inline schema survives.
 - [x] Every 0.1.0 locator unchanged against the frozen baseline.
