@@ -93,10 +93,13 @@ def test_threat_and_risk_coverage_is_declared_not_coded() -> None:
       * each has its OWN ``trace:<check>`` key so it is independently tunable
         (quire-rs FR-057) — a repository can promote uncontrolled threats to
         ``error`` while risk treatment is still being backfilled;
-      * ``direction`` is ``incoming``: a control says what it mitigates, and a
-        threat listing its own controls would duplicate the fact;
-      * every ``from`` names an object type this module declares, and every
-        verb is one the module already permits — the relation must not invent
+      * ``direction`` is ``incoming`` for the exposure-end relations: a control
+        says what it mitigates, and a threat listing its own controls would
+        duplicate the fact. The one exception is the reverse NFR relation
+        (FR-008), which is ``outgoing`` because the NFR authors the edge;
+      * every ``from`` names an object type this module declares, except that
+        reverse relation, whose ``NFR`` is spec-artifacts-iso's archetype;
+      * every verb is one the module already permits — the relation must not invent
         vocabulary (quire-rs CR-075 would report it as matching nothing).
     """
     manifest = yaml.safe_load(MANIFEST_PATH.read_text())

@@ -34,7 +34,7 @@ jsonschema = "^4.25.0"
 quire = { version = "^0.58.0", source = "internal-pypi" }
 # The reverse-mitigates tests (tests/test_reverse_mitigates.py) load the NFR archetype and its
 # `quality_attribute` field, which spec-artifacts-iso owns.
-spec-artifacts-iso = { version = "^0.22.0", source = "internal-pypi" }
+spec-artifacts-iso = { version = "^0.25.0", source = "internal-pypi" }
 
 [tool.poetry.scripts]
 build-tools = "scripts.build_tools:main"
