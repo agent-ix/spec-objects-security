@@ -46,3 +46,13 @@ contradict it.
 | FND-003 | low | "depends on no package that redistributes one" is now false as written. `pyproject.toml` depends on `quire`, whose engine embeds the schema, and the same paragraph says the engine embeds it. Say instead that no copy is held in this repository. | spec/functional/FR-003-semantic-manifest-contract.md:32, spec/spec.md:63-64 |
 | FND-004 | medium | FR-003-CON-1 still says Quoin's refusal of an unknown `semantic` key "is assumed, evidenced only by the clean install of IT-002". FR-003-AC-7 and TC-115 now verify that refusal, naming `semantic.foo`. | spec/functional/FR-003-semantic-manifest-contract.md:58 |
 | FND-005 | medium | The FR-003 Behavior says "`quoin module install` (FR-003-AC-5) is a Demonstration this repository cannot run", and the FR-003 note in `spec/tests.md` says "AC-5 is a Demonstration nothing here can discharge". AC-7 now runs `quoin module install path:<module dir>` and asserts exit 0. Once the install is truly isolated, AC-5's "listed by `quoin module`" can also be a Test, and its "restore the previous entry" clause becomes unnecessary. | spec/functional/FR-003-semantic-manifest-contract.md:47, spec/functional/FR-003-semantic-manifest-contract.md:66, spec/tests.md:93 |
+
+## Dispositions
+
+| FND | outcome | reason |
+|-----|---------|--------|
+| FND-001 | fixed | Fixed in d8165ff. AC-7 and TC-115 now say `HOME` points at a temporary directory, which matches the test. |
+| FND-002 | fixed | Fixed in d8165ff. The FR-003 Inputs and the `spec.md` non-goal now state the measured split. Re-probed in a tmp HOME: quire accepts `semantic.foo`, and quoin refuses it with QM020. |
+| FND-003 | fixed | Fixed in d8165ff. FR-003, FR-001 and `spec.md` now say "commits no copy". |
+| FND-004 | fixed | Fixed in d8165ff. CON-1 says Quoin's refusal is verified by AC-7. |
+| FND-005 | fixed | Fixed in d8165ff. The Behavior and the `tests.md` note say AC-7 runs the install in a temporary HOME. AC-5 keeps only the listing and restore of the real install. |

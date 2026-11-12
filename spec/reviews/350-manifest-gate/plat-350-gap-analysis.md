@@ -38,3 +38,9 @@ did not reach `plan/`.
 | ID | Severity | Summary | Refs |
 |----|----------|---------|------|
 | FND-001 | low | The ownership correction is incomplete. `plan/Plan-001-semantic-module-contract/plan.md` still says FR-001 "conforms to filament-core-service FR-035". Task-007 still records an FR-035 schema pin under `tests/fixtures/` as delivered `[x]`, but that fixture no longer exists. Delete the pin record and correct the owner. | plan/Plan-001-semantic-module-contract/plan.md:45, plan/Plan-001-semantic-module-contract/tasks/Task-007-test-environment-and-fr035-pin.md:58-61 |
+
+## Dispositions
+
+| FND | outcome | reason |
+|-----|---------|--------|
+| FND-001 | fixed | Fixed in d8165ff. `plan.md` names `filament-core-data`. Task-007's pin subtask, its fixture deliverable and its Notes are deleted. The rename to `Task-007-test-environment.md` is justified, because the old name described the deleted pin. No link to the old path remains outside this finding row. |

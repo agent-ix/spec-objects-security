@@ -45,3 +45,9 @@ positive test overwrites the user's real default install of
 | ID | Severity | Summary | Refs |
 |----|----------|---------|------|
 | FND-001 | high | `IX_CONFIG_ROOT` does not redirect `quoin module install`. quoin 0.30.1 still reports `targetPath: ~/.ix/filament/modules/spec-objects-security` and rewrites `~/.ix/filament/registry.json`. The positive test therefore replaces the user's default `spec-objects-security` (git-subdir `v0.11.0`) with the PR copy, and leaves the registry entry pointing at a pytest tmp dir that is then deleted. Every quire/quoin session on the machine then sees the PR's module content. Reproduced: the registry mtime changed during the run. The real install had already been replaced about 2 min before this review, which fits an earlier run of this test. Restored with `quoin module install github:agent-ix/spec-objects-security//spec_objects_security@v0.11.0`. Fix: give the quoin subprocess `HOME=<tmp_path>/home`. Verified: targetPath then lands under the tmp HOME and the real registry is untouched. Then drop the `IX_CONFIG_ROOT` claim. | tests/test_manifest_engine_gate.py:55-63, tests/test_manifest_engine_gate.py:66-72 |
+
+## Dispositions
+
+| FND | outcome | reason |
+|-----|---------|--------|
+| FND-001 | fixed | Fixed in d8165ff. `_quoin_install` sets `HOME=<tmp_path>/home` and pops `IX_CONFIG_ROOT`. The positive test asserts that the tmp-HOME registry exists and that the real registry bytes are unchanged. Verified: the focused run left the sha256 of `~/.ix/filament/registry.json` and of the installed module tree unchanged. |
