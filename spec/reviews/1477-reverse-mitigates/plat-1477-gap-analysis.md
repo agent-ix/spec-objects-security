@@ -60,3 +60,10 @@ and no test.
 |----|----------|---------|------|
 | FND-001 | medium | FR-008 Behavior says "The module SHALL NOT narrow the `to: []` of `threat-has-control` or `risk-has-treatment`". It has no AC and no test. Mutating `threat-has-control` to `to: [control]` leaves the suite result unchanged (same 175 passed and 6 node_modules-only failures as baseline). Either add an AC with a test asserting both relations keep `to: []`, or delete the statement, since it governs declarations FR-008 does not own. | spec/functional/FR-008-security-nfr-needs-mitigation-target.md:55 |
 | FND-002 | low | FR-008 Outputs says the finding names "the NFR, the declaration and the selector". TC-117 asserts only the NFR id and `'security'`. The engine output does name `security-nfr-has-mitigation-target` and `quality_attribute`, but no assertion pins them. | spec/functional/FR-008-security-nfr-needs-mitigation-target.md:45, tests/test_reverse_mitigates.py:95-102 |
+
+## Dispositions
+
+| ID | Disposition |
+|----|-------------|
+| FND-001 | Fixed in round 1: FR-008-AC-6 and TC-120 assert `threat-has-control` and `risk-has-treatment` keep `to: []`. |
+| FND-002 | Fixed in round 1: TC-117 asserts the finding names the declaration and the selector field. |

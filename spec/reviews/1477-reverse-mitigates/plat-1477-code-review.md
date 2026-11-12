@@ -73,3 +73,12 @@ The other two findings are a harness degradation (FND-002) and a nit (FND-003).
 | FND-002 | medium | The harness never applies the iso `NFR` archetype. Every fixture NFR is reported as "unknown type 'NFR' tolerated under OKF posture [unknown-type]" because `--module <site-packages>/spec_artifacts_iso` (0.22.1, and 0.24.0 too) registers no artifact types. Bisected: deleting the retired `semantic.semantic_core: 0.3.2` line from the wheel manifest restores registration. The installed `~/.ix/filament/modules/spec-artifacts-iso` copy registers NFR. The docstring says both modules are loaded, but the NFR frontmatter schema and `allowed_links` are never exercised. The `where` path still works because it reads raw frontmatter. This is an upstream iso/engine defect: route it to the owner. Here, either state the limitation or assert no `unknown-type` once upstream is fixed. | tests/test_reverse_mitigates.py:1-7, tests/test_reverse_mitigates.py:62-76 |
 | FND-003 | low | `_quire()` resolves `quire` from PATH only. `_tool()` in `tests/test_manifest_engine_gate.py` prefers `node_modules/.bin`. One suite therefore runs two different engines. In CI they are 0.43.0 on PATH and the 0.41.0 devDependency, which is why only the gate failed. Reuse one resolver so the suite tests one engine. | tests/test_reverse_mitigates.py:32-36, tests/test_manifest_engine_gate.py:23-32 |
 | FND-004 | low | The TC-007 docstring still states the old criteria: "`direction` is `incoming`" and "every `from` names an object type this module declares". The body now exempts `security-nfr-has-mitigation-target` from both (outgoing, `from: NFR` owned by iso). Update the criteria to match the special case. | tests/test_manifest.py:96-100, tests/test_manifest.py:128-136 |
+
+## Dispositions
+
+| ID | Disposition |
+|----|-------------|
+| FND-001 | Fixed in round 1: TC-119 asserts the strict finding is a `warning:`. |
+| FND-002 | Fixed in round 1: fixtures use `ix://` targets, a `_registered()` guard fails on `unknown type 'NFR'`, and the iso dev dependency is `^0.25.0`, which registers the type. |
+| FND-003 | Fixed in round 1: one `engine_tool()` lookup in `tests/conftest.py` (node_modules/.bin first, then PATH) is used by the reverse tests and the engine gate. |
+| FND-004 | Fixed in round 1: the TC-007 docstring states the outgoing NFR exception. |

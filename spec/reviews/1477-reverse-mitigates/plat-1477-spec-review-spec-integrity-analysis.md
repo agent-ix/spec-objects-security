@@ -35,3 +35,10 @@ CHANGES REQUESTED on FND-001. The rest is sound.
 |----|----------|---------|------|
 | FND-001 | high | FR-008-AC-5 claims "without it `--okf --strict` still exits 0", and `spec/tests.md` marks TC-119 ✅. Measured with quire 0.43.0 (engine 0.58.0), both the test's fixture and a properly loaded iso exit 3 under `--okf --strict`. The first fails on an `unknown-type` NFR error. The second fails on iso's own `unowned-quality-characteristic` errors. The `unjustified-security-nfr` finding itself stays a warning, which is what FR-058-AC-18 promises. Restate the AC as "under `--okf --strict` the finding is reported as a warning", and assert that (SR-024 FND-001). | spec/functional/FR-008-security-nfr-needs-mitigation-target.md:65, spec/tests.md:191 |
 | FND-002 | low | The Description justifies `to: []` (a cross-repo threat cannot satisfy a constrained `to`) but does not state its cost. Any `mitigates` target satisfies the rule: measured, an NFR mitigating another NFR and an NFR mitigating a typo'd id (which only gets an advisory `dangling-reference`) both come back clean. iso `NFR.allowed_links` has no `mitigates`, so nothing constrains the target kind. The choice is defensible (FR-058 sanctions it, and the PLAT-1477 caveat anticipates it). Record the trade-off so a reader does not take a clean run as "traces to a threat or risk". | spec/functional/FR-008-security-nfr-needs-mitigation-target.md:27-31 |
+
+## Dispositions
+
+| ID | Disposition |
+|----|-------------|
+| FND-001 | Fixed in round 1: FR-008-AC-5 states the FR-058-AC-18 reading (warning under strict, not "exits 0") and TC-119 asserts it. |
+| FND-002 | Fixed in round 1: FR-008 has a "What `to: []` lets through" section stating the cost. |
