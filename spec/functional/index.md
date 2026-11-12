@@ -13,3 +13,4 @@ description: "Index of artifacts in this directory."
 * [FR-004: Give every security object type a role-distinct declaration schema](./FR-004-role-schemas.md)
 * [FR-005: Make every skeleton an executable typed fixture](./FR-005-executable-skeletons.md)
 * [FR-006: Refuse embedded material, and state every security grade explicitly](./FR-006-security-safe-declarations.md)
+* [FR-007: A control admits hazard and failure_mode as mitigates targets](./FR-007-control-mitigates-safety-objects.md)
