@@ -19,7 +19,6 @@ from tests.conftest import (
     CLAUSE_BEARING,
     FIELD_BEARING,
     IDENTIFIER,
-    KERNEL_SCALARS,
     NEGATIVE_DIR,
     OBJECT_TYPES,
     OPERATION_BEARING,
@@ -27,6 +26,7 @@ from tests.conftest import (
     REPO_ROOT,
     SKELETONS_DIR,
     frontmatter,
+    kernel_scalars,
     locators,
     object_type,
 )
@@ -119,7 +119,7 @@ def test_under_the_bundle_index_every_skeleton_extracts_clean(
         for decl in record.get("fields") or []:
             target = decl["type"]["target"]
             if target["kind"] == "KernelScalar":
-                assert target["value"] in KERNEL_SCALARS, (path.name, target)
+                assert target["value"] in kernel_scalars(), (path.name, target)
                 continue
             assert target["value"].startswith(TYPE_PREFIX), (path.name, target)
 
@@ -249,7 +249,7 @@ def test_titles_are_distinct_identifiers_and_object_equals_type():
     for path in primary_skeletons():
         front = frontmatter(path.read_text())
         assert IDENTIFIER.match(front["title"]), (path.name, front["title"])
-        assert front["title"] not in KERNEL_SCALARS, front["title"]
+        assert front["title"] not in kernel_scalars(), front["title"]
         assert front["object"] == front["type"] == path.stem, path.name
         titles.append(front["title"])
     assert len(titles) == len(set(titles)), titles

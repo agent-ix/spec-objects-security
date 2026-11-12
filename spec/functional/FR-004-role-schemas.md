@@ -46,14 +46,12 @@ rules.
 
 Each model SHALL enforce its row of the following table. "Identity field"
 means a `FieldDecl` with `identity: true`; "occurrence field" a `FieldDecl`
-whose `type.target` is `Timestamp`; "defaulted field" a `FieldDecl` carrying a
+whose `type.target` is the tagged kernel scalar `{kind: "KernelScalar", value: "Timestamp"}`; "defaulted field" a `FieldDecl` carrying a
 `default`; "a `<name>` field" a `FieldDecl` whose `name` is that literal.
 These readings are semantic-core reader conventions (the identity flag
 is set only by a bare `identity` keyword in a Constraints cell and is absent,
-not `false`, otherwise; the kernel scalar is the bare token `Timestamp`), so a
-semantic-core release that renders `identity: false` or namespaces kernel
-scalars is a breaking change to these schemas, and this module SHALL answer it
-with a manifest version bump rather than by widening a rule.
+not `false`, otherwise; a `type.target` is a tagged object, `{kind: "KernelScalar", value: "Timestamp"}` for a kernel scalar and `{kind: "SemanticId", value: "ix://..."}` for a type), so a
+semantic-core release that renders `identity: false` is a breaking change to these schemas.
 
 | Object type | Model | Required keys | Optional keys | Item rules |
 |---|---|---|---|---|
@@ -121,7 +119,7 @@ with a manifest version bump rather than by widening a rule.
 | FR-004-AC-9 | An audit-event record with a `Timestamp` field and no identity field validates against `AuditEvent.json`; a record whose only fields are non-`Timestamp` fails; a record with an identity field fails; a record with `operations` fails. | Test |
 | FR-004-AC-10 | A trust-boundary record with one clause and a `trust_level` field validates; the same record without `clauses` fails; a `trust_level` outside `TrustLevel` fails. | Test |
 | FR-004-AC-11 | The empty record `{}` fails against all twenty-three schemas. | Test |
-| FR-004-AC-12 | A `type.target` of `ix://agent-ix/spec-objects-security/unresolved/Mystery` is accepted by the schema (it is a `SemanticId`) and reported by the extractor as `semantic.unresolved-type`; a bare `Mystery` string is rejected by the schema. | Test |
+| FR-004-AC-12 | A `type.target` of `ix://agent-ix/spec-objects-security/unresolved/Mystery` is accepted by the schema (it is a `SemanticId`) and reported by the extractor as `semantic.unresolved-type`; a `SemanticId`-tagged `Mystery` (no `ix://` prefix) is rejected by the schema. | Test |
 | FR-004-AC-13 | No module schema redeclares a semantic-core model; every grammar item is a `$ref` to semantic-core. | Test |
 | FR-004-AC-14 | A data-classification record with a `level` field validates; one without it fails; a record carrying `relations` fails. | Test |
 

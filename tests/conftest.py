@@ -14,6 +14,7 @@ Two policies are enforced here and nowhere else:
 
 from __future__ import annotations
 
+import functools
 import json
 import pathlib
 import re
@@ -210,21 +211,18 @@ OPERATION_BEARING = ("auth_flow",)
 
 ALTERNATES = ("asset", "secret", "threat")
 
-KERNEL_SCALARS = frozenset(
-    {
-        "UUID",
-        "Boolean",
-        "Integer",
-        "Decimal",
-        "Float32",
-        "Float64",
-        "String",
-        "Timestamp",
-        "Duration",
-        "Bytes",
-        "JsonObject",
-    }
-)
+
+@functools.lru_cache(maxsize=1)
+def kernel_scalars() -> frozenset[str]:
+    """The kernel scalar names, read from the installed semantic-core enum."""
+    path = SEMANTIC_CORE_DIR / "KernelScalar.json"
+    if not path.is_file():
+        pytest.fail(
+            "@agent-ix/semantic-core is not installed, so the kernel scalar "
+            "names cannot be read. Run `npm ci` (make semantic-install)."
+        )
+    return frozenset(json.loads(path.read_text())["enum"])
+
 
 IDENTIFIER = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 
@@ -340,7 +338,7 @@ def schema_registry():
         pytest.fail(
             "@agent-ix/semantic-core is not installed, so `$ref`s to the grammar "
             "cannot resolve. Run `make semantic-install` (FR-002-CON-4: "
-            "`@agent-ix` resolves from GitHub Packages)."
+            "every package resolves from npmjs)."
         )
     resources = []
     for path in sorted(SCHEMAS_DIR.glob("*.json")):
@@ -384,7 +382,7 @@ def field(
         "type": {
             "target": (
                 {"kind": "KernelScalar", "value": target}
-                if target in KERNEL_SCALARS
+                if target in kernel_scalars()
                 else {"kind": "SemanticId", "value": target}
             ),
             "multiplicity": {
