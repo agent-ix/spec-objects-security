@@ -37,3 +37,10 @@ removal; SR-014, SR-015 and SR-016 carry further high findings.
 |----|----------|---------|------|
 | FND-001 | high | FR-007-AC-5 ("relations and `semantic.compatibility_posture` equal their pre-change values") and FR-007-CON-1 (validated by Test: no existing target, verb or direction removed or changed) specify a snapshot comparison against frozen pre-change values. That is a baseline/pin check, not behaviour: AC-1 already asserts the exact target list, FR-003-AC-1 already asserts `compatibility_posture`, and the two relations are asserted by their own tests. The companion safety review flags the same pattern (safety PR #20 deleted it there). Delete AC-5 and CON-1. | spec/functional/FR-007-control-mitigates-safety-objects.md:47, spec/functional/FR-007-control-mitigates-safety-objects.md:57 |
 | FND-002 | low | `spec/tests.md` (TM-001) is not updated: no `covers` relationship to FR-007 and no rows for FR-007's criteria, although TM-001 states coverage is complete only when every AC maps to a test case. | spec/tests.md:1-20 |
+
+## Dispositions
+
+| FND | outcome | reason |
+|-----|---------|--------|
+| FND-001 | fixed | fixed in c667d46 |
+| FND-002 | still-open | spec/tests.md gained the FR-007 coverage row and TC-091/TC-092, but TM-001 frontmatter `relationships` still has no `covers` entry for ix://agent-ix/spec-objects-security/FR-007 (it stops at FR-006). |

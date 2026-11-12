@@ -25,3 +25,9 @@ Conformant except one Behavior bullet with no named system.
 | ID | Severity | Summary | Refs |
 |----|----------|---------|------|
 | FND-001 | low | Behavior bullet "The `mitigates` edge to any type outside the list SHALL still be reported `disallowed-edge-target`." is passive with no named system; every sibling bullet names Quire or the manifest. Restate as "Quire SHALL report `disallowed-edge-target` for a `control` document's `mitigates` edge to any type outside the list." | spec/functional/FR-007-control-mitigates-safety-objects.md:41 |
+
+## Dispositions
+
+| FND | outcome | reason |
+|-----|---------|--------|
+| FND-001 | fixed | fixed in c667d46 |
