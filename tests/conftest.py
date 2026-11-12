@@ -216,6 +216,8 @@ KERNEL_SCALARS = frozenset(
         "Boolean",
         "Integer",
         "Decimal",
+        "Float32",
+        "Float64",
         "String",
         "Timestamp",
         "Duration",
@@ -380,7 +382,11 @@ def field(
     decl: dict[str, Any] = {
         "name": name,
         "type": {
-            "target": target,
+            "target": (
+                {"kind": "KernelScalar", "value": target}
+                if target in KERNEL_SCALARS
+                else {"kind": "SemanticId", "value": target}
+            ),
             "multiplicity": {
                 "lower": lower,
                 "upper": upper,

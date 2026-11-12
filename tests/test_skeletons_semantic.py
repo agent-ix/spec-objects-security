@@ -118,9 +118,10 @@ def test_under_the_bundle_index_every_skeleton_extracts_clean(
         ], (path.name, diagnostics)
         for decl in record.get("fields") or []:
             target = decl["type"]["target"]
-            if target in KERNEL_SCALARS:
+            if target["kind"] == "KernelScalar":
+                assert target["value"] in KERNEL_SCALARS, (path.name, target)
                 continue
-            assert target.startswith(TYPE_PREFIX), (path.name, target)
+            assert target["value"].startswith(TYPE_PREFIX), (path.name, target)
 
 
 @pytest.mark.trace("TC-083", "FR-005-AC-4")

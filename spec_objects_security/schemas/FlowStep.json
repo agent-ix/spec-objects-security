@@ -4,10 +4,10 @@
   "type": "object",
   "properties": {
     "name": {
-      "$ref": "https://schemas.agent-ix.org/semantic-core/0.3.2/Identifier.json"
+      "$ref": "https://schemas.agent-ix.org/semantic-core/0.4.4/Identifier.json"
     },
     "actor": {
-      "$ref": "https://schemas.agent-ix.org/semantic-core/0.3.2/Identifier.json"
+      "$ref": "https://schemas.agent-ix.org/semantic-core/0.4.4/Identifier.json"
     },
     "doc": {
       "type": "string"

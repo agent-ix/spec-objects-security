@@ -173,7 +173,10 @@ model DefaultedField {
 
 /** A `TypeRef` whose target is the kernel `Timestamp` scalar. */
 model OccurrenceTypeRef {
-  target: KernelScalar.Timestamp;
+  target: {
+    kind: "KernelScalar";
+    value: KernelScalar.Timestamp;
+  };
 }
 
 /** A `FieldDecl` whose type targets `Timestamp` — the occurrence time an audit event declaration must carry. */
