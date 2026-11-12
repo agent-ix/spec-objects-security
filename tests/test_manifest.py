@@ -103,12 +103,20 @@ def test_threat_and_risk_coverage_is_declared_not_coded() -> None:
     model = manifest["traceability"]
     by_name = {r["name"]: r for r in model["required_relations"]}
 
-    assert set(by_name) == {"threat-has-control", "risk-has-treatment"}
+    assert set(by_name) == {
+        "threat-has-control",
+        "risk-has-treatment",
+        "security-nfr-has-mitigation-target",
+    }
     assert by_name["threat-has-control"]["from"] == "threat"
     assert by_name["risk-has-treatment"]["from"] == "risk"
 
     checks = {r["check"] for r in by_name.values()}
-    assert checks == {"uncontrolled-threat", "untreated-risk"}
+    assert checks == {
+        "uncontrolled-threat",
+        "untreated-risk",
+        "unjustified-security-nfr",
+    }
     assert len(checks) == len(by_name), "each relation is independently tunable"
 
     declared = {o["name"] for o in manifest["object_types"]}
@@ -117,9 +125,15 @@ def test_threat_and_risk_coverage_is_declared_not_coded() -> None:
         for o in manifest["object_types"]
         for verb in (o.get("allowed_links") or {})
     }
-    for relation in by_name.values():
-        assert relation["direction"] == "incoming"
-        assert relation["from"] in declared, relation["from"]
+    for name, relation in by_name.items():
+        if name == "security-nfr-has-mitigation-target":
+            # The reverse reading (FR-008): `NFR` is spec-artifacts-iso's
+            # archetype and the NFR authors the edge.
+            assert relation["from"] == "NFR"
+            assert relation["direction"] == "outgoing"
+        else:
+            assert relation["direction"] == "incoming"
+            assert relation["from"] in declared, relation["from"]
         for verb in relation["edges"]:
             assert verb in permitted, f"{verb} is not a verb this module permits"
 
