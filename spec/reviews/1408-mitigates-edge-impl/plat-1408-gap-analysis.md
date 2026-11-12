@@ -40,3 +40,9 @@ AC-2 binder is only as sound as the SR-017 fixes make it.
 | ID | Severity | Summary | Refs |
 |----|----------|---------|------|
 | FND-001 | low | No findings (placeholder) | - |
+
+## Dispositions
+
+| FND | outcome | reason |
+|-----|---------|--------|
+| FND-001 | n/a | placeholder row for a clean review: there were no findings to disposition |
