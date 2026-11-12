@@ -32,7 +32,7 @@
     "url": "git+https://github.com/agent-ix/spec-objects-security.git"
   },
   "devDependencies": {
-    "@agent-ix/quire-cli": "0.41.0",
+    "@agent-ix/quire-cli": "0.43.0",
     "@agent-ix/quoin": "0.30.1",
     "@agent-ix/semantic-core": "0.4.4",
     "@typespec/compiler": "1.15.0",

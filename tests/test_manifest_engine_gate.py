@@ -17,19 +17,8 @@ import subprocess
 import pytest
 import yaml
 
-from tests.conftest import PACKAGE_ROOT, REPO_ROOT, SKELETONS_DIR
-
-
-def _tool(name: str) -> str:
-    local = REPO_ROOT / "node_modules" / ".bin" / name
-    path = str(local) if local.exists() else shutil.which(name)
-    if path is None:
-        pytest.fail(
-            f"the `{name}` CLI is in neither node_modules/.bin nor on PATH; the "
-            "manifest gate needs the real engine. Run `npm ci` (both CLIs are "
-            "devDependencies)."
-        )
-    return path
+from tests.conftest import PACKAGE_ROOT, SKELETONS_DIR
+from tests.conftest import engine_tool as _tool
 
 
 def _module(tmp_path, mutate=None):

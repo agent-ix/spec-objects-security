@@ -17,6 +17,8 @@ relationships:
     type: covers
   - target: "ix://agent-ix/spec-objects-security/FR-007"
     type: covers
+  - target: "ix://agent-ix/spec-objects-security/FR-008"
+    type: covers
 ---
 # Test Matrix
 
@@ -76,13 +78,13 @@ the Python package only: neither Node script is measured by it.
 
 | Stakeholder Req | Trace to US/FR | Test/Validation | Status |
 |---|---|---|---|
-| StR-001 | US-001, FR-001..FR-007 | TC-111, TC-112, TC-113 | 🚧 VC-1 needs a running filament-core; VC-2 needs a generator run |
+| StR-001 | US-001, FR-001..FR-008 | TC-111, TC-112, TC-113 | 🚧 VC-1 needs a running filament-core; VC-2 needs a generator run |
 
 ### User Story Coverage
 
 | User Story | Acceptance Criteria | Test Cases | Status |
 |---|---|---|---|
-| US-001 | US-001-EX-1..3 (illustrative) implemented by FR-002..FR-007 | TC-080, TC-073, TC-110 | 🚧 TC-110 needs a Quoin with the module installer |
+| US-001 | US-001-EX-1..3 (illustrative) implemented by FR-002..FR-008 | TC-080, TC-073, TC-110 | 🚧 TC-110 needs a Quoin with the module installer |
 
 ### Functional Requirement Coverage
 
@@ -94,7 +96,8 @@ the Python package only: neither Node script is measured by it.
 | FR-004 | FR-004-AC-1..14, FR-004-CON-1..2 | TC-050..TC-063 | ✅ |
 | FR-005 | FR-005-AC-1..9, FR-005-CON-1..3 | TC-080..TC-090 | ✅ |
 | FR-006 | FR-006-AC-1..8, FR-006-CON-1..2 | TC-070..TC-078 | ✅ |
-| FR-007 | FR-007-AC-1..2 | TC-091, TC-092 | 🚧 no test written yet |
+| FR-007 | FR-007-AC-1..2 | TC-091, TC-092 | ✅ |
+| FR-008 | FR-008-AC-1..6 | TC-116..TC-120 | ✅ |
 
 ### Integration Test Coverage
 
@@ -182,6 +185,11 @@ the Python package only: neither Node script is measured by it.
 | TC-113 | A generator run (minijinja-cli) produces a valid artifact from a shipped skeleton and schema | Manual | P2 | StR-001-VC-2 | 🚧 needs a generator run against a released module |
 | TC-114 | The module directory a Quoin install would consume is complete and self-consistent: every export's schema file exists and carries its own `$id` | Unit | P1 | IT-002-SC-01 | ✅ precondition only; the install roundtrip itself is TC-110 |
 | TC-115 | The shipped manifest is accepted by `quire validate --module` and `quoin module install` (`HOME` pointed at a temporary directory); an unknown top-level key is refused by quire naming it, an unknown `semantic` key is refused by quoin naming `semantic.foo` | Integration | P0 | FR-003-AC-7 | ✅ |
+| TC-116 | The manifest declares the `NFR` required relation with `where` on `quality_attribute` = `security`, `mitigates`, `to: []`, outgoing, `unjustified-security-nfr` | Unit | P0 | FR-008-AC-1 | ✅ |
+| TC-117 | A `security` NFR with no `mitigates` edge yields exactly one `unjustified-security-nfr` finding naming the NFR, the declaration, the selector field and `security`, exit 0 | Integration | P0 | FR-008-AC-2 | ✅ |
+| TC-118 | The same NFR with a `mitigates` edge to a threat, or to a document in another repository, yields no finding; an NFR with another `quality_attribute` and no edge yields none | Integration | P0 | FR-008-AC-3, FR-008-AC-4 | ✅ |
+| TC-119 | Under `--okf --strict` the finding stays a `warning:`, and `--severity trace:unjustified-security-nfr=error` exits non-zero | Integration | P1 | FR-008-AC-5 | ✅ |
+| TC-120 | `threat-has-control` and `risk-has-treatment` still declare `to: []` | Unit | P1 | FR-008-AC-6 | ✅ |
 
 ## Test Environment
 

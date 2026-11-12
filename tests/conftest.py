@@ -18,12 +18,32 @@ import functools
 import json
 import pathlib
 import re
+import shutil
 from typing import Any
 
 import pytest
 import yaml
 
 REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent
+
+
+def engine_tool(name: str) -> str:
+    """The one lookup for an engine CLI: node_modules/.bin first, then PATH.
+
+    Every test that shells out to `quire` or `quoin` uses this, so the suite
+    exercises a single engine rather than two.
+    """
+    local = REPO_ROOT / "node_modules" / ".bin" / name
+    path = str(local) if local.exists() else shutil.which(name)
+    if path is None:
+        pytest.fail(
+            f"the `{name}` CLI is in neither node_modules/.bin nor on PATH; the "
+            "tests need the real engine. Run `npm ci` (both CLIs are "
+            "devDependencies)."
+        )
+    return path
+
+
 PACKAGE_ROOT = REPO_ROOT / "spec_objects_security"
 MANIFEST_PATH = PACKAGE_ROOT / "manifest.yaml"
 SCHEMAS_DIR = PACKAGE_ROOT / "schemas"

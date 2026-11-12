@@ -656,10 +656,21 @@ traceability:
   # and a vulnerability is a property of an implementation rather than a thing
   # the specification owes a response to. Adding it would widen the ticket.
   #
-  # ALSO NOT DECLARED: the reverse direction, "every security-classified
-  # requirement traces to an upstream threat". It needs a way to say a
-  # requirement is security-classified, and no such axis exists — neither this
-  # module nor iso declares one. Filed rather than invented.
+  # The reverse direction (PLAT-1477): a security-classified requirement owes
+  # an upstream exposure it answers, else it is unjustified scope. The
+  # classification is the `quality_attribute` frontmatter field spec-artifacts-iso
+  # already declares on `NFR`; `where` (quire-rs FR-058) narrows the obligation to
+  # NFRs holding `security`, so a performance NFR is never reported. The NFR
+  # authors the edge, so `direction: outgoing`. `to: []` on purpose: the
+  # threat or risk an NFR answers usually lives in another repository, and a
+  # dangling edge cannot satisfy a constrained `to` (FR-058).
+  - name: security-nfr-has-mitigation-target
+    from: NFR
+    where: {field: quality_attribute, values: [security]}
+    edges: [mitigates]
+    to: []
+    direction: outgoing
+    check: unjustified-security-nfr
   #
   # A risk that transitively arises from itself states nothing, and no
   # per-document check can see it: the defect is a property of the graph.
