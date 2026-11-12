@@ -74,13 +74,13 @@ the Python package only: neither Node script is measured by it.
 
 | Stakeholder Req | Trace to US/FR | Test/Validation | Coverage Status |
 |---|---|---|---|
-| StR-001 | US-001, FR-001..FR-006 | TC-111, TC-112, TC-113 | 🚧 VC-1 needs a running filament-core; VC-2 needs a generator run |
+| StR-001 | US-001, FR-001..FR-007 | TC-111, TC-112, TC-113 | 🚧 VC-1 needs a running filament-core; VC-2 needs a generator run |
 
 ### User Story Coverage
 
 | User Story | Acceptance Criteria | Test Cases | Coverage Status |
 |---|---|---|---|
-| US-001 | US-001-EX-1..3 (illustrative) implemented by FR-002..FR-006 | TC-080, TC-073, TC-110 | 🚧 TC-110 needs a Quoin with the module installer |
+| US-001 | US-001-EX-1..3 (illustrative) implemented by FR-002..FR-007 | TC-080, TC-073, TC-110 | 🚧 TC-110 needs a Quoin with the module installer |
 
 ### Functional Requirement Coverage
 
@@ -92,6 +92,7 @@ the Python package only: neither Node script is measured by it.
 | FR-004 | FR-004-AC-1..14, FR-004-CON-1..2 | TC-050..TC-063 | ✅ |
 | FR-005 | FR-005-AC-1..9, FR-005-CON-1..3 | TC-080..TC-090 | ✅ |
 | FR-006 | FR-006-AC-1..8, FR-006-CON-1..2 | TC-070..TC-078 | ✅ |
+| FR-007 | FR-007-AC-1..2 | TC-091, TC-092 | 🚧 no test written yet |
 
 ### Integration Test Coverage
 
@@ -168,6 +169,8 @@ the Python package only: neither Node script is measured by it.
 | TC-085 | Every skeleton's H2 set is asserted by the manifest and includes every required heading | Unit | P1 | FR-005-AC-6 | ✅ |
 | TC-086 | Every skeleton is placeholder-free with non-empty asserted sections | Unit | P2 | FR-005-AC-7 | ✅ |
 | TC-087 | Skeleton titles are distinct `Identifier`s outside `KernelScalar`, and `object` equals `type` in every skeleton frontmatter | Unit | P1 | FR-005-AC-8 | ✅ |
+| TC-091 | The loaded `control` type lists exactly `threat`, `risk`, `vulnerability`, `hazard`, `failure_mode` under `allowed_links.mitigates` | Unit | P0 | FR-007-AC-1 | 🚧 |
+| TC-092 | A `control` `mitigates` edge to an `asset` fixture is reported `disallowed-edge-target` naming `asset` | Integration | P0 | FR-007-AC-2 | 🚧 |
 | TC-088 | No skeleton or fixture matches a credential-shaped literal | Unit | P0 | FR-005-AC-9, FR-005-CON-3 | ✅ |
 | TC-089 | No corpus repository or vendored fixture is tracked (tree assertion over `git ls-files`) | Static | P2 | FR-005-CON-1 | ✅ |
 | TC-090 | A Properties section holding both a table and a fence is refused at the second form | Integration | P1 | FR-005-CON-2 | ✅ |

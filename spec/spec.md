@@ -49,23 +49,15 @@ This document specifies the requirements for `spec-objects-security`, a Filament
   published only behind the promotion gate (`agent-ix/quoin#290`); the
   semantic-core language packages are `agent-ix/filament-core-data#11`. None is
   produced or faked here.
-- Changing this module's `traceability` block or any `allowed_links` verb or
-  target list. Measured rather than assumed: `agent-ix/spec-objects-safety`
-  reads no field of this manifest today — its `hazard-has-mitigation` and
-  `failure-mode-has-mitigation` relations are declared in its own manifest over
-  its own archetypes, and the shared element is the verb `mitigates`, owned by
-  `spec-artifacts-iso` FR-004. What couples the two repositories is that safety
-  mirrored this module's `traceability` shape, and that this module's
-  `control.allowed_links.mitigates` list — `[threat, risk, vulnerability]` —
-  excludes `hazard` and `failure_mode`, so a security control cannot satisfy a
-  safety coverage check today. Widening or narrowing that list is a
-  cross-repository decision, reported rather than made here.
-- Widening `control.allowed_links.mitigates`. `agent-ix/spec-objects-safety#4`
-  reports that the incoming `mitigates` edge its `unmitigated-hazard` check
-  depends on is authorable nowhere: this module's `control` declares
-  `mitigates: [threat, risk, vulnerability]`, and the `spec-artifacts-iso`
-  `FR`/`NFR` archetypes declare no `mitigates` at all. The fix is a coordinated
-  change across at least two repositories and is not made here.
+- Changing this module's `traceability` block, or any `allowed_links` verb or
+  target list other than `control.allowed_links.mitigates`, which gains `hazard`
+  and `failure_mode` ([FR-007](./functional/FR-007-control-mitigates-safety-objects.md)).
+  `agent-ix/spec-objects-safety` reads no field of this manifest; its
+  `hazard-has-mitigation` and `failure-mode-has-mitigation` relations are
+  declared in its own manifest, and the shared element is the verb `mitigates`,
+  owned by `spec-artifacts-iso` FR-004.
+- Making `FR` and `NFR` documents able to declare `mitigates`. That belongs to
+  `spec-artifacts-iso` and is not made here.
 - Reconciling this module's `Severity` and `Likelihood` vocabularies with
   `agent-ix/spec-objects-safety`'s `hazard-severity` and `hazard-likelihood`
   lint columns. The names collide and the member sets are disjoint; a shared
