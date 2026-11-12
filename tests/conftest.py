@@ -236,8 +236,7 @@ SEMANTIC_CORE_VERSION = json.loads((REPO_ROOT / "package.json").read_text())[
     "devDependencies"
 ]["@agent-ix/semantic-core"]
 SEMANTIC_CORE_BASE = (
-    "https://schemas.agent-ix.org/semantic-core/"
-    f"{SEMANTIC_CORE_VERSION}/"
+    "https://schemas.agent-ix.org/semantic-core/" f"{SEMANTIC_CORE_VERSION}/"
 )
 
 
