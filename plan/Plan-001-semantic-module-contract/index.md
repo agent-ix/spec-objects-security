@@ -16,7 +16,7 @@ okf_version: "0.1"
 * [Task-004](./tasks/Task-004-manifest-semantic-contract.md) - Manifest 0.2.0, semantic block and the freeze.
 * [Task-005](./tasks/Task-005-executable-skeletons.md) - Executable skeletons, alternates and negative fixtures.
 * [Task-006](./tasks/Task-006-added-locators.md) - The optional locators the new sections need.
-* [Task-007](./tasks/Task-007-test-environment-and-fr035-pin.md) - Engine provisioning, no-vacuous-skip, and the FR-035 pin.
+* [Task-007](./tasks/Task-007-test-environment.md) - Engine provisioning, and no-vacuous-skip.
 * [Task-008](./tasks/Task-008-nfr-additive-compatibility.md) - NFR-001 additive-compatibility verification.
 * [Task-009](./tasks/Task-009-quoin-install-roundtrip.md) - IT-002 Quoin install roundtrip with unconditional restore.
 * [Task-010](./tasks/Task-010-activation-reverification.md) - Activation re-verification and the rows a human owns.

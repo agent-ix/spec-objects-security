@@ -42,7 +42,7 @@ main, or a human, and is owned by the two `blocked` tasks.
 - [x] **US-001**: Declare every security object type against the shared semantic-core grammar, so one declaration record per object validates identically in Quire, Quoin and the compiler.
 
 ### Functional Requirements
-- [~] **FR-001**: The manifest conforms to filament-core-service FR-035 and activates idempotently.
+- [~] **FR-001**: The manifest conforms to the module-manifest schema owned by `filament-core-data` and activates idempotently.
 - [x] **FR-002**: Emit one JSON Schema 2020-12 document per model from `typespec/main.tsp` with the official emitter at a pinned toolchain; normalize `$id`/`$ref`; gate drift; package into the wheel and the npm tarball; version-embedded `$id` with an atomic bump procedure.
 - [x] **FR-003**: `manifest.yaml` at 0.2.0 carries the quoin FR-070 `semantic` block and a reference-form `data_schema` per exported type, with every 0.1.0 locator, the `traceability` block, the `lexicon` and every `allowed_links`/`roles` map unchanged.
 - [x] **FR-004**: One role-distinct model per security object type — required keys, sealed key set and item rules — with every grammar item by `$ref` to semantic-core 0.1.0.

@@ -12,10 +12,6 @@ depends_on:
   - filament-core-service
 standards_alignment:
   - iso-iec-ieee-29148
-relationships:
-  - target: "ix://agent-ix/filament-core-service/FR-035"
-    type: "depends_on"
-    cardinality: "1:1"
 security_critical: true
 ---
 # Master Requirements Specification
@@ -63,14 +59,14 @@ This document specifies the requirements for `spec-objects-security`, a Filament
   lint columns. The names collide and the member sets are disjoint; a shared
   grading vocabulary is a decision for the two modules' common owner, and
   nothing here depends on the other module's members.
-- Applying `filament-core-service`'s FR-035 module-manifest schema to this
-  manifest as a document. That schema is filament-core-service's, and this
-  repository holds no copy of it and depends on no package that redistributes
-  one (PLAT-902). Conformance to it is settled where it is applied, at
-  activation (FR-001-AC-2) — `🚧` here, needing a running filament-core. What is
-  executed is what the consumers accept, which is narrower and stands in for
-  nothing: Quire's registry loader (FR-003-AC-4, FR-003-AC-6). `quoin module
-  install` (FR-003-AC-5) is a Demonstration this repository cannot run.
+- Holding a copy of the module-manifest schema. The schema is owned by
+  `filament-core-data`; this repository commits no copy of it. The manifest is
+  checked by the engines that apply it when they read a module (FR-003-AC-7):
+  `quire validate --module` refuses an unknown top-level key but accepts bad
+  `semantic.*`, and `quoin module install` refuses bad `semantic.*` but accepts
+  an unknown top-level key, so together they cover what the schema closes. It is
+  also checked by activation (FR-001-AC-2), which needs a running filament-core and is `🚧`
+  here.
 - Extraction of the declared-but-not-yet-extracted keys (`severity`,
   `likelihood`, `impact`, `status`, `level`, `trust_level`,
   `stride_category`, `effectiveness`, `lifecycle`, `material_ref`, and the
@@ -143,7 +139,7 @@ Inputs.
 ## References
 
 - ISO/IEC/IEEE 29148 — Requirements engineering.
-- filament-core-service [FR-035](ix://agent-ix/filament-core-service/FR-035) — Module Manifest Schema.
+- `agent-ix/filament-core-data` — owner of the module-manifest schema.
 - The component's source repository and README.
 - `agent-ix/filament-core-data` FR-031..FR-034 (semantic-core grammar,
   scalars, JSON Schema projection, lowering) and ADR-0005 (TypeSpec source).

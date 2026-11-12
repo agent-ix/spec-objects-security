@@ -24,4 +24,4 @@ Security and identity content is currently expressed as unstructured narrative, 
 
 ## Dependencies
 
-- **Upstream**: filament-core-service [FR-035](ix://agent-ix/filament-core-service/FR-035) (Module Manifest Schema)
+- **Upstream**: `filament-core-data` (owner of the module-manifest schema)
