@@ -25,7 +25,7 @@ build.
 
 - `typespec/main.tsp`: namespace `AgentIx.SpecObjects.Security`, decorated
   `@jsonSchema("https://schemas.agent-ix.org/agent-ix/spec-objects-security/")`.
-- `@agent-ix/semantic-core` from GitHub Packages (`FieldDecl`, `TypeRef`,
+- `@agent-ix/semantic-core` from npmjs (`FieldDecl`, `TypeRef`,
   `Multiplicity`, `ConstraintDecl`, `DefaultDecl`, `RelationDecl`,
   `OperationDecl`, `ClauseRef`, `EnumValue`, `KernelScalar`, `Identifier`,
   `SemanticId`).
@@ -70,7 +70,7 @@ build.
 | FR-002-CON-1 | The build SHALL use the official `@typespec/json-schema` emitter only; no custom emitter and no hand-edited emitted file. | Architecture | Inspection |
 | FR-002-CON-2 | The repository SHALL carry no `.npmrc`, no `file:` or `link:` dependency, and no upper version bound on the TypeSpec toolchain. | Packaging | Inspection |
 | FR-002-CON-3 | Emission SHALL be deterministic: two runs over one source produce byte-identical files. | Integrity | Test |
-| FR-002-CON-4 | `package-lock.json` SHALL resolve every public package from `registry.npmjs.org`; `@agent-ix/semantic-core` resolves from `npm.pkg.github.com`, the real GitHub Packages registry it publishes to (`agent-ix/filament-core-data#11`) and the one CI actually authenticates against, so `make schemas`/`make schemas-check` run identically in the GitHub workflow and on a machine authenticated to GitHub Packages. | Packaging | Inspection |
+| FR-002-CON-4 | `package-lock.json` SHALL resolve every package, `@agent-ix/semantic-core` included, from `registry.npmjs.org`, so `make schemas`/`make schemas-check` run identically in the GitHub workflow and on any machine. | Packaging | Inspection |
 
 ## Acceptance Criteria
 

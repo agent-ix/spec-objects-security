@@ -17,16 +17,17 @@ import subprocess
 import pytest
 import yaml
 
-from tests.conftest import PACKAGE_ROOT, SKELETONS_DIR
+from tests.conftest import PACKAGE_ROOT, REPO_ROOT, SKELETONS_DIR
 
 
 def _tool(name: str) -> str:
-    path = shutil.which(name)
+    local = REPO_ROOT / "node_modules" / ".bin" / name
+    path = str(local) if local.exists() else shutil.which(name)
     if path is None:
         pytest.fail(
-            f"the `{name}` CLI is not on PATH; the manifest gate needs the real "
-            "engine. Install the Quoin/Quire release (npm i -g @agent-ix/quoin "
-            "@agent-ix/quire-cli)."
+            f"the `{name}` CLI is in neither node_modules/.bin nor on PATH; the "
+            "manifest gate needs the real engine. Run `npm ci` (both CLIs are "
+            "devDependencies)."
         )
     return path
 

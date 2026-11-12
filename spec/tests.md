@@ -134,7 +134,7 @@ the Python package only: neither Node script is measured by it.
 | TC-029 | Two generator runs over one source are byte-identical | Integration | P1 | FR-002-CON-3 | ✅ |
 | TC-030 | The build uses the official `@typespec/json-schema` emitter only and no emitted file is hand-edited | Static | P2 | FR-002-CON-1 | ✅ |
 | TC-031 | No `.npmrc`, no `file:`/`link:` dependency | Static | P2 | FR-002-CON-2 | ✅ |
-| TC-032 | `package-lock.json` resolves every package from npmjs except `@agent-ix/semantic-core` (GitHub Packages, `npm.pkg.github.com`) | Unit | P2 | FR-002-CON-4 | ✅ |
+| TC-032 | `package-lock.json` resolves every package, `@agent-ix/semantic-core` included, from npmjs | Unit | P2 | FR-002-CON-4 | ✅ |
 | TC-035 | `.gitattributes` pins `eol=lf` and `npm pack` leaves nothing staged at the repository root | Unit | P1 | FR-002-AC-11 | ✅ |
 | TC-040 | The `semantic` block equals the eight admitted keys and `exports` equals the twenty-three types | Unit | P0 | FR-003-AC-1, FR-003-CON-1 | ✅ |
 | TC-044 | `quire.Registry.load_from` lists all twenty-three archetypes and `validate_document` reports no `semantic.*` load failure on any skeleton | Integration | P0 | FR-003-AC-4 | ✅ |

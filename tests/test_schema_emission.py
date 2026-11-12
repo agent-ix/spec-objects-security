@@ -220,8 +220,8 @@ def test_no_npmrc_and_no_local_refs():
 
 @pytest.mark.trace("TC-032", "FR-002-CON-4")
 def test_the_lockfile_resolves_public_packages_from_npmjs():
-    """`@agent-ix/semantic-core` is published to GitHub Packages; the committed
-    lockfile resolves it from `npm.pkg.github.com` directly, not the private
+    """Every package, `@agent-ix/semantic-core` included, is published to
+    npmjs; the committed lockfile resolves from there, not the private
     dev-only mirror."""
     lock = json.loads((REPO_ROOT / "package-lock.json").read_text())
     offenders = []
@@ -229,9 +229,7 @@ def test_the_lockfile_resolves_public_packages_from_npmjs():
         resolved = entry.get("resolved")
         if not resolved:
             continue
-        if "@agent-ix/" in name:
-            assert resolved.startswith("https://npm.pkg.github.com/"), name
-        elif not resolved.startswith("https://registry.npmjs.org/"):
+        if not resolved.startswith("https://registry.npmjs.org/"):
             offenders.append((name, resolved))
     assert not offenders, offenders
 
