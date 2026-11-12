@@ -452,7 +452,7 @@ object_types:
           required: false
 - name: control
   allowed_links:
-    mitigates: [threat, risk, vulnerability]
+    mitigates: [threat, risk, vulnerability, hazard, failure_mode]
     implements: [policy]
     protects: [externally-exposed, asset]
   data_schema:
