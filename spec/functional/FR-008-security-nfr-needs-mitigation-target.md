@@ -66,7 +66,7 @@ hazards) is declared by `agent-ix/spec-objects-safety` FR-009.
 | FR-008-AC-2 | Over a bundle holding a `security` NFR with no `mitigates` edge, `quire validate --okf` exits 0 and yields exactly one `unjustified-security-nfr` finding, naming the NFR and the value `security`. | Test |
 | FR-008-AC-3 | Giving that NFR a `mitigates` edge to a `threat` removes the finding, as does an edge to a document in another repository. | Test |
 | FR-008-AC-4 | An NFR whose `quality_attribute` is not `security` and which has no `mitigates` edge yields no `unjustified-security-nfr` finding. | Test |
-| FR-008-AC-5 | Under `--okf --strict` the finding stays a warning, and a bundle whose only faults are these findings stays valid (`agent-ix/quire-rs` FR-058-AC-18). `--severity trace:unjustified-security-nfr=error` promotes it and the run exits non-zero. | Test |
+| FR-008-AC-5 | Under `--okf --strict` the finding is a warning and never an error; strict still exits 3 on warnings by design. `--severity trace:unjustified-security-nfr=error` promotes it and the run exits non-zero. | Test |
 | FR-008-AC-6 | `threat-has-control` and `risk-has-treatment` still declare `to: []`. | Test |
 
 ## Dependencies

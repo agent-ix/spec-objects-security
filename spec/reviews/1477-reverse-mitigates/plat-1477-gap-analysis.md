@@ -63,7 +63,7 @@ and no test.
 
 ## Dispositions
 
-| ID | Disposition |
-|----|-------------|
-| FND-001 | Fixed in round 1: FR-008-AC-6 and TC-120 assert `threat-has-control` and `risk-has-treatment` keep `to: []`. |
-| FND-002 | Fixed in round 1: TC-117 asserts the finding names the declaration and the selector field. |
+| FND | outcome | reason |
+|-----|---------|--------|
+| FND-001 | fixed | Verified on 1b45548. FR-008-AC-6 and TC-120 (`test_exposure_end_relations_keep_an_empty_to`) assert both relations keep `to: []`. Mutating either to `to: [control]` fails TC-120, and `quire matrix` binds AC-6. |
+| FND-002 | fixed | Verified on 1b45548. TC-117 asserts the finding contains `security-nfr-has-mitigation-target` and `quality_attribute` (tests/test_reverse_mitigates.py:107-109). |

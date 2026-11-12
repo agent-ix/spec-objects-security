@@ -76,9 +76,9 @@ The other two findings are a harness degradation (FND-002) and a nit (FND-003).
 
 ## Dispositions
 
-| ID | Disposition |
-|----|-------------|
-| FND-001 | Fixed in round 1: TC-119 asserts the strict finding is a `warning:`. |
-| FND-002 | Fixed in round 1: fixtures use `ix://` targets, a `_registered()` guard fails on `unknown type 'NFR'`, and the iso dev dependency is `^0.25.0`, which registers the type. |
-| FND-003 | Fixed in round 1: one `engine_tool()` lookup in `tests/conftest.py` (node_modules/.bin first, then PATH) is used by the reverse tests and the engine gate. |
-| FND-004 | Fixed in round 1: the TC-007 docstring states the outgoing NFR exception. |
+| FND | outcome | reason |
+|-----|---------|--------|
+| FND-001 | fixed | Verified on 1b45548. TC-119 asserts `findings[0].startswith("warning:")` for the `--strict` run (tests/test_reverse_mitigates.py:129-140). The module `grammar_severity: error` mutation now fails TC-119 as well as TC-117. |
+| FND-002 | fixed | Verified on 1b45548. The iso dev dependency is now ^0.25.0, and the lock resolves 0.25.0. Its manifest no longer carries `semantic_core`, and a probe with `--module` shows no `unknown-type` for the NFR. The new `_registered()` guard fails on "unknown type 'NFR'", which iso 0.22.1 printed, so the degradation can no longer pass silently. |
+| FND-003 | fixed | Verified on 1b45548. `engine_tool()` in tests/conftest.py (node_modules/.bin, then PATH) is the one lookup. The engine gate imports it as `_tool`, and the reverse tests call it. This is why CI run 43288180643 now fails 5 tests on the 0.41.0 devDependency instead of 2. |
+| FND-004 | fixed | Verified on 1b45548. The TC-007 docstring names the outgoing NFR exception and iso's ownership of `NFR` (tests/test_manifest.py:96-103). |
