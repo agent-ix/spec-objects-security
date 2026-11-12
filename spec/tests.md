@@ -90,7 +90,7 @@ the Python package only: neither Node script is measured by it.
 |---|---|---|---|
 | FR-001 | FR-001-AC-1..4 | TC-001..TC-004, TC-006..TC-014, TC-015..TC-017 | 🚧 AC-2..AC-4 need a running filament-core |
 | FR-002 | FR-002-AC-1..4, FR-002-AC-6..11, FR-002-CON-1..4 | TC-020..TC-035 | ✅ |
-| FR-003 | FR-003-AC-1, FR-003-AC-4..6, FR-003-CON-1 | TC-040, TC-041, TC-044..TC-046 | ✅ AC-5 is a Demonstration nothing here can discharge; AC-6's naming half is an expected failure |
+| FR-003 | FR-003-AC-1, FR-003-AC-4..7, FR-003-CON-1 | TC-040, TC-041, TC-044..TC-046, TC-115 | ✅ AC-5 is a Demonstration nothing here can discharge; AC-6's naming half is an expected failure |
 | FR-004 | FR-004-AC-1..14, FR-004-CON-1..2 | TC-050..TC-063 | ✅ |
 | FR-005 | FR-005-AC-1..9, FR-005-CON-1..3 | TC-080..TC-090 | ✅ |
 | FR-006 | FR-006-AC-1..8, FR-006-CON-1..2 | TC-070..TC-078 | ✅ |
@@ -180,7 +180,8 @@ the Python package only: neither Node script is measured by it.
 | TC-111 | Every object type ships a typed schema a fixture reader can consume; a secret and a risk record are distinguishable by schema alone | Unit | P2 | StR-001-VC-3 | ✅ |
 | TC-112 | A module activation against filament-core registers every declared contribution | Manual | P2 | StR-001-VC-1 | 🚧 needs a running filament-core |
 | TC-113 | A generator run (minijinja-cli) produces a valid artifact from a shipped skeleton and schema | Manual | P2 | StR-001-VC-2 | 🚧 needs a generator run against a released module |
-| TC-114 | The module directory a Quoin install would consume is complete and self-consistent: every export's schema file exists, carries its own `$id`, and hashes | Unit | P1 | IT-002-SC-01 | ✅ precondition only; the install roundtrip itself is TC-110 |
+| TC-114 | The module directory a Quoin install would consume is complete and self-consistent: every export's schema file exists and carries its own `$id` | Unit | P1 | IT-002-SC-01 | ✅ precondition only; the install roundtrip itself is TC-110 |
+| TC-115 | The shipped manifest is accepted by `quire validate --module` and `quoin module install` (isolated config root); an unknown top-level key is refused by quire naming it, an unknown `semantic` key is refused by quoin naming `semantic.foo` | Integration | P0 | FR-003-AC-7 | ✅ |
 
 ## Test Environment
 

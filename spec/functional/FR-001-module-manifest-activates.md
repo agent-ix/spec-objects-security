@@ -2,15 +2,12 @@
 id: FR-001
 title: "Module manifest activates against filament-core"
 type: FR
-relationships:
-  - target: "ix://agent-ix/filament-core-service/FR-035"
-    type: "implements"
 ---
 # FR-001: Module manifest activates against filament-core
 
 ## Description
 
-The system **SHALL** publish a Filament Module manifest (`spec_objects_security/manifest.yaml`) that conforms to filament-core-service [FR-035](ix://agent-ix/filament-core-service/FR-035) v1.0.0 and activates idempotently against `POST /api/v1/modules/activate`.
+The system **SHALL** publish a Filament Module manifest (`spec_objects_security/manifest.yaml`) that conforms to the module-manifest schema owned by `filament-core-data` and activates idempotently against `POST /api/v1/modules/activate`.
 
 
 ## Inputs
@@ -25,7 +22,7 @@ The system **SHALL** publish a Filament Module manifest (`spec_objects_security/
 
 ## Behavior
 
-The manifest **SHALL** conform to the module-manifest schema filament-core-service applies at activation. That schema belongs to filament-core-service; this module holds no copy of it and depends on no package that redistributes one, so conformance is settled at `POST /api/v1/modules/activate` (FR-001-AC-2), which needs a running filament-core and is `🚧` in this repository's matrix. What is executed here is narrower and does not stand in for it: the quire loader accepts the `semantic` contract and refuses it when mutated (FR-003-AC-4, FR-003-AC-6). Re-activation **SHALL** be a no-op (idempotent by content hash per FR-026-AC-1).
+The manifest **SHALL** conform to the module-manifest schema owned by `filament-core-data`; this module holds no copy of it. Conformance is judged by the engines that apply that schema when they load a module (FR-003-AC-7) and by activation at `POST /api/v1/modules/activate` (FR-001-AC-2), which needs a running filament-core and is `🚧` in this repository's matrix. Re-activation **SHALL** be a no-op (idempotent by content hash per FR-026-AC-1).
 
 ## Acceptance Criteria
 
@@ -38,5 +35,5 @@ The manifest **SHALL** conform to the module-manifest schema filament-core-servi
 
 ## Dependencies
 
-- **Upstream**: filament-core-service [FR-035](ix://agent-ix/filament-core-service/FR-035), FR-026, FR-034
+- **Upstream**: `filament-core-data` (module-manifest schema), filament-core-service FR-026, FR-034
 - **Downstream**: consumer agents/editors discovering this module's contributions
