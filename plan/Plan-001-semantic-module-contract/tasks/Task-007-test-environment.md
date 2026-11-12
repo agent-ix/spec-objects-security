@@ -1,6 +1,6 @@
 ---
 id: Task-007
-title: "Test environment - engine provisioning, the no-vacuous-skip rule and the FR-035 pin"
+title: "Test environment - engine provisioning, the no-vacuous-skip rule"
 type: Task
 status: done
 track: B
@@ -39,12 +39,11 @@ relationships:
   - target: ix://agent-ix/spec-objects-security/TC-014
     type: verifies
 ---
-# Task-007: Test environment - engine provisioning, the no-vacuous-skip rule and the FR-035 pin
+# Task-007: Test environment - engine provisioning, the no-vacuous-skip rule
 
 ## Scope
 
-The environment every semantic row runs in, and the manifest gate that had to
-be kept alive across the contract change.
+The environment every semantic row runs in.
 
 ## Subtasks
 
@@ -55,19 +54,7 @@ be kept alive across the contract change.
       skipping tests of agent-ix/spec-objects-security#10 now run.
 - [x] A schema registry resolving every reference locally - module schemas from
       the committed tree, grammar models from the installed semantic-core.
-- [x] The FR-035 gate keeps running: the CR-012 schema revision is pinned under
-      `tests/fixtures/`, and a second test proves the pin differs from the
-      newest released spec-artifacts-iso only at the CR-012 pointers, so the
-      gate is narrowed to one known key rather than skipped.
 
 ## Deliverables
 
-- `tests/conftest.py`, `tests/fixtures/module-manifest.cr-012.schema.json`,
-  the `dev-quire` target
-
-## Notes
-
-agent-ix/spec-artifacts-iso#36 asks that no consumer weaken or skip its FR-035
-gate while waiting for a release, and that a pinned copy prove its delta. That
-is what the second test is; when the release lands it fails with an empty delta
-and the pin is deleted.
+- `tests/conftest.py`, the `dev-quire` target

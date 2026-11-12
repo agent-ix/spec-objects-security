@@ -22,7 +22,7 @@ The system **SHALL** publish a Filament Module manifest (`spec_objects_security/
 
 ## Behavior
 
-The manifest **SHALL** conform to the module-manifest schema owned by `filament-core-data`; this module holds no copy of it. Conformance is judged by the engines that apply that schema when they load a module (FR-003-AC-7) and by activation at `POST /api/v1/modules/activate` (FR-001-AC-2), which needs a running filament-core and is `🚧` in this repository's matrix. Re-activation **SHALL** be a no-op (idempotent by content hash per FR-026-AC-1).
+The manifest **SHALL** conform to the module-manifest schema owned by `filament-core-data`; this module commits no copy of it. Conformance is judged by the engines that apply that schema when they load a module (FR-003-AC-7) and by activation at `POST /api/v1/modules/activate` (FR-001-AC-2), which needs a running filament-core and is `🚧` in this repository's matrix. Re-activation **SHALL** be a no-op (idempotent by content hash per FR-026-AC-1).
 
 ## Acceptance Criteria
 

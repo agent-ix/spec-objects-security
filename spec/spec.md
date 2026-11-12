@@ -60,10 +60,12 @@ This document specifies the requirements for `spec-objects-security`, a Filament
   grading vocabulary is a decision for the two modules' common owner, and
   nothing here depends on the other module's members.
 - Holding a copy of the module-manifest schema. The schema is owned by
-  `filament-core-data`; this repository holds no copy of it and depends on no
-  package that redistributes one. The manifest is checked by the engines that
-  apply the authoritative schema when they load a module (FR-003-AC-7), and by
-  activation (FR-001-AC-2), which needs a running filament-core and is `🚧`
+  `filament-core-data`; this repository commits no copy of it. The manifest is
+  checked by the engines that apply it when they read a module (FR-003-AC-7):
+  `quire validate --module` refuses an unknown top-level key but accepts bad
+  `semantic.*`, and `quoin module install` refuses bad `semantic.*` but accepts
+  an unknown top-level key, so together they cover what the schema closes. It is
+  also checked by activation (FR-001-AC-2), which needs a running filament-core and is `🚧`
   here.
 - Extraction of the declared-but-not-yet-extracted keys (`severity`,
   `likelihood`, `impact`, `status`, `level`, `trust_level`,

@@ -10,6 +10,7 @@ to a temporary module directory and expects the engine to name the offending key
 from __future__ import annotations
 
 import os
+import pathlib
 import shutil
 import subprocess
 
@@ -53,7 +54,12 @@ def _quire_validate(module, tmp_path):
 
 
 def _quoin_install(module, tmp_path):
-    env = {**os.environ, "IX_CONFIG_ROOT": str(tmp_path / "ix-config")}
+    # `quoin module install` writes under $HOME/.ix/filament, and IX_CONFIG_ROOT
+    # does not move that, so the install is isolated by pointing HOME at tmp.
+    home = tmp_path / "home"
+    home.mkdir(exist_ok=True)
+    env = {**os.environ, "HOME": str(home)}
+    env.pop("IX_CONFIG_ROOT", None)
     return subprocess.run(
         [_tool("quoin"), "module", "install", f"path:{module}", "--no-project-config"],
         capture_output=True,
@@ -68,8 +74,13 @@ def test_the_shipped_manifest_is_accepted_by_both_engines(tmp_path):
     module = _module(tmp_path)
     quire = _quire_validate(module, tmp_path)
     assert quire.returncode == 0, quire.stderr
+    real_registry = pathlib.Path.home() / ".ix" / "filament" / "registry.json"
+    before = real_registry.read_bytes() if real_registry.exists() else None
     quoin = _quoin_install(module, tmp_path)
     assert quoin.returncode == 0, quoin.stderr + quoin.stdout
+    assert (tmp_path / "home" / ".ix" / "filament" / "registry.json").is_file()
+    after = real_registry.read_bytes() if real_registry.exists() else None
+    assert after == before, "the install escaped the temporary HOME"
 
 
 @pytest.mark.trace("TC-115", "FR-003-AC-7")
