@@ -74,4 +74,4 @@ the pins are right, and the test-helper changes keep their assertions.
 
 | FND | outcome | reason |
 |-----|---------|--------|
-| FND-001 | fixed | `kernel_scalars()` in `tests/conftest.py` reads the enum from the installed semantic-core `KernelScalar.json` and fails with an actionable message when it is missing. The hand copy is deleted. |
+| FND-001 | fixed | Verified on 3709c28. The hand copy is deleted. `kernel_scalars()` (`tests/conftest.py:215-224`, `lru_cache`) reads the `enum` of the installed semantic-core `KernelScalar.json`, and fails with "Run `npm ci`" when that file is missing. All three former users now call it: `field()` and both checks in `tests/test_skeletons_semantic.py`. Focused run with semantic-core 0.4.4 bytes: 198 passed. The only 4 failures are the tsp emission tests, which need `@typespec/compiler`. CI run 43276629477 on 3709c28 is green. |
