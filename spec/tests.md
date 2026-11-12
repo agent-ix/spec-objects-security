@@ -19,6 +19,16 @@ relationships:
     type: covers
   - target: "ix://agent-ix/spec-objects-security/FR-008"
     type: covers
+  - target: "ix://agent-ix/spec-objects-security/FR-009"
+    type: covers
+  - target: "ix://agent-ix/spec-objects-security/FR-010"
+    type: covers
+  - target: "ix://agent-ix/spec-objects-security/FR-011"
+    type: covers
+  - target: "ix://agent-ix/spec-objects-security/FR-012"
+    type: covers
+  - target: "ix://agent-ix/spec-objects-security/NFR-001"
+    type: covers
 ---
 # Test Matrix
 
@@ -98,6 +108,11 @@ the Python package only: neither Node script is measured by it.
 | FR-006 | FR-006-AC-1..8, FR-006-CON-1..2 | TC-070..TC-078 | ✅ |
 | FR-007 | FR-007-AC-1..2 | TC-091, TC-092 | ✅ |
 | FR-008 | FR-008-AC-1..6 | TC-116..TC-120 | ✅ |
+| FR-009 | FR-009-AC-1..8, FR-009-CON-1..2 | TC-121..TC-128 | 🚧 specified by PLAT-1512; the tests land with the schema and manifest work |
+| FR-010 | FR-010-AC-1..6, FR-010-CON-1 | TC-129..TC-134 | 🚧 as FR-009 |
+| FR-011 | FR-011-AC-1..8, FR-011-CON-1 | TC-135..TC-142 | 🚧 as FR-009; AC-8 needs a Quoin with `discharge --rmm` installed |
+| FR-012 | FR-012-AC-1..5 | TC-143..TC-147 | 🚧 as FR-009 |
+| NFR-001 | NFR-001-AC-1..2 | TC-148, TC-149 | 🚧 as FR-009 |
 
 ### Integration Test Coverage
 
@@ -190,6 +205,35 @@ the Python package only: neither Node script is measured by it.
 | TC-118 | The same NFR with a `mitigates` edge to a threat, or to a document in another repository, yields no finding; an NFR with another `quality_attribute` and no edge yields none | Integration | P0 | FR-008-AC-3, FR-008-AC-4 | ✅ |
 | TC-119 | Under `--okf --strict` the finding stays a `warning:`, and `--severity trace:unjustified-security-nfr=error` exits non-zero | Integration | P1 | FR-008-AC-5 | ✅ |
 | TC-120 | `threat-has-control` and `risk-has-treatment` still declare `to: []` | Unit | P1 | FR-008-AC-6 | ✅ |
+| TC-121 | The loaded manifest exports `soup_record` with a schema that resolves to a shipped file | Unit | P0 | FR-009-AC-1 | 🚧 |
+| TC-122 | A `soup_record` with purl, name and version validates; without a purl it fails | Unit | P0 | FR-009-AC-2 | 🚧 |
+| TC-123 | Two `soup_record` documents with one purl yield one duplicate-identity report naming both | Integration | P0 | FR-009-AC-3 | 🚧 |
+| TC-124 | No identity field of `soup_record` is a digest; a digest-only record without a purl fails | Unit | P0 | FR-009-AC-4, FR-009-CON-1 | 🚧 |
+| TC-125 | A promotion with no supplier carries `unknown`, and the schema has no `default` keyword | Unit | P0 | FR-009-AC-5 | 🚧 |
+| TC-126 | An SBOM component with no purl yields no `soup_record` and is named in the promotion report | Integration | P0 | FR-009-AC-6 | 🚧 |
+| TC-127 | A record references an integrator license fact and a `cargo-deny` finding by id; an embedded finding fails | Unit | P1 | FR-009-AC-7 | 🚧 |
+| TC-128 | The module declares no `--discharges` option, binding key or SBOM reader | Static | P2 | FR-009-AC-8, FR-009-CON-2 | 🚧 |
+| TC-129 | `SoupSupportStatus` has exactly four members; `unknown` validates and an invented member fails | Unit | P0 | FR-010-AC-1, FR-010-CON-1 | 🚧 |
+| TC-130 | An empty `known_anomalies` validates and differs from an absent one | Unit | P0 | FR-010-AC-2 | 🚧 |
+| TC-131 | `end_of_support` accepts a date or `unknown` and refuses any other string | Unit | P0 | FR-010-AC-3 | 🚧 |
+| TC-132 | The `soup_record` schema carries no `default` keyword at any depth | Unit | P0 | FR-010-AC-4 | 🚧 |
+| TC-133 | An empty `serves` yields one finding; a cross-repository `serves` target yields none | Integration | P1 | FR-010-AC-5 | 🚧 |
+| TC-134 | An anomaly statement with a credential-shaped string is refused by the FR-005 scan | Unit | P1 | FR-010-AC-6 | 🚧 |
+| TC-135 | `SoupDispositionKind` has exactly three members; an invented kind fails | Unit | P0 | FR-011-AC-1, FR-011-CON-1 | 🚧 |
+| TC-136 | A record with no `disposition` validates and carries no `disposition` key | Unit | P0 | FR-011-AC-2 | 🚧 |
+| TC-137 | A `temporary_exception` validates with `expires` and fails without it | Unit | P0 | FR-011-AC-3 | 🚧 |
+| TC-138 | A `delegated` disposition validates with `delegate` and fails without it | Unit | P0 | FR-011-AC-4 | 🚧 |
+| TC-139 | An empty `approval_ref` or whitespace-only `rationale` fails | Unit | P0 | FR-011-AC-5 | 🚧 |
+| TC-140 | An `approver` naming an agent identity fails | Unit | P0 | FR-011-AC-6 | 🚧 |
+| TC-141 | A disposition changes no other emitted key of the record | Unit | P1 | FR-011-AC-7 | 🚧 |
+| TC-142 | The kinds in `SoupDispositionKind` equal the kinds `quoin discharge --rmm` accepts | Integration | P1 | FR-011-AC-8 | 🚧 |
+| TC-143 | The loaded `soup_record` type lists the three declared `allowed_links` | Unit | P0 | FR-012-AC-1 | 🚧 |
+| TC-144 | An `affected_by` edge to a `threat` is reported `disallowed-edge-target` naming `threat` | Integration | P0 | FR-012-AC-2 | 🚧 |
+| TC-145 | An `affected_by` edge to a `vulnerability`, and no edge, both validate with no finding | Integration | P1 | FR-012-AC-3 | 🚧 |
+| TC-146 | The `soup_record` schema declares no `severity`, `cve_id` or advisory-list key | Unit | P0 | FR-012-AC-4 | 🚧 |
+| TC-147 | `vulnerability.affects` and the required relations are unchanged | Unit | P1 | FR-012-AC-5 | 🚧 |
+| TC-148 | The `soup_record` schema has no score, rating, class, tier or level property and reuses no graded vocabulary | Unit | P0 | NFR-001-AC-1 | 🚧 |
+| TC-149 | A validated fixture emits exactly the keys the author wrote | Unit | P0 | NFR-001-AC-2 | 🚧 |
 
 ## Test Environment
 
