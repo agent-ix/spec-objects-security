@@ -1,54 +1,52 @@
 ---
-id: SR-052
-title: "Gap analysis of PR #53 typed controls and scope_exclusion"
+id: SR-20261113181008
+title: "Gap analysis of quoin PR 876 against FR-171, FR-172 and NFR-038"
 type: SpecReview
-analysis: gap-analysis
+analysis: base
+scope: "agent-ix/quoin@5afac302; spec/functional/FR-171-security-analysis-emits-typed-controls.md, spec/functional/FR-172-clause-set-sources-and-licence-boundary.md, spec/non-functional/NFR-038-mapping-facts-state-and-never-decide.md, skills/spec-security-analysis/**, tests/fixtures/security-analysis/**, rust/crates/quoin-cli/tests/tc_171_security_analysis_skill.rs, spec/evals.md"
 review_set: subset
-scope: "agent-ix/spec-objects-security; spec/functional/FR-014-control-mappings-are-clause-references.md, spec/functional/FR-015-mappings-carry-no-standard-text.md, spec/functional/FR-016-scope-exclusion-object.md, spec/non-functional/NFR-003-clause-references-state-and-never-derive.md, tests/test_typed_controls.py (PR #53, git diff origin/main...HEAD at bc6eba1)"
 ---
-# SR-052: Gap analysis of PR #53 typed controls and scope_exclusion
+
+# Gap analysis of quoin PR 876
 
 ## Summary
 
-Ticket: PLAT-1427. Planless. The matrix was computed with `quoin matrix --repo
-<worktree> --json` on quoin 0.30.1.
+Ticket: PLAT-1427. Planless. Plan completion: not assessed. Each acceptance criterion of FR-171,
+FR-172 and NFR-038 was read against the `#[trace]` tags in `tc_171_security_analysis_skill.rs`,
+the skill text and the committed fixture. Tools: quoin 0.30.1, quire 0.44.0 (engine 0.59.1).
+Companion: agent-ix/spec-objects-security PR 53 at bc6eba15.
 
-- All 17 criteria of FR-014 (AC-1..7), FR-015 (AC-1..3) and FR-016 (AC-1..7) are
-  `tagged`, each by one test in `tests/test_typed_controls.py`, and all of those
-  tests pass. Their evidence status is `no run evidence`, because no run evidence
-  was recorded.
-- NFR-003 constrains FR-014 and FR-016. Its scope is the `ControlMapping` and
-  `ScopeExclusion` schemas, skeletons and manifest entries that this PR ships.
-  Its criteria NFR-003-AC-1 and NFR-003-AC-2 are `untagged`, and so are its
-  metrics NFR-003-M-1 and M-2.
-- Reverse gap: every changed source line is owned by FR-014, FR-015, FR-016 or
-  FR-004. No stubs were found and there is no coverage inflation; the coverage
-  denominator is the 4-statement `__init__.py` and it is unchanged.
-- quoin FR-171, FR-172 and NFR-038 were read as context only. Their criteria are
-  over the quoin skill and `facts-from-mappings`, not over this module. The keys
-  `nist/sp800-53@5.2.0` and `owasp/asvs@5.0.0` appear in FR-014, which FR-172-AC-6
-  asks for. FR-017 was not changed by this PR.
-- Pre-existing untagged criteria outside this PR (for example FR-001-AC-2..4,
-  FR-008-AC-7..10) are not findings here.
+Clean: FR-171-AC-1, AC-2, AC-3, AC-4, AC-5, AC-7; FR-171-AC-6 (data resolves; see SR-20261113181007
+FND-001 for the test's blind spot); FR-172-AC-5; FR-172-AC-6 for `SKILL.md`. FR-172-AC-1 and AC-2
+belong to PLAT-1521/PLAT-1522 and the companion module and were read as context only. NFR-038
+constrains `facts-from-mappings` (FR-173, not in this PR); its one hook into the skill, never
+assigning an effectiveness, is met by the `not_assessed` default and the "never write `effective`
+yourself" rule.
 
 ## Verdict
 
-**FAIL** under the verdict rule, because two criteria are untagged:
-NFR-003-AC-1 and NFR-003-AC-2. TC-196 and TC-197 already pin the exact property
-sets, so NFR-003-AC-1 holds in fact and only needs a test bound to it. One
-medium finding is also open: half of FR-015-AC-2 is not asserted.
+**NOT MERGEABLE AS IS (two high, one medium, one low).** Two Demonstration criteria of FR-172 are bound in
+the Test Matrix by tests that exercise neither a skill run nor a licensed pack, so the matrix
+reports them covered when nothing demonstrates them.
 
 ## Findings
 
 | ID | Severity | Summary | Refs |
 | --- | --- | --- | --- |
-| FND-001 | high | NFR-003-AC-1 (no property named or typed as coverage, compliance, score, percentage, rating or status in `ControlMapping.json` or `ScopeExclusion.json`) and NFR-003-AC-2 (validating a fixture control and exclusion emits exactly the keys the author wrote) have no test tagged with their ids. NFR-003 constrains FR-014 and FR-016, and its scope is exactly the schemas this PR emits. Fix: add a test that scans both schemas' property names and types for the six terms (`@pytest.mark.trace(..., "NFR-003-AC-1")`). Add a second test that extracts the skeleton control and exclusion and asserts that the record keys equal the authored sections (`NFR-003-AC-2`) | spec/non-functional/NFR-003-clause-references-state-and-never-derive.md:37-38, tests/test_typed_controls.py |
-| FND-002 | medium | FR-015-AC-2 has three parts: `semantic.invalid-model-cell` with reason `column-unknown` at the header line; an extracted record with no `mappings` key (`unavailable`); and none of the column's values in that record. TC-195 asserts only the first, by the message `header ... matches no property` and the line. It never extracts the record, so a regression that kept the third column's values in `mappings` would pass. The engine's error dict carries `reason: semantic`, not `column-unknown`. Fix: run `extract_semantic` on the three-column fixture and assert that there is no `mappings` key and that a sentinel cell value is absent. Either assert `column-unknown` from wherever the engine exposes it, or amend the AC to the observable message | tests/test_typed_controls.py:168-185, spec/functional/FR-015-mappings-carry-no-standard-text.md:39 |
+| FND-001 | high | FR-172-AC-3 (synthetic pack `example.invalid/std@1` in a temp `IX_HOME`, a skill run maps only its clause ids and states not-mapped for an absent set) is tagged on `a_mapping_to_a_clause_no_installed_set_holds_does_not_resolve`, which only calls the test's own `unresolved` helper on three literal rows, and on `expected_fixture_output_validates_and_every_mapping_resolves`, whose fixture has no pack. No product code, skill run or pack is involved; the test can only fail if the helper changes. Drop the AC-3 tags and add an eval scenario for the pack case, or a demonstration that installs the pack and runs the skill | rust/crates/quoin-cli/tests/tc_171_security_analysis_skill.rs:414-423 |
+| FND-002 | high | FR-172-AC-4 (no artifact or reply of the AC-3 run contains the pack's clause-text sentinel) is tagged on `no_expected_artifact_carries_clause_text`, which asserts that Clause cells of the hand-written fixture contain no space. There is no pack, no sentinel and no reply; `mapping_rows` already forces two cells. Drop the tag and cover AC-4 in the same pack demonstration as FND-001 | rust/crates/quoin-cli/tests/tc_171_security_analysis_skill.rs:439-451 |
+| FND-003 | medium | The skill is told never to supply the title or summary of a SOC 2 or ISO/IEC 27001 clause, yet step 2 still sends it to `references/iso27001/*.md` and `references/soc2/*.md`, which carry per-control titles and paraphrased descriptions for those licence-restricted sources. A run is primed to repeat them. The files predate this PR, but the new rule makes the conflict live. Needs an owner decision under the licensing boundary: reduce those references to ids, or state why their titles are permitted | skills/spec-security-analysis/SKILL.md:34-35 |
+| FND-004 | low | FR-171-AC-5 (`SKILL.md` instructs the gap and no-responsible-party reply) is tagged on `the_review_records_each_gap_as_a_finding`, which reads the hand-written fixture SpecReview, not `SKILL.md`; the `SKILL.md` half is already covered by `skill_text_instructs_the_defaults_the_reply_and_the_set_check`. Drop the tag | rust/crates/quoin-cli/tests/tc_171_security_analysis_skill.rs:425-437 |
 
-## Coverage
+## New findings (disposition pass 1)
 
-- Criteria in scope: 19 (FR-014 ×7, FR-015 ×3, FR-016 ×7, NFR-003 ×2). 17 are
-  tagged and 2 are untagged.
-- Semantic review: not run as a separate pass. The intent checks that were done
-  are recorded in SR-051 and in the findings above.
-- Plan completion: not assessed
+| ID | Severity | Summary | Refs |
+| --- | --- | --- | --- |
+| FND-003 | high | Round 1 removed the 20 TC-187..TC-203 rows from `spec/tests.md` (TM-001). quire's traceability model binds a trace tag only through a declared matrix row. At 33521a3, `quoin matrix` therefore reports all 17 criteria of FR-014, FR-015 and FR-016 as `untagged`, where they were `tagged` at bc6eba1. `quire matrix` warns `criterion-tagged-outside-row ... This tag does not provide backing` for each one. The new TC-204 and TC-205 have no rows either, so NFR-003-AC-1 and NFR-003-AC-2 stay untagged. Fix: restore the 20 rows and add rows for TC-204 (NFR-003-AC-1) and TC-205 (NFR-003-AC-2), with an NFR-003 summary row. Then confirm with `quoin matrix` that all 19 criteria read `tagged` | spec/tests.md, tests/test_typed_controls.py:326-356 |
+
+## Dispositions
+
+| FND | outcome | reason |
+| --- | --- | --- |
+| FND-001 | still-open: the tests now exist and pass. TC-204 scans both schemas for the six terms, and TC-205 asserts that the extracted record keys equal the authored sections. But neither has a TM-001 row, so `quoin matrix` still reports NFR-003-AC-1 and NFR-003-AC-2 as `untagged` (see FND-003) | - |
+| FND-002 | fixed | Round 1, head 33521a3. TC-195 now extracts the three-column fixture and asserts four things: an `invalid-model-cell` diagnostic with reason `column-unknown` at the header line, no `mappings` key, `recordKeys.mappings` state `unavailable`, and an absent sentinel. FR-015-AC-2 now notes that document validation reports reason `semantic`. The criterion's matrix backing was lost by the row removal (FND-003); the assertions themselves are complete |
