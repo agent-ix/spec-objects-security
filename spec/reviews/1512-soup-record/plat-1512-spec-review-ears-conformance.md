@@ -29,3 +29,10 @@ PASS with findings. No finding here is high.
 |----|----------|---------|------|
 | FND-001 | medium | Some statements have a subject that is neither the module nor part of it. In "A `soup_record` SHALL pass `kind`, ... to `quoin discharge --rmm` unchanged", the record, which is passive data, is the actor. "A promotion SHALL copy only the facts ..." names an activity that has no owning system (see SR-031 FND-001). Restate each with the system that performs it. | spec/functional/FR-011-soup-risk-disposition.md:48, spec/functional/FR-009-soup-record-identity-and-promotion.md:47 |
 | FND-002 | low | Some Behavior statements embed their rationale ("because a component that serves no requirement is unjustified scope", "because they are free text", "because a component with no linked vulnerability is a valid state"). Move the reason to a Rationale or Description section. | spec/functional/FR-010-soup-record-fields.md:39, spec/functional/FR-010-soup-record-fields.md:41, spec/functional/FR-012-soup-record-relations.md:39 |
+
+## Dispositions
+
+| FND | outcome | reason |
+|-----|---------|--------|
+| FND-001 | fixed | Fixed in 3d75c3d. "A `soup_record` SHALL pass ..." and "A promotion SHALL copy ..." are gone. Every FR-009 and FR-011 Behavior statement now has "The `soup_record` schema", "The module" or "Quire" as its subject. |
+| FND-002 | fixed | Fixed in 3d75c3d. FR-010 and FR-012 Behavior carry no "because" clause. The unjustified-scope reason moved to the FR-010 Description, and the `part_of` reason to the FR-012 Description. |
