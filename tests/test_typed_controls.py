@@ -70,7 +70,10 @@ def extract_record(quire, kind: str, schema_file: str, text: str) -> dict:
             "sourceIdentity": f"ix://{BUNDLE}/{kind}",
             "bundle": {
                 "package": BUNDLE,
-                "objects": [{"id": "COMP-001", "names": ["COMP-001"]}],
+                "objects": [
+                    {"id": "COMP-001", "names": ["COMP-001"]},
+                    {"id": "SEC-OWNER-001", "names": ["SEC-OWNER-001"]},
+                ],
                 "enumerations": [],
                 "imports": {},
             },
@@ -97,8 +100,31 @@ def excl(**over):
         "clause": "EX-1",
         "responsible": "ix://agent-ix/spec-objects-security/COMP-001",
         "rationale": "The platform owns it.",
+        "decision": "temporary_exception",
+        "decision_owner": "ix://agent-ix/spec-objects-security/SEC-OWNER-001",
+        "approval_ref": "APPROVAL-001",
+        "expires_at": "2026-11-14T12:00:00Z",
     }
     return {**base, **over}
+
+
+def exclusion_variants():
+    """Return each concrete decision schema referenced by the union."""
+    doc = schema("ScopeExclusion")
+    variants = []
+    for alternative in doc["oneOf"]:
+        if "$ref" not in alternative:
+            continue
+        branch = schema(alternative["$ref"].rsplit("/", 1)[-1].removesuffix(".json"))
+        variants.append(
+            {
+                "decision": branch["properties"]["decision"]["const"],
+                "properties": branch["properties"],
+                "required": set(branch["required"]),
+                "sealed": branch["unevaluatedProperties"],
+            }
+        )
+    return variants
 
 
 @pytest.mark.trace("TC-187", "FR-014-AC-1")
@@ -241,49 +267,231 @@ def test_control_mapping_schema_lists_exactly_set_and_clause():
 
 @pytest.mark.trace("TC-197", "FR-016-AC-1")
 def test_scope_exclusion_schema_is_sealed_and_exported():
+    """
+    Description:
+        Verify all authored disposition variants expose only their declared keys.
+
+    Assumptions:
+        The TypeSpec union emits one sealed schema for each decision.
+
+    Criteria:
+        The three variants require the correct shared and conditional fields.
+
+    Trace: FR-016-AC-1, FR-016-AC-3
+    """
     doc = schema("ScopeExclusion")
-    assert set(doc["required"]) == {"set", "clause", "responsible", "rationale"}
-    assert set(doc["properties"]) == set(doc["required"])
-    assert doc["unevaluatedProperties"] == {"not": {}}
+    variants = exclusion_variants()
+    assert len(doc["oneOf"]) == 4
+    assert set(doc["properties"]) == {
+        "set",
+        "clause",
+        "responsible",
+        "rationale",
+        "decision",
+        "decision_owner",
+        "approval_ref",
+        "expires_at",
+    }
+    assert set(doc["required"]) == {
+        "set",
+        "clause",
+        "responsible",
+        "rationale",
+        "decision",
+        "decision_owner",
+        "approval_ref",
+    }
+    assert doc["properties"]["decision"]["pattern"] == (
+        "^(delegated|accepted_risk|temporary_exception)$"
+    )
+    assert len(variants) == 3
+    expected = {
+        "delegated": {
+            "set",
+            "clause",
+            "responsible",
+            "rationale",
+            "decision",
+            "decision_owner",
+            "approval_ref",
+        },
+        "accepted_risk": {
+            "set",
+            "clause",
+            "responsible",
+            "rationale",
+            "decision",
+            "decision_owner",
+            "approval_ref",
+        },
+        "temporary_exception": {
+            "set",
+            "clause",
+            "responsible",
+            "rationale",
+            "decision",
+            "decision_owner",
+            "approval_ref",
+            "expires_at",
+        },
+    }
+    for variant in variants:
+        decision = variant["decision"]
+        assert variant["required"] == expected[decision]
+        assert set(variant["properties"]) == expected[decision] | {"expires_at"}
+        assert variant["sealed"] == {"not": {}}
+        if decision == "temporary_exception":
+            assert variant["properties"]["expires_at"]["format"] == "date-time"
+        else:
+            assert variant["properties"]["expires_at"] == {"not": {}}
     manifest = yaml.safe_load(MANIFEST_PATH.read_text())
     assert "scope_exclusion" in manifest["semantic"]["exports"]
 
 
 @pytest.mark.trace("TC-198", "FR-016-AC-2")
-def test_exclusion_without_responsible_or_rationale_fails(exclusion, quire_engine):
+def test_exclusion_requires_responsible_disposition_owner_and_approval(
+    exclusion, quire_engine
+):
+    """
+    Description:
+        Refuse an exclusion missing required identity or disposition metadata.
+
+    Assumptions:
+        Validation uses the shipped schema and Quire extractor.
+
+    Criteria:
+        Every required field is enforced and invalid identifiers are rejected.
+
+    Trace: FR-016-AC-2
+    """
     assert exclusion.is_valid(excl())
-    assert not exclusion.is_valid(
-        {k: v for k, v in excl().items() if k != "responsible"}
-    )
+    for key in (
+        "responsible",
+        "rationale",
+        "decision",
+        "decision_owner",
+        "approval_ref",
+    ):
+        assert not exclusion.is_valid(
+            {k: v for k, v in excl().items() if k != key}
+        ), key
     assert not exclusion.is_valid(excl(responsible="not an id"))
     assert not exclusion.is_valid(excl(rationale=""))
+    assert not exclusion.is_valid(excl(decision_owner="not an id"))
+    assert not exclusion.is_valid(excl(approval_ref=""))
     text = exclusion_skeleton().replace("## Responsible\n\n`COMP-001`\n\n", "")
     result = validate(quire_engine, "scope_exclusion", text)
     assert any(
-        "semantic.record-invalid" in m and "responsible" in m for m in messages(result)
+        error["reason"] == "missing" and "responsible" in error["message"]
+        for error in result["errors"]
     ), result["errors"]
 
 
-@pytest.mark.trace("TC-199", "FR-016-AC-3")
-def test_exclusion_admits_no_decision_status_or_approval(exclusion):
-    for key in ("decision", "status", "approved_by"):
+@pytest.mark.trace("TC-199", "FR-016-AC-3", "FR-016-AC-9")
+def test_exclusion_decisions_and_conditional_rfc3339_expiry(exclusion, quire_engine):
+    """
+    Description:
+        Enforce the decision vocabulary and conditional expiry rules.
+
+    Assumptions:
+        Temporary exception expiry is authored as an RFC 3339 instant.
+
+    Criteria:
+        Only temporary exceptions accept an expiry, and they require a valid one.
+
+    Trace: FR-016-AC-3, FR-016-AC-9
+    """
+    for decision in ("delegated", "accepted_risk"):
+        without_expiry = {
+            key: value
+            for key, value in excl(decision=decision).items()
+            if key != "expires_at"
+        }
+        assert exclusion.is_valid(without_expiry)
+        assert not exclusion.is_valid(excl(decision=decision))
+
+    temporary = excl()
+    assert exclusion.is_valid(temporary)
+    assert not exclusion.is_valid(
+        {k: v for k, v in temporary.items() if k != "expires_at"}
+    )
+    for value in ("", "tomorrow", "2026-11-14T12:00:00"):
+        assert not exclusion.is_valid(excl(expires_at=value)), value
+    assert exclusion.is_valid(excl(expires_at="2026-11-14T12:00:00+02:00"))
+    assert not exclusion.is_valid(excl(decision="unknown"))
+    for key in ("status", "approved_by"):
         assert not exclusion.is_valid(excl(**{key: "x"})), key
+
+    invalid_expiry = exclusion_skeleton().replace(
+        "`2026-11-14T12:00:00Z`", "`tomorrow`"
+    )
+    extracted_invalid_expiry = extract_record(
+        quire_engine, "scope_exclusion", "ScopeExclusion.json", invalid_expiry
+    )["record"]
+    assert extracted_invalid_expiry["expires_at"] == "tomorrow"
+    assert not exclusion.is_valid(extracted_invalid_expiry)
+
+    delegated = exclusion_skeleton().replace("`temporary_exception`", "`delegated`")
+    delegated = re.sub(r"\n## Expires at\n\n`[^`]*`\n?", "\n", delegated)
+    assert validate(quire_engine, "scope_exclusion", delegated)["is_valid"]
+
+    delegated_with_expiry = exclusion_skeleton().replace(
+        "`temporary_exception`", "`delegated`"
+    )
+    delegated_with_expiry = extract_record(
+        quire_engine,
+        "scope_exclusion",
+        "ScopeExclusion.json",
+        delegated_with_expiry,
+    )["record"]
+    assert not exclusion.is_valid(delegated_with_expiry)
+
+    missing_expiry = re.sub(
+        r"\n## Expires at\n\n`[^`]*`\n?", "\n", exclusion_skeleton()
+    )
+    extracted_missing_expiry = extract_record(
+        quire_engine, "scope_exclusion", "ScopeExclusion.json", missing_expiry
+    )["record"]
+    assert "expires_at" not in extracted_missing_expiry
+    assert not exclusion.is_valid(extracted_missing_expiry)
 
 
 @pytest.mark.trace("TC-200", "FR-016-AC-4")
 def test_exclusion_skeleton_validates_and_each_section_is_required(quire_engine):
+    """
+    Description:
+        Validate the canonical temporary-exception skeleton and required sections.
+
+    Assumptions:
+        The fixture contains synthetic bundle IDs and values only.
+
+    Criteria:
+        Required headings validate, while removing one makes the document invalid.
+
+    Trace: FR-016-AC-4
+    """
     text = exclusion_skeleton()
     result = validate(quire_engine, "scope_exclusion", text)
     assert result["is_valid"], result["errors"]
     assert not [m for m in messages(result) if "semantic.record-invalid" in m]
     for token in ("TODO", "TBD", "{{", "placeholder"):
         assert token.lower() not in text.lower()
-    for heading in ("Set", "Clause", "Responsible", "Rationale"):
+    for heading in (
+        "Set",
+        "Clause",
+        "Responsible",
+        "Rationale",
+        "Decision",
+        "Decision owner",
+        "Approval ref",
+    ):
         cut = re.sub(rf"^## {heading}\n\n`[^`]*`\n\n?", "", text, flags=re.M)
         assert f"## {heading}\n" not in cut.split("-->", 1)[1]
         broken = validate(quire_engine, "scope_exclusion", cut, bundle_package=BUNDLE)
+        normalized_heading = heading.lower().replace(" ", "_")
         assert any(
-            "semantic.record-invalid" in m and heading.lower() in m.lower()
+            "semantic.record-invalid" in m
+            and normalized_heading in m.lower().replace(" ", "_")
             for m in messages(broken)
         ), (heading, broken["errors"])
 
@@ -310,19 +518,39 @@ def test_the_empty_exclusion_record_fails(exclusion):
 
 
 @pytest.mark.trace("TC-203", "FR-016-AC-6")
-def test_exclusion_manifest_entry_requires_four_section_body_locators():
+def test_exclusion_manifest_entry_requires_authored_fields_and_optional_expiry():
+    """
+    Description:
+        Check the manifest extracts the required decision headings.
+
+    Assumptions:
+        Expires at is conditionally required by the sealed decision schema.
+
+    Criteria:
+        Seven headings are required and expiry extraction is optional.
+
+    Trace: FR-016-AC-6
+    """
     match = locators(object_type("scope_exclusion"))
     for key, heading in (
         ("set", "Set"),
         ("clause", "Clause"),
         ("responsible", "Responsible"),
         ("rationale", "Rationale"),
+        ("decision", "Decision"),
+        ("decision_owner", "Decision owner"),
+        ("approval_ref", "Approval ref"),
     ):
         assert match[key] == {
             "from": "section_body",
             "after_heading": heading,
             "required": True,
         }
+    assert match["expires_at"] == {
+        "from": "section_body",
+        "after_heading": "Expires at",
+        "required": False,
+    }
 
 
 COVERAGE_WORDS = ("coverage", "compliance", "score", "percent", "rating", "status")
@@ -331,15 +559,38 @@ COVERAGE_WORDS = ("coverage", "compliance", "score", "percent", "rating", "statu
 @pytest.mark.trace("TC-204", "NFR-003-AC-1", "NFR-003-M-1")
 def test_no_computed_value_property_on_mapping_or_exclusion_schemas():
     for model in ("ControlMapping", "ScopeExclusion"):
-        for name, prop in schema(model)["properties"].items():
+        properties = (
+            schema(model)["properties"]
+            if model == "ControlMapping"
+            else {
+                name: prop
+                for variant in exclusion_variants()
+                for name, prop in variant["properties"].items()
+            }
+        )
+        for name, prop in properties.items():
             blob = (name + json.dumps(prop)).lower()
             for word in COVERAGE_WORDS:
                 assert word not in blob, (model, name, word)
-            assert prop.get("type") == "string" or "$ref" in prop, (model, name)
+            assert (
+                prop.get("type") == "string" or "$ref" in prop or prop == {"not": {}}
+            ), (model, name)
 
 
 @pytest.mark.trace("TC-205", "NFR-003-AC-2", "NFR-003-M-2")
 def test_validated_fixtures_emit_exactly_the_keys_the_author_wrote(quire_engine):
+    """
+    Description:
+        Verify Quire extracts every authored exclusion disposition field.
+
+    Assumptions:
+        The fixture uses synthetic set, clause, bundle and approval identifiers.
+
+    Criteria:
+        The extracted record preserves the decision owner, approval and expiry.
+
+    Trace: FR-016-AC-8
+    """
     control = extract_record(
         quire_engine, "control", "Control.json", control_skeleton()
     )
@@ -353,4 +604,19 @@ def test_validated_fixtures_emit_exactly_the_keys_the_author_wrote(quire_engine)
     exclusion = extract_record(
         quire_engine, "scope_exclusion", "ScopeExclusion.json", exclusion_skeleton()
     )
-    assert set(exclusion["record"]) == {"set", "clause", "responsible", "rationale"}
+    assert set(exclusion["record"]) == {
+        "set",
+        "clause",
+        "responsible",
+        "rationale",
+        "decision",
+        "decision_owner",
+        "approval_ref",
+        "expires_at",
+    }
+    assert exclusion["record"]["decision"] == "temporary_exception"
+    assert exclusion["record"]["decision_owner"] == (
+        "ix://agent-ix/spec-objects-security/SEC-OWNER-001"
+    )
+    assert exclusion["record"]["approval_ref"] == "APPROVAL-001"
+    assert exclusion["record"]["expires_at"] == "2026-11-14T12:00:00Z"

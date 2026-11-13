@@ -228,6 +228,10 @@ MINIMAL = {
         "clause": "EX-1",
         "responsible": "ix://agent-ix/spec-objects-security/COMP-001",
         "rationale": "The platform owns it.",
+        "decision": "temporary_exception",
+        "decision_owner": "ix://agent-ix/spec-objects-security/SEC-OWNER-001",
+        "approval_ref": "APPROVAL-001",
+        "expires_at": "2026-11-14T12:00:00Z",
     },
 }
 
