@@ -131,9 +131,9 @@ the Python package only: neither Node script is measured by it.
 | FR-012 | FR-012-AC-1..4 | TC-140..TC-143 | ✅ |
 | FR-013 | FR-013-AC-1..7 | TC-150..TC-156 | 🚧 AC-7 needs `quire validate --repo` (PLAT-1519); `quire trace`/`quire matrix` show no document edges (PLAT-1519), so AC-6 reads the edge with `quire extract` |
 | NFR-001 | NFR-001-AC-1..2, NFR-001-M-1..2 | TC-144, TC-145 | ✅ |
-| FR-020 | FR-020-AC-1..6 | TC-160..TC-165 | 🚧 not yet implemented |
-| FR-021 | FR-021-AC-1..7 | TC-166..TC-172 | 🚧 not yet implemented; AC-4, AC-6 and AC-7 are inspections; AC-2 and AC-3 are vacuous until a profile ships |
-| NFR-002 | NFR-002-AC-1..2, NFR-002-M-1..2 | TC-173, TC-174 | 🚧 not yet implemented |
+| FR-020 | FR-020-AC-1..6 | TC-160..TC-165 | ✅ AC-6 covers the key-absence half only; activation is FR-001-AC-2 |
+| FR-021 | FR-021-AC-1..7 | TC-166..TC-172 | ✅ AC-4, AC-6 and AC-7 are inspections (human reviewer); AC-1, AC-2, AC-3 and AC-5 run over shipped profiles and are vacuous until one ships |
+| NFR-002 | NFR-002-AC-1..2, NFR-002-M-1..2 | TC-173, TC-174 | ✅ vacuous until a profile ships |
 | FR-017 | FR-017-AC-1..7 | TC-175..TC-186 | ✅ `quire clauses` loads strictly and cannot load the real module (the object-type edges come from another module), so TC-181, TC-183, TC-185 and TC-186 evaluate a module that holds only the set files |
 
 ### Integration Test Coverage
@@ -261,21 +261,21 @@ the Python package only: neither Node script is measured by it.
 | TC-154 | The finding is a warning and `--severity trace:soup-serves-no-requirement=error` promotes it | Integration | P1 | FR-013-AC-5 | ✅ |
 | TC-155 | The skeleton carries no `serves`; `quire extract` lists each `serves` entry as a `references` edge | Integration | P1 | FR-013-AC-6 | ✅ |
 | TC-156 | `quire validate --okf --repo o/a=… --repo o/b=…` with the record in `o/a` serving an `FR` in `o/b` yields no finding | Integration | P1 | FR-013-AC-7 | 🚧 the pinned CLI has no `--repo`; engine gap tracked in PLAT-1519 |
-| TC-160 | A fixture profile with every required key passes the profile test | Unit | P1 | FR-020-AC-1 | 🚧 |
-| TC-161 | A profile missing a required key, or named differently from its file stem, fails | Unit | P1 | FR-020-AC-2 | 🚧 |
-| TC-162 | A profile with an empty or repeated clause-set key fails | Unit | P1 | FR-020-AC-3 | 🚧 |
-| TC-163 | A profile with an unknown key or a non-string context value fails | Unit | P1 | FR-020-AC-4 | 🚧 |
-| TC-164 | A profile carrying clause text or title fails | Unit | P1 | FR-020-AC-5 | 🚧 |
-| TC-165 | The manifest has no `profiles` key and still activates | Unit | P1 | FR-020-AC-6 | 🚧 |
-| TC-166 | Every shipped profile passes the profile test | Unit | P1 | FR-021-AC-1 | 🚧 |
-| TC-167 | Every shipped key is declared by a module in the reference module set | Integration | P1 | FR-021-AC-2 | 🚧 |
-| TC-168 | `quire publish-check` accepts the declaring module of every shipped key | Integration | P1 | FR-021-AC-3 | 🚧 |
+| TC-160 | A fixture profile with every required key passes the profile test | Unit | P1 | FR-020-AC-1 | ✅ |
+| TC-161 | A profile missing a required key, or named differently from its file stem, fails | Unit | P1 | FR-020-AC-2 | ✅ |
+| TC-162 | A profile with an empty or repeated clause-set key fails | Unit | P1 | FR-020-AC-3 | ✅ |
+| TC-163 | A profile with an unknown key or a non-string context value fails | Unit | P1 | FR-020-AC-4 | ✅ |
+| TC-164 | A profile carrying clause text or title fails | Unit | P1 | FR-020-AC-5 | ✅ |
+| TC-165 | The manifest has no `profiles` key and still activates | Unit | P1 | FR-020-AC-6 | 🚧 key absence only; activation against filament-core is FR-001-AC-2 |
+| TC-166 | Every shipped profile passes the profile test | Unit | P1 | FR-021-AC-1 | ✅ |
+| TC-167 | Every shipped key is declared by a module in the reference module set | Integration | P1 | FR-021-AC-2 | ✅ |
+| TC-168 | `quire publish-check` accepts the declaring module of every shipped key | Integration | P1 | FR-021-AC-3 | ✅ |
 | TC-169 | Profile context entries state only market or product-kind facts | Manual | P2 | FR-021-AC-4 | 🚧 human reviewer |
-| TC-170 | Shipped profile names are a subset of the three named profiles | Unit | P1 | FR-021-AC-5 | 🚧 |
+| TC-170 | Shipped profile names are a subset of the three named profiles | Unit | P1 | FR-021-AC-5 | ✅ |
 | TC-171 | Published files name no licensed pack | Manual | P2 | FR-021-AC-6 | 🚧 human reviewer |
 | TC-172 | A published module's set for an intended source is listed in the matching profile | Manual | P2 | FR-021-AC-7 | 🚧 human reviewer |
-| TC-173 | Every shipped profile has only the six top-level keys and the three key fields | Unit | P1 | NFR-002-AC-1, NFR-002-M-1 | 🚧 |
-| TC-174 | `quire publish-check` accepts every declaring module, with no authority list | Integration | P1 | NFR-002-AC-2, NFR-002-M-2 | 🚧 |
+| TC-173 | Every shipped profile has only the six top-level keys and the three key fields | Unit | P1 | NFR-002-AC-1, NFR-002-M-1 | ✅ |
+| TC-174 | `quire publish-check` accepts every declaring module, with no authority list | Integration | P1 | NFR-002-AC-2, NFR-002-M-2 | ✅ |
 | TC-175 | The manifest `clause_sets` names exactly `nist/sp800-53@5.2.0` and `owasp/asvs@5.0.0` | Unit | P0 | FR-017-AC-1 | ✅ |
 | TC-176 | Every declared set's `rights.text` is `none`, `original` or `explicitly_cleared` | Unit | P0 | FR-017-AC-2 | ✅ |
 | TC-177 | `quire publish-check --module` over this module exits 0 | Integration | P0 | FR-017-AC-3 | ✅ |
