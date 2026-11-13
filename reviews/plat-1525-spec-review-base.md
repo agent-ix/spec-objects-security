@@ -237,3 +237,29 @@ Reviewed only the two-file `git diff origin/main...HEAD` at PR #54. Upstream FR-
 US-001 traces to StR-001, and FR-004/FR-016 link to US-001; each changed criterion declares Test verification. The integrity failure-domain cross-check found no new callback, graph traversal, or executable user logic in this change. Human attestation and the opaque approval reference remain separate from the boundary assertion.
 
 Language-specific Rust, React and Python execution checks and gap-analysis were skipped because no production or test code changed. Dependency analysis was skipped because no relationship edges changed. Evidence, risk-complexity, scope-boundary and full failure-domain reports were not selected: this narrow contract edit changes no verification method, algorithm, component allocation or execution model. Criterion-strength, correctness and fuzz generation were not selected for this review. No aggregate gate was run, per the review brief.
+
+## Dispositions
+
+Round 1: checked directly against fix commit `fbee533` and the current security PR diff.
+
+| FND | outcome | reason |
+| --- | --- | --- |
+| FND-001 | fixed | The expiry is now an RFC 3339 string with an explicit UTC designator or offset, with format validation required. AC-9 rejects empty, malformed and timezone-free values. The referenced Quoin FR-040 AC-19 specifies instant ordering across fractional seconds and zone offsets. |
+
+### Round 1 evidence
+
+```yaml
+dispositions:
+- fnd: FND-001
+  outcome: fixed
+  after_excerpt: '`expires_at` SHALL be a string containing an RFC 3339 date-time instant with an explicit
+    UTC designator or numeric UTC offset, using the instant comparison contract of Quoin FR-040.'
+```
+
+### Round 1 verdict
+
+**PASS** for this method after dispositions: all original findings are fixed; no new findings. Original findings and verdict above remain the immutable initial review. The original review scope and method skips remain in force. The added FR-040 reference was checked only as evidence for the expiry fix; it is an instant-ordering contract in companion Quoin FR-040 AC-19. No implementation claim or human risk decision is made.
+
+Quoin 0.30.1; Quire 0.44.0 (engine 0.59.1); both version commands exited 0. `quoin module list` exited 0 and identifies spec-artifacts-process@v0.31.0. `quire validate --scope . "spec/functional/FR-004-role-schemas.md" "spec/functional/FR-016-scope-exclusion-object.md" --summary` exited 0 with 2/2 documents grammar-clean and zero grammar findings. Unused-import and duplicate-module-name advisories remain visible in the log. No aggregate gate ran.
+
+GitHub reports PR #54 OPEN and MERGEABLE at this head, with mergeStateStatus BLOCKED and reviewDecision REVIEW_REQUIRED. The observed CLA checks succeeded (one conditional CLA check skipped). This disposition clears the recorded semantic findings; it does not supply GitHub approval or merge authorization.
