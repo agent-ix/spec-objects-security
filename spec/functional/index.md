@@ -20,3 +20,5 @@ description: "Index of artifacts in this directory."
 * [FR-011: A SOUP record's risk disposition is a person-owned quoin disposition fact, referenced by clause id](./FR-011-soup-risk-disposition.md)
 * [FR-012: A vulnerability can affect a SOUP record, and the advisory join stays open](./FR-012-soup-record-relations.md)
 * [FR-013: A SOUP record that serves no requirement is reported as unjustified scope](./FR-013-soup-record-serves-requirement.md)
+* [FR-020: A source profile is a module data file naming clause sets and an applicability context](./FR-020-source-profile-format.md)
+* [FR-021: Default source profiles list only publishable clause sets and degrade while a pack is missing](./FR-021-default-source-profiles.md)
