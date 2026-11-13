@@ -19,3 +19,4 @@ description: "Index of artifacts in this directory."
 * [FR-010: A SOUP record states requirements served, anomalies, support status and end of support](./FR-010-soup-record-fields.md)
 * [FR-011: A SOUP record's risk disposition is a person-owned quoin disposition fact, referenced by clause id](./FR-011-soup-risk-disposition.md)
 * [FR-012: A vulnerability can affect a SOUP record, and the advisory join stays open](./FR-012-soup-record-relations.md)
+* [FR-013: A SOUP record that serves no requirement is reported as unjustified scope](./FR-013-soup-record-serves-requirement.md)

@@ -621,6 +621,11 @@ object_types:
           after_heading: Properties
           required: false
 - name: soup_record
+  # PLAT-1598: the authored trace edge to the requirements a component serves.
+  # Reviewer-authored on the record; promotion never writes it. The target
+  # usually lives in the product repository, so it may be cross-repository.
+  allowed_links:
+    serves: [FR, NFR, StR]
   data_schema:
     schema: schemas/SoupRecord.json
   body_extraction:
@@ -691,6 +696,16 @@ traceability:
     to: []
     direction: outgoing
     check: unjustified-security-nfr
+  # A component that serves no requirement is unjustified scope (PLAT-1598).
+  # The record authors the edge, so `direction: outgoing`. The requirement is
+  # usually declared in another repository, so a cross-repository target
+  # satisfies the constrained `to` once the repositories are loaded together.
+  - name: soup-record-serves-requirement
+    from: soup_record
+    edges: [serves]
+    to: [FR, NFR, StR]
+    direction: outgoing
+    check: soup-serves-no-requirement
   #
   # A risk that transitively arises from itself states nothing, and no
   # per-document check can see it: the defect is a property of the graph.

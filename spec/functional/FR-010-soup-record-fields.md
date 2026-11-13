@@ -21,7 +21,7 @@ in two ways, by field kind. A scalar field (`support_status`, `end_of_support`) 
 means nobody has stated it, and an empty list means the reviewer stated that there are none.
 Neither form has a default, in the manner of [FR-006](./FR-006-security-safe-declarations.md).
 
-The module reports a record whose `serves` is empty or absent, because a component that serves no
+The module reports a record with no `serves` edge (FR-013), because a component that serves no
 requirement is unjustified scope. `SoupSupportStatus` is owned by this requirement and is not one of
 the ten vocabularies counted by FR-006.
 
@@ -42,7 +42,7 @@ the ten vocabularies counted by FR-006.
 - The `soup_record` schema SHALL admit `end_of_support` only as a calendar date or the literal `unknown`.
 - The `soup_record` schema SHALL admit an `end_of_support` of `unknown` together with a `support_status` of `supported`.
 - The module SHALL emit no default for `serves`, `known_anomalies`, `support_status` or `end_of_support`.
-- Quire SHALL report a `soup_record` whose `serves` is empty or absent.
+- Quire SHALL report a `soup_record` that has no `serves` edge, as [FR-013](./FR-013-soup-record-serves-requirement.md) specifies; the `serves` record field is not read by that check.
 - The module SHALL accept `serves` entries that name requirements declared in another repository.
 - The module SHALL apply the credential-shape scan of [FR-005](./FR-005-executable-skeletons.md) to the `known_anomalies` statements.
 
@@ -60,10 +60,10 @@ the ten vocabularies counted by FR-006.
 | FR-010-AC-2 | A fixture with `known_anomalies: []` validates, a fixture with the field absent validates, and the two emit different records, the first with an empty list and the second with no key. | Test |
 | FR-010-AC-3 | A fixture with `end_of_support: unknown` validates, a fixture with a calendar date validates, and a fixture with any other string fails. | Test |
 | FR-010-AC-4 | The emitted `soup_record` schema carries no `default` keyword at any depth. | Test |
-| FR-010-AC-5 | A fixture `soup_record` with an empty or absent `serves` yields one finding naming the record, and a fixture whose `serves` names a requirement in another repository yields none. | Test |
+| FR-010-AC-5 | A fixture `soup_record` with no `serves` relationship yields one finding naming the record (FR-013-AC-2), and a fixture whose `serves` relationship names a requirement in the bundle yields none (FR-013-AC-3). | Test |
 | FR-010-AC-6 | A fixture whose anomaly statement contains a credential-shaped string is refused by the FR-005 scan. | Test |
 
 ## Dependencies
 
 - **Upstream**: [FR-006](./FR-006-security-safe-declarations.md), [FR-009](./FR-009-soup-record-identity-and-promotion.md)
-- **Downstream**: [FR-011](./FR-011-soup-risk-disposition.md)
+- **Downstream**: [FR-011](./FR-011-soup-risk-disposition.md), [FR-013](./FR-013-soup-record-serves-requirement.md)

@@ -110,6 +110,7 @@ def test_threat_and_risk_coverage_is_declared_not_coded() -> None:
         "threat-has-control",
         "risk-has-treatment",
         "security-nfr-has-mitigation-target",
+        "soup-record-serves-requirement",
     }
     assert by_name["threat-has-control"]["from"] == "threat"
     assert by_name["risk-has-treatment"]["from"] == "risk"
@@ -119,6 +120,7 @@ def test_threat_and_risk_coverage_is_declared_not_coded() -> None:
         "uncontrolled-threat",
         "untreated-risk",
         "unjustified-security-nfr",
+        "soup-serves-no-requirement",
     }
     assert len(checks) == len(by_name), "each relation is independently tunable"
 
@@ -133,6 +135,10 @@ def test_threat_and_risk_coverage_is_declared_not_coded() -> None:
             # The reverse reading (FR-008): `NFR` is spec-artifacts-iso's
             # archetype and the NFR authors the edge.
             assert relation["from"] == "NFR"
+            assert relation["direction"] == "outgoing"
+        elif name == "soup-record-serves-requirement":
+            # FR-013: the reviewer authors the edge on the record.
+            assert relation["from"] == "soup_record"
             assert relation["direction"] == "outgoing"
         else:
             assert relation["direction"] == "incoming"

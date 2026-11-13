@@ -362,12 +362,13 @@ def _iso() -> pathlib.Path:
     return pathlib.Path(spec.origin).parent
 
 
-def _validate(root):
+def _validate(root, *flags):
     return subprocess.run(
         [
             engine_tool("quire"),
             "validate",
             "--okf",
+            *flags,
             "--module",
             str(_iso()),
             "--module",
@@ -397,10 +398,7 @@ def test_vulnerability_affects_lists_soup_record_and_soup_declares_no_links():
         "attack_surface",
         "soup_record",
     ]
-    assert "allowed_links" not in object_type("soup_record")
-    manifest = yaml.safe_load(MANIFEST_PATH.read_text())
-    required = manifest["traceability"]["required_relations"]
-    assert not [r for r in required if r["from"] == "soup_record"]
+    assert list(object_type("soup_record")["allowed_links"]) == ["serves"]
     assert "required_relations" not in vulnerability
 
 
@@ -439,7 +437,11 @@ def test_a_soup_record_no_vulnerability_affects_has_no_finding(tmp_path, quire_e
     result = _validate(tmp_path)
     assert result.returncode == 0, result.stderr
     soup_id = frontmatter((SKELETONS_DIR / "soup_record.md").read_text())["id"]
-    assert not [line for line in result.stderr.splitlines() if soup_id in line]
+    assert not [
+        line
+        for line in result.stderr.splitlines()
+        if soup_id in line and CHECK not in line
+    ]
 
 
 # -- Engine gaps ---------------------------------------------------------------
@@ -551,17 +553,95 @@ def test_two_documents_with_one_purl_yield_one_duplicate_identity_report(tmp_pat
     assert len(reports) == 1, result.stderr
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason="The engine cannot report an absent or empty record list key.",
-)
-@pytest.mark.trace("TC-133", "FR-010-AC-5")
-def test_a_record_with_no_serves_yields_one_finding_naming_it(tmp_path):
-    text = re.sub(r"serves:\n(  .*\n)+", "", full_fixture())
-    (tmp_path / "a.md").write_text(text)
+CHECK = "soup-serves-no-requirement"
+SERVED = FIXTURES / "served.md"
+
+
+def _requirement(root, req_id="FR-100"):
+    """An FR from the installed iso skeleton, standing in for the served requirement."""
+    text = (_iso() / "skeletons" / "fr.md").read_text().replace("FR-001", req_id)
+    (root / f"{req_id}.md").write_text(text)
+
+
+def _findings(result):
+    return [line for line in result.stderr.splitlines() if line.endswith(f"[{CHECK}]")]
+
+
+@pytest.mark.trace("TC-150", "FR-013-AC-1")
+def test_serves_link_and_required_relation_are_declared():
+    assert object_type("soup_record")["allowed_links"] == {
+        "serves": ["FR", "NFR", "StR"]
+    }
+    manifest = yaml.safe_load(MANIFEST_PATH.read_text())
+    relations = manifest["traceability"]["required_relations"]
+    (relation,) = [r for r in relations if r["from"] == "soup_record"]
+    assert relation == {
+        "name": "soup-record-serves-requirement",
+        "from": "soup_record",
+        "edges": ["serves"],
+        "to": ["FR", "NFR", "StR"],
+        "direction": "outgoing",
+        "check": CHECK,
+    }
+
+
+@pytest.mark.trace("TC-151", "FR-013-AC-2")
+def test_record_with_no_serves_edge_is_reported_by_name(tmp_path):
+    _requirement(tmp_path)
+    (tmp_path / "soup.md").write_text(full_fixture())
     result = _validate(tmp_path)
-    findings = [line for line in result.stderr.splitlines() if "SOUP-010" in line]
-    assert len(findings) == 1, result.stderr
+    assert result.returncode == 0, result.stderr
+    findings = _findings(result)
+    assert len(findings) == 1 and "SOUP-010" in findings[0], result.stderr
+
+
+@pytest.mark.trace("TC-152", "FR-013-AC-3")
+def test_record_with_a_serves_edge_is_not_reported(tmp_path):
+    _requirement(tmp_path)
+    (tmp_path / "soup.md").write_text(SERVED.read_text())
+    result = _validate(tmp_path)
+    assert result.returncode == 0, result.stderr
+    assert _findings(result) == [], result.stderr
+
+
+@pytest.mark.trace("TC-153", "FR-013-AC-4")
+def test_serves_edge_to_another_kind_or_nothing_is_still_reported(tmp_path):
+    shutil.copy(SKELETONS_DIR / "threat.md", tmp_path / "threat.md")
+    threat_id = frontmatter((SKELETONS_DIR / "threat.md").read_text())["id"]
+    text = SERVED.read_text().replace(
+        "example-product/FR-100\n    type: serves",
+        f"spec-objects-security/{threat_id}\n    type: serves",
+    )
+    (tmp_path / "soup.md").write_text(text)
+    assert len(_findings(_validate(tmp_path))) == 1
+    # No FR-100 in the bundle: the target resolves to nothing.
+    (tmp_path / "soup.md").write_text(SERVED.read_text())
+    assert len(_findings(_validate(tmp_path))) == 1
+
+
+@pytest.mark.trace("TC-154", "FR-013-AC-5")
+def test_finding_is_advisory_and_tunable(tmp_path):
+    (tmp_path / "soup.md").write_text(full_fixture())
+    plain = _validate(tmp_path)
+    assert _findings(plain)[0].startswith("warning:"), plain.stderr
+    promoted = _validate(tmp_path, "--severity", f"trace:{CHECK}=error")
+    assert promoted.returncode != 0, promoted.stderr
+    assert len(_findings(promoted)) == 1, promoted.stderr
+
+
+@pytest.mark.trace("TC-155", "FR-013-AC-6")
+def test_skeleton_carries_no_edge_and_extract_lists_the_authored_one():
+    assert "relationships" not in frontmatter(
+        (SKELETONS_DIR / "soup_record.md").read_text()
+    )
+    out = subprocess.run(
+        [engine_tool("quire"), "extract", "--module", str(PACKAGE_ROOT), str(SERVED)],
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout
+    edges = json.loads(out)["edges"]
+    assert {"target": "FR-100", "type": "serves"} in edges, edges
 
 
 def test_the_worked_disposition_example_pairs_a_record_with_a_fact(quire_engine):
