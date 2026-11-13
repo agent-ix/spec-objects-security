@@ -41,12 +41,6 @@
     "inventory_ref": {
       "$ref": "https://schemas.agent-ix.org/semantic-core/0.4.4/SemanticId.json"
     },
-    "serves": {
-      "type": "array",
-      "items": {
-        "$ref": "https://schemas.agent-ix.org/semantic-core/0.4.4/SemanticId.json"
-      }
-    },
     "known_anomalies": {
       "type": "array",
       "items": {

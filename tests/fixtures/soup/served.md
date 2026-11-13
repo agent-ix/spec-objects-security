@@ -7,8 +7,6 @@ purl: "pkg:cargo/example-parser-lib@2.3.1"
 name: example-parser-lib
 version: "2.3.1"
 supplier: unknown
-serves:
-  - ix://agent-ix/example-product/FR-100
 known_anomalies:
   - statement: "Rejects inputs over 16 MiB without an error code."
     source_ref: ix://agent-ix/example-product/ISSUE-7
@@ -16,8 +14,8 @@ support_status: community_supported
 end_of_support: 2027-06-30
 disposition_clause: SOUP-RISK-EXAMPLE-010
 relationships:
-  - target: "ix://agent-ix/example-product/FR-100"
-    type: serves
+  - target: "ix://agent-ix/spec-objects-security/FR-100"
+    type: supports
 ---
 # [SOUP-011] ExampleParserLib
 

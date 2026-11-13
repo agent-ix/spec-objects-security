@@ -118,10 +118,10 @@ the Python package only: neither Node script is measured by it.
 | FR-007 | FR-007-AC-1..2 | TC-091, TC-092 | ✅ |
 | FR-008 | FR-008-AC-1..10 | TC-116..TC-120, TC-146..TC-149 | 🚧 |
 | FR-009 | FR-009-AC-1..8, FR-009-CON-1..2 | TC-121..TC-128 | ✅ AC-3 is an engine gap (TC-123); AC-8 and CON-2 are inspections |
-| FR-010 | FR-010-AC-1..6, FR-010-CON-1 | TC-129..TC-134 | ✅ AC-5 is discharged by FR-013 (TC-151, TC-152) |
+| FR-010 | FR-010-AC-1..4, FR-010-AC-6, FR-010-CON-1 | TC-129..TC-132, TC-134 | ✅ |
 | FR-011 | FR-011-AC-1..5, FR-011-CON-1 | TC-135..TC-139 | ✅ AC-4 and CON-1 need a human reviewer (TC-138) |
 | FR-012 | FR-012-AC-1..4 | TC-140..TC-143 | ✅ |
-| FR-013 | FR-013-AC-1..7 | TC-150..TC-156 | 🚧 AC-7 needs `quire validate --repo`, which the pinned CLI lacks |
+| FR-013 | FR-013-AC-1..7 | TC-150..TC-156 | 🚧 AC-7 needs `quire validate --repo` (PLAT-1519); `quire trace`/`quire matrix` show no document edges (PLAT-1519), so AC-6 reads the edge with `quire extract` |
 | NFR-001 | NFR-001-AC-1..2, NFR-001-M-1..2 | TC-144, TC-145 | ✅ |
 
 ### Integration Test Coverage
@@ -230,7 +230,6 @@ the Python package only: neither Node script is measured by it.
 | TC-130 | An empty `known_anomalies` and an absent one both validate and emit different records | Unit | P0 | FR-010-AC-2 | 🚧 both forms validate; the emission half is a strict expected failure (the frontmatter record keys of an authored document are neither validated against the data schema nor projected into the extracted record) |
 | TC-131 | `end_of_support` accepts a date or `unknown` and refuses any other string | Unit | P0 | FR-010-AC-3 | ✅ schema half; the authored-document half is a strict expected failure (the frontmatter record keys of an authored document are neither validated against the data schema nor projected into the extracted record) |
 | TC-132 | The `soup_record` schema carries no `default` keyword at any depth | Unit | P0 | FR-010-AC-4 | ✅ |
-| TC-133 | A record with no `serves` relationship yields one finding; one with a `serves` relationship yields none | Integration | P1 | FR-010-AC-5 | ✅ discharged by TC-151 and TC-152 (FR-013) |
 | TC-134 | An anomaly statement with a credential-shaped string is refused by the FR-005 scan | Unit | P1 | FR-010-AC-6 | ✅ |
 | TC-135 | A non-empty `disposition_clause` validates; an empty or whitespace-only one fails | Unit | P0 | FR-011-AC-1 | ✅ |
 | TC-136 | A record with no `disposition_clause` validates and carries no such key | Unit | P0 | FR-011-AC-2 | ✅ |
@@ -243,13 +242,13 @@ the Python package only: neither Node script is measured by it.
 | TC-143 | A `soup_record` carrying `severity`, `cve_id` or an advisory list fails | Unit | P0 | FR-012-AC-4 | ✅ schema half; the authored-document half is a strict expected failure (the frontmatter record keys of an authored document are neither validated against the data schema nor projected into the extracted record) |
 | TC-144 | The `soup_record` schema has no score, rating, class, tier or level property and reuses no graded vocabulary | Unit | P0 | NFR-001-AC-1, NFR-001-M-1 | ✅ |
 | TC-145 | A validated fixture emits exactly the keys the author wrote | Unit | P0 | NFR-001-AC-2, NFR-001-M-2 | ✅ |
-| TC-150 | The manifest declares `soup_record.allowed_links.serves` and the `soup-record-serves-requirement` relation | Unit | P0 | FR-013-AC-1 | ✅ |
-| TC-151 | A record with no `serves` relationship yields exactly one `soup-serves-no-requirement` finding naming it | Integration | P0 | FR-013-AC-2 | ✅ |
-| TC-152 | A record with a `serves` relationship to an `FR` in the bundle yields no finding | Integration | P0 | FR-013-AC-3 | ✅ |
-| TC-153 | A `serves` edge to a document of another kind, or to nothing, still yields the finding | Integration | P1 | FR-013-AC-4 | ✅ |
+| TC-150 | The manifest declares `soup_record.allowed_links.supports` and the `soup-record-serves-requirement` relation | Unit | P0 | FR-013-AC-1 | ✅ |
+| TC-151 | A record with no `supports` relationship yields exactly one `soup-serves-no-requirement` finding naming it | Integration | P0 | FR-013-AC-2 | ✅ |
+| TC-152 | A record with a `supports` relationship to an `FR` in the bundle yields no finding | Integration | P0 | FR-013-AC-3 | ✅ |
+| TC-153 | A `supports` edge to a document of another kind, or to nothing, still yields the finding | Integration | P1 | FR-013-AC-4 | ✅ |
 | TC-154 | The finding is a warning and `--severity trace:soup-serves-no-requirement=error` promotes it | Integration | P1 | FR-013-AC-5 | ✅ |
-| TC-155 | The skeleton carries no `relationships`; `quire extract` lists the authored `serves` edge | Integration | P1 | FR-013-AC-6 | ✅ |
-| TC-156 | `quire validate --okf --repo o/a=… --repo o/b=…` with the record in `o/a` serving an `FR` in `o/b` yields no finding | Integration | P1 | FR-013-AC-7 | 🚧 the pinned CLI has no `--repo` |
+| TC-155 | The skeleton carries no `relationships`; `quire extract` lists the authored `supports` edge | Integration | P1 | FR-013-AC-6 | ✅ |
+| TC-156 | `quire validate --okf --repo o/a=… --repo o/b=…` with the record in `o/a` serving an `FR` in `o/b` yields no finding | Integration | P1 | FR-013-AC-7 | 🚧 the pinned CLI has no `--repo`; engine gap tracked in PLAT-1519 |
 
 ## Test Environment
 

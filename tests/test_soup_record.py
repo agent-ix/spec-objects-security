@@ -295,7 +295,7 @@ def test_an_embedded_decision_is_refused(validator):
 
 @pytest.mark.trace("TC-139", "FR-011-AC-5")
 def test_disposition_clause_changes_no_other_key(validator, quire_engine):
-    plain = record(support_status="supported", serves=[REQ])
+    plain = record(support_status="supported")
     assert validator.is_valid(plain)
     assert validator.is_valid({**plain, "disposition_clause": "SOUP-RISK-EXAMPLE-001"})
     full = full_fixture()
@@ -329,7 +329,7 @@ def test_no_score_rating_class_tier_or_level_property():
 def test_a_validated_fixture_emits_exactly_the_keys_written(
     validator, quire_engine, semantic_module, bundle_index
 ):
-    written = record(supplier="unknown", serves=[REQ], known_anomalies=[])
+    written = record(supplier="unknown", known_anomalies=[])
     before = copy.deepcopy(written)
     assert validator.is_valid(written)
     assert written == before
@@ -342,7 +342,6 @@ def test_a_validated_fixture_emits_exactly_the_keys_written(
         "supplier",
     ]
     for key in (
-        "serves",
         "known_anomalies",
         "support_status",
         "end_of_support",
@@ -398,7 +397,7 @@ def test_vulnerability_affects_lists_soup_record_and_soup_declares_no_links():
         "attack_surface",
         "soup_record",
     ]
-    assert list(object_type("soup_record")["allowed_links"]) == ["serves"]
+    assert list(object_type("soup_record")["allowed_links"]) == ["supports"]
     assert "required_relations" not in vulnerability
 
 
@@ -568,9 +567,9 @@ def _findings(result):
 
 
 @pytest.mark.trace("TC-150", "FR-013-AC-1")
-def test_serves_link_and_required_relation_are_declared():
+def test_supports_link_and_required_relation_are_declared():
     assert object_type("soup_record")["allowed_links"] == {
-        "serves": ["FR", "NFR", "StR"]
+        "supports": ["FR", "NFR", "StR"]
     }
     manifest = yaml.safe_load(MANIFEST_PATH.read_text())
     relations = manifest["traceability"]["required_relations"]
@@ -578,7 +577,7 @@ def test_serves_link_and_required_relation_are_declared():
     assert relation == {
         "name": "soup-record-serves-requirement",
         "from": "soup_record",
-        "edges": ["serves"],
+        "edges": ["supports"],
         "to": ["FR", "NFR", "StR"],
         "direction": "outgoing",
         "check": CHECK,
@@ -586,7 +585,7 @@ def test_serves_link_and_required_relation_are_declared():
 
 
 @pytest.mark.trace("TC-151", "FR-013-AC-2")
-def test_record_with_no_serves_edge_is_reported_by_name(tmp_path):
+def test_record_with_no_supports_edge_is_reported_by_name(tmp_path):
     _requirement(tmp_path)
     (tmp_path / "soup.md").write_text(full_fixture())
     result = _validate(tmp_path)
@@ -596,22 +595,28 @@ def test_record_with_no_serves_edge_is_reported_by_name(tmp_path):
 
 
 @pytest.mark.trace("TC-152", "FR-013-AC-3")
-def test_record_with_a_serves_edge_is_not_reported(tmp_path):
+def test_record_with_a_supports_edge_is_not_reported(tmp_path):
     _requirement(tmp_path)
     (tmp_path / "soup.md").write_text(SERVED.read_text())
     result = _validate(tmp_path)
     assert result.returncode == 0, result.stderr
     assert _findings(result) == [], result.stderr
+    # `supports` is a registered verb: loading the module reports no unknown edge.
+    # The verb must come from the iso edge registry, not be invented here.
+    registry = yaml.safe_load((_iso() / "manifest.yaml").read_text())["edge_types"]
+    assert set(object_type("soup_record")["allowed_links"]) <= set(registry)
 
 
 @pytest.mark.trace("TC-153", "FR-013-AC-4")
-def test_serves_edge_to_another_kind_or_nothing_is_still_reported(tmp_path):
+def test_supports_edge_to_another_kind_or_nothing_is_still_reported(tmp_path):
     shutil.copy(SKELETONS_DIR / "threat.md", tmp_path / "threat.md")
     threat_id = frontmatter((SKELETONS_DIR / "threat.md").read_text())["id"]
     text = SERVED.read_text().replace(
-        "example-product/FR-100\n    type: serves",
-        f"spec-objects-security/{threat_id}\n    type: serves",
+        'spec-objects-security/FR-100"\n    type: supports',
+        f'spec-objects-security/{threat_id}"\n    type: supports',
     )
+    assert text != SERVED.read_text(), "the relationship was not rewritten"
+    assert threat_id in text
     (tmp_path / "soup.md").write_text(text)
     assert len(_findings(_validate(tmp_path))) == 1
     # No FR-100 in the bundle: the target resolves to nothing.
@@ -641,7 +646,7 @@ def test_skeleton_carries_no_edge_and_extract_lists_the_authored_one():
         check=True,
     ).stdout
     edges = json.loads(out)["edges"]
-    assert {"target": "FR-100", "type": "serves"} in edges, edges
+    assert {"target": "FR-100", "type": "supports"} in edges, edges
 
 
 def test_the_worked_disposition_example_pairs_a_record_with_a_fact(quire_engine):

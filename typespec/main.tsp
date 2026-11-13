@@ -794,7 +794,6 @@ model SoupRecord {
   license_fact_ref?: SemanticId;
   finding_refs?: SemanticId[];
   inventory_ref?: SemanticId;
-  serves?: SemanticId[];
   known_anomalies?: Anomaly[];
   support_status?: SoupSupportStatus;
   @pattern("^(unknown|[0-9]{4}-(0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01])|[0-9]{4}-(0[469]|11)-(0[1-9]|[12][0-9]|30)|[0-9]{4}-02-(0[1-9]|1[0-9]|2[0-8])|([0-9]{2}(0[48]|[2468][048]|[13579][26])|([02468][048]|[13579][26])00)-02-29)$") end_of_support?: string;

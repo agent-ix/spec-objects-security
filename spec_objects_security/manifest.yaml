@@ -621,11 +621,12 @@ object_types:
           after_heading: Properties
           required: false
 - name: soup_record
-  # PLAT-1598: the authored trace edge to the requirements a component serves.
+  # PLAT-1598: the authored `supports` trace edge to the requirements a component
+  # serves (a verb the iso edge_types registry already declares).
   # Reviewer-authored on the record; promotion never writes it. The target
   # usually lives in the product repository, so it may be cross-repository.
   allowed_links:
-    serves: [FR, NFR, StR]
+    supports: [FR, NFR, StR]
   data_schema:
     schema: schemas/SoupRecord.json
   body_extraction:
@@ -702,7 +703,7 @@ traceability:
   # satisfies the constrained `to` once the repositories are loaded together.
   - name: soup-record-serves-requirement
     from: soup_record
-    edges: [serves]
+    edges: [supports]
     to: [FR, NFR, StR]
     direction: outgoing
     check: soup-serves-no-requirement
