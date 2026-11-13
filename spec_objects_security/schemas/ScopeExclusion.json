@@ -5,12 +5,11 @@
   "properties": {
     "set": {
       "type": "string",
-      "pattern": "^[^/@]{1,64}/[^/@]{1,64}@[^/@]{1,64}$"
+      "pattern": "^[!-.0-?A-~]{1,64}/[!-.0-?A-~]{1,64}@[!-.0-?A-~]{1,64}$"
     },
     "clause": {
       "type": "string",
-      "minLength": 1,
-      "maxLength": 64
+      "pattern": "^[!-~]{1,64}$"
     },
     "responsible": {
       "$ref": "https://schemas.agent-ix.org/semantic-core/0.4.4/SemanticId.json"

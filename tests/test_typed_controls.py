@@ -46,6 +46,41 @@ def schema(model: str) -> dict:
     return json.loads((SCHEMAS_DIR / f"{model}.json").read_text())
 
 
+def extract_record(quire, kind: str, schema_file: str, text: str) -> dict:
+    """The semantic extraction of one authored document with its record schema."""
+    sem = yaml.safe_load(MANIFEST_PATH.read_text())["semantic"]
+    module = {
+        "contractVersion": sem["contract_version"],
+        "package": sem["package"],
+        "exports": sem["exports"],
+        "imports": sem["imports"],
+        "compatibilityPosture": sem["compatibility_posture"],
+        "legacyForms": sem["legacy_forms"],
+        "mappings": sem["mappings"],
+    }
+    docs = {}
+    for path in sorted(SCHEMAS_DIR.glob("*.json")):
+        doc = json.loads(path.read_text())
+        docs[doc["$id"]] = doc
+    return quire.extract_semantic(
+        {
+            "markdown": text,
+            "module": module,
+            "path": "doc.md",
+            "sourceIdentity": f"ix://{BUNDLE}/{kind}",
+            "bundle": {
+                "package": BUNDLE,
+                "objects": [{"id": "COMP-001", "names": ["COMP-001"]}],
+                "enumerations": [],
+                "imports": {},
+            },
+            "objectType": kind,
+            "dataSchema": json.loads((SCHEMAS_DIR / schema_file).read_text()),
+            "schemaDocuments": docs,
+        }
+    )
+
+
 @pytest.fixture
 def mapping(schema_registry):
     return schema_registry("ControlMapping")
@@ -93,6 +128,9 @@ def test_set_key_and_clause_id_shapes(mapping):
     assert ok(f"{'a' * 64}/b@1")
     assert not ok("a/b@" + "1" * 65)
     assert ok("a/b@" + "1" * 64)
+    assert not ok("é/b@1") and not ok("a/é@1") and not ok("a/b@é")
+    assert not ok(f"{'é' * 33}/b@1"), "33 two-byte characters are 66 bytes"
+    assert not ok(SET, "é") and not ok(SET, "a b")
     assert not ok(SET, "")
     assert not ok(SET, "c" * 65)
     assert ok(SET, "c" * 64)
@@ -182,6 +220,18 @@ def test_a_third_mapping_column_is_a_column_unknown_refusal(quire_engine):
     assert hit and "header `Title` matches no property" in hit[0]["message"], result[
         "errors"
     ]
+    sentinel = "SENTINEL-TITLE"
+    text = text.replace("| EX-1 | t |", f"| EX-1 | {sentinel} |")
+    out = extract_record(quire_engine, "control", "Control.json", text)
+    column = [
+        d
+        for d in out["diagnostics"]
+        if d["code"] == "semantic.invalid-model-cell" and d["line"] == line
+    ]
+    assert column and column[0]["reason"] == "column-unknown", out["diagnostics"]
+    assert "mappings" not in (out["record"] or {})
+    assert out["availability"]["recordKeys"]["mappings"]["state"] == "unavailable"
+    assert sentinel not in json.dumps(out["record"])
 
 
 @pytest.mark.trace("TC-196", "FR-015-AC-3")
@@ -273,3 +323,34 @@ def test_exclusion_manifest_entry_requires_four_section_body_locators():
             "after_heading": heading,
             "required": True,
         }
+
+
+COVERAGE_WORDS = ("coverage", "compliance", "score", "percent", "rating", "status")
+
+
+@pytest.mark.trace("TC-204", "NFR-003-AC-1")
+def test_no_computed_value_property_on_mapping_or_exclusion_schemas():
+    for model in ("ControlMapping", "ScopeExclusion"):
+        for name, prop in schema(model)["properties"].items():
+            blob = (name + json.dumps(prop)).lower()
+            for word in COVERAGE_WORDS:
+                assert word not in blob, (model, name, word)
+            assert prop.get("type") == "string" or "$ref" in prop, (model, name)
+
+
+@pytest.mark.trace("TC-205", "NFR-003-AC-2")
+def test_validated_fixtures_emit_exactly_the_keys_the_author_wrote(quire_engine):
+    control = extract_record(
+        quire_engine, "control", "Control.json", control_skeleton()
+    )
+    record = control["record"]
+    assert set(record) == {"mappings", "effectiveness"}
+    assert all(set(row) == {"set", "clause"} for row in record["mappings"])
+    assert [(r["set"], r["clause"]) for r in record["mappings"]] == [
+        ("example.invalid/std@1", "EX-1"),
+        ("example.invalid/std@1", "EX-2"),
+    ]
+    exclusion = extract_record(
+        quire_engine, "scope_exclusion", "ScopeExclusion.json", exclusion_skeleton()
+    )
+    assert set(exclusion["record"]) == {"set", "clause", "responsible", "rationale"}

@@ -149,12 +149,13 @@ enum MfaFactorKind {
 
 /**
  * One clause of one clause set that a control answers. `set` is the clause set
- * key `authority/id@version`; `clause` is the clause id inside it. No other
+ * key `authority/id@version`; `clause` is the clause id inside it. Both are
+ * printable ASCII, so the character limits are the byte limits. No other
  * property is admitted, so a mapping can carry no text of a standard.
  */
 model ControlMapping {
-  @pattern("^[^/@]{1,64}/[^/@]{1,64}@[^/@]{1,64}$") set: string;
-  @minLength(1) @maxLength(64) clause: string;
+  @pattern("^[!-.0-?A-~]{1,64}/[!-.0-?A-~]{1,64}@[!-.0-?A-~]{1,64}$") set: string;
+  @pattern("^[!-~]{1,64}$") clause: string;
   ...Record<never>;
 }
 
@@ -811,8 +812,8 @@ model SoupRecord {
  * approval: it admits no decision, status or approval property.
  */
 model ScopeExclusion {
-  @pattern("^[^/@]{1,64}/[^/@]{1,64}@[^/@]{1,64}$") set: string;
-  @minLength(1) @maxLength(64) clause: string;
+  @pattern("^[!-.0-?A-~]{1,64}/[!-.0-?A-~]{1,64}@[!-.0-?A-~]{1,64}$") set: string;
+  @pattern("^[!-~]{1,64}$") clause: string;
   responsible: SemanticId;
   @pattern("\\S") rationale: string;
   ...Record<never>;

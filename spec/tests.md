@@ -134,9 +134,6 @@ the Python package only: neither Node script is measured by it.
 | FR-020 | FR-020-AC-1..6 | TC-160..TC-165 | ✅ AC-6 covers the key-absence half only; activation is FR-001-AC-2 |
 | FR-021 | FR-021-AC-1..7 | TC-166..TC-172 | ✅ AC-4, AC-6 and AC-7 are inspections (human reviewer); AC-1, AC-2, AC-3 and AC-5 run over shipped profiles and are vacuous until one ships |
 | NFR-002 | NFR-002-AC-1..2, NFR-002-M-1..2 | TC-173, TC-174 | ✅ vacuous until a profile ships |
-| FR-014 | FR-014-AC-1..7 | TC-187..TC-193 | ✅ |
-| FR-015 | FR-015-AC-1..3 | TC-194..TC-196 | ✅ |
-| FR-016 | FR-016-AC-1..7 | TC-197..TC-203 | ✅ |
 | FR-017 | FR-017-AC-1..7 | TC-175..TC-186 | ✅ `quire clauses` loads strictly and cannot load the real module (the object-type edges come from another module), so TC-181, TC-183, TC-185 and TC-186 evaluate a module that holds only the set files |
 
 ### Integration Test Coverage
@@ -291,23 +288,6 @@ the Python package only: neither Node script is measured by it.
 | TC-184 | Each ASVS clause's `subjects` is its chapter id, declared in the `chapter` dimension | Unit | P0 | FR-017-AC-6 | ✅ |
 | TC-185 | `quire clauses evaluate` binds 70, 253 and 345 ASVS clauses at level 1, 2 and 3, and no level leaves every clause `unresolved` | Integration | P0 | FR-017-AC-7 | ✅ |
 | TC-186 | `quoin discharge --binding --rmm --repo` renders a requirements matrix for the ASVS set over a synthetic corpus, with compliant, undischarged and not-applicable rows | Integration | P1 | FR-017 | ✅ |
-| TC-187 | mapping requires set and clause and refuses the old keys | Unit | P0 | FR-014-AC-1 | ✅ |
-| TC-188 | set key and clause id shapes | Unit | P0 | FR-014-AC-2 | ✅ |
-| TC-189 | authored control mappings and effectiveness are validated | Unit | P0 | FR-014-AC-3 | ✅ |
-| TC-190 | control skeleton has a mappings table and not assessed effectiveness | Unit | P0 | FR-014-AC-4 | ✅ |
-| TC-191 | a control with no mappings or effectiveness section validates | Unit | P0 | FR-014-AC-5 | ✅ |
-| TC-192 | control manifest mappings and effectiveness locators are optional | Unit | P0 | FR-014-AC-7 | ✅ |
-| TC-193 | manifest mappings names record sections | Unit | P0 | FR-014-AC-6 | ✅ |
-| TC-194 | a third mapping key fails for each of title text note | Unit | P0 | FR-015-AC-1 | ✅ |
-| TC-195 | a third mapping column is a column unknown refusal | Unit | P0 | FR-015-AC-2 | ✅ |
-| TC-196 | control mapping schema lists exactly set and clause | Unit | P0 | FR-015-AC-3 | ✅ |
-| TC-197 | scope exclusion schema is sealed and exported | Unit | P0 | FR-016-AC-1 | ✅ |
-| TC-198 | exclusion without responsible or rationale fails | Unit | P0 | FR-016-AC-2 | ✅ |
-| TC-199 | exclusion admits no decision status or approval | Unit | P0 | FR-016-AC-3 | ✅ |
-| TC-200 | exclusion skeleton validates and each section is required | Unit | P0 | FR-016-AC-4 | ✅ |
-| TC-201 | responsible is a bare bundle id not a cross repository identity | Unit | P0 | FR-016-AC-7 | ✅ |
-| TC-202 | the empty exclusion record fails | Unit | P0 | FR-016-AC-5 | ✅ |
-| TC-203 | exclusion manifest entry requires four section body locators | Unit | P0 | FR-016-AC-6 | ✅ |
 
 ## Test Environment
 
