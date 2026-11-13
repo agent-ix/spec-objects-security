@@ -35,6 +35,8 @@ semantic:
   mappings: [typed-table, sysml-fence, ocl-clause]
   compatibility_posture: additive
   legacy_forms: warning
+clause_sets:
+- clauses/nist-sp800-53-5.2.0.json
 nav:
   category:
     slug: security

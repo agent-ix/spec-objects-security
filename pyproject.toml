@@ -13,6 +13,7 @@ include = [
     { path = "spec_objects_security/manifest.yaml", format = ["sdist", "wheel"] },
     { path = "spec_objects_security/skeletons/*.md", format = ["sdist", "wheel"] },
     { path = "spec_objects_security/schemas/*.json", format = ["sdist", "wheel"] },
+    { path = "spec_objects_security/clauses/*.json", format = ["sdist", "wheel"] },
 ]
 
 [tool.poetry.dependencies]
