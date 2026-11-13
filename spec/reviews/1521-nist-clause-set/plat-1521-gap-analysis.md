@@ -54,3 +54,18 @@ copy, because of an engine limit (FND-002). Another ticket AC needs its text cor
 | FND-002 | medium | `quire clauses evaluate --module spec_objects_security --authority nist --set sp800-53 --version 5.2.0` exits 3 with `loading clause-set module: EdgeVocabularyViolation [UnknownEdgeType]: 'references'`. The `quire clauses` loader is strict and does not merge the edge vocabulary of the installed modules, so the shipped module cannot be evaluated where it lives. Ticket AC 1 and the RMM test are met only through `_stage_clause_only_module`, a temp module that holds the set alone. Anyone binding the installed NIST set has to repeat that workaround. The data is fine; the gap is in the engine. Fix: send it to the quire-rs owner (terra:quoin:triage) so `quire clauses` resolves edge types the way `quire validate` does. Then point the test at `PACKAGE_ROOT` | tests/test_clause_sets.py:44-60, tests/test_clause_sets.py:138-146 |
 | FND-003 | low | FR-017-AC-1 requires `clause_sets` to name exactly `nist/sp800-53@5.2.0` and `owasp/asvs@5.0.0`. The test asserts `"nist/sp800-53@5.2.0" in keys`, which passes with ASVS absent and with any extra set present, so its AC-1 trace cannot fail on the AC's real condition. PR #51, stacked on this one, replaces it with an exact-equality test. Disposition: deferred to PR #51, provided the two merge together | tests/test_clause_sets.py:92-94, spec/functional/FR-017-module-declares-nist-and-asvs-clause-sets.md:39 |
 | FND-004 | low | Ticket AC 4, "`quoin discharge --rmm --pack` renders a matrix for the set", cannot be met for this module. The installed quoin 0.30.1 has no `--pack` flag (`quoin discharge --help`). On quoin main, `pack_matrix` refuses any module that is not a pack (`module … is not a pack`), and FR-137 defines a pack as a module with at least one restricted (`licensed`) clause set. spec-objects-security is publishable by design (FR-017), so it can never be a `--pack` target. The right test is the FR-135 single-set path, which the PR uses: `quoin discharge --binding <quire clauses evaluate output> --rmm --repo`. Fix: amend the ticket AC to the FR-135 form; the code needs no change | tests/test_clause_sets.py:183-245 |
+
+## Dispositions
+
+| FND | outcome | reason |
+| --- | --- | --- |
+| FND-001 | fixed | `spec/tests.md` has an FR-017 coverage row and TC-175..TC-183; `quire matrix` shows FR-017-AC-1..7 all `tagged`, and `quire trace --id` resolves every AC and every TC to its test |
+| FND-002 | deferred | Engine gap outside this repo: the strict `quire clauses` loader does not merge the installed edge vocabulary. It is now documented in the FR-017 row of `spec/tests.md`; no quire-rs ticket is cited yet, and the lead routes one to the quire-rs owner |
+| FND-003 | deferred | TC-175 now asserts equality with `DECLARED_SETS = [nist]`, the sets this branch ships. FR-017-AC-1 (NIST and ASVS) holds only once PR #51 adds ASVS to `DECLARED_SETS`, so #51 must land together with this PR |
+| FND-004 | deferred | A defect in the ticket text, not the code: ticket AC 4 should be amended to the FR-135 form `--binding --rmm --repo` when the ticket is closed. The code needs no change |
+
+## New findings (disposition pass 1)
+
+| ID | Severity | Summary | Refs |
+| --- | --- | --- | --- |
+| FND-005 | low | TC-182 (wheel and npm tarball ship the clause files) is tagged `FR-017-AC-1`, and its `spec/tests.md` row maps it to AC-1. AC-1 says the manifest names exactly the two sets; packaging is not part of it, so the tag inflates AC-1's backing (`quire trace --id FR-017-AC-1` lists two claims). Fix: tag TC-182 with its TC id only, as TC-183 is, and set its row's criterion to `FR-017` | tests/test_clause_sets.py:207, spec/tests.md:286 |

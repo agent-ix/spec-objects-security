@@ -37,6 +37,7 @@ semantic:
   legacy_forms: warning
 clause_sets:
 - clauses/nist-sp800-53-5.2.0.json
+- clauses/owasp-asvs-5.0.0.json
 nav:
   category:
     slug: security

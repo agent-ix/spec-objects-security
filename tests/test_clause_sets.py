@@ -24,6 +24,9 @@ from tests.conftest import MANIFEST_PATH, PACKAGE_ROOT, REPO_ROOT, engine_tool
 CLAUSES_DIR = PACKAGE_ROOT / "clauses"
 NIST = ("nist", "sp800-53", "5.2.0")
 NIST_FILE = CLAUSES_DIR / "nist-sp800-53-5.2.0.json"
+ASVS_FILE = CLAUSES_DIR / "owasp-asvs-5.0.0.json"
+ASVS_KEY = "owasp/asvs@5.0.0"
+CC_BY_SA_URI = "https://creativecommons.org/licenses/by-sa/4.0/"
 PUBLISHABLE_TEXT = {"none", "original", "explicitly_cleared"}
 AS_OF = "2026-11-13T00:00:00Z"
 
@@ -94,7 +97,7 @@ def _outcomes(report):
 
 
 NIST_KEY = "nist/sp800-53@5.2.0"
-DECLARED_SETS = [NIST_KEY]
+DECLARED_SETS = [NIST_KEY, ASVS_KEY]
 NIST_FAMILIES = [
     "ac", "at", "au", "ca", "cm", "cp", "ia", "ir", "ma", "mp",
     "pe", "pl", "pm", "ps", "pt", "ra", "sa", "sc", "si", "sr",
@@ -140,6 +143,11 @@ def test_every_set_names_its_licence_and_the_nist_set_is_public_domain():
     assert "Public domain" in rights["licence"]
     assert "attribution" not in rights
     assert "share_alike" not in rights
+    asvs = _by_key(ASVS_KEY)["rights"]
+    assert CC_BY_SA_URI in asvs["licence"]
+    assert CC_BY_SA_URI in asvs["attribution"]
+    assert "OWASP" in asvs["attribution"]
+    assert asvs["share_alike"].strip()
 
 
 @pytest.mark.trace("TC-180", "FR-017-AC-6")
@@ -152,6 +160,54 @@ def test_each_nist_clause_names_its_official_family_dimension_value():
         assert clause["subjects"] == [prefix], clause["id"]
         assert prefix in dimension, clause["id"]
     assert {c["subjects"][0] for c in nist["clauses"]} == set(NIST_FAMILIES)
+
+
+@pytest.mark.trace("TC-184", "FR-017-AC-6")
+def test_each_asvs_clause_names_its_chapter_dimension_value():
+    asvs = _by_key(ASVS_KEY)
+    dimension = asvs["classificationDimensions"]["chapter"]["values"]
+    assert dimension == [f"V{n}" for n in range(1, 18)]
+    for clause in asvs["clauses"]:
+        prefix = clause["id"].split(".")[0]
+        assert clause["subjects"] == [prefix], clause["id"]
+        assert prefix in dimension, clause["id"]
+    assert {c["subjects"][0] for c in asvs["clauses"]} == set(dimension)
+
+
+def test_the_asvs_set_carries_only_identifiers():
+    asvs = _by_key(ASVS_KEY)
+    assert len(asvs["clauses"]) == 345
+    for clause in asvs["clauses"]:
+        assert set(clause) == {
+            "id",
+            "force",
+            "subjects",
+            "obligatedActors",
+            "approvalRoles",
+            "styles",
+            "applicability",
+            "expectedOutputs",
+        }, clause["id"]
+
+
+def test_levels_are_an_ordered_applicability_dimension():
+    asvs = _by_key(ASVS_KEY)
+    dimension = asvs["classificationDimensions"]["level"]
+    assert dimension["values"] == ["1", "2", "3"]
+    assert dimension["order"] == [["1"], ["2"], ["3"]]
+    assert {c["applicability"]["dimension"] for c in asvs["clauses"]} == {"level"}
+
+
+@pytest.mark.trace("TC-185", "FR-017-AC-7")
+def test_a_profile_binds_only_the_asvs_level_it_needs(tmp_path):
+    root = _stage_clause_only_module(tmp_path, ASVS_FILE)
+    counts = {}
+    for level in ("1", "2", "3"):
+        outcomes = _outcomes(_evaluate(root, ASVS_KEY, f"level={level}"))
+        counts[level] = sum(1 for o in outcomes.values() if o == "binding")
+    assert counts == {"1": 70, "2": 253, "3": 345}
+    unresolved = _outcomes(_evaluate(root, ASVS_KEY))
+    assert set(unresolved.values()) == {"unresolved"}
 
 
 def test_the_nist_set_carries_no_clause_text():
@@ -204,7 +260,7 @@ def test_a_profile_binds_only_the_baseline_it_needs(tmp_path):
     assert set(unresolved.values()) == {"unresolved"}
 
 
-@pytest.mark.trace("TC-182", "FR-017-AC-1")
+@pytest.mark.trace("TC-182")
 def test_the_clause_files_ship_in_the_wheel_and_the_npm_tarball():
     shipped = [
         PACKAGE_ROOT / p
@@ -238,8 +294,8 @@ def test_the_clause_files_ship_in_the_wheel_and_the_npm_tarball():
     assert not (REPO_ROOT / "clauses").exists(), "postpack left a staged clauses dir"
 
 
-def _record_and_render_matrix(tmp_path, key, context, clause_id):
-    root = _stage_clause_only_module(tmp_path, NIST_FILE)
+def _record_and_render_matrix(tmp_path, source, key, context, clause_id):
+    root = _stage_clause_only_module(tmp_path, source)
     binding = tmp_path / "binding.json"
     binding.write_text(json.dumps(_evaluate(root, key, context)))
     facts = tmp_path / "facts.json"
@@ -291,7 +347,7 @@ def _record_and_render_matrix(tmp_path, key, context, clause_id):
 @pytest.mark.trace("TC-183")
 def test_quoin_renders_a_requirements_matrix_over_a_synthetic_corpus(tmp_path):
     rendered = _record_and_render_matrix(
-        tmp_path, "nist/sp800-53@5.2.0", "baseline=low", "AC-1"
+        tmp_path, NIST_FILE, NIST_KEY, "baseline=low", "AC-1"
     )
     assert rendered.returncode == 0, rendered.stderr
     matrix = rendered.stdout
@@ -300,3 +356,17 @@ def test_quoin_renders_a_requirements_matrix_over_a_synthetic_corpus(tmp_path):
     assert row in matrix
     assert "| AC-2 | Applicable | Not compliant - undischarged" in matrix
     assert "| AC-2\\(1\\) | Not applicable | Not applicable |" in matrix
+
+
+@pytest.mark.trace("TC-186")
+def test_quoin_renders_an_asvs_requirements_matrix_over_a_synthetic_corpus(tmp_path):
+    rendered = _record_and_render_matrix(
+        tmp_path, ASVS_FILE, ASVS_KEY, "level=1", "V1.2.1"
+    )
+    assert rendered.returncode == 0, rendered.stderr
+    matrix = rendered.stdout
+    assert "# Requirements mapping matrix: owasp/asvs@5.0.0" in matrix
+    row = "| V1.2.1 | Applicable | Compliant | evidence://example.invalid/run/one |"
+    assert row in matrix
+    assert "| V1.2.2 | Applicable | Not compliant - undischarged" in matrix
+    assert "| V1.2.6 | Not applicable | Not applicable |" in matrix

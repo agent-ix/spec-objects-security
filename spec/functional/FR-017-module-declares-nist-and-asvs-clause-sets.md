@@ -47,7 +47,7 @@ the rights rule they follow. `agent-ix/quoin` FR-172 states the same decision fr
 | FR-017-AC-4 | A fixture manifest declaring a set with `rights.text: licensed` makes `quire publish-check` exit non-zero. | Test |
 | FR-017-AC-5 | Each set's `rights` carries a non-blank `licence`; the NIST `licence` states the public-domain status; the ASVS `licence` and `attribution` contain the CC BY-SA 4.0 licence URI and the ASVS `share_alike` is non-blank; the NIST `rights` has no `attribution` or `share_alike`. | Test |
 | FR-017-AC-6 | Every clause's `subjects` is exactly its family code or chapter id, that value is declared in the set's `family` or `chapter` dimension, and it equals the family or chapter of the clause's id. | Test |
-| FR-017-AC-7 | Evaluating the NIST set with `baseline` low, moderate or high binds 149, 287 and 370 clauses, a control in no baseline is `not_binding`, and with no baseline every clause is `unresolved`. | Test |
+| FR-017-AC-7 | Evaluating the NIST set with `baseline` low, moderate or high binds 149, 287 and 370 clauses, a control in no baseline is `not_binding`, and with no baseline every clause is `unresolved`; evaluating the ASVS set with `level` 1, 2 or 3 binds 70, 253 and 345 clauses, and with no level every clause is `unresolved`. | Test |
 
 ## Dependencies
 
