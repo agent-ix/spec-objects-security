@@ -44,18 +44,18 @@ The clauses this control enforces. Each clause owns one `ocl` fence under its
 own `### <clauseId>` heading; the fence text is carried verbatim and never
 evaluated here.
 
-### EveryExchangeInvalidatesThePresentedToken
+### AssessedControlHasAnAssessmentDate
 
 ```ocl
 context RefreshTokenRotation
-inv EveryExchangeInvalidatesThePresentedToken:
+inv AssessedControlHasAnAssessmentDate:
   self.effectiveness <> 'not_assessed' implies self.last_assessed_at->notEmpty()
 ```
 
-### ReuseRevokesTheWholeFamily
+### ControlHasAnOwner
 
 ```ocl
 context RefreshTokenRotation
-inv ReuseRevokesTheWholeFamily:
+inv ControlHasAnOwner:
   self.owner->notEmpty()
 ```
