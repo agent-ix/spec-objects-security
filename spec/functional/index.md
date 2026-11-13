@@ -22,7 +22,7 @@ description: "Index of artifacts in this directory."
 * [FR-013: A SOUP record that serves no requirement is reported as unjustified scope](./FR-013-soup-record-serves-requirement.md)
 * [FR-014: A control's mappings are clause references: a clause set key and a clause id](./FR-014-control-mappings-are-clause-references.md)
 * [FR-015: A mapping carries a set key and a clause id and never the text of a standard](./FR-015-mappings-carry-no-standard-text.md)
-* [FR-016: A scope_exclusion states that a clause is outside a component, with an owner](./FR-016-scope-exclusion-object.md)
+* [FR-016: A scope_exclusion states that a clause is outside a component, with a responsible party](./FR-016-scope-exclusion-object.md)
 * [FR-017: The module declares the NIST SP 800-53 and OWASP ASVS clause sets with truthful rights metadata](./FR-017-module-declares-nist-and-asvs-clause-sets.md)
 * [FR-020: A source profile is a module data file naming clause sets and an applicability context](./FR-020-source-profile-format.md)
 * [FR-021: Default source profiles list only publishable clause sets and degrade while a pack is missing](./FR-021-default-source-profiles.md)

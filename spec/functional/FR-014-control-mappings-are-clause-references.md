@@ -64,6 +64,8 @@ module ([FR-017](./FR-017-module-declares-nist-and-asvs-clause-sets.md)).
 - The `control` skeleton SHALL carry a `## Mappings` table with the header Set and Clause and one placeholder-free example row.
 - The `control` skeleton SHALL carry an `## Effectiveness` section whose body is `not_assessed`.
 - `mappings` and `effectiveness` SHALL stay optional keys of the schema, so a control that maps to no clause validates.
+- The `control` manifest entry's `mappings` locator SHALL be `required: false`; it was `required: true`.
+- The `control` manifest entry SHALL gain an `effectiveness` locator, `section_body` after the heading Effectiveness with `required: false`, because a skeleton section the manifest does not assert is refused (FR-005).
 
 ## Acceptance Criteria
 
@@ -71,9 +73,10 @@ module ([FR-017](./FR-017-module-declares-nist-and-asvs-clause-sets.md)).
 |----|----------|--------------|
 | FR-014-AC-1 | The emitted `ControlMapping` schema requires exactly `set` and `clause` and admits no other property; a record with `framework`, `control_id` or `doc` fails validation. | Test |
 | FR-014-AC-2 | A `set` of `example.invalid/std@1` is accepted. Each of `example.invalid/std@`, `example.invalid/@1`, `/std@1`, `std@1`, `a/b/c@1` and `a/b@1@2` is rejected. A part of 65 bytes is rejected and one of 64 bytes accepted. An empty `clause` and a `clause` of 65 bytes are rejected. | Test |
-| FR-014-AC-3 | Over a fixture control whose `## Mappings` table has two rows and whose `## Effectiveness` section is `effective`, `quire extract` yields `mappings` with two entries in row order and `effectiveness` equal to `effective`, and `Control.json` accepts the record. | Test |
-| FR-014-AC-4 | The `control` skeleton validates, its `## Mappings` section is a two-column table headed Set and Clause with no prose bullet, and its `## Effectiveness` section extracts `not_assessed`. | Test |
-| FR-014-AC-5 | A control with neither section validates and extracts neither key. | Test |
+| FR-014-AC-3 | A fixture control whose `## Mappings` table has two valid rows and whose `## Effectiveness` section is `effective` validates with no `semantic.record-invalid`; with one row whose Set is `std@1` it fails `semantic.record-invalid` at `mappings`; with `## Effectiveness` set to `bogus` it fails `semantic.record-invalid` at `effectiveness`. | Test |
+| FR-014-AC-4 | The `control` skeleton validates, its `## Mappings` section is a two-column table headed Set and Clause with no prose bullet, and its `## Effectiveness` section is `not_assessed`, which validates. | Test |
+| FR-014-AC-5 | A control with neither a `## Mappings` nor an `## Effectiveness` section validates. | Test |
+| FR-014-AC-7 | The loaded `control` manifest entry has a `mappings` locator with `required: false` and an `effectiveness` locator with `required: false`. | Test |
 | FR-014-AC-6 | The loaded manifest's `semantic.mappings` contains `record-sections`. | Test |
 
 ## Dependencies
