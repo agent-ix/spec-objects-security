@@ -242,12 +242,12 @@ the Python package only: neither Node script is measured by it.
 | TC-143 | A `soup_record` carrying `severity`, `cve_id` or an advisory list fails | Unit | P0 | FR-012-AC-4 | ✅ schema half; the authored-document half is a strict expected failure (the frontmatter record keys of an authored document are neither validated against the data schema nor projected into the extracted record) |
 | TC-144 | The `soup_record` schema has no score, rating, class, tier or level property and reuses no graded vocabulary | Unit | P0 | NFR-001-AC-1, NFR-001-M-1 | ✅ |
 | TC-145 | A validated fixture emits exactly the keys the author wrote | Unit | P0 | NFR-001-AC-2, NFR-001-M-2 | ✅ |
-| TC-150 | The manifest declares `soup_record.allowed_links.supports` and the `soup-record-serves-requirement` relation | Unit | P0 | FR-013-AC-1 | ✅ |
-| TC-151 | A record with no `supports` relationship yields exactly one `soup-serves-no-requirement` finding naming it | Integration | P0 | FR-013-AC-2 | ✅ |
-| TC-152 | A record with a `supports` relationship to an `FR` in the bundle yields no finding | Integration | P0 | FR-013-AC-3 | ✅ |
-| TC-153 | A `supports` edge to a document of another kind, or to nothing, still yields the finding | Integration | P1 | FR-013-AC-4 | ✅ |
+| TC-150 | The manifest declares `soup-record-serves-requirement` relation reading `references`, and `soup_record` declares no `allowed_links` | Unit | P0 | FR-013-AC-1 | ✅ |
+| TC-151 | A record whose `serves` is absent yields exactly one `soup-serves-no-requirement` finding naming it | Integration | P0 | FR-013-AC-2 | ✅ |
+| TC-152 | A record whose `serves` names an `FR` in the bundle yields no finding | Integration | P0 | FR-013-AC-3 | ✅ |
+| TC-153 | A `serves` entry naming a document of another kind, or nothing, still yields the finding | Integration | P1 | FR-013-AC-4 | ✅ |
 | TC-154 | The finding is a warning and `--severity trace:soup-serves-no-requirement=error` promotes it | Integration | P1 | FR-013-AC-5 | ✅ |
-| TC-155 | The skeleton carries no `relationships`; `quire extract` lists the authored `supports` edge | Integration | P1 | FR-013-AC-6 | ✅ |
+| TC-155 | The skeleton carries no `serves`; `quire extract` lists each `serves` entry as a `references` edge | Integration | P1 | FR-013-AC-6 | ✅ |
 | TC-156 | `quire validate --okf --repo o/a=… --repo o/b=…` with the record in `o/a` serving an `FR` in `o/b` yields no finding | Integration | P1 | FR-013-AC-7 | 🚧 the pinned CLI has no `--repo`; engine gap tracked in PLAT-1519 |
 
 ## Test Environment

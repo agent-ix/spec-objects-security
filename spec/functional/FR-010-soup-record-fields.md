@@ -1,6 +1,6 @@
 ---
 id: FR-010
-title: "A SOUP record states anomalies, support status and end of support"
+title: "A SOUP record states requirements served, anomalies, support status and end of support"
 type: FR
 relationships:
   - target: "ix://agent-ix/spec-objects-security/US-001"
@@ -10,18 +10,19 @@ relationships:
   - target: "ix://agent-ix/spec-objects-security/FR-006"
     type: "depends_on"
 ---
-# FR-010: A SOUP record states anomalies, support status and end of support
+# FR-010: A SOUP record states requirements served, anomalies, support status and end of support
 
 ## Description
 
 Beyond identity ([FR-009](./FR-009-soup-record-identity-and-promotion.md)), a `soup_record`
-carries three reviewer-authored facts that an SBOM cannot supply. The module states "not stated"
+carries four reviewer-authored facts that an SBOM cannot supply. The module states "not stated"
 in two ways, by field kind. A scalar field (`support_status`, `end_of_support`) holds the literal
-`unknown`. A list field (`known_anomalies`) has no `unknown` member: an absent list
+`unknown`. A list field (`serves`, `known_anomalies`) has no `unknown` member: an absent list
 means nobody has stated it, and an empty list means the reviewer stated that there are none.
 Neither form has a default, in the manner of [FR-006](./FR-006-security-safe-declarations.md).
 
-The requirements a component serves are not a record field: they are `supports` trace edges ([FR-013](./FR-013-soup-record-serves-requirement.md)). `SoupSupportStatus` is owned by this requirement and is not one of
+The module reports a record whose `serves` names no requirement ([FR-013](./FR-013-soup-record-serves-requirement.md)), because a component that serves no
+requirement is unjustified scope. `SoupSupportStatus` is owned by this requirement and is not one of
 the ten vocabularies counted by FR-006.
 
 ## Inputs
@@ -34,12 +35,14 @@ the ten vocabularies counted by FR-006.
 
 ## Behavior
 
+- The `soup_record` schema SHALL admit `serves`, a `SemanticId[]` naming the requirements the component serves.
 - The `soup_record` schema SHALL admit `known_anomalies`, a list of anomaly statements, each with a free-text `statement` and an optional `source_ref` `SemanticId`.
-- The `soup_record` schema SHALL treat an absent `known_anomalies` as not stated and an empty one as stated none.
+- The `soup_record` schema SHALL treat an absent `serves` or `known_anomalies` as not stated and an empty one as stated none.
 - The `soup_record` schema SHALL admit `support_status` only from the closed vocabulary `SoupSupportStatus`, whose members are exactly `supported`, `community_supported`, `unsupported`, `unknown`.
 - The `soup_record` schema SHALL admit `end_of_support` only as a calendar date or the literal `unknown`.
 - The `soup_record` schema SHALL admit an `end_of_support` of `unknown` together with a `support_status` of `supported`.
-- The module SHALL emit no default for `known_anomalies`, `support_status` or `end_of_support`.
+- The module SHALL emit no default for `serves`, `known_anomalies`, `support_status` or `end_of_support`.
+- The module SHALL accept `serves` entries that name requirements declared in another repository.
 - The module SHALL apply the credential-shape scan of [FR-005](./FR-005-executable-skeletons.md) to the `known_anomalies` statements.
 
 ## Constraints

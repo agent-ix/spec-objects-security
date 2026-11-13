@@ -7,6 +7,8 @@ purl: "pkg:cargo/example-parser-lib@2.3.1"
 name: example-parser-lib
 version: "2.3.1"
 supplier: unknown
+serves:
+  - ix://agent-ix/example-product/FR-100
 known_anomalies:
   - statement: "Rejects inputs over 16 MiB without an error code."
     source_ref: ix://agent-ix/example-product/ISSUE-7

@@ -621,12 +621,6 @@ object_types:
           after_heading: Properties
           required: false
 - name: soup_record
-  # PLAT-1598: the authored `supports` trace edge to the requirements a component
-  # serves (a verb the iso edge_types registry already declares).
-  # Reviewer-authored on the record; promotion never writes it. The target
-  # usually lives in the product repository, so it may be cross-repository.
-  allowed_links:
-    supports: [FR, NFR, StR]
   data_schema:
     schema: schemas/SoupRecord.json
   body_extraction:
@@ -698,12 +692,14 @@ traceability:
     direction: outgoing
     check: unjustified-security-nfr
   # A component that serves no requirement is unjustified scope (PLAT-1598).
-  # The record authors the edge, so `direction: outgoing`. The requirement is
-  # usually declared in another repository, so a cross-repository target
-  # satisfies the constrained `to` once the repositories are loaded together.
+  # The `serves` frontmatter list is the single authored source; the engine
+  # harvests each ix:// value in it as a `references` edge, which this rule reads
+  # (a manifest cannot bind a list field to a typed verb). Reviewer-authored;
+  # promotion never writes it. A cross-repository target satisfies the
+  # constrained `to` once the repositories are loaded together.
   - name: soup-record-serves-requirement
     from: soup_record
-    edges: [supports]
+    edges: [references]
     to: [FR, NFR, StR]
     direction: outgoing
     check: soup-serves-no-requirement
