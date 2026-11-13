@@ -19,6 +19,8 @@ from tests.conftest import MANIFEST_PATH, PACKAGE_ROOT, engine_tool
 CLAUSES_DIR = PACKAGE_ROOT / "clauses"
 NIST = ("nist", "sp800-53", "5.2.0")
 NIST_FILE = CLAUSES_DIR / "nist-sp800-53-5.2.0.json"
+ASVS_FILE = CLAUSES_DIR / "owasp-asvs-5.0.0.json"
+ASVS_KEY = "owasp/asvs@5.0.0"
 PUBLISHABLE_TEXT = {"none", "original", "explicitly_cleared"}
 AS_OF = "2026-11-13T00:00:00Z"
 
@@ -89,9 +91,9 @@ def _outcomes(report):
 
 
 @pytest.mark.trace("FR-017-AC-1")
-def test_manifest_declares_the_nist_clause_set():
-    keys = {_key(s) for s in _declared()}
-    assert "nist/sp800-53@5.2.0" in keys
+def test_manifest_declares_exactly_the_nist_and_asvs_clause_sets():
+    keys = [_key(s) for s in _declared()]
+    assert sorted(keys) == ["nist/sp800-53@5.2.0", "owasp/asvs@5.0.0"]
 
 
 @pytest.mark.trace("FR-017-AC-2")
@@ -109,6 +111,15 @@ def test_the_nist_set_is_truthful_about_a_public_domain_source():
     rights = _by_key("nist/sp800-53@5.2.0")["rights"]
     assert "Public domain" in rights["licence"]
     assert rights["share_alike"] == "none"
+    assert rights["text"] == "none"
+
+
+@pytest.mark.trace("FR-017-AC-2")
+def test_the_asvs_set_records_its_open_licence_attribution_and_share_alike():
+    rights = _by_key(ASVS_KEY)["rights"]
+    assert "CC BY-SA 4.0" in rights["licence"]
+    assert "OWASP" in rights["attribution"]
+    assert "CC BY-SA 4.0" in rights["share_alike"]
     assert rights["text"] == "none"
 
 
@@ -136,6 +147,22 @@ def test_the_nist_set_carries_no_clause_text():
     nist = _by_key("nist/sp800-53@5.2.0")
     assert all("text" not in clause for clause in nist["clauses"])
     assert all(clause["title"].strip() for clause in nist["clauses"])
+
+
+def test_the_asvs_set_carries_only_identifiers_and_chapter_names():
+    asvs = _by_key(ASVS_KEY)
+    assert len(asvs["clauses"]) == 345
+    for clause in asvs["clauses"]:
+        assert set(clause) == {
+            "id",
+            "force",
+            "subjects",
+            "obligatedActors",
+            "approvalRoles",
+            "styles",
+            "applicability",
+            "expectedOutputs",
+        }, clause["id"]
 
 
 def test_the_nist_set_loads_and_validates_via_quire_clauses(tmp_path):
@@ -182,8 +209,30 @@ def test_a_profile_binds_only_the_baseline_it_needs(tmp_path):
     assert set(unresolved.values()) == {"unresolved"}
 
 
-def _record_and_render_matrix(tmp_path, key, context, clause_id):
-    root = _stage_clause_only_module(tmp_path, NIST_FILE)
+def test_chapters_classify_and_levels_are_an_ordered_applicability_dimension():
+    asvs = _by_key(ASVS_KEY)
+    dimensions = asvs["classificationDimensions"]
+    assert len(dimensions["chapter"]["values"]) == 17
+    assert dimensions["level"]["values"] == ["1", "2", "3"]
+    assert dimensions["level"]["order"] == [["1"], ["2"], ["3"]]
+    chapters = {c["subjects"][0] for c in asvs["clauses"]}
+    assert len(chapters) == 17
+    assert {c["applicability"]["dimension"] for c in asvs["clauses"]} == {"level"}
+
+
+def test_a_profile_binds_only_the_asvs_level_it_needs(tmp_path):
+    root = _stage_clause_only_module(tmp_path, ASVS_FILE)
+    counts = {}
+    for level in ("1", "2", "3"):
+        outcomes = _outcomes(_evaluate(root, ASVS_KEY, f"level={level}"))
+        counts[level] = sum(1 for o in outcomes.values() if o == "binding")
+    assert counts == {"1": 70, "2": 253, "3": 345}
+    unresolved = _outcomes(_evaluate(root, ASVS_KEY))
+    assert set(unresolved.values()) == {"unresolved"}
+
+
+def _record_and_render_matrix(tmp_path, source, key, context, clause_id):
+    root = _stage_clause_only_module(tmp_path, source)
     binding = tmp_path / "binding.json"
     binding.write_text(json.dumps(_evaluate(root, key, context)))
     facts = tmp_path / "facts.json"
@@ -234,7 +283,7 @@ def _record_and_render_matrix(tmp_path, key, context, clause_id):
 
 def test_quoin_renders_a_requirements_matrix_over_a_synthetic_corpus(tmp_path):
     rendered = _record_and_render_matrix(
-        tmp_path, "nist/sp800-53@5.2.0", "baseline=low", "AC-1"
+        tmp_path, NIST_FILE, "nist/sp800-53@5.2.0", "baseline=low", "AC-1"
     )
     assert rendered.returncode == 0, rendered.stderr
     matrix = rendered.stdout
@@ -243,3 +292,15 @@ def test_quoin_renders_a_requirements_matrix_over_a_synthetic_corpus(tmp_path):
     assert row in matrix
     assert "| AC-2 | Applicable | Not compliant - undischarged" in matrix
     assert "| AC-2\\(1\\) | Not applicable | Not applicable |" in matrix
+
+
+def test_quoin_renders_an_asvs_requirements_matrix_over_a_synthetic_corpus(tmp_path):
+    rendered = _record_and_render_matrix(
+        tmp_path, ASVS_FILE, ASVS_KEY, "level=1", "V1.2.1"
+    )
+    assert rendered.returncode == 0, rendered.stderr
+    matrix = rendered.stdout
+    assert "# Requirements mapping matrix: owasp/asvs@5.0.0" in matrix
+    row = "| V1.2.1 | Applicable | Compliant | evidence://example.invalid/run/one |"
+    assert row in matrix
+    assert "| V1.2.6 | Not applicable | Not applicable |" in matrix
