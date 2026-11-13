@@ -46,7 +46,7 @@ engine refuse.
 
 ## Behavior
 
-- Each skeleton whose type requires `fields` (`asset`, `role`, `permission`, `scope`, `mfa_method`, `threat`, `vulnerability`, `risk`, `audit_finding`, `data_classification`, `attack_surface`, `trust_boundary`, `secret`, `encryption_key`, `jwt_claim`, `csrf_token`, `control`, `audit_event`) SHALL author `## Properties` as one table with the header exactly `Field | Type | Multiplicity | Constraints`.
+- Each skeleton whose type requires `fields` (`asset`, `role`, `permission`, `scope`, `mfa_method`, `threat`, `vulnerability`, `risk`, `audit_finding`, `data_classification`, `attack_surface`, `trust_boundary`, `secret`, `encryption_key`, `jwt_claim`, `csrf_token`, `control`, `audit_event`, `soup_record`) SHALL author `## Properties` as one table with the header exactly `Field | Type | Multiplicity | Constraints`.
 - Each skeleton whose type requires `clauses` (`trust_boundary`, `policy`, `control`, `password_policy`, `cors_policy`, `session_config`) SHALL author `## Invariants` with one `### <clauseId>` per clause, each owning exactly one ```` ```ocl ```` fence.
 - The `auth_flow` skeleton SHALL author `## Operations` with one `### <name>` per exchange, an optional `| Param | Type | Multiplicity | Constraints |` table, a `Returns: <Type>[<multiplicity>]` line where the exchange returns a value, and optional `Pre:`/`Post:` lines that, when present, name clause ids declared in the same artifact.
 - No skeleton SHALL carry a section its type does not require and its manifest entry does not assert.
@@ -78,13 +78,13 @@ engine refuse.
 
 | ID | Criteria | Verification |
 |----|----------|--------------|
-| FR-005-AC-1 | Every skeleton file (twenty-three types plus three alternates) passes `validate_document` against this module with `is_valid` true and no `semantic.record-invalid` error. | Test |
+| FR-005-AC-1 | Every skeleton file (twenty-four types plus three alternates) passes `validate_document` against this module with `is_valid` true and no `semantic.record-invalid` error. | Test |
 | FR-005-AC-2 | For `asset`, `secret`, and `threat`, the table and `sysml` skeletons extract to identical normalized `fields` with `fieldsForm` `table` and `fence` respectively. | Test |
 | FR-005-AC-3 | Under a bundle index built from the skeleton frontmatter, every skeleton extracts with zero `error` diagnostics and zero `semantic.unresolved-type` findings, and every non-kernel `type.target.value` (kind `SemanticId`) starts with `ix://agent-ix/spec-objects-security/type/`. | Test |
 | FR-005-AC-4 | Each skeleton's `availability` states match its type: `fields` `available` for the eighteen field-bearing types, `clauses` `available` for the six clause-bearing types, `operations` `available` for `auth_flow`; `not_applicable` for every other kind. | Test |
 | FR-005-AC-5 | Every negative fixture produces a diagnostic carrying its `expect:` code, and at least the ten cases listed in Behavior are present. | Test |
 | FR-005-AC-6 | Every skeleton's H2 set equals a subset of the headings the manifest asserts for its type and includes every `required: true` heading. | Test |
-| FR-005-AC-7 | The skeleton for each of the twenty-three types has no placeholder token and every asserted section body is non-empty. | Test |
+| FR-005-AC-7 | The skeleton for each of the twenty-four types has no placeholder token and every asserted section body is non-empty. | Test |
 | FR-005-AC-8 | Every skeleton `title` matches the `Identifier` pattern, is unique across the skeletons, and is not a `KernelScalar` name; every skeleton frontmatter carries `object` equal to `type`. | Test |
 | FR-005-AC-9 | No skeleton or negative fixture matches a credential-shaped literal (a private-key PEM header, a JWT triple, an `AKIA` or `ghp_`/`sk-` prefixed token, or a `password`/`secret`/`token` assignment to a literal). | Test |
 

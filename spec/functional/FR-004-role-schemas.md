@@ -64,6 +64,7 @@ semantic-core release that renders `identity: false` is a breaking change to the
 | vulnerability | `Vulnerability` | `fields` | `clauses`, `relations`, `severity: Severity`, `cve_id: string`, `affects: SemanticId[]` | `fields` has ≥ 1 item, ≥ 1 identity field, and ≥ 1 `severity` field; `operations` forbidden |
 | risk | `Risk` | `fields` | `clauses`, `relations`, `likelihood: Likelihood`, `impact: Impact`, `arises_from: SemanticId[]` | `fields` has ≥ 1 item, ≥ 1 identity field, ≥ 1 `likelihood` field and ≥ 1 `impact` field; `operations` forbidden |
 | audit_finding | `AuditFinding` | `fields` | `clauses`, `relations`, `status: FindingStatus`, `traces_to: SemanticId[]` | `fields` has ≥ 1 item, ≥ 1 identity field, and ≥ 1 `status` field; `operations` forbidden |
+| soup_record | `SoupRecord` | `fields`, `purl: string` | `name: string`, `version: string`, `supplier: string`, `license: string`, `license_fact_ref: SemanticId`, `finding_refs: SemanticId[]`, `inventory_ref: SemanticId`, `serves: SemanticId[]`, `known_anomalies: Anomaly[]`, `support_status: SoupSupportStatus`, `end_of_support: string`, `disposition_clause: string` | `fields` has ≥ 1 item, ≥ 1 identity field, and 0 defaulted fields; `operations`, `relations` and `clauses` forbidden; no key beyond those listed (the field set of [FR-009](./FR-009-soup-record-identity-and-promotion.md) and [FR-010](./FR-010-soup-record-fields.md)) |
 | data_classification | `DataClassification` | `fields` | `clauses`, `level: ConfidentialityLevel`, `values: EnumValue[]` | `fields` has ≥ 1 item, ≥ 1 identity field, and ≥ 1 `level` field; `operations` and `relations` forbidden |
 | attack_surface | `AttackSurface` | `fields` | `clauses`, `relations`, `exposes: SemanticId[]` | `fields` has ≥ 1 item and ≥ 1 identity field; `operations` forbidden |
 | trust_boundary | `TrustBoundary` | `fields`, `clauses` | `relations`, `trust_level: TrustLevel`, `crosses: SemanticId[]` | `fields` has ≥ 1 item, ≥ 1 identity field and ≥ 1 `trust_level` field; `clauses` has ≥ 1 item — a boundary that admits every crossing is not a boundary; `operations` forbidden |
@@ -102,13 +103,13 @@ semantic-core release that renders `identity: false` is a breaking change to the
 | ID | Constraint | Type | Validation |
 |----|------------|------|------------|
 | FR-004-CON-1 | No model SHALL redeclare a semantic-core model or scalar; the module namespace contributes archetype shapes only (semantic-core NFR-014 kernel discipline). | Architecture | Test |
-| FR-004-CON-2 | The empty record `{}` SHALL fail every one of the twenty-three types, because every type has a non-empty required set. | Integrity | Test |
+| FR-004-CON-2 | The empty record `{}` SHALL fail every one of the twenty-four types, because every type has a non-empty required set. | Integrity | Test |
 
 ## Acceptance Criteria
 
 | ID | Criteria | Verification |
 |----|----------|--------------|
-| FR-004-AC-1 | Each of the twenty-three shipped object-type schemas differs from every other in at least one required key, admitted key, or item rule listed in the table; a schema with only `type: object` is absent. | Test |
+| FR-004-AC-1 | Each of the twenty-four shipped object-type schemas differs from every other in at least one required key, admitted key, or item rule listed in the table; a schema with only `type: object` is absent. | Test |
 | FR-004-AC-2 | An asset record with one identity field validates against `Asset.json`; the same record with the identity flag removed fails; a record with no `fields` fails. | Test |
 | FR-004-AC-3 | A role record validates; a record carrying `operations` fails. A permission and a scope record each fail when they carry `relations`. | Test |
 | FR-004-AC-4 | A threat record with a `stride_category` field validates; the same record without that field fails; a `stride_category` outside `StrideCategory` fails. | Test |
@@ -118,7 +119,7 @@ semantic-core release that renders `identity: false` is a breaking change to the
 | FR-004-AC-8 | An auth-flow record with one operation validates; an empty `operations` array fails; a record carrying `relations` fails. | Test |
 | FR-004-AC-9 | An audit-event record with a `Timestamp` field and no identity field validates against `AuditEvent.json`; a record whose only fields are non-`Timestamp` fails; a record with an identity field fails; a record with `operations` fails. | Test |
 | FR-004-AC-10 | A trust-boundary record with one clause and a `trust_level` field validates; the same record without `clauses` fails; a `trust_level` outside `TrustLevel` fails. | Test |
-| FR-004-AC-11 | The empty record `{}` fails against all twenty-three schemas. | Test |
+| FR-004-AC-11 | The empty record `{}` fails against all twenty-four schemas. | Test |
 | FR-004-AC-12 | A `type.target` of `ix://agent-ix/spec-objects-security/unresolved/Mystery` is accepted by the schema (it is a `SemanticId`) and reported by the extractor as `semantic.unresolved-type`; a `SemanticId`-tagged `Mystery` (no `ix://` prefix) is rejected by the schema. | Test |
 | FR-004-AC-13 | No module schema redeclares a semantic-core model; every grammar item is a `$ref` to semantic-core. | Test |
 | FR-004-AC-14 | A data-classification record with a `level` field validates; one without it fails; a record carrying `relations` fails. | Test |

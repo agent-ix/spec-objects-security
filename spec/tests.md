@@ -19,6 +19,16 @@ relationships:
     type: covers
   - target: "ix://agent-ix/spec-objects-security/FR-008"
     type: covers
+  - target: "ix://agent-ix/spec-objects-security/FR-009"
+    type: covers
+  - target: "ix://agent-ix/spec-objects-security/FR-010"
+    type: covers
+  - target: "ix://agent-ix/spec-objects-security/FR-011"
+    type: covers
+  - target: "ix://agent-ix/spec-objects-security/FR-012"
+    type: covers
+  - target: "ix://agent-ix/spec-objects-security/NFR-001"
+    type: covers
 ---
 # Test Matrix
 
@@ -58,7 +68,7 @@ the Python package only: neither Node script is measured by it.
 
 1. Every acceptance criterion and named constraint has at least one test case.
 2. Both Properties forms (typed table, `sysml` fence) and every one of the
-   twenty-three object types are tested.
+   twenty-four object types are tested.
 3. Item-rule boundaries are tested at their allowed and refused edges (zero
    versus one identity field, empty versus one-item `clauses`/`operations`,
    present versus absent graded row).
@@ -78,13 +88,13 @@ the Python package only: neither Node script is measured by it.
 
 | Stakeholder Req | Trace to US/FR | Test/Validation | Status |
 |---|---|---|---|
-| StR-001 | US-001, FR-001..FR-008 | TC-111, TC-112, TC-113 | 🚧 VC-1 needs a running filament-core; VC-2 needs a generator run |
+| StR-001 | US-001, FR-001..FR-012, NFR-001 | TC-111, TC-112, TC-113 | 🚧 VC-1 needs a running filament-core; VC-2 needs a generator run |
 
 ### User Story Coverage
 
 | User Story | Acceptance Criteria | Test Cases | Status |
 |---|---|---|---|
-| US-001 | US-001-EX-1..3 (illustrative) implemented by FR-002..FR-008 | TC-080, TC-073, TC-110 | 🚧 TC-110 needs a Quoin with the module installer |
+| US-001 | US-001-EX-1..3 (illustrative) implemented by FR-002..FR-012 | TC-080, TC-073, TC-110 | 🚧 TC-110 needs a Quoin with the module installer |
 
 ### Functional Requirement Coverage
 
@@ -98,6 +108,11 @@ the Python package only: neither Node script is measured by it.
 | FR-006 | FR-006-AC-1..8, FR-006-CON-1..2 | TC-070..TC-078 | ✅ |
 | FR-007 | FR-007-AC-1..2 | TC-091, TC-092 | ✅ |
 | FR-008 | FR-008-AC-1..6 | TC-116..TC-120 | ✅ |
+| FR-009 | FR-009-AC-1..8, FR-009-CON-1..2 | TC-121..TC-128 | 🚧 specified by PLAT-1512; the tests land with the schema and manifest work |
+| FR-010 | FR-010-AC-1..6, FR-010-CON-1 | TC-129..TC-134 | 🚧 as FR-009 |
+| FR-011 | FR-011-AC-1..5, FR-011-CON-1 | TC-135..TC-139 | 🚧 as FR-009; AC-4 and CON-1 need a human reviewer |
+| FR-012 | FR-012-AC-1..4 | TC-140..TC-143 | 🚧 as FR-009 |
+| NFR-001 | NFR-001-AC-1..2 | TC-144, TC-145 | 🚧 as FR-009 |
 
 ### Integration Test Coverage
 
@@ -139,11 +154,11 @@ the Python package only: neither Node script is measured by it.
 | TC-031 | No `.npmrc`, no `file:`/`link:` dependency | Static | P2 | FR-002-CON-2 | ✅ |
 | TC-032 | `package-lock.json` resolves every package, `@agent-ix/semantic-core` included, from npmjs | Unit | P2 | FR-002-CON-4 | ✅ |
 | TC-035 | `.gitattributes` pins `eol=lf` and `npm pack` leaves nothing staged at the repository root | Unit | P1 | FR-002-AC-11 | ✅ |
-| TC-040 | The `semantic` block equals the eight admitted keys and `exports` equals the twenty-three types | Unit | P0 | FR-003-AC-1, FR-003-CON-1 | ✅ |
-| TC-044 | `quire.Registry.load_from` lists all twenty-three archetypes and `validate_document` reports no `semantic.*` load failure on any skeleton | Integration | P0 | FR-003-AC-4 | ✅ |
+| TC-040 | The `semantic` block equals the eight admitted keys and `exports` equals the twenty-four types | Unit | P0 | FR-003-AC-1, FR-003-CON-1 | ✅ |
+| TC-044 | `quire.Registry.load_from` lists all twenty-four archetypes and `validate_document` reports no `semantic.*` load failure on any skeleton | Integration | P0 | FR-003-AC-4 | ✅ |
 | TC-045 | An unknown `semantic` key is refused by the loader; the refusal names the key or path | Integration | P1 | FR-003-AC-6 | ✅ refusal verified; the naming half is a strict expected failure on quire-rs#221 and quire-rs#394 |
 | TC-046 | `quoin module install path:` succeeds, lists the module, and the prior entry is restored | Manual | P1 | FR-003-AC-5 | 🚧 |
-| TC-050 | Each of the twenty-three schemas differs from every other in a required, admitted, or item rule; none is `type: object` only | Unit | P0 | FR-004-AC-1 | ✅ |
+| TC-050 | Each of the twenty-four schemas differs from every other in a required, admitted, or item rule; none is `type: object` only | Unit | P0 | FR-004-AC-1 | ✅ |
 | TC-051 | Asset: identity record validates; identity flag removed fails; no `fields` fails | Integration | P0 | FR-004-AC-2 | ✅ |
 | TC-052 | Role with `operations` fails; permission and scope with `relations` each fail | Integration | P0 | FR-004-AC-3 | ✅ |
 | TC-053 | Threat: `stride_category` row required; an invented STRIDE member fails | Integration | P0 | FR-004-AC-4 | ✅ |
@@ -153,7 +168,7 @@ the Python package only: neither Node script is measured by it.
 | TC-057 | Auth flow: one operation validates; empty `operations` fails; `relations` fails | Integration | P0 | FR-004-AC-8 | ✅ |
 | TC-058 | Audit event: `Timestamp` field and no identity validates; missing `Timestamp`, an identity row, or `operations` each fail | Integration | P0 | FR-004-AC-9 | ✅ |
 | TC-059 | Trust boundary: one clause and a `trust_level` row validates; each removal fails; an invented trust level fails | Integration | P1 | FR-004-AC-10 | ✅ |
-| TC-060 | The empty record `{}` fails against all twenty-three schemas | Unit | P0 | FR-004-AC-11, FR-004-CON-2 | ✅ |
+| TC-060 | The empty record `{}` fails against all twenty-four schemas | Unit | P0 | FR-004-AC-11, FR-004-CON-2 | ✅ |
 | TC-061 | Placeholder `unresolved` target is accepted by the schema and reported by the extractor; a bare token is refused | Integration | P1 | FR-004-AC-12 | ✅ |
 | TC-062 | No module schema redeclares a semantic-core model; every grammar item is a `$ref` to semantic-core | Unit | P1 | FR-004-AC-13, FR-004-CON-1 | ✅ |
 | TC-063 | Data classification: `level` row required; `relations` refused | Integration | P1 | FR-004-AC-14 | ✅ |
@@ -166,7 +181,7 @@ the Python package only: neither Node script is measured by it.
 | TC-076 | No shipped schema uses `minContains` or `maxContains`, so no negative rule can invert | Unit | P0 | FR-006-AC-7 | ✅ |
 | TC-077 | No vocabulary member expresses "assume the permissive value" | Static | P2 | FR-006-CON-1 | ✅ |
 | TC-078 | The change carries a recorded SpecReview set whose every owned finding has a disposition | Static | P1 | FR-006-AC-8 | ✅ |
-| TC-080 | Every skeleton (twenty-three plus three alternates) validates with no error | Integration | P0 | FR-005-AC-1 | ✅ |
+| TC-080 | Every skeleton (twenty-four plus three alternates) validates with no error | Integration | P0 | FR-005-AC-1 | ✅ |
 | TC-081 | Table and `sysml` skeletons extract to identical normalized fields with the recorded forms | Integration | P0 | FR-005-AC-2, FR-005-CON-2 | ✅ |
 | TC-082 | Under the skeleton bundle index every skeleton extracts with zero errors and zero unresolved tokens | Integration | P0 | FR-005-AC-3 | ✅ |
 | TC-083 | Availability states per skeleton (fields, clauses, operations) match the type's declared set | Integration | P1 | FR-005-AC-4 | ✅ |
@@ -190,6 +205,31 @@ the Python package only: neither Node script is measured by it.
 | TC-118 | The same NFR with a `mitigates` edge to a threat, or to a document in another repository, yields no finding; an NFR with another `quality_attribute` and no edge yields none | Integration | P0 | FR-008-AC-3, FR-008-AC-4 | ✅ |
 | TC-119 | Under `--okf --strict` the finding stays a `warning:`, and `--severity trace:unjustified-security-nfr=error` exits non-zero | Integration | P1 | FR-008-AC-5 | ✅ |
 | TC-120 | `threat-has-control` and `risk-has-treatment` still declare `to: []` | Unit | P1 | FR-008-AC-6 | ✅ |
+| TC-121 | The loaded manifest exports `soup_record` with a shipped schema, and its skeleton validates | Unit | P0 | FR-009-AC-1 | 🚧 |
+| TC-122 | A `soup_record` with a purl validates; without a purl it fails | Unit | P0 | FR-009-AC-2 | 🚧 |
+| TC-123 | Two `soup_record` documents with one purl yield one duplicate-identity report naming both | Integration | P0 | FR-009-AC-3 | 🚧 |
+| TC-124 | A record with an added `digest` key fails; a record with a different purl is a distinct component | Unit | P0 | FR-009-AC-4, FR-009-CON-1 | 🚧 |
+| TC-125 | `supplier: unknown` validates, an omitted `supplier` adds no key, and the schema has no `default` keyword | Unit | P0 | FR-009-AC-5 | 🚧 |
+| TC-126 | A record carrying both `license` and `license_fact_ref` fails; either alone validates | Unit | P0 | FR-009-AC-6 | 🚧 |
+| TC-127 | `finding_refs` and `license_fact_ref` ids validate; a `finding_text` key fails | Unit | P1 | FR-009-AC-7 | 🚧 |
+| TC-128 | The module declares no `--discharges` option, binding key or SBOM reader | Static | P2 | FR-009-AC-8, FR-009-CON-2 | 🚧 |
+| TC-129 | `SoupSupportStatus` has exactly four members; `unknown` validates and an invented member fails | Unit | P0 | FR-010-AC-1, FR-010-CON-1 | 🚧 |
+| TC-130 | An empty `known_anomalies` and an absent one both validate and emit different records | Unit | P0 | FR-010-AC-2 | 🚧 |
+| TC-131 | `end_of_support` accepts a date or `unknown` and refuses any other string | Unit | P0 | FR-010-AC-3 | 🚧 |
+| TC-132 | The `soup_record` schema carries no `default` keyword at any depth | Unit | P0 | FR-010-AC-4 | 🚧 |
+| TC-133 | An empty or absent `serves` yields one finding; a cross-repository `serves` target yields none | Integration | P1 | FR-010-AC-5 | 🚧 |
+| TC-134 | An anomaly statement with a credential-shaped string is refused by the FR-005 scan | Unit | P1 | FR-010-AC-6 | 🚧 |
+| TC-135 | A non-empty `disposition_clause` validates; an empty or whitespace-only one fails | Unit | P0 | FR-011-AC-1 | 🚧 |
+| TC-136 | A record with no `disposition_clause` validates and carries no such key | Unit | P0 | FR-011-AC-2 | 🚧 |
+| TC-137 | A record embedding `decision`, `rationale`, `approvalRef`, `attestation`, `approver` or `expires` fails | Unit | P0 | FR-011-AC-3 | 🚧 |
+| TC-138 | A worked disposition fact of the quoin FR-046 shape names a person in `attestedBy` and `authority` | Manual | P1 | FR-011-AC-4, FR-011-CON-1 | 🚧 |
+| TC-139 | A `disposition_clause` changes no other emitted key of the record | Unit | P1 | FR-011-AC-5 | 🚧 |
+| TC-140 | The loaded `vulnerability` type lists `asset`, `attack_surface`, `soup_record` under `affects`; `soup_record` declares no `allowed_links` | Unit | P0 | FR-012-AC-1 | 🚧 |
+| TC-141 | A `vulnerability` `affects` edge to a `soup_record` validates with no `UnknownEdgeType`; to a `threat` it is `disallowed-edge-target` | Integration | P0 | FR-012-AC-2 | 🚧 |
+| TC-142 | A `soup_record` that no vulnerability affects validates with no finding | Integration | P1 | FR-012-AC-3 | 🚧 |
+| TC-143 | A `soup_record` carrying `severity`, `cve_id` or an advisory list fails | Unit | P0 | FR-012-AC-4 | 🚧 |
+| TC-144 | The `soup_record` schema has no score, rating, class, tier or level property and reuses no graded vocabulary | Unit | P0 | NFR-001-AC-1 | 🚧 |
+| TC-145 | A validated fixture emits exactly the keys the author wrote | Unit | P0 | NFR-001-AC-2 | 🚧 |
 
 ## Test Environment
 
