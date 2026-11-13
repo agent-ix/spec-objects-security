@@ -1,20 +1,20 @@
 ---
-id: FR-021
+id: FR-015
 title: "A mapping to a loaded clause set must name a clause of it, and a mapping is stated once"
 type: FR
 relationships:
   - target: "ix://agent-ix/spec-objects-security/US-001"
     type: "implements"
-  - target: "ix://agent-ix/spec-objects-security/FR-020"
+  - target: "ix://agent-ix/spec-objects-security/FR-014"
     type: "depends_on"
   - target: "ix://agent-ix/quire-rs/FR-083"
     type: "references"
 ---
-# FR-021: A mapping to a loaded clause set must name a clause of it, and a mapping is stated once
+# FR-015: A mapping to a loaded clause set must name a clause of it, and a mapping is stated once
 
 ## Description
 
-A mapping ([FR-020](./FR-020-control-mappings-are-clause-references.md)) names a clause set that might not be
+A mapping ([FR-014](./FR-014-control-mappings-are-clause-references.md)) names a clause set that might not be
 installed where the spec is validated. A licensed set is installed only on a machine that holds its pack, so a
 public repository's CI cannot load it. The module therefore checks a mapping only against sets it can see and never
 reports a set it cannot see.
@@ -31,13 +31,13 @@ reports a set it cannot see.
 
 | ID | Criteria | Verification |
 |----|----------|--------------|
-| FR-021-AC-1 | With a synthetic clause set `example.invalid/std@1` loaded, a control mapping to a clause it does not contain yields exactly one `control-mapping-clause-unresolved` error naming control, set key and clause id. | Test |
-| FR-021-AC-2 | With the set loaded, a control mapping to a clause it contains yields no finding. | Test |
-| FR-021-AC-3 | With the set not loaded, the same control yields no finding about the mapping and validation exits 0. | Test |
-| FR-021-AC-4 | Two identical rows in one control yield one `control-mapping-duplicate` error; the same row in two controls yields none. | Test |
-| FR-021-AC-5 | No finding output contains the clause-text sentinel of the loaded synthetic set. | Test |
+| FR-015-AC-1 | With a synthetic clause set `example.invalid/std@1` loaded, a control mapping to a clause it does not contain yields exactly one `control-mapping-clause-unresolved` error naming control, set key and clause id. | Test |
+| FR-015-AC-2 | With the set loaded, a control mapping to a clause it contains yields no finding. | Test |
+| FR-015-AC-3 | With the set not loaded, the same control yields no finding about the mapping and validation exits 0. | Test |
+| FR-015-AC-4 | Two identical rows in one control yield one `control-mapping-duplicate` error; the same row in two controls yields none. | Test |
+| FR-015-AC-5 | No finding output contains the clause-text sentinel of the loaded synthetic set. | Test |
 
 ## Dependencies
 
-- **Upstream**: [FR-020](./FR-020-control-mappings-are-clause-references.md); `agent-ix/quire-rs` FR-083 (clause sets and their rights)
+- **Upstream**: [FR-014](./FR-014-control-mappings-are-clause-references.md); `agent-ix/quire-rs` FR-083 (clause sets and their rights)
 - **Downstream**: none

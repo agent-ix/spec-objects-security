@@ -1,16 +1,16 @@
 ---
-id: FR-024
+id: FR-018
 title: "A clause that is both mapped by a control and excluded from scope is reported"
 type: FR
 relationships:
   - target: "ix://agent-ix/spec-objects-security/US-001"
     type: "implements"
-  - target: "ix://agent-ix/spec-objects-security/FR-020"
+  - target: "ix://agent-ix/spec-objects-security/FR-014"
     type: "depends_on"
-  - target: "ix://agent-ix/spec-objects-security/FR-023"
+  - target: "ix://agent-ix/spec-objects-security/FR-017"
     type: "depends_on"
 ---
-# FR-024: A clause that is both mapped by a control and excluded from scope is reported
+# FR-018: A clause that is both mapped by a control and excluded from scope is reported
 
 ## Description
 
@@ -28,12 +28,12 @@ delegation.
 
 | ID | Criteria | Verification |
 |----|----------|--------------|
-| FR-024-AC-1 | A corpus with a control mapping `(example.invalid/std@1, C1)` and a `scope_exclusion` for the same pair yields one `clause-mapped-and-excluded` error naming both artifacts. | Test |
-| FR-024-AC-2 | Different clauses in the control and the exclusion yield no finding. | Test |
-| FR-024-AC-3 | Two exclusions for one pair yield one `scope-exclusion-duplicate` error. | Test |
-| FR-024-AC-4 | The findings appear with the set not loaded. | Test |
+| FR-018-AC-1 | A corpus with a control mapping `(example.invalid/std@1, C1)` and a `scope_exclusion` for the same pair yields one `clause-mapped-and-excluded` error naming both artifacts. | Test |
+| FR-018-AC-2 | Different clauses in the control and the exclusion yield no finding. | Test |
+| FR-018-AC-3 | Two exclusions for one pair yield one `scope-exclusion-duplicate` error. | Test |
+| FR-018-AC-4 | The findings appear with the set not loaded. | Test |
 
 ## Dependencies
 
-- **Upstream**: [FR-020](./FR-020-control-mappings-are-clause-references.md), [FR-023](./FR-023-scope-exclusion-object.md)
+- **Upstream**: [FR-014](./FR-014-control-mappings-are-clause-references.md), [FR-017](./FR-017-scope-exclusion-object.md)
 - **Downstream**: none

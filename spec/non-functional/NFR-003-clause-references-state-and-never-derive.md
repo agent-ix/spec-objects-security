@@ -1,15 +1,15 @@
 ---
-id: NFR-004
+id: NFR-003
 title: "Clause references and scope exclusions state references and never derive coverage"
 type: NFR
 quality_attribute: maintainability
 relationships:
-  - target: "ix://agent-ix/spec-objects-security/FR-020"
+  - target: "ix://agent-ix/spec-objects-security/FR-014"
     type: "constrains"
-  - target: "ix://agent-ix/spec-objects-security/FR-023"
+  - target: "ix://agent-ix/spec-objects-security/FR-017"
     type: "constrains"
 ---
-# NFR-004: Clause references and scope exclusions state references and never derive coverage
+# NFR-003: Clause references and scope exclusions state references and never derive coverage
 
 ## Statement
 
@@ -38,8 +38,8 @@ the record would read as an assessment nobody made.
 
 | ID | Criteria | Verification |
 |----|----------|--------------|
-| NFR-004-AC-1 | Neither `ControlMapping.json` nor `ScopeExclusion.json` has a property named or typed as coverage, compliance, score, percentage, rating or status. | Test |
-| NFR-004-AC-2 | Validating a fixture control and exclusion emits exactly the keys the author wrote. | Test |
+| NFR-003-AC-1 | Neither `ControlMapping.json` nor `ScopeExclusion.json` has a property named or typed as coverage, compliance, score, percentage, rating or status. | Test |
+| NFR-003-AC-2 | Validating a fixture control and exclusion emits exactly the keys the author wrote. | Test |
 
 ## Verification
 
@@ -47,4 +47,4 @@ Both are tests over the emitted schemas and validated fixtures.
 
 ## Dependencies
 
-- **Upstream**: [FR-020](../functional/FR-020-control-mappings-are-clause-references.md), [FR-023](../functional/FR-023-scope-exclusion-object.md)
+- **Upstream**: [FR-014](../functional/FR-014-control-mappings-are-clause-references.md), [FR-017](../functional/FR-017-scope-exclusion-object.md)

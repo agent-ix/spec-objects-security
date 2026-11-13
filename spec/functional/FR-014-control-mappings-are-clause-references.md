@@ -1,5 +1,5 @@
 ---
-id: FR-020
+id: FR-014
 title: "A control's mappings are clause references: a clause set key and a clause id"
 type: FR
 relationships:
@@ -10,7 +10,7 @@ relationships:
   - target: "ix://agent-ix/spec-objects-security/FR-005"
     type: "depends_on"
 ---
-# FR-020: A control's mappings are clause references: a clause set key and a clause id
+# FR-014: A control's mappings are clause references: a clause set key and a clause id
 
 ## Description
 
@@ -48,13 +48,13 @@ two columns, `Set` and `Clause`, one row per reference. The threats and risks th
 
 | ID | Criteria | Verification |
 |----|----------|--------------|
-| FR-020-AC-1 | The emitted `ControlMapping` schema requires exactly `set` and `clause` and admits no other property; a record with `framework`, `control_id` or `doc` fails validation. | Test |
-| FR-020-AC-2 | A `set` of `example.invalid/std@1` is accepted; `example.invalid/std@`, `example.invalid//1` and `std@1` are each rejected; an empty `clause` is rejected. | Test |
-| FR-020-AC-3 | A fixture control whose `## Mappings` table has two rows extracts `mappings` with two entries in row order, and `Control.json` accepts the record. | Test |
-| FR-020-AC-4 | The `control` skeleton validates, its `## Mappings` section is a two-column table headed Set and Clause, and it contains no prose bullet in that section. | Test |
-| FR-020-AC-5 | A control with no `## Mappings` rows validates. | Test |
+| FR-014-AC-1 | The emitted `ControlMapping` schema requires exactly `set` and `clause` and admits no other property; a record with `framework`, `control_id` or `doc` fails validation. | Test |
+| FR-014-AC-2 | A `set` of `example.invalid/std@1` is accepted; `example.invalid/std@`, `example.invalid//1` and `std@1` are each rejected; an empty `clause` is rejected. | Test |
+| FR-014-AC-3 | A fixture control whose `## Mappings` table has two rows extracts `mappings` with two entries in row order, and `Control.json` accepts the record. | Test |
+| FR-014-AC-4 | The `control` skeleton validates, its `## Mappings` section is a two-column table headed Set and Clause, and it contains no prose bullet in that section. | Test |
+| FR-014-AC-5 | A control with no `## Mappings` rows validates. | Test |
 
 ## Dependencies
 
 - **Upstream**: [FR-004](./FR-004-role-schemas.md), [FR-005](./FR-005-executable-skeletons.md); `agent-ix/quoin` FR-133 for the set key form
-- **Downstream**: [FR-021](./FR-021-mapping-resolution-and-duplicates.md), [FR-022](./FR-022-mappings-carry-no-standard-text.md)
+- **Downstream**: [FR-015](./FR-015-mapping-resolution-and-duplicates.md), [FR-016](./FR-016-mappings-carry-no-standard-text.md)

@@ -80,7 +80,7 @@ semantic-core release that renders `identity: false` is a breaking change to the
 | auth_flow | `AuthFlow` | `operations` | `fields`, `clauses`, `steps: FlowStep[]` | `operations` has ≥ 1 item — a flow is its exchanges; `fields` has 0 defaulted fields; `relations` forbidden |
 | audit_event | `AuditEvent` | `fields` | `clauses`, `source: SemanticId` | `fields` has ≥ 1 item, 0 identity fields, ≥ 1 occurrence field, and 0 defaulted fields; `operations` and `relations` forbidden |
 
-- `ControlMapping` SHALL be `{ set: string, clause: string }` as [FR-020](./FR-020-control-mappings-are-clause-references.md) defines it.
+- `ControlMapping` SHALL be `{ set: string, clause: string }` as [FR-014](./FR-014-control-mappings-are-clause-references.md) defines it.
 - `FlowStep` SHALL be `{ name: Identifier, actor: Identifier, doc?: string }`.
 - Each graded vocabulary SHALL be a closed enum whose members are exactly those listed in [FR-006](./FR-006-security-safe-declarations.md), including its explicit unassessed member.
 - Every `fields`, `params`, `clauses`, `operations`, and `relations` item SHALL be validated by `$ref` to the semantic-core model, never by a copied definition.
