@@ -145,7 +145,7 @@ the Python package only: neither Node script is measured by it.
 | FR-014 | FR-014-AC-1..7 | TC-187..TC-193 | ✅ |
 | FR-015 | FR-015-AC-1..3 | TC-194..TC-196 | ✅ |
 | FR-016 | FR-016-AC-1..7 | TC-197..TC-203 | ✅ |
-| NFR-003 | NFR-003-AC-1..2 | TC-204, TC-205 | ✅ |
+| NFR-003 | NFR-003-AC-1..2, NFR-003-M-1..2 | TC-204, TC-205 | ✅ |
 | FR-017 | FR-017-AC-1..7 | TC-175..TC-186 | ✅ `quire clauses` loads strictly and cannot load the real module (the object-type edges come from another module), so TC-181, TC-183, TC-185 and TC-186 evaluate a module that holds only the set files |
 
 ### Integration Test Coverage
@@ -317,8 +317,8 @@ the Python package only: neither Node script is measured by it.
 | TC-201 | responsible is a bare bundle id not a cross repository identity | Unit | P0 | FR-016-AC-7 | ✅ |
 | TC-202 | the empty exclusion record fails | Unit | P0 | FR-016-AC-5 | ✅ |
 | TC-203 | exclusion manifest entry requires four section body locators | Unit | P0 | FR-016-AC-6 | ✅ |
-| TC-204 | No property of the mapping or exclusion schemas is named or typed as a computed value | Unit | P0 | NFR-003-AC-1 | ✅ |
-| TC-205 | A validated control and exclusion emit exactly the keys the author wrote | Unit | P0 | NFR-003-AC-2 | ✅ |
+| TC-204 | No property of the mapping or exclusion schemas is named or typed as a computed value | Unit | P0 | NFR-003-AC-1, NFR-003-M-1 | ✅ |
+| TC-205 | A validated control and exclusion emit exactly the keys the author wrote | Unit | P0 | NFR-003-AC-2, NFR-003-M-2 | ✅ |
 
 ## Test Environment
 

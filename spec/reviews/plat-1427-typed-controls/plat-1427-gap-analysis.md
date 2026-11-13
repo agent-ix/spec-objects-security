@@ -44,9 +44,17 @@ reports them covered when nothing demonstrates them.
 | --- | --- | --- | --- |
 | FND-003 | high | Round 1 removed the 20 TC-187..TC-203 rows from `spec/tests.md` (TM-001). quire's traceability model binds a trace tag only through a declared matrix row. At 33521a3, `quoin matrix` therefore reports all 17 criteria of FR-014, FR-015 and FR-016 as `untagged`, where they were `tagged` at bc6eba1. `quire matrix` warns `criterion-tagged-outside-row ... This tag does not provide backing` for each one. The new TC-204 and TC-205 have no rows either, so NFR-003-AC-1 and NFR-003-AC-2 stay untagged. Fix: restore the 20 rows and add rows for TC-204 (NFR-003-AC-1) and TC-205 (NFR-003-AC-2), with an NFR-003 summary row. Then confirm with `quoin matrix` that all 19 criteria read `tagged` | spec/tests.md, tests/test_typed_controls.py:326-356 |
 
+## New findings (disposition pass 2)
+
+| ID | Severity | Summary | Refs |
+| --- | --- | --- | --- |
+| FND-004 | low | At 2f18f96, `quoin matrix` reports all 19 FR-014, FR-015, FR-016 and NFR-003 acceptance criteria as `tagged`, and there is no `criterion-tagged-outside-row` warning. The NFR-003 measurement criteria NFR-003-M-1 and NFR-003-M-2 are still `untagged`. The repo binds measurements on the same test as their AC: NFR-002 uses `@pytest.mark.trace("TC-173", ..., "NFR-002-AC-1", "NFR-002-M-1")` at `tests/test_profiles.py:191`, and its TM-001 row lists `NFR-002-M-1..2`. Fix: add `"NFR-003-M-1"` to the TC-204 marker and `"NFR-003-M-2"` to the TC-205 marker, and list `NFR-003-M-1..2` in the NFR-003 summary row | tests/test_typed_controls.py:331, tests/test_typed_controls.py:341, spec/tests.md:148 |
+
 ## Dispositions
 
 | FND | outcome | reason |
 | --- | --- | --- |
 | FND-001 | still-open: the tests now exist and pass. TC-204 scans both schemas for the six terms, and TC-205 asserts that the extracted record keys equal the authored sections. But neither has a TM-001 row, so `quoin matrix` still reports NFR-003-AC-1 and NFR-003-AC-2 as `untagged` (see FND-003) | - |
 | FND-002 | fixed | Round 1, head 33521a3. TC-195 now extracts the three-column fixture and asserts four things: an `invalid-model-cell` diagnostic with reason `column-unknown` at the header line, no `mappings` key, `recordKeys.mappings` state `unavailable`, and an absent sentinel. FR-015-AC-2 now notes that document validation reports reason `semantic`. The criterion's matrix backing was lost by the row removal (FND-003); the assertions themselves are complete |
+| FND-001 | fixed | Round 2, head 2f18f96. TC-204 and TC-205 have TM-001 rows, and `quoin matrix` reports NFR-003-AC-1 and NFR-003-AC-2 as `tagged` |
+| FND-003 | fixed | Round 2, head 2f18f96. The TC-187..TC-203 rows are restored, the TC-204 and TC-205 rows and an NFR-003 summary row are added, and the TM-001 frontmatter `covers` FR-014, FR-015, FR-016 and NFR-003. `quoin matrix` reports all 19 acceptance criteria as `tagged`, and `quire matrix` emits no `criterion-tagged-outside-row` warning |

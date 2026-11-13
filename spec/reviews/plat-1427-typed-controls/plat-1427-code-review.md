@@ -1,48 +1,54 @@
 ---
-id: SR-20261113181007
-title: "Code review of quoin PR 876 (spec-security-analysis typed controls, FR-171, FR-172)"
+id: SR-051
+title: "Code review of PR #53 typed controls and scope_exclusion"
 type: SpecReview
-analysis: base
-scope: "agent-ix/quoin@5afac302; README.md, skills/spec-security-analysis/SKILL.md, skills/spec-security-analysis/assets/*, spec/evals.md, tests/fixtures/security-analysis/**, rust/crates/quoin-cli/tests/tc_171_security_analysis_skill.rs"
+analysis: code-review
 review_set: subset
+scope: "agent-ix/spec-objects-security; spec_objects_security/schemas/ControlMapping.json, spec_objects_security/schemas/ScopeExclusion.json, typespec/main.tsp, spec_objects_security/manifest.yaml, spec_objects_security/skeletons/control.md, spec_objects_security/skeletons/scope_exclusion.md, tests/, spec/tests.md (PR #53, git diff origin/main...HEAD at bc6eba1)"
 ---
-
-# Code review of quoin PR 876
+# SR-051: Code review of PR #53 typed controls and scope_exclusion
 
 ## Summary
 
-Ticket: PLAT-1427. Scoped to `git diff origin/main...HEAD` at 5afac302 (merge base 15131e3a).
-The Rust lane (`rust-review`, with the repo `.claude/skills/rust-style`) is folded in; the only
-Rust file is the integration test `tc_171_security_analysis_skill.rs`. Companion module read in
-place from agent-ix/spec-objects-security PR 53 at bc6eba15. Tools: quoin 0.30.1, quire 0.44.0
-(engine 0.59.1).
+Ticket: PLAT-1427. One commit, bc6eba1. quoin 0.30.1, quire wheel from the
+repo's Poetry environment.
 
-Measured: all 345 bare ASVS requirement ids in `references/owasp-asvs/*.md` table rows resolve
-in `owasp/asvs@5.0.0` of the companion module; `quoin write [REPO_DIR] --types` exists as the
-skill instructs. Test evidence (locked-build.sh, jobs 4, debug 0): at 5afac302 with spec-objects-security PR 53 (bc6eba15) and fresh spec-objects-safety origin/main (bf44b49), `tc_171_security_analysis_skill` passes 10 of 10 and the six risk-advise/discrepancies/summary binaries pass 76 of 76; the same six pass 76 of 76 on quoin origin/main 15131e3a. The coder's 75 failures come from the local spec-objects-safety checkout (d11cbe8, a branch that predates PLAT-1565), not from this PR: against that checkout the same six binaries fail 75 of 76 (reproduced).
+What was measured:
+
+- `poe test`: 296 passed, 3 skipped, 9 xfailed, 100% coverage. `poe lint`
+  (ruff, black, schema drift gate with 52 schemas) is clean.
+- `ControlMapping` is sealed `{set, clause}`. The old `framework`, `control_id`
+  and `doc` keys are refused. TypeSpec and the emitted JSON agree (drift gate).
+- The `scope_exclusion` type has a schema, a skeleton, a manifest entry with four
+  required `section_body` locators, and an export. It is counted in the 25-type
+  helpers.
+- The engine reads `## Mappings` and `## Effectiveness` through
+  `record-sections`. A probe showed that removing each exclusion section gives both
+  the required-locator error and `semantic.record-invalid` at that key. A prose
+  (non-inline-code) `## Rationale` or `## Effectiveness` is refused with
+  `semantic.feature-not-extractable`. A third `Title` column gives
+  `semantic.invalid-model-cell` at the header line, and the column value does
+  not appear in the `extract_semantic` output.
+- No standard text, no vendored content, no build artifacts and no digest or pin
+  were added.
 
 ## Verdict
 
-**MERGEABLE AFTER FIXES (one medium, four low).** The skill rewrite matches FR-171 and FR-172:
-no Section 19, typed `control` and `scope_exclusion` output via `quoin write`, Set/Clause rows,
-`not_assessed` default, installed-set check, not-mapped statement, no-text rule, no exclusion
-without a responsible party, `quire validate` run. The Mandatory Standards table is unchanged,
-so FR-171-AC-4 holds. The test reads the companion modules in place and copies nothing. The
-medium defect is that the FR-171-AC-6 check cannot see 345 of the 350 ASVS ids it claims to check.
+**PASS with findings.** The schemas, the manifest and the skeletons do what
+FR-014, FR-015 and FR-016 describe on the ASCII path. There is one medium
+finding: identifier length is measured in characters, not bytes. There is one
+low finding about a hand-maintained test table.
 
 ## Findings
 
 | ID | Severity | Summary | Refs |
 | --- | --- | --- | --- |
-| FND-001 | medium | `is_asvs_id` only accepts a `V` prefix, but every ASVS requirement table under `references/owasp-asvs/` cites ids bare (`6.1.1`), so 345 of the 350 cited ASVS ids are never checked; a wrong row number there passes the FR-171-AC-6 test. All 345 resolve today (measured), so this is a test that cannot fail, not a wrong citation. Accept the bare form in the ASVS reference files (prefix `V` before lookup) | rust/crates/quoin-cli/tests/tc_171_security_analysis_skill.rs:223-229 |
-| FND-002 | low | The fixture SpecReview summary says the gateway answers "eight" clauses through three controls; the three controls map nine distinct clauses, and the test itself asserts `mapped == 9` | tests/fixtures/security-analysis/expected/reviews/26-11-13-security-analysis-example-session-gateway.md:14 |
-| FND-003 | low | `installed_clause_sets` parses `manifest.yaml` by line prefix (`clause_sets:` then `- `), though the workspace has `quoin-yaml`; an equally valid indented list (`  - clauses/x.json`) reads as "declares no clause sets". Requirement and component ids are taken by fixed slices of file names (`[..6]`, `[..8]`), which mis-read a longer id. Parse the manifest with the YAML reader and take ids from frontmatter | rust/crates/quoin-cli/tests/tc_171_security_analysis_skill.rs:130-139 |
-| FND-004 | low | `module()` takes a `subdir` argument its only caller passes as `""`, with the module subdirectory folded into `sibling`; `SPEC_OBJECTS_SECURITY_DIR` names the module directory while `SPEC_ARTIFACTS_PROCESS_DIR` and the existing `SPEC_OBJECTS_SAFETY_DIR` name the repository root. Two meanings for the same kind of variable is a setup trap; make all three name the repository root and drop the dead parameter | rust/crates/quoin-cli/tests/tc_171_security_analysis_skill.rs:54-88 |
-| FND-005 | low | Every control template, example and expected fixture names its invariant for a behaviour (`EveryRequestIsAuthorized`, `FailSafeOnMissingGrant`, `NoRoleNoForward`, ...) while the OCL body only says `self.effectiveness->notEmpty()`. The skill copies these, so it is taught to write invariants whose name and body disagree. The companion skeleton has the same pattern. Name the invariant for what the body states, or state the behaviour in the body | skills/spec-security-analysis/assets/control-template.md:41-47 |
+| FND-001 | medium | FR-014 bounds each part of `set` and the `clause` id to 1 to 64 bytes, so that a mapping this module accepts is never refused on length by `quoin evidence record-discharge` (quoin FR-133 refuses an id over 64 bytes). The schemas count characters instead: `[^/@]{1,64}` and `maxLength: 64`. A probe validated a control whose clause was 64 copies of `é` (128 bytes), and another whose set authority was the same 128-byte string. Both were `is_valid: true`, which is exactly the length refusal FR-014 says cannot happen. The same bound appears in `ScopeExclusion.json` and in both TypeSpec models. Fix: restrict each part to printable ASCII without `/` and `@` (for example `[!-.0-?A-~]{1,64}`), so that characters equal bytes. Then add a non-ASCII case to TC-188. Alternatively, amend FR-014 to state the ASCII alphabet | spec_objects_security/schemas/ControlMapping.json:6-13, spec_objects_security/schemas/ScopeExclusion.json:6-14, typespec/main.tsp:156-157, typespec/main.tsp:814-815 |
+| FND-002 | low | `spec/tests.md` is a hand-maintained test matrix (TC id to AC to status). It repeats what `quoin matrix` computes from the `@pytest.mark.trace` tags, and this PR grows it by 20 rows. Its ✅ status column is a claim that nothing checks. This is file-tracking ceremony: the computed matrix already holds the same data. Fix: stop extending the table, and drop it repo-wide under its own ticket. The trace tags remain the record | spec/tests.md:137-139, spec/tests.md:294-310 |
 
 ## Dispositions
 
 | FND | outcome | reason |
 | --- | --- | --- |
-| FND-001 | fixed | Round 1, head 33521a3. Each `set` part is now `[!-.0-?A-~]{1,64}` (printable ASCII except `/` and `@`) and `clause` is `[!-~]{1,64}`, in both schemas and both TypeSpec models, so character counts equal byte counts. TC-188 now rejects non-ASCII values. It has no separate non-ASCII case for `ScopeExclusion`, but that schema's pattern is identical and is emitted from the same TypeSpec source |
-| FND-002 | rejected: the finding was wrong. `spec/tests.md` is `TM-001`, a typed `TestMatrix` with `covers` relationships, and quire's traceability model reads it: a `@pytest.mark.trace("TC-nnn", "<AC>")` tag backs a criterion only when TC-nnn is a declared row. It is load-bearing, not file-tracking ceremony. Acting on this finding, round 1 removed the 20 rows and unbound every FR-014/015/016 criterion (SR-052 FND-003) | - |
+| FND-001 | fixed | Round 1, head 33521a3. `ControlMapping.json` and `ScopeExclusion.json` now pattern `set` as `^[!-.0-?A-~]{1,64}/[!-.0-?A-~]{1,64}@[!-.0-?A-~]{1,64}$` and `clause` as `^[!-~]{1,64}$`, so the character limits are the byte limits |
+| FND-002 | rejected | The finding was wrong. `spec/tests.md` is TM-001, a typed TestMatrix; quire's traceability model backs a trace tag only through a declared TC row, so the table is load-bearing, not ceremony. Removing its 20 rows in round 1 unbound all 17 FR-014/015/016 criteria (SR-052 FND-003) |

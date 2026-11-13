@@ -328,7 +328,7 @@ def test_exclusion_manifest_entry_requires_four_section_body_locators():
 COVERAGE_WORDS = ("coverage", "compliance", "score", "percent", "rating", "status")
 
 
-@pytest.mark.trace("TC-204", "NFR-003-AC-1")
+@pytest.mark.trace("TC-204", "NFR-003-AC-1", "NFR-003-M-1")
 def test_no_computed_value_property_on_mapping_or_exclusion_schemas():
     for model in ("ControlMapping", "ScopeExclusion"):
         for name, prop in schema(model)["properties"].items():
@@ -338,7 +338,7 @@ def test_no_computed_value_property_on_mapping_or_exclusion_schemas():
             assert prop.get("type") == "string" or "$ref" in prop, (model, name)
 
 
-@pytest.mark.trace("TC-205", "NFR-003-AC-2")
+@pytest.mark.trace("TC-205", "NFR-003-AC-2", "NFR-003-M-2")
 def test_validated_fixtures_emit_exactly_the_keys_the_author_wrote(quire_engine):
     control = extract_record(
         quire_engine, "control", "Control.json", control_skeleton()
