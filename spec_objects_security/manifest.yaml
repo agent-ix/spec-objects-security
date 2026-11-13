@@ -29,6 +29,7 @@ semantic:
   - attack_surface
   - policy
   - audit_finding
+  - soup_record
   imports: {}
   targets: [json-schema, markdown]
   mappings: [typed-table, sysml-fence, ocl-clause]
@@ -508,7 +509,7 @@ object_types:
           required: false
 - name: vulnerability
   allowed_links:
-    affects: [asset, attack_surface]
+    affects: [asset, attack_surface, soup_record]
     references: [vulnerability]
   data_schema:
     schema: schemas/Vulnerability.json
@@ -615,6 +616,25 @@ object_types:
           required: true
         # FR-005: the typed `## Properties` table the
         # semantic layer reads. Optional, so existing artifacts stay valid.
+        properties:
+          from: section_body
+          after_heading: Properties
+          required: false
+- name: soup_record
+  data_schema:
+    schema: schemas/SoupRecord.json
+  body_extraction:
+    yield_pattern:
+      match:
+        id: *id004
+        title: *id005
+        type: *id006
+        purl:
+          from: frontmatter_field
+          path:
+          - purl
+          required: true
+        # The typed `## Properties` table the semantic layer reads.
         properties:
           from: section_body
           after_heading: Properties

@@ -186,7 +186,7 @@ def test_no_shipped_schema_carries_a_default_keyword():
 
 @pytest.mark.trace("TC-073", "FR-006-AC-4", "FR-006-CON-2")
 def test_no_declaration_admits_a_defaulted_field_or_param(schema_registry):
-    """Every one of the twenty-three types, not only the sensitive four.
+    """Every one of the twenty-four types, not only the sensitive four.
 
     The rule began on `secret`, `encryption_key`, `jwt_claim` and `csrf_token`,
     which left it off exactly the rows that grant: a `Control` whose

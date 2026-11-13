@@ -56,7 +56,7 @@ def test_every_schema_differs_from_every_other():
         key = signature(model)
         assert key not in seen, f"{model} is indistinguishable from {seen.get(key)}"
         seen[key] = model
-    assert len(seen) == 23
+    assert len(seen) == 24
 
 
 @pytest.mark.trace("TC-051", "FR-004-AC-2")
@@ -222,6 +222,7 @@ MINIMAL = {
     "Control": {"clauses": [CLAUSE], "fields": [field("effectiveness")]},
     "AuthFlow": {"operations": [OPERATION]},
     "AuditEvent": {"fields": [field("occurred_at", "Timestamp")]},
+    "SoupRecord": {"fields": [field("a", "UUID", identity=True), field("purl")]},
 }
 
 

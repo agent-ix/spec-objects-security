@@ -41,6 +41,18 @@ enum Severity {
   `unknown`,
 }
 
+/**
+ * Whether the upstream maintainer still supports a component. `unknown`
+ * states that nobody has assessed it; it is not owned by the ten graded
+ * vocabularies of FR-006.
+ */
+enum SoupSupportStatus {
+  supported,
+  community_supported,
+  unsupported,
+  `unknown`,
+}
+
 /** How likely a risk is to be realized. `unknown` states that it was not assessed. */
 enum Likelihood {
   rare,
@@ -151,6 +163,13 @@ model FlowStep {
   ...Record<never>;
 }
 
+/** One reviewer-stated anomaly of a component. */
+model Anomaly {
+  @minLength(1) statement: string;
+  source_ref?: SemanticId;
+  ...Record<never>;
+}
+
 // ---------------------------------------------------------------------------
 // Open marker models
 //
@@ -182,6 +201,11 @@ model OccurrenceTypeRef {
 /** A `FieldDecl` whose type targets `Timestamp` — the occurrence time an audit event declaration must carry. */
 model OccurrenceField {
   type: OccurrenceTypeRef;
+}
+
+/** A `FieldDecl` named `purl`. */
+model PurlField {
+  name: "purl";
 }
 
 /** A `FieldDecl` named `stride_category`. */
@@ -737,5 +761,43 @@ model AuditEvent {
 
   clauses?: ClauseRef[];
   source?: SemanticId;
+  ...Record<never>;
+}
+
+/**
+ * A reviewed third-party component (SOUP), identified by its purl, which the
+ * declaration states as a `purl` field row. Every value
+ * is an SBOM-stated fact, a reviewer statement or a pointer to a person-owned
+ * disposition; nothing is computed. `license` and `license_fact_ref` are
+ * mutually exclusive, and `end_of_support` is a calendar date or `unknown`. The
+ * seal refuses `digest`, finding text, advisory keys and an embedded decision.
+ * `operations`, `relations` and `clauses` are forbidden by the seal.
+ */
+@extension(
+  "allOf",
+  #[
+    #{ properties: #{ fields: #{ contains: #{ `$ref`: "PurlField.json" } } } },
+    #{ properties: #{ fields: #{ items: #{ not: #{ `$ref`: "DefaultedField.json" } } } } },
+    #{ not: #{ required: #["license", "license_fact_ref"] } }
+  ]
+)
+model SoupRecord {
+  @minItems(1)
+  @contains(IdentityField)
+  fields: FieldDecl[];
+
+  @minLength(1) purl?: string;
+  name?: string;
+  version?: string;
+  supplier?: string;
+  license?: string;
+  license_fact_ref?: SemanticId;
+  finding_refs?: SemanticId[];
+  inventory_ref?: SemanticId;
+  serves?: SemanticId[];
+  known_anomalies?: Anomaly[];
+  support_status?: SoupSupportStatus;
+  @pattern("^(unknown|[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01]))$") end_of_support?: string;
+  @pattern("\\S") disposition_clause?: string;
   ...Record<never>;
 }

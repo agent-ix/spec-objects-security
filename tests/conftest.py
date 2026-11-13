@@ -90,6 +90,7 @@ OBJECT_TYPES = (
     "attack_surface",
     "policy",
     "audit_finding",
+    "soup_record",
 )
 
 MODEL_OF = {
@@ -116,6 +117,7 @@ MODEL_OF = {
     "attack_surface": "AttackSurface",
     "policy": "Policy",
     "audit_finding": "AuditFinding",
+    "soup_record": "SoupRecord",
 }
 
 MARKER_MODELS = (
@@ -131,6 +133,7 @@ MARKER_MODELS = (
     "LevelField",
     "TrustLevelField",
     "EffectivenessField",
+    "PurlField",
 )
 
 RECORD_MODELS = ("ControlMapping", "FlowStep")
@@ -194,7 +197,7 @@ VOCABULARIES = {
 # `TrustBoundary` whose `trust_level` defaulted to `trusted`, and defaulted
 # grant rows on `role`, `permission` and `scope` all validated. The ticket gate
 # reads "No schema default grants permission, trust, or control effectiveness",
-# so the guard is now on all twenty-three (FR-006).
+# so the guard is now on all twenty-four (FR-006).
 DEFAULT_REFUSING = OBJECT_TYPES
 
 FIELD_BEARING = (
@@ -216,6 +219,7 @@ FIELD_BEARING = (
     "csrf_token",
     "control",
     "audit_event",
+    "soup_record",
 )
 
 CLAUSE_BEARING = (
