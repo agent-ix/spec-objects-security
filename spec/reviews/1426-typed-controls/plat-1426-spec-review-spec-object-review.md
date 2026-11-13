@@ -73,3 +73,11 @@ Round 1, checked against fix commit f61e87f, with the PR head at aa90516.
 | FND-006 | still-open | Found in this pass, and no fix has landed: `owner` is a record-sections owned key (FR-075 systems member), so an authored `## Owner` is never read. |
 | FND-007 | still-open | Found in this pass, and no fix has landed: the `control.mappings` locator is still `required: true`, and `## Effectiveness` has no locator. |
 | FND-008 | still-open | Found in this pass, and no fix has landed: `quire extract` does not emit the semantic record that the criteria read. |
+
+Round 2, checked against fix commit 4ed7d94. The PR head is 4ed7d94, current main 9d3c9e7 is an ancestor, and GitHub reports `MERGEABLE`. I re-measured with the quire 0.58.0 wheel against a scratch module carrying the stated manifest and schema changes.
+
+| FND | outcome | reason |
+| --- | --- | --- |
+| FND-006 | fixed | The key is now `responsible` in FR-004, FR-016 and quoin#871 FR-173 at e8300f46. FR-016 states that a cross-repository id is refused and requires a bare bundle id (AC-7). Measured: a complete exclusion with `## Responsible` `COMP-001` validates. `ix://agent-ix/example-platform/COMP-001` fails with `not a bundle artifact id`. Removing any of the four sections fails `semantic.record-invalid` naming that key. |
+| FND-007 | fixed | FR-014 now makes the `mappings` locator `required: false` and adds an optional `effectiveness` locator (AC-7). Measured: a control with neither section validates, and a control with both validates. |
+| FND-008 | fixed | FR-014-AC-3/AC-4 and FR-016-AC-4 are restated as validation outcomes. Measured: `std@1` fails `semantic.record-invalid` at `mappings[0].set`, and `bogus` fails at `effectiveness`. |
