@@ -19,7 +19,7 @@ the emitter, the file layout, or the extraction engine.
 
 ## Context
 
-Today all twenty-four object types in `manifest.yaml` carry
+Today all twenty-five object types in `manifest.yaml` carry
 `data_schema: {type: object}`, which types nothing: a `secret` and a `risk` are
 indistinguishable to a consumer, every `## Properties` equivalent is free
 prose, and no cross-reference between two objects is checked. For a security

@@ -1,5 +1,5 @@
 ---
-id: FR-016
+id: FR-015
 title: "A mapping carries a set key and a clause id and never the text of a standard"
 type: FR
 relationships:
@@ -10,7 +10,7 @@ relationships:
   - target: "ix://agent-ix/spec-objects-security/FR-006"
     type: "depends_on"
 ---
-# FR-016: A mapping carries a set key and a clause id and never the text of a standard
+# FR-015: A mapping carries a set key and a clause id and never the text of a standard
 
 ## Description
 
@@ -30,9 +30,9 @@ mechanism; this requirement states the rule it serves and its limits.
 
 | ID | Criteria | Verification |
 |----|----------|--------------|
-| FR-016-AC-1 | A control mapping row carrying a third key (`title`, `text`, `note`) fails schema validation, for each of the three keys. | Test |
-| FR-016-AC-2 | A `## Mappings` table with a third column is reported by Quire, and the extracted record holds no value from that column. | Test |
-| FR-016-AC-3 | The emitted `ControlMapping.json` lists exactly the properties `set` and `clause`. | Test |
+| FR-015-AC-1 | A control mapping row carrying a third key (`title`, `text`, `note`) fails schema validation, for each of the three keys. | Test |
+| FR-015-AC-2 | A `## Mappings` table with a third column makes Quire emit `semantic.invalid-model-cell` with reason `column-unknown` at the header line, and the extracted record has no `mappings` key (`unavailable`) and none of the column's values. | Test |
+| FR-015-AC-3 | The emitted `ControlMapping.json` lists exactly the properties `set` and `clause`. | Test |
 
 ## Dependencies
 

@@ -6,7 +6,7 @@ quality_attribute: maintainability
 relationships:
   - target: "ix://agent-ix/spec-objects-security/FR-014"
     type: "constrains"
-  - target: "ix://agent-ix/spec-objects-security/FR-017"
+  - target: "ix://agent-ix/spec-objects-security/FR-016"
     type: "constrains"
 ---
 # NFR-003: Clause references and scope exclusions state references and never derive coverage
@@ -47,4 +47,4 @@ Both are tests over the emitted schemas and validated fixtures.
 
 ## Dependencies
 
-- **Upstream**: [FR-014](../functional/FR-014-control-mappings-are-clause-references.md), [FR-017](../functional/FR-017-scope-exclusion-object.md)
+- **Upstream**: [FR-014](../functional/FR-014-control-mappings-are-clause-references.md), [FR-016](../functional/FR-016-scope-exclusion-object.md)

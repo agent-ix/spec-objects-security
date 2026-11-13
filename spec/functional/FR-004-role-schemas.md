@@ -31,7 +31,7 @@ rules.
 
 ## Outputs
 
-- Twenty-four object-type models, each emitted as `schemas/<Model>.json`,
+- Twenty-five object-type models, each emitted as `schemas/<Model>.json`,
   sealed (`unevaluatedProperties: {not: {}}`).
 - Support models emitted as sibling files: the open marker models
   `IdentityField`, `DefaultedField`, `OccurrenceField`, `OccurrenceTypeRef`,
@@ -73,6 +73,7 @@ semantic-core release that renders `identity: false` is a breaking change to the
 | jwt_claim | `JwtClaim` | `fields` | `clauses`, `classification: ConfidentialityLevel`, `issuer: SemanticId` | `fields` has ≥ 1 item, ≥ 1 identity field, and 0 defaulted fields; `operations` and `relations` forbidden |
 | csrf_token | `CsrfToken` | `fields` | `clauses`, `binds: SemanticId` | `fields` has ≥ 1 item, ≥ 1 identity field, and 0 defaulted fields; `operations` and `relations` forbidden |
 | policy | `Policy` | `clauses` | `fields`, `relations`, `governs: SemanticId[]` | `clauses` has ≥ 1 item — a policy that constrains nothing is prose; `operations` forbidden |
+| scope_exclusion | `ScopeExclusion` | `set`, `clause`, `owner: SemanticId`, `rationale` | none | `fields`, `clauses`, `operations` and `relations` forbidden by the seal; see [FR-016](./FR-016-scope-exclusion-object.md) |
 | control | `Control` | `clauses`, `fields` | `operations`, `effectiveness: ControlEffectiveness`, `mitigates: SemanticId[]`, `mappings: ControlMapping[]` | `clauses` has ≥ 1 item; `fields` has ≥ 1 item and ≥ 1 `effectiveness` field, so effectiveness is always stated and never inferred; `relations` forbidden |
 | password_policy | `PasswordPolicy` | `clauses` | `fields` | `clauses` has ≥ 1 item; `operations` and `relations` forbidden |
 | cors_policy | `CorsPolicy` | `clauses` | `fields`, `allowed_origins: string[]` | `clauses` has ≥ 1 item; `operations` and `relations` forbidden |
@@ -80,6 +81,7 @@ semantic-core release that renders `identity: false` is a breaking change to the
 | auth_flow | `AuthFlow` | `operations` | `fields`, `clauses`, `steps: FlowStep[]` | `operations` has ≥ 1 item — a flow is its exchanges; `fields` has 0 defaulted fields; `relations` forbidden |
 | audit_event | `AuditEvent` | `fields` | `clauses`, `source: SemanticId` | `fields` has ≥ 1 item, 0 identity fields, ≥ 1 occurrence field, and 0 defaulted fields; `operations` and `relations` forbidden |
 
+- The keys `mappings` and `effectiveness` of `control` are populated by the `record-sections` mapping (`agent-ix/quire-rs` FR-081) from the `## Mappings` and `## Effectiveness` sections, as [FR-014](./FR-014-control-mappings-are-clause-references.md) defines; the extractor still does not populate the other keys listed below.
 - `ControlMapping` SHALL be `{ set: string, clause: string }` as [FR-014](./FR-014-control-mappings-are-clause-references.md) defines it.
 - `FlowStep` SHALL be `{ name: Identifier, actor: Identifier, doc?: string }`.
 - Each graded vocabulary SHALL be a closed enum whose members are exactly those listed in [FR-006](./FR-006-security-safe-declarations.md), including its explicit unassessed member.
@@ -91,7 +93,7 @@ semantic-core release that renders `identity: false` is a breaking change to the
 - Because JSON Schema admits one `contains` per array, the TypeSpec source SHALL carry every predicate beyond the first on that array as an `@extension("allOf", …)` clause referencing the marker file (`DefaultedField.json`, `OccurrenceField.json`, `IdentityField.json`, `SeverityField.json`, and the rest); the generator normalizes those relative `$ref`s per FR-002.
 - Every cross-reference a declaration makes (`type.target`, `RelationDecl.target`, `owner`, `resource`, `grants`, `includes`, `exploits`, `affects`, `arises_from`, `traces_to`, `exposes`, `crosses`, `material_ref`, `custodian`, `issuer`, `binds`, `binds_flow`, `governs`, `mitigates`, `source`) SHALL be a `SemanticId` or `KernelScalar` per semantic-core, so a bare token is rejected by the schema; resolution against the bundle, and the placeholder `ix://<org>/<repo>/unresolved/<Token>` with its `semantic.unresolved-type` finding, exist today for `type.target` only (quire-rs FR-070). No published mapping covers the other keys: `agent-ix/quoin#335` is the ticket that would own one, and its body scopes itself to the ten `spec-objects-business` keys and names none of these, so this module records the gap rather than assuming that ticket will close it.
 - Each schema SHALL describe the declared shape only, never a runtime occurrence (a session, an emitted audit record, a scanner hit), which is why `AuditEvent` carries no identity field: occurrence identity belongs to the runtime record, not the declaration.
-- Where a key is declared but the current extractor does not populate it (`relations`, `classification`, `owner`, `grants`, `includes`, `resource`, `verb`, `factor_kind`, `stride_category`, `severity`, `cve_id`, `likelihood`, `impact`, `status`, `level`, `values`, `trust_level`, `crosses`, `exposes`, `lifecycle`, `material_ref`, `custodian`, `algorithm`, `issuer`, `binds`, `binds_flow`, `governs`, `mitigates`, `mappings`, `effectiveness`, `steps`, `source`, `affects`, `arises_from`, `traces_to`, `exploits`, `allowed_origins`) the key SHALL be optional, so a record produced by today's extractor validates and a future extractor can fill it without a schema change.
+- Where a key is declared but the current extractor does not populate it (`relations`, `classification`, `owner`, `grants`, `includes`, `resource`, `verb`, `factor_kind`, `stride_category`, `severity`, `cve_id`, `likelihood`, `impact`, `status`, `level`, `values`, `trust_level`, `crosses`, `exposes`, `lifecycle`, `material_ref`, `custodian`, `algorithm`, `issuer`, `binds`, `binds_flow`, `governs`, `mitigates`, `steps`, `source`, `affects`, `arises_from`, `traces_to`, `exploits`, `allowed_origins`) the key SHALL be optional, so a record produced by today's extractor validates and a future extractor can fill it without a schema change.
 - Eight of the optional graded keys SHALL additionally be expressed as an item rule over `fields`, which the extractor does populate — `stride_category`, `severity`, `likelihood`, `impact`, `status`, `level`, `trust_level` and `effectiveness`, one open marker model each — so a threat states its STRIDE class as a row and a control its effectiveness as a row, and the obligation is enforced today rather than deferred.
 - The remaining graded keys (`lifecycle`, `classification`, `factor_kind`) SHALL carry no item rule: they record how something is held rather than how bad it is, and no refusal in this module turns on them. They are declared, typed, and optional; nothing else is claimed for them.
 - The test suite SHALL verify every criterion over a key the extractor does not populate against a hand-built JSON record rather than an extracted one, naming that limitation in the test itself, so that no row claims extraction evidence it does not have.
@@ -103,13 +105,13 @@ semantic-core release that renders `identity: false` is a breaking change to the
 | ID | Constraint | Type | Validation |
 |----|------------|------|------------|
 | FR-004-CON-1 | No model SHALL redeclare a semantic-core model or scalar; the module namespace contributes archetype shapes only (semantic-core NFR-014 kernel discipline). | Architecture | Test |
-| FR-004-CON-2 | The empty record `{}` SHALL fail every one of the twenty-four types, because every type has a non-empty required set. | Integrity | Test |
+| FR-004-CON-2 | The empty record `{}` SHALL fail every one of the twenty-five types, because every type has a non-empty required set. | Integrity | Test |
 
 ## Acceptance Criteria
 
 | ID | Criteria | Verification |
 |----|----------|--------------|
-| FR-004-AC-1 | Each of the twenty-four shipped object-type schemas differs from every other in at least one required key, admitted key, or item rule listed in the table; a schema with only `type: object` is absent. | Test |
+| FR-004-AC-1 | Each of the twenty-five shipped object-type schemas differs from every other in at least one required key, admitted key, or item rule listed in the table; a schema with only `type: object` is absent. | Test |
 | FR-004-AC-2 | An asset record with one identity field validates against `Asset.json`; the same record with the identity flag removed fails; a record with no `fields` fails. | Test |
 | FR-004-AC-3 | A role record validates; a record carrying `operations` fails. A permission and a scope record each fail when they carry `relations`. | Test |
 | FR-004-AC-4 | A threat record with a `stride_category` field validates; the same record without that field fails; a `stride_category` outside `StrideCategory` fails. | Test |
@@ -119,7 +121,7 @@ semantic-core release that renders `identity: false` is a breaking change to the
 | FR-004-AC-8 | An auth-flow record with one operation validates; an empty `operations` array fails; a record carrying `relations` fails. | Test |
 | FR-004-AC-9 | An audit-event record with a `Timestamp` field and no identity field validates against `AuditEvent.json`; a record whose only fields are non-`Timestamp` fails; a record with an identity field fails; a record with `operations` fails. | Test |
 | FR-004-AC-10 | A trust-boundary record with one clause and a `trust_level` field validates; the same record without `clauses` fails; a `trust_level` outside `TrustLevel` fails. | Test |
-| FR-004-AC-11 | The empty record `{}` fails against all twenty-four schemas. | Test |
+| FR-004-AC-11 | The empty record `{}` fails against all twenty-five schemas. | Test |
 | FR-004-AC-12 | A `type.target` of `ix://agent-ix/spec-objects-security/unresolved/Mystery` is accepted by the schema (it is a `SemanticId`) and reported by the extractor as `semantic.unresolved-type`; a `SemanticId`-tagged `Mystery` (no `ix://` prefix) is rejected by the schema. | Test |
 | FR-004-AC-13 | No module schema redeclares a semantic-core model; every grammar item is a `$ref` to semantic-core. | Test |
 | FR-004-AC-14 | A data-classification record with a `level` field validates; one without it fails; a record carrying `relations` fails. | Test |

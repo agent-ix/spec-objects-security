@@ -57,7 +57,7 @@ The module directory `spec_objects_security/` from this branch, containing
 ## Expected Results
 
 The install succeeds with exit code 0, the module is listed, the derived
-package manifest names the twenty-four exports, and the prior module state is
+package manifest names the twenty-five exports, and the prior module state is
 restored. The test passes only when every per-step success criterion holds.
 
 ## Dependencies
