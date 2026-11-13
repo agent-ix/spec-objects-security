@@ -22,7 +22,8 @@ mechanism; this requirement states the rule it serves and its limits.
 ## Behavior
 
 - The `ControlMapping` model SHALL declare no property other than `set` and `clause`.
-- The `control` skeleton and the module SHALL contain no clause text, title or summary of any standard.
+- The `control` skeleton SHALL contain no clause text, title or summary of any standard.
+- The module SHALL contain no clause text, title or summary of a licence-restricted standard, that is, of a clause set whose `rights.text` is `licensed`. A publishable clause set ([FR-017](./FR-017-module-declares-nist-and-asvs-clause-sets.md)) carries identifiers, titles and subjects as far as its `rights` allow.
 - The module SHALL NOT add a mapping field for a clause title, description, quotation or note.
 - The author's own `clauses` and prose describe the control; they are the author's words and are outside this rule.
 

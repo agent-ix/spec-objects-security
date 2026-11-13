@@ -37,6 +37,8 @@ relationships:
     type: covers
   - target: "ix://agent-ix/spec-objects-security/NFR-002"
     type: covers
+  - target: "ix://agent-ix/spec-objects-security/FR-017"
+    type: covers
 ---
 # Test Matrix
 
@@ -132,6 +134,7 @@ the Python package only: neither Node script is measured by it.
 | FR-020 | FR-020-AC-1..6 | TC-160..TC-165 | 🚧 not yet implemented |
 | FR-021 | FR-021-AC-1..7 | TC-166..TC-172 | 🚧 not yet implemented; AC-4, AC-6 and AC-7 are inspections; AC-2 and AC-3 are vacuous until a profile ships |
 | NFR-002 | NFR-002-AC-1..2, NFR-002-M-1..2 | TC-173, TC-174 | 🚧 not yet implemented |
+| FR-017 | FR-017-AC-1..7 | TC-175..TC-183 | ✅ AC-1 is asserted against the sets this branch declares; `quire clauses` loads strictly and cannot load the real module (the object-type edges come from another module), so TC-181 and TC-183 evaluate a module that holds only the set files |
 
 ### Integration Test Coverage
 
@@ -273,6 +276,15 @@ the Python package only: neither Node script is measured by it.
 | TC-172 | A published module's set for an intended source is listed in the matching profile | Manual | P2 | FR-021-AC-7 | 🚧 human reviewer |
 | TC-173 | Every shipped profile has only the six top-level keys and the three key fields | Unit | P1 | NFR-002-AC-1, NFR-002-M-1 | 🚧 |
 | TC-174 | `quire publish-check` accepts every declaring module, with no authority list | Integration | P1 | NFR-002-AC-2, NFR-002-M-2 | 🚧 |
+| TC-175 | The manifest `clause_sets` names exactly the clause sets this branch ships | Unit | P0 | FR-017-AC-1 | ✅ |
+| TC-176 | Every declared set's `rights.text` is `none`, `original` or `explicitly_cleared` | Unit | P0 | FR-017-AC-2 | ✅ |
+| TC-177 | `quire publish-check --module` over this module exits 0 | Integration | P0 | FR-017-AC-3 | ✅ |
+| TC-178 | A set with `rights.text: licensed` makes `quire publish-check` exit non-zero without echoing its text | Integration | P0 | FR-017-AC-4 | ✅ |
+| TC-179 | Every set names its licence; the NIST licence states the public-domain status and carries no attribution or share-alike key | Unit | P0 | FR-017-AC-5 | ✅ |
+| TC-180 | Each NIST clause's `subjects` is its official family code, declared in the `family` dimension | Unit | P0 | FR-017-AC-6 | ✅ |
+| TC-181 | `quire clauses evaluate` binds 149, 287 and 370 NIST clauses at low, moderate and high, a control in no baseline is `not_binding`, and no baseline leaves every clause `unresolved` | Integration | P0 | FR-017-AC-7 | ✅ |
+| TC-182 | The wheel and the npm tarball ship every file named by `clause_sets` | Integration | P1 | FR-017-AC-1 | ✅ |
+| TC-183 | `quoin discharge --binding --rmm --repo` renders a requirements matrix for the NIST set over a synthetic corpus | Integration | P1 | FR-017 | ✅ |
 
 ## Test Environment
 
