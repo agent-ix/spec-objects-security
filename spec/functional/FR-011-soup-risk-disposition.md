@@ -15,6 +15,8 @@ relationships:
     type: "references"
   - target: "ix://agent-ix/quoin/FR-135"
     type: "references"
+  - target: "ix://agent-ix/quoin/FR-141"
+    type: "references"
 ---
 # FR-011: A SOUP record's risk disposition is a person-owned quoin disposition fact, referenced by clause id
 
@@ -26,9 +28,12 @@ FR-133 and read by `quoin discharge --rmm` (FR-135). The fact is `{kind: "dispos
 approvalRef, attestation: {attestedBy, authority, attestedAt, expiresAt}}` with `decision` one of `accepted_risk`,
 `temporary_exception`, `delegated`. This module defines no second shape and no copy of that vocabulary.
 
-A disposition fact is keyed on a clause id. For a component record, that clause id is the obligation the
-component's SBOM entries are bound to by the `--discharges` binding of `agent-ix/quoin` FR-041. The record
-therefore holds that one clause id, `disposition_clause`, and does not embed the fact. The decision, rationale,
+A disposition fact is keyed on a clause id, and `disposition_clause` is that clause id: the one a person's
+disposition fact for this component is keyed on. The record's author mints it. When a record is promoted from an SBOM
+(`ix://agent-ix/quoin/FR-141`), the promotion fills `disposition_clause` from the obligation id of the `--discharges`
+binding, so records promoted from one recording share a clause id and one disposition fact then covers all of them. To
+decide one component separately, its author gives that record its own distinct clause id. The record
+therefore holds that one clause id and does not embed the fact. The decision, rationale,
 approval reference and expiry live in the fact and are read from it.
 
 A person accepts each risk. That is a process constraint over the attestation authority fields of the fact

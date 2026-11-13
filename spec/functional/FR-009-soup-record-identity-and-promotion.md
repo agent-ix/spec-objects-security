@@ -13,6 +13,8 @@ relationships:
     type: "depends_on"
   - target: "ix://agent-ix/quoin/FR-041"
     type: "references"
+  - target: "ix://agent-ix/quoin/FR-141"
+    type: "references"
   - target: "ix://agent-ix/engineering-assurance/FR-038"
     type: "references"
   - target: "ix://agent-ix/engineering-assurance/FR-030"
@@ -28,8 +30,8 @@ A software-of-unknown-provenance (SOUP) record is the reviewed statement about o
 component that a product ships or builds with. This module owns the validity of the authored
 record: its shape, its identity and its refusals. It does not own the promotion of an SBOM
 component into a record. The inventory is produced by Syft through the producer request of
-`agent-ix/engineering-assurance` FR-038 and read by the SBOM adapter of `agent-ix/quoin` FR-041,
-which is the consumer that promotes a component into a record and is context only here.
+`agent-ix/engineering-assurance` FR-038 and read by the SBOM adapter of `agent-ix/quoin` FR-041.
+The promotion of a component into a record is owned by `ix://agent-ix/quoin/FR-141` and is context only here.
 
 The `soup_record` type is the twenty-fourth object type of the module, so the counts of
 [FR-003](./FR-003-semantic-manifest-contract.md) through [FR-006](./FR-006-security-safe-declarations.md)
@@ -53,7 +55,8 @@ finding-shaped evidence (`agent-ix/quoin` FR-034). The record references them an
 ## Behavior
 
 - The module SHALL export a `soup_record` object type.
-- The `soup_record` schema SHALL require `purl`, the component's package URL, as the component identity.
+- A `soup_record` document SHALL carry `purl`, the component's package URL, as a required frontmatter key; it is the component identity.
+- The `soup_record` schema SHALL require a `purl` field row in `fields`.
 - The `soup_record` schema SHALL admit `name`, `version` and `supplier` as the SBOM states them.
 - The `soup_record` schema SHALL admit the literal `unknown` as the value of `name`, `version`, `supplier` and `license`.
 - The `soup_record` schema SHALL admit no key beyond those listed in the `soup_record` row of [FR-004](./FR-004-role-schemas.md).
@@ -65,7 +68,7 @@ finding-shaped evidence (`agent-ix/quoin` FR-034). The record references them an
 - The `soup_record` schema SHALL admit `finding_refs`, a `SemanticId[]` naming `cargo-deny` finding entries of `agent-ix/quoin` FR-034.
 - The `soup_record` schema SHALL admit `inventory_ref`, a `SemanticId` naming the inventory the component came from.
 - The `soup_record` schema SHALL refuse a key that carries the text of a finding, a license text or an SBOM document.
-- The module SHALL NOT define an SBOM parser, a promotion command, or a binding option; the `--discharges` binding stays with `agent-ix/quoin` FR-041.
+- The module SHALL NOT define an SBOM parser, a promotion command, or a binding option; the `--discharges` binding stays with `agent-ix/quoin` FR-141.
 
 ## Constraints
 
@@ -79,7 +82,7 @@ finding-shaped evidence (`agent-ix/quoin` FR-034). The record references them an
 | ID | Criteria | Verification |
 |----|----------|--------------|
 | FR-009-AC-1 | The loaded manifest exports `soup_record` with a `data_schema` that resolves to a shipped schema file, and a `soup_record` skeleton validates with no `semantic.record-invalid` error. | Test |
-| FR-009-AC-2 | A fixture `soup_record` with a purl validates, and the same record without a purl fails its schema. | Test |
+| FR-009-AC-2 | A fixture `soup_record` with a purl validates; the same document without its `purl` frontmatter key fails naming `purl`, and a declaration record without a `purl` field row fails its schema. | Test |
 | FR-009-AC-3 | Two fixture `soup_record` documents carrying the same purl yield one duplicate-identity report naming both documents. | Test |
 | FR-009-AC-4 | A fixture that adds a `digest` key to an otherwise valid record fails, and a fixture whose only difference from a valid record is a different digest-free purl validates as a distinct component. | Test |
 | FR-009-AC-5 | A fixture with `supplier: unknown` validates, a fixture that omits `supplier` validates with no `supplier` key added, and the emitted schema carries no `default` keyword. | Test |
@@ -90,5 +93,5 @@ finding-shaped evidence (`agent-ix/quoin` FR-034). The record references them an
 ## Dependencies
 
 - **Upstream**: [FR-004](./FR-004-role-schemas.md), [FR-005](./FR-005-executable-skeletons.md), [FR-006](./FR-006-security-safe-declarations.md)
-- **Context only**: `agent-ix/quoin` FR-041 promotes an SBOM component into a record; its promotion requirement is not authored here.
+- **Context only**: `ix://agent-ix/quoin/FR-141` promotes an SBOM component into a record; its promotion requirement is not authored here.
 - **Downstream**: [FR-010](./FR-010-soup-record-fields.md), [FR-011](./FR-011-soup-risk-disposition.md), [FR-012](./FR-012-soup-record-relations.md)

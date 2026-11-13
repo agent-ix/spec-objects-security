@@ -56,7 +56,7 @@ def test_every_schema_differs_from_every_other():
         key = signature(model)
         assert key not in seen, f"{model} is indistinguishable from {seen.get(key)}"
         seen[key] = model
-    assert len(seen) == 24
+    assert len(seen) == len(MODELS)
 
 
 @pytest.mark.trace("TC-051", "FR-004-AC-2")

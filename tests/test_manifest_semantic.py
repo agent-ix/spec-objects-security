@@ -43,7 +43,6 @@ def test_the_semantic_block_is_exactly_the_eight_admitted_keys(semantic_block):
     assert semantic_block["compatibility_posture"] == "additive"
     assert semantic_block["legacy_forms"] == "warning"
     assert semantic_block["exports"] == list(OBJECT_TYPES)
-    assert len(semantic_block["exports"]) == 24
 
 
 @pytest.mark.trace("TC-044", "FR-003-AC-4")

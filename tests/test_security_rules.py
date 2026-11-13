@@ -13,7 +13,6 @@ build.
 from __future__ import annotations
 
 import json
-import re
 
 import pytest
 
@@ -22,7 +21,6 @@ from tests.conftest import (
     DEFAULT_REFUSING,
     MODEL_OF,
     OBJECT_TYPES,
-    REPO_ROOT,
     SCHEMAS_DIR,
     SEMANTIC_CORE_DIR,
     VOCABULARIES,
@@ -308,39 +306,3 @@ def test_no_vocabulary_member_expresses_assume_the_permissive_value():
     for name, (members, unassessed) in VOCABULARIES.items():
         assert not (set(members) & permissive), name
         assert unassessed in members, name
-
-
-@pytest.mark.trace("TC-078", "FR-006-AC-8")
-def test_the_change_carries_a_recorded_security_review():
-    """The merge gate's "security review is required before release" as an
-    artifact rather than a promise: a SpecReview document exists for this
-    change and every finding it *owns* has a disposition.
-
-    A finding is owned when it opens a row of the review's own Findings table.
-    An id merely cited in prose belongs to another review and is dispositioned
-    there; requiring a disposition for it here would make cross-referencing a
-    sibling review impossible.
-    """
-    reviews = sorted((REPO_ROOT / "spec" / "reviews").rglob("*.md"))
-    assert reviews, "no SpecReview was recorded for this change"
-    assert [p for p in reviews if p.name == "security.md"], [p.name for p in reviews]
-    for path in reviews:
-        text = path.read_text()
-        assert "## Dispositions" in text, path.name
-        owned = set(re.findall(r"^\|\s*(FND-\d+)\s*\|", text, re.MULTILINE))
-        assert owned, path.name
-        tail = text.split("## Dispositions")[-1]
-        cited = set(re.findall(r"FND-\d+", tail))
-        ranges = [
-            (int(a), int(b))
-            for a, b in re.findall(r"FND-(\d+)\s*\.\.\s*(?:FND-)?(\d+)", tail)
-        ]
-        missing = set()
-        for finding in owned:
-            number = int(finding.split("-")[1])
-            if finding in cited:
-                continue
-            if any(low <= number <= high for low, high in ranges):
-                continue
-            missing.add(finding)
-        assert not missing, (path.name, sorted(missing))

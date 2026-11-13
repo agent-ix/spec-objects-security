@@ -1,9 +1,12 @@
-"""FR-009..FR-012 and NFR-001: the `soup_record` object type.
+"""The `soup_record` object type: identity, fields, disposition and relations.
 
-Records here are hand-built declaration records, as in `test_role_schemas.py`:
-the keys beyond `fields` are not populated by the extractor, so these rows are
-schema evidence. The skeleton and the manifest relations run through the real
-engine. All fixture components are fictional.
+Two kinds of evidence are kept apart. Hand-built declaration records, as in
+`test_role_schemas.py`, are schema evidence: the keys beyond `fields` are not
+populated by the extractor. Committed documents under `tests/fixtures/soup/`
+go through the real engine. The engine does not yet validate or project the
+frontmatter record keys of an authored document against the data schema, so
+every test that needs that is a strict expected failure naming the missing
+engine behaviour. All fixture components are fictional.
 """
 
 from __future__ import annotations
@@ -12,6 +15,7 @@ import copy
 import importlib.util
 import json
 import pathlib
+import re
 import shutil
 import subprocess
 
@@ -30,6 +34,7 @@ from tests.conftest import (
 )
 from tests.test_skeletons_semantic import CREDENTIAL_SHAPES, extract
 
+FIXTURES = pathlib.Path(__file__).parent / "fixtures" / "soup"
 PURL = "pkg:cargo/example-http-client@1.4.2"
 REQ = "ix://agent-ix/other-repo/FR-100"
 
@@ -40,6 +45,28 @@ def record(**extra):
         "purl": PURL,
     }
     return {**base, **extra}
+
+
+def full_fixture() -> str:
+    return (FIXTURES / "full.md").read_text()
+
+
+def with_frontmatter(text: str, **keys) -> str:
+    """The document with each key set in its frontmatter, replacing any value."""
+    for key, value in keys.items():
+        text = re.sub(rf"^{key}: .*\n", "", text, count=1, flags=re.M)
+        text = text.replace("\n---\n#", f"\n{key}: {value}\n---\n#", 1)
+    return text
+
+
+def validate_doc(quire_engine, text: str) -> dict:
+    return quire_engine.validate_document("soup_record", str(PACKAGE_ROOT), text)
+
+
+def extract_doc(quire_engine, semantic_module, bundle_index, text, tmp_path):
+    path = tmp_path / "doc.md"
+    path.write_text(text)
+    return extract(quire_engine, semantic_module, bundle_index, path)
 
 
 def schema() -> dict:
@@ -77,23 +104,40 @@ def test_manifest_exports_soup_record_with_a_shipped_schema(quire_engine):
     assert not [
         e for e in result["errors"] if "semantic.record-invalid" in e["message"]
     ]
+    full = validate_doc(quire_engine, full_fixture())
+    assert full["is_valid"], full["errors"]
 
 
 @pytest.mark.trace("TC-122", "FR-009-AC-2")
-def test_the_purl_is_required(validator):
+def test_the_purl_is_required_as_a_frontmatter_key_and_as_a_field_row(
+    validator, quire_engine
+):
     assert validator.is_valid(record())
-    assert not validator.is_valid(
-        {"fields": [field("component_id", "UUID", identity=True)]}
-    )
+    # Schema half: the top-level key does not stand in for the row.
+    identity = [field("component_id", "UUID", identity=True)]
+    assert not validator.is_valid({"fields": identity, "purl": PURL})
+    assert not validator.is_valid({"fields": identity})
+    # Document half: the frontmatter key and the Properties row are each required.
+    full = full_fixture()
+    no_key = validate_doc(quire_engine, re.sub(r"^purl: .*\n", "", full, flags=re.M))
+    assert not no_key["is_valid"]
+    assert any("purl" in e["message"] for e in no_key["errors"]), no_key["errors"]
+    row = "| purl | String | 1..1 | minLength: 1 |\n"
+    no_row = validate_doc(quire_engine, full.replace(row, ""))
+    assert not no_row["is_valid"]
+    assert any("semantic.record-invalid" in e["message"] for e in no_row["errors"])
 
 
 @pytest.mark.trace("TC-124", "FR-009-AC-4", "FR-009-CON-1")
-def test_a_digest_is_refused_and_a_different_purl_is_a_distinct_component(validator):
+def test_a_digest_is_refused_and_a_different_purl_is_a_distinct_component(
+    validator, quire_engine
+):
     assert not validator.is_valid(record(digest="sha256:" + "0" * 64))
-    other = record(purl="pkg:cargo/example-http-client@2.0.0")
-    assert validator.is_valid(other)
-    assert other["purl"] != record()["purl"]
     assert "digest" not in schema()["properties"]
+    other = with_frontmatter(
+        full_fixture(), purl='"pkg:cargo/example-parser-lib@3.0.0"'
+    )
+    assert validate_doc(quire_engine, other)["is_valid"]
 
 
 @pytest.mark.trace("TC-125", "FR-009-AC-5")
@@ -101,10 +145,7 @@ def test_unknown_is_a_value_and_absence_is_not_filled(validator):
     assert validator.is_valid(record(supplier="unknown"))
     for key in ("name", "version", "license"):
         assert validator.is_valid(record(**{key: "unknown"})), key
-    absent = record()
-    before = copy.deepcopy(absent)
-    assert validator.is_valid(absent)
-    assert absent == before and "supplier" not in absent
+    assert validator.is_valid(record())
     assert "default" not in keywords(schema())
 
 
@@ -156,11 +197,9 @@ def test_support_status_is_a_closed_four_member_enum(validator):
 
 
 @pytest.mark.trace("TC-130", "FR-010-AC-2")
-def test_empty_and_absent_known_anomalies_are_different_records(validator):
-    empty, absent = record(known_anomalies=[]), record()
-    assert validator.is_valid(empty) and validator.is_valid(absent)
-    assert "known_anomalies" in empty and "known_anomalies" not in absent
-    assert empty != absent
+def test_empty_and_absent_known_anomalies_both_validate(validator):
+    assert validator.is_valid(record(known_anomalies=[]))
+    assert validator.is_valid(record())
     stated = record(known_anomalies=[{"statement": "leaks a socket on retry"}])
     assert validator.is_valid(stated)
     assert not validator.is_valid(record(known_anomalies=[{"source_ref": REQ}]))
@@ -170,7 +209,17 @@ def test_empty_and_absent_known_anomalies_are_different_records(validator):
 def test_end_of_support_is_a_calendar_date_or_unknown(validator):
     assert validator.is_valid(record(end_of_support="unknown"))
     assert validator.is_valid(record(end_of_support="2027-06-30"))
-    for bad in ("soon", "2027-13-01", "2027-06-30T00:00:00Z", "UNKNOWN", ""):
+    assert validator.is_valid(record(end_of_support="2028-02-29"))
+    for bad in (
+        "soon",
+        "2027-02-31",
+        "2027-02-29",
+        "2027-04-31",
+        "2027-13-01",
+        "2027-06-30T00:00:00Z",
+        "UNKNOWN",
+        "",
+    ):
         assert not validator.is_valid(record(end_of_support=bad)), bad
     assert validator.is_valid(
         record(support_status="supported", end_of_support="unknown")
@@ -184,13 +233,30 @@ def test_the_schema_carries_no_default_at_any_depth():
     assert "default" not in keywords(anomaly)
 
 
+def anomaly_statements(text: str) -> list[str]:
+    anomalies = frontmatter(text).get("known_anomalies") or []
+    return [a["statement"] for a in anomalies]
+
+
+def credential_hits(text: str) -> list[str]:
+    return [
+        statement
+        for statement in anomaly_statements(text)
+        if any(p.search(statement) for p in CREDENTIAL_SHAPES)
+    ]
+
+
 @pytest.mark.trace("TC-134", "FR-010-AC-6")
-def test_a_credential_shaped_anomaly_statement_is_caught_by_the_scan():
+def test_the_scan_refuses_a_credential_shaped_anomaly_statement():
+    clean = full_fixture()
+    assert anomaly_statements(clean), "the fixture must carry an anomaly statement"
+    assert credential_hits(clean) == []
     canary = "api_key: " + "x9Zq" * 4
-    statement = {"statement": f"ships a debug build with {canary}"}
-    assert any(p.search(statement["statement"]) for p in CREDENTIAL_SHAPES)
-    skeleton = (SKELETONS_DIR / "soup_record.md").read_text()
-    assert not any(p.search(skeleton) for p in CREDENTIAL_SHAPES)
+    dirty = clean.replace(
+        "Rejects inputs over 16 MiB without an error code.",
+        f"Ships a debug build with {canary}",
+    )
+    assert credential_hits(dirty) == [f"Ships a debug build with {canary}"]
 
 
 @pytest.mark.trace("TC-135", "FR-011-AC-1")
@@ -201,12 +267,15 @@ def test_disposition_clause_must_be_non_blank(validator):
 
 
 @pytest.mark.trace("TC-136", "FR-011-AC-2")
-def test_absent_disposition_clause_adds_no_key(validator):
-    absent = record()
-    before = copy.deepcopy(absent)
-    assert validator.is_valid(absent)
-    assert absent == before and "disposition_clause" not in absent
+def test_absent_disposition_clause_adds_no_key(
+    validator, quire_engine, semantic_module, bundle_index, tmp_path
+):
+    assert validator.is_valid(record())
     assert "disposition_clause" not in schema()["required"]
+    text = re.sub(r"^disposition_clause: .*\n", "", full_fixture(), flags=re.M)
+    assert validate_doc(quire_engine, text)["is_valid"]
+    extracted = extract_doc(quire_engine, semantic_module, bundle_index, text, tmp_path)
+    assert "disposition_clause" not in extracted
 
 
 @pytest.mark.trace("TC-137", "FR-011-AC-3")
@@ -225,12 +294,14 @@ def test_an_embedded_decision_is_refused(validator):
 
 
 @pytest.mark.trace("TC-139", "FR-011-AC-5")
-def test_disposition_clause_changes_no_other_key(validator):
+def test_disposition_clause_changes_no_other_key(validator, quire_engine):
     plain = record(support_status="supported", serves=[REQ])
-    clause = {**plain, "disposition_clause": "SOUP-RISK-EXAMPLE-001"}
-    assert validator.is_valid(plain) and validator.is_valid(clause)
-    stripped = {k: v for k, v in clause.items() if k != "disposition_clause"}
-    assert stripped == plain
+    assert validator.is_valid(plain)
+    assert validator.is_valid({**plain, "disposition_clause": "SOUP-RISK-EXAMPLE-001"})
+    full = full_fixture()
+    other = with_frontmatter(full, disposition_clause="SOUP-RISK-EXAMPLE-099")
+    assert validate_doc(quire_engine, full)["is_valid"]
+    assert validate_doc(quire_engine, other)["is_valid"]
 
 
 @pytest.mark.trace("TC-143", "FR-012-AC-4")
@@ -243,7 +314,7 @@ def test_advisory_keys_are_refused(validator):
         assert not validator.is_valid(record(**{key: value})), key
 
 
-@pytest.mark.trace("TC-144", "NFR-001-AC-1")
+@pytest.mark.trace("TC-144", "NFR-001-AC-1", "NFR-001-M-1")
 def test_no_score_rating_class_tier_or_level_property():
     doc = schema()
     banned = {"score", "rating", "class", "tier", "level", "grade", "rank"}
@@ -254,7 +325,7 @@ def test_no_score_rating_class_tier_or_level_property():
         assert f"/{vocabulary}.json" not in text, vocabulary
 
 
-@pytest.mark.trace("TC-145", "NFR-001-AC-2")
+@pytest.mark.trace("TC-145", "NFR-001-AC-2", "NFR-001-M-2")
 def test_a_validated_fixture_emits_exactly_the_keys_written(
     validator, quire_engine, semantic_module, bundle_index
 ):
@@ -334,10 +405,14 @@ def test_vulnerability_affects_lists_soup_record_and_soup_declares_no_links():
 
 
 @pytest.mark.trace("TC-141", "FR-012-AC-2")
-def test_affects_edge_to_soup_validates_and_to_a_threat_is_disallowed(tmp_path):
+def test_affects_edge_to_soup_validates_and_to_a_threat_is_disallowed(
+    tmp_path, quire_engine
+):
     shutil.copy(SKELETONS_DIR / "soup_record.md", tmp_path / "soup.md")
     shutil.copy(SKELETONS_DIR / "threat.md", tmp_path / "threat.md")
-    soup_id = frontmatter((SKELETONS_DIR / "soup_record.md").read_text())["id"]
+    soup_text = (SKELETONS_DIR / "soup_record.md").read_text()
+    assert validate_doc(quire_engine, soup_text)["is_valid"]
+    soup_id = frontmatter(soup_text)["id"]
     threat_id = frontmatter((SKELETONS_DIR / "threat.md").read_text())["id"]
 
     _vulnerability_affecting(tmp_path, soup_id)
@@ -357,9 +432,143 @@ def test_affects_edge_to_soup_validates_and_to_a_threat_is_disallowed(tmp_path):
 
 
 @pytest.mark.trace("TC-142", "FR-012-AC-3")
-def test_a_soup_record_no_vulnerability_affects_has_no_finding(tmp_path):
+def test_a_soup_record_no_vulnerability_affects_has_no_finding(tmp_path, quire_engine):
+    # Directory mode skips record keys, so the record is checked on its own too.
+    assert validate_doc(quire_engine, full_fixture())["is_valid"]
     shutil.copy(SKELETONS_DIR / "soup_record.md", tmp_path / "soup.md")
     result = _validate(tmp_path)
     assert result.returncode == 0, result.stderr
     soup_id = frontmatter((SKELETONS_DIR / "soup_record.md").read_text())["id"]
     assert not [line for line in result.stderr.splitlines() if soup_id in line]
+
+
+# -- Engine gaps ---------------------------------------------------------------
+#
+# Each test below states the behaviour the spec requires and fails today. They
+# are strict expected failures so the day the engine supplies the behaviour the
+# rows turn red and are noticed.
+
+ENGINE_RECORD_KEYS = (
+    "The engine does not validate the frontmatter record keys of an authored "
+    "document against the data schema."
+)
+ENGINE_PROJECTION = (
+    "The engine does not project the frontmatter record keys of an authored "
+    "document into the extracted record."
+)
+
+
+def refused_document(quire_engine, **keys) -> bool:
+    bogus = with_frontmatter(full_fixture(), **keys)
+    return not validate_doc(quire_engine, bogus)["is_valid"]
+
+
+@pytest.mark.xfail(strict=True, reason=ENGINE_RECORD_KEYS)
+@pytest.mark.trace("TC-129", "FR-010-AC-1")
+def test_an_authored_document_with_an_invented_support_status_fails(quire_engine):
+    assert refused_document(quire_engine, support_status="bogus_status")
+
+
+@pytest.mark.xfail(strict=True, reason=ENGINE_RECORD_KEYS)
+@pytest.mark.trace("TC-131", "FR-010-AC-3")
+def test_an_authored_document_with_a_bad_end_of_support_fails(quire_engine):
+    assert refused_document(quire_engine, end_of_support="soon")
+
+
+@pytest.mark.xfail(strict=True, reason=ENGINE_RECORD_KEYS)
+@pytest.mark.trace("TC-124", "FR-009-AC-4")
+def test_an_authored_document_with_a_digest_fails(quire_engine):
+    assert refused_document(quire_engine, digest='"sha256:00"')
+
+
+@pytest.mark.xfail(strict=True, reason=ENGINE_RECORD_KEYS)
+@pytest.mark.trace("TC-143", "FR-012-AC-4")
+def test_an_authored_document_with_a_severity_fails(quire_engine):
+    assert refused_document(quire_engine, severity="high")
+
+
+@pytest.mark.xfail(strict=True, reason=ENGINE_PROJECTION)
+@pytest.mark.trace("TC-130", "FR-010-AC-2")
+def test_an_empty_known_anomalies_is_emitted_and_an_absent_one_is_not(
+    quire_engine, semantic_module, bundle_index, tmp_path
+):
+    full = full_fixture()
+    empty = re.sub(r"known_anomalies:\n(  .*\n)+", "known_anomalies: []\n", full)
+    absent = re.sub(r"known_anomalies:\n(  .*\n)+", "", full)
+    emitted = extract_doc(quire_engine, semantic_module, bundle_index, empty, tmp_path)
+    omitted = extract_doc(quire_engine, semantic_module, bundle_index, absent, tmp_path)
+    assert emitted["known_anomalies"] == []
+    assert "known_anomalies" not in omitted
+
+
+@pytest.mark.xfail(strict=True, reason=ENGINE_PROJECTION)
+@pytest.mark.trace("TC-125", "FR-009-AC-5")
+def test_unknown_supplier_is_emitted_and_an_omitted_supplier_is_not(
+    quire_engine, semantic_module, bundle_index, tmp_path
+):
+    full = full_fixture()
+    omitted = re.sub(r"^supplier: .*\n", "", full, flags=re.M)
+    stated = extract_doc(quire_engine, semantic_module, bundle_index, full, tmp_path)
+    left_out = extract_doc(
+        quire_engine, semantic_module, bundle_index, omitted, tmp_path
+    )
+    assert stated["supplier"] == "unknown"
+    assert "supplier" not in left_out
+
+
+@pytest.mark.xfail(strict=True, reason=ENGINE_PROJECTION)
+@pytest.mark.trace("TC-139", "FR-011-AC-5")
+def test_disposition_clause_is_emitted_and_changes_no_other_key(
+    quire_engine, semantic_module, bundle_index, tmp_path
+):
+    full = full_fixture()
+    plain = re.sub(r"^disposition_clause: .*\n", "", full, flags=re.M)
+    with_clause = extract_doc(
+        quire_engine, semantic_module, bundle_index, full, tmp_path
+    )
+    without = extract_doc(quire_engine, semantic_module, bundle_index, plain, tmp_path)
+    assert with_clause["disposition_clause"] == "SOUP-RISK-EXAMPLE-010"
+    assert {
+        k: v for k, v in with_clause.items() if k != "disposition_clause"
+    } == without
+
+
+@pytest.mark.xfail(
+    strict=True,
+    reason="The engine has no identity-uniqueness check over a frontmatter key.",
+)
+@pytest.mark.trace("TC-123", "FR-009-AC-3")
+def test_two_documents_with_one_purl_yield_one_duplicate_identity_report(tmp_path):
+    full = full_fixture()
+    (tmp_path / "a.md").write_text(full)
+    (tmp_path / "b.md").write_text(full.replace("SOUP-010", "SOUP-020"))
+    result = _validate(tmp_path)
+    reports = [
+        line
+        for line in result.stderr.splitlines()
+        if "purl" in line and "SOUP-010" in line and "SOUP-020" in line
+    ]
+    assert len(reports) == 1, result.stderr
+
+
+@pytest.mark.xfail(
+    strict=True,
+    reason="The engine cannot report an absent or empty record list key.",
+)
+@pytest.mark.trace("TC-133", "FR-010-AC-5")
+def test_a_record_with_no_serves_yields_one_finding_naming_it(tmp_path):
+    text = re.sub(r"serves:\n(  .*\n)+", "", full_fixture())
+    (tmp_path / "a.md").write_text(text)
+    result = _validate(tmp_path)
+    findings = [line for line in result.stderr.splitlines() if "SOUP-010" in line]
+    assert len(findings) == 1, result.stderr
+
+
+def test_the_worked_disposition_example_pairs_a_record_with_a_fact(quire_engine):
+    text = (FIXTURES / "disposition-example.md").read_text()
+    front = frontmatter(text)
+    assert validate_doc(quire_engine, text)["is_valid"]
+    fact = json.loads(re.search(r"```json\n(.*?)\n```", text, re.DOTALL).group(1))
+    assert fact["kind"] == "disposition"
+    assert fact["clauseId"] == front["disposition_clause"]
+    assert fact["attestation"]["attestedBy"] and fact["attestation"]["authority"]

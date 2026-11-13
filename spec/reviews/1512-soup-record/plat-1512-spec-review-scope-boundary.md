@@ -43,4 +43,4 @@ FAIL. FND-001 is high.
 |-----|---------|--------|
 | FND-001 | fixed | Fixed in 3d75c3d. The module disclaims promotion: "It does not own the promotion of an SBOM component into a record", and "The module SHALL NOT define an SBOM parser, a promotion command, or a binding option". The former promotion ACs are now schema checks on an authored record (FR-009-AC-5 `supplier: unknown`/absent; FR-009-AC-6 license exclusivity). |
 | FND-002 | fixed | Fixed in 3d75c3d. Both untestable statements ("SHALL NOT populate `affected_by` ...", "SHALL exist only when an author wrote it") are gone from FR-012. |
-| FND-003 | still-open | New in disposition pass 1; no fix has landed yet. |
+| FND-003 | fixed | Fixed in PLAT-1514. FR-009 now names `ix://agent-ix/quoin/FR-141` as the owner of promotion and cites FR-041 only as the SBOM adapter that reads the inventory. |
