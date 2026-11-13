@@ -22,7 +22,7 @@ record whose owner is required.
 
 The `scope_exclusion` is a declaration of boundary. It is not an approval: the approval of the exclusion, with an
 actor, an authority and an expiry, is the `delegated` disposition fact of `agent-ix/quoin` FR-046, recorded by a
-person (see `agent-ix/quoin` FR-183).
+person (see `agent-ix/quoin` FR-182).
 
 The type is the twenty-fifth object type of the module, so the counts of
 [FR-003](./FR-003-semantic-manifest-contract.md) through [FR-006](./FR-006-security-safe-declarations.md) include it:
@@ -50,4 +50,4 @@ it has a role-schema row, a skeleton and the no-default rule.
 ## Dependencies
 
 - **Upstream**: [FR-003](./FR-003-semantic-manifest-contract.md), [FR-004](./FR-004-role-schemas.md), [FR-005](./FR-005-executable-skeletons.md), [FR-020](./FR-020-control-mappings-are-clause-references.md)
-- **Downstream**: [FR-024](./FR-024-mapped-and-excluded-contradiction.md); `agent-ix/quoin` FR-183
+- **Downstream**: [FR-024](./FR-024-mapped-and-excluded-contradiction.md); `agent-ix/quoin` FR-182
