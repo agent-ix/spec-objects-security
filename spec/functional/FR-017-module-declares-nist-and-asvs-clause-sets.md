@@ -31,6 +31,11 @@ the rights rule they follow. `agent-ix/quoin` FR-172 states the same decision fr
 - The module SHALL carry no clause text beyond what its source licence allows.
 - `quire publish-check` over the module SHALL exit 0.
 - The module SHALL declare no clause set for a licence-restricted standard.
+- Each set's `rights` SHALL carry a `licence` string that names the licence of its source and, where the licence has a canonical URI, that URI. The `licence` of the NIST set states that the source is a work of the United States Government in the public domain.
+- Where a licence imposes attribution or share-alike terms, the set's `rights` SHALL carry an `attribution` string naming the work, its author and the licence URI, and a `share_alike` string that states what the term applies to. The ASVS set (CC BY-SA 4.0) carries both; the NIST set carries neither.
+- The keys `licence`, `attribution` and `share_alike` are informational. The engine ignores them, and `rights.text` remains the only publishability signal.
+- Each clause SHALL carry in `subjects` the value of its classification dimension: the family code (NIST, for example `ac`) or the chapter id (ASVS, for example `V6`). That value is one of the declared dimension's values and matches the family or chapter of the clause's official id.
+- The NIST set SHALL model the SP 800-53B low, moderate and high baselines as an ordered `baseline` dimension. A control that no baseline selects evaluates `not_binding` under every baseline, so a matrix shows it as not applicable. The OSCAL privacy baseline and the organisation-wide applicability of the PM and PT families are not modelled in this version.
 
 ## Acceptance Criteria
 
@@ -40,6 +45,9 @@ the rights rule they follow. `agent-ix/quoin` FR-172 states the same decision fr
 | FR-017-AC-2 | Each of the two sets declares rights metadata naming its source licence and a `rights.text` of `none`, `original` or `explicitly_cleared`. | Test |
 | FR-017-AC-3 | `quire publish-check --module <this module>` exits 0. | Test |
 | FR-017-AC-4 | A fixture manifest declaring a set with `rights.text: licensed` makes `quire publish-check` exit non-zero. | Test |
+| FR-017-AC-5 | Each set's `rights` carries a non-blank `licence`; the NIST `licence` states the public-domain status; the ASVS `licence` and `attribution` contain the CC BY-SA 4.0 licence URI and the ASVS `share_alike` is non-blank; the NIST `rights` has no `attribution` or `share_alike`. | Test |
+| FR-017-AC-6 | Every clause's `subjects` is exactly its family code or chapter id, that value is declared in the set's `family` or `chapter` dimension, and it equals the family or chapter of the clause's id. | Test |
+| FR-017-AC-7 | Evaluating the NIST set with `baseline` low, moderate or high binds 149, 287 and 370 clauses, a control in no baseline is `not_binding`, and with no baseline every clause is `unresolved`; evaluating the ASVS set with `level` 1, 2 or 3 binds 70, 253 and 345 clauses, and with no level every clause is `unresolved`. | Test |
 
 ## Dependencies
 

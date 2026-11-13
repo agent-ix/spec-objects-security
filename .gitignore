@@ -16,6 +16,7 @@ report.json
 /manifest.yaml
 /schemas/
 /skeletons/
+/clauses/
 *.tgz
 
 # git worktrees created under the repo for branch work
