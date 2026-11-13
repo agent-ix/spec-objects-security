@@ -58,3 +58,6 @@ Checked at c6ee512. `quire validate --scope . "spec/**/*.md"` now exits 3.
 | FND-001 | fixed | TC-116 now reads `to: [threat, risk]` (c6ee512) |
 | FND-002 | fixed | TC-118 now covers a same-repository threat; TC-147..TC-149 cover the cross-repo, wrong-kind and unloaded cases (c6ee512) |
 | FND-003 | fixed | New FR-008-AC-6 and TC-146 cover a `risk` edge (c6ee512) |
+| FND-004 | fixed | Status cells restored (🚧 for the pending rows, ✅ for TC-120); `quire validate --scope . "spec/**/*.md"` exits 0 at 4d8a4f1 |
+| FND-005 | fixed | FR-008-AC-6 restored to the exposure-end `to: []` criterion; the new criteria take fresh ids AC-7..AC-10, so the TC-120 tag to FR-008-AC-6 is correct again (4d8a4f1) |
+| FND-006 | fixed | TC-149 now maps to FR-008-AC-10 only (4d8a4f1) |

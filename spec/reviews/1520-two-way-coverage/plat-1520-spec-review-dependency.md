@@ -55,3 +55,5 @@ Checked at c6ee512.
 | FND-002 | still-open | Line 35 is fixed, but the new line 48 restates the claim: "Without `--repo`, validate sees one repository and an edge into another repository is dangling". quire-cli FR-030 loads `--scope` as one member with no identity, and FR-085-AC-10 keeps FR-026 lexical `ix://` resolution there, so `ix://agent-ix/other-repo/THREAT-001` resolves to a local THREAT-001 |
 | FND-003 | fixed | Frontmatter adds `depends_on` FR-085 and quire-cli FR-030; FR-084 moved to Downstream (c6ee512) |
 | FND-004 | fixed | PLAT-1673 (Backlog) names spec-objects-security, the manifest `to` change and the test updates |
+| FND-002 | fixed | Line 48 now states single-member lexical resolution per quire-rs FR-085-AC-10 (4d8a4f1) |
+| FND-005 | fixed | FR-003 `depends_on` removed from the frontmatter, matching the Upstream prose (4d8a4f1) |
