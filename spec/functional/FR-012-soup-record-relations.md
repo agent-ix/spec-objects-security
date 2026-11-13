@@ -1,6 +1,6 @@
 ---
 id: FR-012
-title: "A SOUP record relates to vulnerability, asset and requirements, and leaves the advisory join open"
+title: "A vulnerability can affect a SOUP record, and the advisory join stays open"
 type: FR
 relationships:
   - target: "ix://agent-ix/spec-objects-security/US-001"
@@ -10,43 +10,46 @@ relationships:
   - target: "ix://agent-ix/spec-objects-security/FR-009"
     type: "depends_on"
 ---
-# FR-012: A SOUP record relates to vulnerability, asset and requirements, and leaves the advisory join open
+# FR-012: A vulnerability can affect a SOUP record, and the advisory join stays open
 
 ## Description
 
-The module already declares `vulnerability` and `asset`. A `soup_record` reuses them instead of
-copying their content. It states which vulnerabilities a reviewer has linked to the component, and
-nothing more: matching advisories to components is a separate capability and is not specified here.
+The module already declares `vulnerability`, whose `affects` edge names the things a vulnerability
+touches. A component is such a thing, so this requirement adds `soup_record` to the targets of
+`vulnerability.affects` and adds no new link verb. The edge is authored on the vulnerability, as every
+`affects` edge is, and a `soup_record` declares no outgoing link.
+
+The record does not link to `asset`. The `part_of` verb is the inverse of `aggregates`, a structural composite,
+which is the wrong fact for a third-party dependency; which requirements a component serves is already stated by
+`serves` in [FR-010](./FR-010-soup-record-fields.md). Matching advisories to components is a later capability
+and is not specified here.
 
 ## Inputs
 
-- The `soup_record`, `vulnerability` and `asset` entries of the module manifest.
+- The `soup_record` and `vulnerability` entries of the module manifest.
 
 ## Outputs
 
-- `soup_record.allowed_links` in the module manifest.
+- `vulnerability.allowed_links.affects` in the module manifest.
 
 ## Behavior
 
-- The manifest SHALL declare `soup_record.allowed_links.affected_by` equal to `[vulnerability]`.
-- The manifest SHALL declare `soup_record.allowed_links.part_of` equal to `[asset]`.
-- The manifest SHALL declare `soup_record.allowed_links.references` equal to `[soup_record]`.
-- A `soup_record` SHALL NOT carry advisory text, an advisory identifier list, or a severity; those belong to the `vulnerability` it links to.
-- Quire SHALL report a `soup_record` edge whose target type is outside the declared list as `disallowed-edge-target`, naming the target's type.
-- The module SHALL NOT populate `affected_by` from an advisory feed or match.
-- An `affected_by` edge SHALL exist only when an author wrote it.
-- The module SHALL leave `vulnerability.affects` unchanged, so a `vulnerability` still names `asset` and `attack_surface` targets only.
-- The module SHALL NOT declare a required relation that obliges a `soup_record` to have an `affected_by` edge, because a component with no linked vulnerability is a valid state.
+- The manifest SHALL list `soup_record` in `vulnerability.allowed_links.affects`.
+- The manifest SHALL keep `asset` and `attack_surface` in `vulnerability.allowed_links.affects`.
+- The manifest SHALL declare no `allowed_links` for `soup_record`.
+- The manifest SHALL declare no required relation that obliges a `soup_record` to have an incoming `affects` edge.
+- The manifest SHALL introduce no link verb that the engine does not already know.
+- Quire SHALL report a `vulnerability` `affects` edge to a type outside the list as `disallowed-edge-target`, naming the target's type.
+- The `soup_record` schema SHALL refuse the keys `severity`, `cve_id` and any advisory list.
 
 ## Acceptance Criteria
 
 | ID | Criteria | Verification |
 |----|----------|--------------|
-| FR-012-AC-1 | The loaded `soup_record` type lists exactly `affected_by: [vulnerability]`, `part_of: [asset]` and `references: [soup_record]` under `allowed_links`. | Test |
-| FR-012-AC-2 | A fixture `soup_record` with an `affected_by` edge to a fixture `threat` is reported `disallowed-edge-target`, and the diagnostic names the type `threat`. | Test |
-| FR-012-AC-3 | A fixture `soup_record` with an `affected_by` edge to a fixture `vulnerability`, and a fixture with no such edge, both validate with no finding. | Test |
-| FR-012-AC-4 | The `soup_record` schema declares no `severity`, `cve_id` or advisory-list key. | Test |
-| FR-012-AC-5 | The loaded `vulnerability` type still lists exactly `asset` and `attack_surface` under `allowed_links.affects`, and the manifest's required relations are unchanged apart from any added for other requirements. | Test |
+| FR-012-AC-1 | The loaded `vulnerability` type lists exactly `asset`, `attack_surface`, `soup_record` under `allowed_links.affects`, and the loaded `soup_record` type declares no `allowed_links`. | Test |
+| FR-012-AC-2 | A fixture `vulnerability` with an `affects` edge to a fixture `soup_record` validates with no `UnknownEdgeType` advisory and no `disallowed-edge-target`, and the same edge to a fixture `threat` is reported `disallowed-edge-target` naming `threat`. | Test |
+| FR-012-AC-3 | A fixture `soup_record` that no vulnerability affects validates with no finding. | Test |
+| FR-012-AC-4 | A fixture `soup_record` carrying `severity`, `cve_id` or an advisory list fails. | Test |
 
 ## Dependencies
 

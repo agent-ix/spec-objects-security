@@ -44,7 +44,7 @@ traceability rule keeps its meaning.
 ## Behavior
 
 - The manifest `semantic` block SHALL carry exactly these keys and values: `contract_version: 1.0.0`, `package: agent-ix/spec-objects-security`, `exports` listing every object type that ships a schema, `imports: {}`, `targets: [json-schema, markdown]`, `mappings: [typed-table, sysml-fence, ocl-clause]`, `compatibility_posture: additive`, `legacy_forms: warning`.
-- `semantic.exports` SHALL name all twenty-three object types: `auth_flow`, `permission`, `scope`, `role`, `secret`, `encryption_key`, `session_config`, `data_classification`, `trust_boundary`, `audit_event`, `csrf_token`, `cors_policy`, `password_policy`, `mfa_method`, `jwt_claim`, `threat`, `control`, `risk`, `vulnerability`, `asset`, `attack_surface`, `policy`, `audit_finding`.
+- `semantic.exports` SHALL name all twenty-four object types: `auth_flow`, `permission`, `scope`, `role`, `secret`, `encryption_key`, `session_config`, `data_classification`, `trust_boundary`, `audit_event`, `csrf_token`, `cors_policy`, `password_policy`, `mfa_method`, `jwt_claim`, `threat`, `control`, `risk`, `vulnerability`, `asset`, `attack_surface`, `policy`, `audit_finding`, `soup_record`.
 - Every exported object type's `data_schema` SHALL be `{ schema: schemas/<Model>.json }`.
 - No exported object type SHALL carry an inline `data_schema`.
 - The manifest SHALL carry the `traceability` block (`required_relations`, `acyclic_edges`) and every object type's `allowed_links` and `roles`. `control.allowed_links.mitigates` is `[threat, risk, vulnerability, hazard, failure_mode]` ([FR-007](./FR-007-control-mitigates-safety-objects.md)); the other target lists are as authored in the manifest.
@@ -65,8 +65,8 @@ traceability rule keeps its meaning.
 
 | ID | Criteria | Verification |
 |----|----------|--------------|
-| FR-003-AC-1 | The loaded `semantic` block equals the eight admitted keys with the values above, and `exports` equals the twenty-three object-type names. | Test |
-| FR-003-AC-4 | `quire.Registry.load_from([module dir])` lists all twenty-three archetypes and `validate_document` on each skeleton reports no `semantic.*` load failure. | Test |
+| FR-003-AC-1 | The loaded `semantic` block equals the eight admitted keys with the values above, and `exports` equals the twenty-four object-type names. | Test |
+| FR-003-AC-4 | `quire.Registry.load_from([module dir])` lists all twenty-four archetypes and `validate_document` on each skeleton reports no `semantic.*` load failure. | Test |
 | FR-003-AC-5 | `quoin module install path:<module dir>` exits zero and `quoin module` lists `spec-objects-security`; the previously installed entry is restored afterwards. | Demonstration |
 | FR-003-AC-6 | A manifest copy whose `semantic` block gains a key `foo` is refused by Quire's loader. The refusal is verified; the half that requires the diagnostic to *name* `foo` or the path is an explicit expected failure while `agent-ix/quire-rs#221` and `agent-ix/quire-rs#394` are open. | Test |
 | FR-003-AC-7 | `quire validate --module <module dir>` and `quoin module install path:<module dir>` (with `HOME` pointed at a temporary directory, so the real install and registry are untouched) both accept the shipped manifest; a copy with an unknown top-level key is refused by `quire validate` naming `bogus_key`, and a copy with an unknown `semantic` key is refused by `quoin module install` naming `semantic.foo`. No copy of the schema is held here. | Test |
