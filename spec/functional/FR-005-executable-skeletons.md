@@ -78,13 +78,13 @@ engine refuse.
 
 | ID | Criteria | Verification |
 |----|----------|--------------|
-| FR-005-AC-1 | Every skeleton file (twenty-four types plus three alternates) passes `validate_document` against this module with `is_valid` true and no `semantic.record-invalid` error. | Test |
+| FR-005-AC-1 | Every skeleton file (twenty-five types plus three alternates) passes `validate_document` against this module with `is_valid` true and no `semantic.record-invalid` error. | Test |
 | FR-005-AC-2 | For `asset`, `secret`, and `threat`, the table and `sysml` skeletons extract to identical normalized `fields` with `fieldsForm` `table` and `fence` respectively. | Test |
 | FR-005-AC-3 | Under a bundle index built from the skeleton frontmatter, every skeleton extracts with zero `error` diagnostics and zero `semantic.unresolved-type` findings, and every non-kernel `type.target.value` (kind `SemanticId`) starts with `ix://agent-ix/spec-objects-security/type/`. | Test |
 | FR-005-AC-4 | Each skeleton's `availability` states match its type: `fields` `available` for the nineteen field-bearing types, `clauses` `available` for the six clause-bearing types, `operations` `available` for `auth_flow`; `not_applicable` for every other kind. | Test |
 | FR-005-AC-5 | Every negative fixture produces a diagnostic carrying its `expect:` code, and at least the ten cases listed in Behavior are present. | Test |
 | FR-005-AC-6 | Every skeleton's H2 set equals a subset of the headings the manifest asserts for its type and includes every `required: true` heading. | Test |
-| FR-005-AC-7 | The skeleton for each of the twenty-four types has no placeholder token and every asserted section body is non-empty. | Test |
+| FR-005-AC-7 | The skeleton for each of the twenty-five types has no placeholder token and every asserted section body is non-empty. | Test |
 | FR-005-AC-8 | Every skeleton `title` matches the `Identifier` pattern, is unique across the skeletons, and is not a `KernelScalar` name; every skeleton frontmatter carries `object` equal to `type`. | Test |
 | FR-005-AC-9 | No skeleton or negative fixture matches a credential-shaped literal (a private-key PEM header, a JWT triple, an `AKIA` or `ghp_`/`sk-` prefixed token, or a `password`/`secret`/`token` assignment to a literal). | Test |
 

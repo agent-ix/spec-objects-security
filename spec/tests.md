@@ -83,7 +83,7 @@ the Python package only: neither Node script is measured by it.
 
 1. Every acceptance criterion and named constraint has at least one test case.
 2. Both Properties forms (typed table, `sysml` fence) and every one of the
-   twenty-four object types are tested.
+   twenty-five object types are tested.
 3. Item-rule boundaries are tested at their allowed and refused edges (zero
    versus one identity field, empty versus one-item `clauses`/`operations`,
    present versus absent graded row).
@@ -173,11 +173,11 @@ the Python package only: neither Node script is measured by it.
 | TC-031 | No `.npmrc`, no `file:`/`link:` dependency | Static | P2 | FR-002-CON-2 | ✅ |
 | TC-032 | `package-lock.json` resolves every package, `@agent-ix/semantic-core` included, from npmjs | Unit | P2 | FR-002-CON-4 | ✅ |
 | TC-035 | `.gitattributes` pins `eol=lf` and `npm pack` leaves nothing staged at the repository root | Unit | P1 | FR-002-AC-11 | ✅ |
-| TC-040 | The `semantic` block equals the eight admitted keys and `exports` equals the twenty-four types | Unit | P0 | FR-003-AC-1, FR-003-CON-1 | ✅ |
-| TC-044 | `quire.Registry.load_from` lists all twenty-four archetypes and `validate_document` reports no `semantic.*` load failure on any skeleton | Integration | P0 | FR-003-AC-4 | ✅ |
+| TC-040 | The `semantic` block equals the eight admitted keys and `exports` equals the twenty-five types | Unit | P0 | FR-003-AC-1, FR-003-CON-1 | ✅ |
+| TC-044 | `quire.Registry.load_from` lists all twenty-five archetypes and `validate_document` reports no `semantic.*` load failure on any skeleton | Integration | P0 | FR-003-AC-4 | ✅ |
 | TC-045 | An unknown `semantic` key is refused by the loader; the refusal names the key or path | Integration | P1 | FR-003-AC-6 | ✅ refusal verified; the naming half is a strict expected failure on quire-rs#221 and quire-rs#394 |
 | TC-046 | `quoin module install path:` succeeds, lists the module, and the prior entry is restored | Manual | P1 | FR-003-AC-5 | 🚧 |
-| TC-050 | Each of the twenty-four schemas differs from every other in a required, admitted, or item rule; none is `type: object` only | Unit | P0 | FR-004-AC-1 | ✅ |
+| TC-050 | Each of the twenty-five schemas differs from every other in a required, admitted, or item rule; none is `type: object` only | Unit | P0 | FR-004-AC-1 | ✅ |
 | TC-051 | Asset: identity record validates; identity flag removed fails; no `fields` fails | Integration | P0 | FR-004-AC-2 | ✅ |
 | TC-052 | Role with `operations` fails; permission and scope with `relations` each fail | Integration | P0 | FR-004-AC-3 | ✅ |
 | TC-053 | Threat: `stride_category` row required; an invented STRIDE member fails | Integration | P0 | FR-004-AC-4 | ✅ |
@@ -187,7 +187,7 @@ the Python package only: neither Node script is measured by it.
 | TC-057 | Auth flow: one operation validates; empty `operations` fails; `relations` fails | Integration | P0 | FR-004-AC-8 | ✅ |
 | TC-058 | Audit event: `Timestamp` field and no identity validates; missing `Timestamp`, an identity row, or `operations` each fail | Integration | P0 | FR-004-AC-9 | ✅ |
 | TC-059 | Trust boundary: one clause and a `trust_level` row validates; each removal fails; an invented trust level fails | Integration | P1 | FR-004-AC-10 | ✅ |
-| TC-060 | The empty record `{}` fails against all twenty-four schemas | Unit | P0 | FR-004-AC-11, FR-004-CON-2 | ✅ |
+| TC-060 | The empty record `{}` fails against all twenty-five schemas | Unit | P0 | FR-004-AC-11, FR-004-CON-2 | ✅ |
 | TC-061 | Placeholder `unresolved` target is accepted by the schema and reported by the extractor; a bare token is refused | Integration | P1 | FR-004-AC-12 | ✅ |
 | TC-062 | No module schema redeclares a semantic-core model; every grammar item is a `$ref` to semantic-core | Unit | P1 | FR-004-AC-13, FR-004-CON-1 | ✅ |
 | TC-063 | Data classification: `level` row required; `relations` refused | Integration | P1 | FR-004-AC-14 | ✅ |
@@ -199,7 +199,7 @@ the Python package only: neither Node script is measured by it.
 | TC-075 | `ControlEffectiveness` starts at `not_assessed` and `TrustLevel`'s unassessed member is `untrusted` | Unit | P1 | FR-006-AC-6 | ✅ |
 | TC-076 | No shipped schema uses `minContains` or `maxContains`, so no negative rule can invert | Unit | P0 | FR-006-AC-7 | ✅ |
 | TC-077 | No vocabulary member expresses "assume the permissive value" | Static | P2 | FR-006-CON-1 | ✅ |
-| TC-080 | Every skeleton (twenty-four plus three alternates) validates with no error | Integration | P0 | FR-005-AC-1 | ✅ |
+| TC-080 | Every skeleton (twenty-five plus three alternates) validates with no error | Integration | P0 | FR-005-AC-1 | ✅ |
 | TC-081 | Table and `sysml` skeletons extract to identical normalized fields with the recorded forms | Integration | P0 | FR-005-AC-2, FR-005-CON-2 | ✅ |
 | TC-082 | Under the skeleton bundle index every skeleton extracts with zero errors and zero unresolved tokens | Integration | P0 | FR-005-AC-3 | ✅ |
 | TC-083 | Availability states per skeleton (fields, clauses, operations) match the type's declared set | Integration | P1 | FR-005-AC-4 | ✅ |
