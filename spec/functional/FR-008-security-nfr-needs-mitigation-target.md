@@ -5,8 +5,6 @@ type: FR
 relationships:
   - target: "ix://agent-ix/spec-objects-security/US-001"
     type: "implements"
-  - target: "ix://agent-ix/spec-objects-security/FR-003"
-    type: "depends_on"
   - target: "ix://agent-ix/spec-objects-security/FR-007"
     type: "depends_on"
   - target: "ix://agent-ix/quire-rs/FR-058"
@@ -45,8 +43,10 @@ reverse view: each `security` NFR with the threats it mitigates, and a
 
 The cross-repository case is reached through `quire validate --okf --repo ORG/REPO=DIR`
 (`agent-ix/quire-cli` FR-030), which loads the sibling repositories into one
-corpus. Without `--repo`, validate sees one repository and an edge into another
-repository is dangling.
+corpus. Without `--repo`, validate loads one repository as a corpus of one member with no
+identity, where `ix://` links resolve by trailing id (quire-rs FR-085-AC-10): an
+edge to a document in another repository resolves only if a local document has
+the same id, and is dangling otherwise.
 
 The finding is advisory (`warning`, exit 0) and is tunable on its own key,
 `trace:unjustified-security-nfr`. The safety counterpart (`safety` NFRs and
@@ -82,11 +82,11 @@ hazards) is declared by `agent-ix/spec-objects-safety` FR-009.
 | FR-008-AC-3 | Giving that NFR a `mitigates` edge to a `threat` in the same repository removes the finding. | Test |
 | FR-008-AC-4 | An NFR whose `quality_attribute` is not `security` and which has no `mitigates` edge yields no `unjustified-security-nfr` finding. | Test |
 | FR-008-AC-5 | Under `--okf --strict` the finding is a warning and never an error; strict still exits 3 on warnings by design. `--severity trace:unjustified-security-nfr=error` promotes it and the run exits non-zero. | Test |
-| FR-008-AC-6 | Giving that NFR a `mitigates` edge to a `risk` in the same repository removes the finding. | Test |
-| FR-008-AC-7 | `quire validate --okf --repo o/a=<A> --repo o/b=<B> --module $M` over a fixture where the NFR in `o/a` has a `mitigates` edge to a `threat` in `o/b` yields no `unjustified-security-nfr` finding. | Test |
-| FR-008-AC-8 | An NFR whose only `mitigates` edge targets a `hazard` in the same repository still yields the `unjustified-security-nfr` finding. | Test |
-| FR-008-AC-9 | An NFR whose only `mitigates` edge targets a `threat` in a repository not named by any `--repo` still yields the `unjustified-security-nfr` finding. | Test |
-| FR-008-AC-10 | `threat-has-control` and `risk-has-treatment` still declare `to: []` in the manifest. | Test |
+| FR-008-AC-6 | `threat-has-control` and `risk-has-treatment` still declare `to: []` in the manifest. | Test |
+| FR-008-AC-7 | Giving that NFR a `mitigates` edge to a `risk` in the same repository removes the finding. | Test |
+| FR-008-AC-8 | `quire validate --okf --repo o/a=<A> --repo o/b=<B> --module $M` over a fixture where the NFR in `o/a` has a `mitigates` edge to a `threat` in `o/b` yields no `unjustified-security-nfr` finding. | Test |
+| FR-008-AC-9 | An NFR whose only `mitigates` edge targets a `hazard` in the same repository still yields the `unjustified-security-nfr` finding. | Test |
+| FR-008-AC-10 | An NFR whose only `mitigates` edge targets a `threat` in a repository not named by any `--repo` still yields the `unjustified-security-nfr` finding. | Test |
 
 ## Dependencies
 

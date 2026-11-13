@@ -27,3 +27,10 @@ trigger as "no outgoing `mitigates` edge", which that NFR does have.
 ## Verdict
 
 Changes requested (1 medium, 1 low).
+
+## Dispositions
+
+| FND | outcome | reason |
+| --- | --- | --- |
+| FND-001 | fixed | Behavior bullet 2 now reads "no outgoing `mitigates` edge to a resolved `threat` or `risk`" (c6ee512) |
+| FND-002 | fixed | Outputs now read "no outgoing `mitigates` edge to a resolved `threat` or `risk`" (c6ee512) |

@@ -40,3 +40,21 @@ one of the two kinds `to` now names.
 
 Changes requested (3 medium). The FR-008 text is otherwise coherent and
 consistent with quire-rs FR-058/FR-084/FR-085.
+
+## New findings (disposition pass 1)
+
+Checked at c6ee512. `quire validate --scope . "spec/**/*.md"` now exits 3.
+
+| ID | Severity | Summary | Refs |
+| --- | --- | --- | --- |
+| FND-004 | high | `spec/tests.md` fails `quire validate` (exit 3): the Status cell of TC-116, TC-118, TC-120 and TC-146..TC-149 is empty, and the TestMatrix schema requires one of ✅ ❌ 🚧 ⛔ | spec/tests.md:210,212,214-218 |
+| FND-005 | medium | FR-008-AC-6 is reused with a new meaning (a `risk` edge clears the finding) instead of a new id; `tests/test_reverse_mitigates.py:142` still tags TC-120 (exposure-end `to: []`) to FR-008-AC-6, so the matrix credits the risk-edge criterion to a test that does not assert it | spec/functional/FR-008-security-nfr-needs-mitigation-target.md:85; tests/test_reverse_mitigates.py:142 |
+| FND-006 | low | TC-149 (threat in a repository not named by `--repo`) lists FR-008-AC-10 (exposure-end `to: []`), which it does not test; TC-120 already backs AC-10 | spec/tests.md:218 |
+
+## Dispositions
+
+| FND | outcome | reason |
+| --- | --- | --- |
+| FND-001 | fixed | TC-116 now reads `to: [threat, risk]` (c6ee512) |
+| FND-002 | fixed | TC-118 now covers a same-repository threat; TC-147..TC-149 cover the cross-repo, wrong-kind and unloaded cases (c6ee512) |
+| FND-003 | fixed | New FR-008-AC-6 and TC-146 cover a `risk` edge (c6ee512) |

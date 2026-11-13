@@ -38,3 +38,20 @@ repository (PLAT-1554 lists quire-rs and quire-cli, PLAT-1556 quire-rs).
 ## Verdict
 
 Changes requested (1 high, 1 medium, 2 low).
+
+## New findings (disposition pass 1)
+
+Checked at c6ee512.
+
+| ID | Severity | Summary | Refs |
+| --- | --- | --- | --- |
+| FND-005 | low | FR-003 was removed from the Upstream prose but is still declared `depends_on` in the frontmatter; the two disagree | spec/functional/FR-008-security-nfr-needs-mitigation-target.md:8-9,93 |
+
+## Dispositions
+
+| FND | outcome | reason |
+| --- | --- | --- |
+| FND-001 | fixed | FR-008-AC-7 runs `quire validate --okf --repo o/a=<A> --repo o/b=<B>`; quire-cli FR-030 (quire-cli#180 at 3746178) now specifies `validate --okf --repo` (FR-030-AC-20) |
+| FND-002 | still-open | Line 35 is fixed, but the new line 48 restates the claim: "Without `--repo`, validate sees one repository and an edge into another repository is dangling". quire-cli FR-030 loads `--scope` as one member with no identity, and FR-085-AC-10 keeps FR-026 lexical `ix://` resolution there, so `ix://agent-ix/other-repo/THREAT-001` resolves to a local THREAT-001 |
+| FND-003 | fixed | Frontmatter adds `depends_on` FR-085 and quire-cli FR-030; FR-084 moved to Downstream (c6ee512) |
+| FND-004 | fixed | PLAT-1673 (Backlog) names spec-objects-security, the manifest `to` change and the test updates |
