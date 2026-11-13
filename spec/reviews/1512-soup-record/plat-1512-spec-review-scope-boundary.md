@@ -30,3 +30,17 @@ FAIL. FND-001 is high.
 |----|----------|---------|------|
 | FND-001 | high | No system owns promotion. FR-009-CON-2 and FR-009-AC-8 say this module has no SBOM parser or reader, and quoin FR-041-CON-2 says quoin introduces no inventory record type. Yet FR-009 requires that "a promotion SHALL copy" SBOM facts, that a purl-less component "SHALL NOT be promoted", FR-009-AC-5 ("a fixture promoted from a CycloneDX component ... carries `unknown`") and FR-009-AC-6 ("the promotion report names the component"). No owner can meet those ACs, and a test in this repository has nothing to run. Name the promoter by ix id, with its own requirement in its repository, and move AC-5/AC-6 there. Or restate them as schema checks on an authored record. | spec/functional/FR-009-soup-record-identity-and-promotion.md:47, spec/functional/FR-009-soup-record-identity-and-promotion.md:75, spec/functional/FR-009-soup-record-identity-and-promotion.md:76 |
 | FND-002 | low | "An `affected_by` edge SHALL exist only when an author wrote it" and "The module SHALL NOT populate `affected_by` from an advisory feed" state limits on a module that writes no edges at all. No test can observe either one. Both are already implied by FR-012's Description and by FR-009-CON-2. Fold them into a constraint verified by Inspection, or delete them. | spec/functional/FR-012-soup-record-relations.md:36, spec/functional/FR-012-soup-record-relations.md:37 |
+
+## New findings (disposition pass 1)
+
+| ID | Severity | Summary | Refs |
+|----|----------|---------|------|
+| FND-003 | low | FR-009 now names quoin FR-041 as "the consumer that promotes a component into a record". quoin FR-041 does not do that: it reads an inventory as run evidence, and FR-041-CON-2 says quoin introduces no record type for inventories. The context note credits a capability its cited owner disclaims. State that no requirement yet owns promotion instead of attributing it to FR-041. | spec/functional/FR-009-soup-record-identity-and-promotion.md:31-32 |
+
+## Dispositions
+
+| FND | outcome | reason |
+|-----|---------|--------|
+| FND-001 | fixed | Fixed in 3d75c3d. The module disclaims promotion: "It does not own the promotion of an SBOM component into a record", and "The module SHALL NOT define an SBOM parser, a promotion command, or a binding option". The former promotion ACs are now schema checks on an authored record (FR-009-AC-5 `supplier: unknown`/absent; FR-009-AC-6 license exclusivity). |
+| FND-002 | fixed | Fixed in 3d75c3d. Both untestable statements ("SHALL NOT populate `affected_by` ...", "SHALL exist only when an author wrote it") are gone from FR-012. |
+| FND-003 | fixed | Fixed in PLAT-1514. FR-009 now names `ix://agent-ix/quoin/FR-141` as the owner of promotion and cites FR-041 only as the SBOM adapter that reads the inventory. |

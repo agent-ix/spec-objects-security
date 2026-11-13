@@ -31,7 +31,7 @@ rules.
 
 ## Outputs
 
-- Twenty-three object-type models, each emitted as `schemas/<Model>.json`,
+- Twenty-four object-type models, each emitted as `schemas/<Model>.json`,
   sealed (`unevaluatedProperties: {not: {}}`).
 - Support models emitted as sibling files: the open marker models
   `IdentityField`, `DefaultedField`, `OccurrenceField`, `OccurrenceTypeRef`,
@@ -64,7 +64,7 @@ semantic-core release that renders `identity: false` is a breaking change to the
 | vulnerability | `Vulnerability` | `fields` | `clauses`, `relations`, `severity: Severity`, `cve_id: string`, `affects: SemanticId[]` | `fields` has ≥ 1 item, ≥ 1 identity field, and ≥ 1 `severity` field; `operations` forbidden |
 | risk | `Risk` | `fields` | `clauses`, `relations`, `likelihood: Likelihood`, `impact: Impact`, `arises_from: SemanticId[]` | `fields` has ≥ 1 item, ≥ 1 identity field, ≥ 1 `likelihood` field and ≥ 1 `impact` field; `operations` forbidden |
 | audit_finding | `AuditFinding` | `fields` | `clauses`, `relations`, `status: FindingStatus`, `traces_to: SemanticId[]` | `fields` has ≥ 1 item, ≥ 1 identity field, and ≥ 1 `status` field; `operations` forbidden |
-| soup_record | `SoupRecord` | `fields`, `purl: string` | `name: string`, `version: string`, `supplier: string`, `license: string`, `license_fact_ref: SemanticId`, `finding_refs: SemanticId[]`, `inventory_ref: SemanticId`, `serves: SemanticId[]`, `known_anomalies: Anomaly[]`, `support_status: SoupSupportStatus`, `end_of_support: string`, `disposition_clause: string` | `fields` has ≥ 1 item, ≥ 1 identity field, and 0 defaulted fields; `operations`, `relations` and `clauses` forbidden; no key beyond those listed (the field set of [FR-009](./FR-009-soup-record-identity-and-promotion.md) and [FR-010](./FR-010-soup-record-fields.md)) |
+| soup_record | `SoupRecord` | `fields` | `purl: string`, `name: string`, `version: string`, `supplier: string`, `license: string`, `license_fact_ref: SemanticId`, `finding_refs: SemanticId[]`, `inventory_ref: SemanticId`, `serves: SemanticId[]`, `known_anomalies: Anomaly[]`, `support_status: SoupSupportStatus`, `end_of_support: string`, `disposition_clause: string` | `fields` has ≥ 1 item, ≥ 1 identity field, ≥ 1 `purl` field, and 0 defaulted fields; `operations`, `relations` and `clauses` forbidden; no key beyond those listed (the field set of [FR-009](./FR-009-soup-record-identity-and-promotion.md) and [FR-010](./FR-010-soup-record-fields.md)) |
 | data_classification | `DataClassification` | `fields` | `clauses`, `level: ConfidentialityLevel`, `values: EnumValue[]` | `fields` has ≥ 1 item, ≥ 1 identity field, and ≥ 1 `level` field; `operations` and `relations` forbidden |
 | attack_surface | `AttackSurface` | `fields` | `clauses`, `relations`, `exposes: SemanticId[]` | `fields` has ≥ 1 item and ≥ 1 identity field; `operations` forbidden |
 | trust_boundary | `TrustBoundary` | `fields`, `clauses` | `relations`, `trust_level: TrustLevel`, `crosses: SemanticId[]` | `fields` has ≥ 1 item, ≥ 1 identity field and ≥ 1 `trust_level` field; `clauses` has ≥ 1 item — a boundary that admits every crossing is not a boundary; `operations` forbidden |

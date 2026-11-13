@@ -51,3 +51,10 @@ FAIL. This file holds two minor findings. The blocking findings are high finding
 |----|----------|---------|------|
 | FND-001 | medium | FR-009-AC-4 cannot fail on the defect it targets. Its second clause ("a record whose only distinguishing field is a digest and whose purl is absent fails") is FR-009-AC-2's purl-absent case again. The first clause ("no identity field is a digest") names a schema notion, "identity field", that the schema does not have. Neither clause fails if a digest is used as identity. A falsifiable form: two records with equal purls and different digests are reported as duplicates. | spec/functional/FR-009-soup-record-identity-and-promotion.md:74 |
 | FND-002 | low | The `spec/tests.md` StR-001 and US-001 coverage rows still trace `FR-001..FR-008`, but FR-009..FR-012 `implements` US-001. | spec/tests.md:81, spec/tests.md:87 |
+
+## Dispositions
+
+| FND | outcome | reason |
+|-----|---------|--------|
+| FND-001 | fixed | Fixed in 3d75c3d. FR-009-AC-4 now reads "A fixture that adds a `digest` key to an otherwise valid record fails, and a fixture whose only difference from a valid record is a different digest-free purl validates as a distinct component." That test fails if a digest is admitted. |
+| FND-002 | fixed | Fixed in 3d75c3d. The `spec/tests.md` StR-001 row traces "US-001, FR-001..FR-012, NFR-001", and the US-001 row says "implemented by FR-002..FR-012". |

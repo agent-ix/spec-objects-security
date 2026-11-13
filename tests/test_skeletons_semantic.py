@@ -71,7 +71,7 @@ def extract(quire_engine, module, bundle, path):
 @pytest.mark.trace("TC-080", "FR-005-AC-1")
 def test_every_skeleton_validates_with_no_error(quire_engine):
     paths = all_skeletons()
-    assert len(paths) == 26, [p.name for p in paths]
+    assert len(paths) == len(OBJECT_TYPES) + len(ALTERNATES), [p.name for p in paths]
     for path in paths:
         text = path.read_text()
         result = quire_engine.validate_document(
@@ -221,7 +221,7 @@ def test_every_skeleton_is_placeholder_free_and_substantive():
         for key, loc in locators(object_type(name)).items():
             if loc.get("from") == "section_body" and loc.get("required"):
                 assert sections[loc["after_heading"]].strip(), (path.name, key)
-    assert len(primary_skeletons()) == 23
+    assert len(primary_skeletons()) == len(OBJECT_TYPES)
 
 
 def _sections(markdown: str) -> dict:
@@ -265,6 +265,7 @@ def test_titles_are_distinct_identifiers_and_object_equals_type():
 @pytest.mark.trace("TC-088", "FR-005-AC-9", "FR-005-CON-3")
 def test_no_skeleton_or_fixture_carries_a_credential_shaped_literal():
     paths = all_skeletons() + sorted(NEGATIVE_DIR.glob("*.md"))
+    paths += sorted((NEGATIVE_DIR.parent / "soup").glob("*.md"))
     assert paths
     for path in paths:
         text = path.read_text()
