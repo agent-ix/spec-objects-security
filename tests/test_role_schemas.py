@@ -223,6 +223,12 @@ MINIMAL = {
     "AuthFlow": {"operations": [OPERATION]},
     "AuditEvent": {"fields": [field("occurred_at", "Timestamp")]},
     "SoupRecord": {"fields": [field("a", "UUID", identity=True), field("purl")]},
+    "ScopeExclusion": {
+        "set": "example.invalid/std@1",
+        "clause": "EX-1",
+        "responsible": "ix://agent-ix/spec-objects-security/COMP-001",
+        "rationale": "The platform owns it.",
+    },
 }
 
 

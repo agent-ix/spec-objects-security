@@ -39,7 +39,12 @@ def test_the_semantic_block_is_exactly_the_eight_admitted_keys(semantic_block):
     assert semantic_block["package"] == "agent-ix/spec-objects-security"
     assert semantic_block["imports"] == {}
     assert semantic_block["targets"] == ["json-schema", "markdown"]
-    assert semantic_block["mappings"] == ["typed-table", "sysml-fence", "ocl-clause"]
+    assert semantic_block["mappings"] == [
+        "typed-table",
+        "sysml-fence",
+        "ocl-clause",
+        "record-sections",
+    ]
     assert semantic_block["compatibility_posture"] == "additive"
     assert semantic_block["legacy_forms"] == "warning"
     assert semantic_block["exports"] == list(OBJECT_TYPES)

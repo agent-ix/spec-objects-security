@@ -30,9 +30,10 @@ semantic:
   - policy
   - audit_finding
   - soup_record
+  - scope_exclusion
   imports: {}
   targets: [json-schema, markdown]
-  mappings: [typed-table, sysml-fence, ocl-clause]
+  mappings: [typed-table, sysml-fence, ocl-clause, record-sections]
   compatibility_posture: additive
   legacy_forms: warning
 clause_sets:
@@ -470,7 +471,11 @@ object_types:
         mappings:
           from: section_body
           after_heading: Mappings
-          required: true
+          required: false
+        effectiveness:
+          from: section_body
+          after_heading: Effectiveness
+          required: false
         # FR-005: the typed `## Properties` table the
         # semantic layer reads. Optional, so existing artifacts stay valid.
         properties:
@@ -642,6 +647,31 @@ object_types:
           from: section_body
           after_heading: Properties
           required: false
+- name: scope_exclusion
+  data_schema:
+    schema: schemas/ScopeExclusion.json
+  body_extraction:
+    yield_pattern:
+      match:
+        id: *id004
+        title: *id005
+        type: *id006
+        set:
+          from: section_body
+          after_heading: Set
+          required: true
+        clause:
+          from: section_body
+          after_heading: Clause
+          required: true
+        responsible:
+          from: section_body
+          after_heading: Responsible
+          required: true
+        rationale:
+          from: section_body
+          after_heading: Rationale
+          required: true
 
 # FR-043: concrete-term lexicon — security / identity / auth objects.
 # FR-058 (quire-rs): upward-trace completeness — the second half of
