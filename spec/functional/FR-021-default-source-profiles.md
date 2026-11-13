@@ -22,13 +22,14 @@ sources are free to publish: NIST and OWASP publications and public law.
 | `web-app-baseline` | NIST and OWASP application security |
 
 The clause sets these profiles draw on are specified and published by other work (PLAT-1593, PLAT-1612, PLAT-1627,
-PLAT-1521, PLAT-1522). This requirement authors no set. A change that publishes a set for an intended source also adds
-that set's key to the matching profile, creating the profile if it does not exist, and takes the key from the set. A
-profile is therefore never shipped listing a key that no module declares. A machine that lacks a listed set is handled
+PLAT-1521, PLAT-1522). This requirement authors no set. Once a module that declares a set for an intended source is
+published, a change to this module adds that set's key to the matching profile, creating the profile if it does not
+exist, and takes the key from the set. A profile is therefore never shipped listing a key that no module declares. A machine that lacks a listed set is handled
 by [quoin FR-181](ix://agent-ix/quoin/FR-181), not here.
 
-The reference module set used by the tests is the modules that `quoin module ensure-defaults` installs, together with
-this module.
+The reference module set used by the tests is the modules that `quoin module ensure-defaults` installs, this module, and
+every published pack module that declares a clause set for an intended source in the table (for example the US
+health-law pack module of PLAT-1593).
 
 A profile's `context` states only a market or product-kind fact the profile name implies (for example that the product
 is a medical device in the named market). It states no fact about the particular product, such as its safety class or
@@ -40,12 +41,11 @@ reported `unresolved`.
 ## Behavior
 
 - The `profiles/` directory SHALL contain no profile whose `name` is not in the table above.
-- When a change publishes a clause set for an intended source in the table, that change SHALL list the set's key in the matching profile.
+- When a published module declares a clause set for an intended source in the table, this module SHALL list the set's key in the matching profile in a following change.
 - A shipped profile SHALL list only keys that a module in the reference module set declares.
 - A shipped profile SHALL list only keys whose declaring module the engine's publishability check (`check_publishable`, run by `quire publish-check`) accepts, with no further rights test of its own.
 - A shipped profile SHALL NOT name a pack whose standard text is licensed.
 - A shipped profile's `context` SHALL hold no entry that describes a particular product.
-- A shipped profile SHALL bind no NIST baseline or ASVS level.
 
 ## Acceptance Criteria
 
@@ -57,8 +57,7 @@ reported `unresolved`.
 | FR-021-AC-4 | Each `context` entry of a shipped profile states a market or product-kind fact implied by the profile name; none states a fact about a particular product (safety class, data processed). | Inspection |
 | FR-021-AC-5 | The set of `name` values in `profiles/` is a subset of the three names in the table; an extra profile fails the test. | Test |
 | FR-021-AC-6 | The module's published files contain no name of a licensed pack. | Inspection |
-| FR-021-AC-7 | `web-app-baseline`, if shipped, has no `context` entry for the NIST baseline or the ASVS level dimension. | Test |
-| FR-021-AC-8 | A change that adds a clause set for an intended source and does not list its key in the matching profile is rejected at review. | Inspection |
+| FR-021-AC-7 | While a published module in the reference module set declares a clause set for an intended source whose key the matching profile omits, review reports the omission. | Inspection |
 
 ## Dependencies
 

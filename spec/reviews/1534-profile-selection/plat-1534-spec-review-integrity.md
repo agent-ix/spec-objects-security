@@ -35,3 +35,11 @@ not repeated here.
 | FND-001 | medium | FR-020-AC-2 (and AC-3, AC-4 and AC-5) say a bad profile "fails validation" without naming the validator. A JSON Schema cannot compare `name` with the file stem, so AC-2's second half cannot be checked the way AC-1 is ("the profile JSON Schema"). No Behavior line requires the module to ship that schema, or says where it is. On the Quoin side, FR-180 reads profiles but has no requirement to validate one or refuse a malformed one. So nothing at use time enforces FR-020. Fix: add a Behavior line that the module ships `schemas/source-profile-v1.schema.json`, say that the stem check is a module test, and have quoin FR-180 refuse a profile that fails the schema or whose name differs from its stem | spec/functional/FR-020-source-profile-format.md:51, spec/functional/FR-020-source-profile-format.md:50 | missing-requirement |
 | FND-002 | low | FR-020 Outputs says "A profile that Quoin lists, selects and evaluates". quoin FR-180..182 specify selection and evaluation but no listing command or output. Fix: drop "lists", or add a listing requirement to quoin #870 | spec/functional/FR-020-source-profile-format.md:34 | wrong-requirement |
 | FND-003 | low | FR-020 says the profile `context` "is passed unchanged to the engine's clause-set evaluation". quoin FR-180 instead merges the repository `context` over it, and FR-181 passes that effective context. Fix: say the profile context is the base of the effective context (quoin FR-180) that the engine receives | spec/functional/FR-020-source-profile-format.md:22-24 | wrong-requirement |
+
+## Dispositions
+
+| FND | outcome | reason |
+| --- | --- | --- |
+| FND-001 | fixed | FR-020 now says the rules are checked by this repo's profile test and by Quoin on read, and that no JSON Schema ships. The ACs say "fails the profile test". quoin#870 FR-180 adds the matching refusal (Behavior line and FR-180-AC-8) |
+| FND-002 | fixed | FR-020 Outputs now reads "A profile that Quoin selects and evaluates." |
+| FND-003 | fixed | FR-020 now calls the profile context the base of the effective context, which a repository's values replace (quoin FR-180) |

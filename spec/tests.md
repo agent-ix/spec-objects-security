@@ -130,8 +130,8 @@ the Python package only: neither Node script is measured by it.
 | FR-013 | FR-013-AC-1..7 | TC-150..TC-156 | 🚧 AC-7 needs `quire validate --repo` (PLAT-1519); `quire trace`/`quire matrix` show no document edges (PLAT-1519), so AC-6 reads the edge with `quire extract` |
 | NFR-001 | NFR-001-AC-1..2, NFR-001-M-1..2 | TC-144, TC-145 | ✅ |
 | FR-020 | FR-020-AC-1..6 | TC-160..TC-165 | 🚧 not yet implemented |
-| FR-021 | FR-021-AC-1..8 | TC-166..TC-173 | 🚧 not yet implemented; AC-4, AC-6 and AC-8 are inspections; AC-2, AC-3 and AC-7 are vacuous until a profile ships |
-| NFR-002 | NFR-002-AC-1..2, NFR-002-M-1..2 | TC-174, TC-175 | 🚧 not yet implemented |
+| FR-021 | FR-021-AC-1..7 | TC-166..TC-172 | 🚧 not yet implemented; AC-4, AC-6 and AC-7 are inspections; AC-2 and AC-3 are vacuous until a profile ships |
+| NFR-002 | NFR-002-AC-1..2, NFR-002-M-1..2 | TC-173, TC-174 | 🚧 not yet implemented |
 
 ### Integration Test Coverage
 
@@ -270,10 +270,9 @@ the Python package only: neither Node script is measured by it.
 | TC-169 | Profile context entries state only market or product-kind facts | Manual | P2 | FR-021-AC-4 | 🚧 human reviewer |
 | TC-170 | Shipped profile names are a subset of the three named profiles | Unit | P1 | FR-021-AC-5 | 🚧 |
 | TC-171 | Published files name no licensed pack | Manual | P2 | FR-021-AC-6 | 🚧 human reviewer |
-| TC-172 | `web-app-baseline` binds no baseline or level dimension | Unit | P1 | FR-021-AC-7 | 🚧 |
-| TC-173 | A change adding a set for an intended source lists its key in the matching profile | Manual | P2 | FR-021-AC-8 | 🚧 human reviewer |
-| TC-174 | Every shipped profile has only the six top-level keys and the three key fields | Unit | P1 | NFR-002-AC-1, NFR-002-M-1 | 🚧 |
-| TC-175 | `quire publish-check` accepts every declaring module, with no authority list | Integration | P1 | NFR-002-AC-2, NFR-002-M-2 | 🚧 |
+| TC-172 | A published module's set for an intended source is listed in the matching profile | Manual | P2 | FR-021-AC-7 | 🚧 human reviewer |
+| TC-173 | Every shipped profile has only the six top-level keys and the three key fields | Unit | P1 | NFR-002-AC-1, NFR-002-M-1 | 🚧 |
+| TC-174 | `quire publish-check` accepts every declaring module, with no authority list | Integration | P1 | NFR-002-AC-2, NFR-002-M-2 | 🚧 |
 
 ## Test Environment
 

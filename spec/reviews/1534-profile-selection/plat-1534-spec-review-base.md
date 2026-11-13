@@ -53,3 +53,25 @@ publishability rule.
 | FND-008 | low | FR-020 `implements` US-001, "Declare security object types against semantic-core". A source profile is module data, not an object type, so the trace is to an unrelated story. Fix: trace to a story or StR that covers source selection (add one if none exists), or drop the edge | spec/functional/FR-020-source-profile-format.md:6-7 | wrong-requirement |
 | FND-009 | low | `spec/spec.md` In Scope lists the manifest, object types, templates, schemas and grammars. The new `profiles/` data and its schema are not in scope there, so the module's scope statement no longer covers what FR-020 and FR-021 ship. Fix: add one In Scope bullet for source profiles | spec/spec.md:25-36 | missing-requirement |
 | FND-010 | low | FR-021's Description lists cross-repo delivery order: which tickets will publish which packs, and "until then" shipping behavior. The rule in the same paragraph (a key is listed in the change that publishes its set) already says what is needed, without the ticket schedule. Fix: drop the ticket list and the "until then" sentence, and keep the rule | spec/functional/FR-021-default-source-profiles.md:24-28 | wrong-requirement |
+
+## New findings (disposition pass 1)
+
+| ID | Severity | Summary | Refs | Escape Cause |
+| --- | --- | --- | --- | --- |
+| FND-011 | medium | FR-021 says a key may be listed only if a module in the reference module set declares it. That set is the ten modules `quoin module ensure-defaults` installs plus this module: spec-artifacts-iso, -app and -process; spec-objects-business, -architecture, -enterprise, -operational, -safety and -security; and engineering-assurance. It includes no US or EU pack module, and PLAT-1593 puts the US pack in a separate "US health-law pack module". So `us-device-cybersecurity-hipaa` and `eu-device-gdpr-ai-act` can never list their intended sets, because AC-2 fails. "That change SHALL list the set's key" also cannot hold when the pack is published from another repository. Fix: let the reference module set include the published pack modules (by name, or "every module the catalog lists"). Restate the obligation as the profile change that follows the pack's publication, not the same change | spec/functional/FR-021-default-source-profiles.md:25-31, spec/functional/FR-021-default-source-profiles.md:43-44, spec/functional/FR-021-default-source-profiles.md:55 | wrong-requirement |
+| FND-012 | low | FR-021-AC-7 (and the matching Behavior line) forbid a `context` entry "for the NIST baseline or the ASVS level dimension", but name no dimension key. Those dimensions are not defined yet (PLAT-1521, PLAT-1522), so TC-172 cannot be written. The general product-fact rule (AC-4) already covers them. Fix: drop AC-7 and the Behavior line, or name the dimension keys once they exist | spec/functional/FR-021-default-source-profiles.md:48, spec/functional/FR-021-default-source-profiles.md:60 | wrong-requirement |
+
+## Dispositions
+
+| FND | outcome | reason |
+| --- | --- | --- |
+| FND-001 | fixed | Measured: agent-ix/spec-objects-security#49 now adds FR-014..FR-018 and NFR-003, and agent-ix/quoin#871 now adds FR-171..FR-174 and NFR-038. Neither collides with FR-020, FR-021 or NFR-002 here, or with FR-180..FR-182 and NFR-037 in quoin#870. #49's FR-017 now cites quoin FR-173 |
+| FND-002 | fixed | FR-021-AC-3 now uses `quire publish-check --module <declaring module>`, and the Behavior line now says no further rights test of its own |
+| FND-003 | fixed | NFR-002-AC-2 now uses `quire publish-check`, with "no authority list is kept in the test" |
+| FND-004 | fixed | "Up to three" profiles; AC-5 bounds the names; AC-8 makes listing a published set's key a review obligation; tests.md states AC-2, AC-3 and AC-7 are vacuous until a profile ships |
+| FND-005 | fixed | The reference module set is now defined (`quoin module ensure-defaults` plus this module); its reach is FND-011 |
+| FND-006 | fixed | spec/tests.md adds TC-160..TC-175 and `covers` edges for FR-020, FR-021 and NFR-002 |
+| FND-007 | fixed | The old AC-5 (Quoin `unavailable` behavior) is removed, and the Description defers to quoin FR-181 |
+| FND-008 | fixed | The US-001 `implements` edge is replaced by `depends_on` FR-001, with a sentence saying no user story covers source selection |
+| FND-009 | fixed | spec/spec.md In Scope gains a source-profiles bullet |
+| FND-010 | fixed | The delivery-order sentence and "until then" are gone; the owning tickets are cited by id only |
