@@ -283,7 +283,7 @@ the Python package only: neither Node script is measured by it.
 | TC-179 | Every set names its licence; the NIST licence states the public-domain status and carries no attribution or share-alike key | Unit | P0 | FR-017-AC-5 | ✅ |
 | TC-180 | Each NIST clause's `subjects` is its official family code, declared in the `family` dimension | Unit | P0 | FR-017-AC-6 | ✅ |
 | TC-181 | `quire clauses evaluate` binds 149, 287 and 370 NIST clauses at low, moderate and high, a control in no baseline is `not_binding`, and no baseline leaves every clause `unresolved` | Integration | P0 | FR-017-AC-7 | ✅ |
-| TC-182 | The wheel and the npm tarball ship every file named by `clause_sets` | Integration | P1 | FR-017-AC-1 | ✅ |
+| TC-182 | The wheel and the npm tarball ship every file named by `clause_sets` | Integration | P1 | FR-017 | ✅ |
 | TC-183 | `quoin discharge --binding --rmm --repo` renders a requirements matrix for the NIST set over a synthetic corpus | Integration | P1 | FR-017 | ✅ |
 | TC-184 | Each ASVS clause's `subjects` is its chapter id, declared in the `chapter` dimension | Unit | P0 | FR-017-AC-6 | ✅ |
 | TC-185 | `quire clauses evaluate` binds 70, 253 and 345 ASVS clauses at level 1, 2 and 3, and no level leaves every clause `unresolved` | Integration | P0 | FR-017-AC-7 | ✅ |

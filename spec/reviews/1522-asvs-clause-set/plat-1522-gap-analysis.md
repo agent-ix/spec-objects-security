@@ -54,3 +54,10 @@ low finding concerns ticket AC-4's wording.
 | --- | --- | --- | --- |
 | FND-001 | medium | `quoin matrix --repo .` reports FR-017-AC-1..4 as `untagged` at 117369e. Every other FR in this repository binds through TC rows in spec/tests.md (`trace("TC-NNN", "FR-...")`), but FR-017 has no TC rows and its tests carry bare `trace("FR-017-AC-n")`. #51's rewritten AC-1 test and its new AC-2 test are therefore invisible to the computed matrix. Adding a TC id to the trace alone did not change the status in a scratch copy, so the TC rows are needed. The gap originates in #50, and the fix belongs to the stack: add FR-017 TC rows to spec/tests.md and tag the tests with them | tests/test_clause_sets.py:93-126, spec/tests.md |
 | FND-002 | low | Ticket AC-4 names `quoin discharge --rmm --pack`. That cannot be met for this module. The installed quoin 0.30.1 has no `--pack` flag. On quoin main, `--pack` refuses any module where `is_pack` is false, and `is_pack` is `!restricted_sets(dir).is_empty()`: a pack must hold at least one `licensed` set (rust/crates/quoin-core/src/runtime.rs:334-339). FR-017 forbids licensed sets here. The substitute (`quoin evidence record-discharge`, then `quoin discharge --binding --rmm --repo`) renders the same per-set FR-135 matrix, and I judge it adequate. Fix: amend the ticket AC-4 text to the binding form, or disposition it on the ticket | tests/test_clause_sets.py:234-282,297-306 |
+
+## Dispositions
+
+| FND | outcome | reason |
+| --- | --- | --- |
+| FND-001 | fixed | Round 1, head 0db79e8. spec/tests.md adds TC-184..TC-186, and the FR-017 tests carry `trace("TC-NNN", "FR-017-AC-n")`. `quoin matrix --repo .` now reports FR-017-AC-1..7 as `tagged` |
+| FND-002 | deferred: this is a ticket-text change, not a code change. The PR body documents the binding-form substitute and why `--pack` cannot apply. PLAT-1522 AC-4 still reads `--rmm --pack`, so the lead should amend it to `quoin discharge --binding --rmm --repo` when the ticket closes | - |

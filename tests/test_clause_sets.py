@@ -260,7 +260,7 @@ def test_a_profile_binds_only_the_baseline_it_needs(tmp_path):
     assert set(unresolved.values()) == {"unresolved"}
 
 
-@pytest.mark.trace("TC-182", "FR-017-AC-1")
+@pytest.mark.trace("TC-182")
 def test_the_clause_files_ship_in_the_wheel_and_the_npm_tarball():
     shipped = [
         PACKAGE_ROOT / p
