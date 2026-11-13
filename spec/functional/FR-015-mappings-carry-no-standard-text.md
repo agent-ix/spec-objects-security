@@ -32,7 +32,7 @@ mechanism; this requirement states the rule it serves and its limits.
 | ID | Criteria | Verification |
 |----|----------|--------------|
 | FR-015-AC-1 | A control mapping row carrying a third key (`title`, `text`, `note`) fails schema validation, for each of the three keys. | Test |
-| FR-015-AC-2 | A `## Mappings` table with a third column makes Quire emit `semantic.invalid-model-cell` with reason `column-unknown` at the header line, and the extracted record has no `mappings` key (`unavailable`) and none of the column's values. | Test |
+| FR-015-AC-2 | A `## Mappings` table with a third column makes Quire emit `semantic.invalid-model-cell` with reason `column-unknown` at the header line (the document-level `validate` surface reports reason `semantic`; the reason `column-unknown` is on the extraction diagnostic), and the extracted record has no `mappings` key (`unavailable`) and none of the column's values. | Test |
 | FR-015-AC-3 | The emitted `ControlMapping.json` lists exactly the properties `set` and `clause`. | Test |
 
 ## Dependencies

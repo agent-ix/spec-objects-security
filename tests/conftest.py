@@ -91,6 +91,7 @@ OBJECT_TYPES = (
     "policy",
     "audit_finding",
     "soup_record",
+    "scope_exclusion",
 )
 
 MODEL_OF = {
@@ -118,6 +119,7 @@ MODEL_OF = {
     "policy": "Policy",
     "audit_finding": "AuditFinding",
     "soup_record": "SoupRecord",
+    "scope_exclusion": "ScopeExclusion",
 }
 
 MARKER_MODELS = (
@@ -197,7 +199,7 @@ VOCABULARIES = {
 # `TrustBoundary` whose `trust_level` defaulted to `trusted`, and defaulted
 # grant rows on `role`, `permission` and `scope` all validated. The ticket gate
 # reads "No schema default grants permission, trust, or control effectiveness",
-# so the guard is now on all twenty-four (FR-006).
+# so the guard is now on all twenty-five (FR-006).
 DEFAULT_REFUSING = OBJECT_TYPES
 
 FIELD_BEARING = (

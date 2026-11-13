@@ -147,11 +147,15 @@ enum MfaFactorKind {
 // Support records
 // ---------------------------------------------------------------------------
 
-/** One external framework a control maps to. */
+/**
+ * One clause of one clause set that a control answers. `set` is the clause set
+ * key `authority/id@version`; `clause` is the clause id inside it. Both are
+ * printable ASCII, so the character limits are the byte limits. No other
+ * property is admitted, so a mapping can carry no text of a standard.
+ */
 model ControlMapping {
-  @minLength(1) framework: string;
-  @minLength(1) control_id: string;
-  doc?: string;
+  @pattern("^[!-.0-?A-~]{1,64}/[!-.0-?A-~]{1,64}@[!-.0-?A-~]{1,64}$") set: string;
+  @pattern("^[!-~]{1,64}$") clause: string;
   ...Record<never>;
 }
 
@@ -799,5 +803,18 @@ model SoupRecord {
   support_status?: SoupSupportStatus;
   @pattern("^(unknown|[0-9]{4}-(0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01])|[0-9]{4}-(0[469]|11)-(0[1-9]|[12][0-9]|30)|[0-9]{4}-02-(0[1-9]|1[0-9]|2[0-8])|([0-9]{2}(0[48]|[2468][048]|[13579][26])|([02468][048]|[13579][26])00)-02-29)$") end_of_support?: string;
   @pattern("\\S") disposition_clause?: string;
+  ...Record<never>;
+}
+
+/**
+ * A declaration that one clause of a clause set is outside the component, with
+ * the party responsible for it. It is a boundary statement and never an
+ * approval: it admits no decision, status or approval property.
+ */
+model ScopeExclusion {
+  @pattern("^[!-.0-?A-~]{1,64}/[!-.0-?A-~]{1,64}@[!-.0-?A-~]{1,64}$") set: string;
+  @pattern("^[!-~]{1,64}$") clause: string;
+  responsible: SemanticId;
+  @pattern("\\S") rationale: string;
   ...Record<never>;
 }

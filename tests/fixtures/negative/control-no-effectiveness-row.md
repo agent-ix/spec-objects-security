@@ -10,7 +10,9 @@ because: "Control.json requires an effectiveness row, so effectiveness is stated
 
 ## Mappings
 
-- Mitigates RefreshTokenReplay.
+| Set | Clause |
+|---|---|
+| example.invalid/std@1 | EX-1 |
 
 ## Properties
 
