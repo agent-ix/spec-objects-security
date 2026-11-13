@@ -691,6 +691,18 @@ traceability:
     to: []
     direction: outgoing
     check: unjustified-security-nfr
+  # A component that serves no requirement is unjustified scope (PLAT-1598).
+  # The `serves` frontmatter list is the single authored source; the engine
+  # harvests each ix:// value in it as a `references` edge, which this rule reads
+  # (a manifest cannot bind a list field to a typed verb). Reviewer-authored;
+  # promotion never writes it. A cross-repository target satisfies the
+  # constrained `to` once the repositories are loaded together.
+  - name: soup-record-serves-requirement
+    from: soup_record
+    edges: [references]
+    to: [FR, NFR, StR]
+    direction: outgoing
+    check: soup-serves-no-requirement
   #
   # A risk that transitively arises from itself states nothing, and no
   # per-document check can see it: the defect is a property of the graph.
