@@ -27,6 +27,7 @@ This document specifies the requirements for `spec-objects-security`, a Filament
 - The Module manifest this package publishes and its activation against filament-core.
 - The 24 tier-2 ObjectTypes the module contributes, covering threats/controls and authentication/authorization (identity folded in per ADR; revisit if identity grows past ~12 types).
 - The templates, schemas, and grammars the module ships for those object types.
+- The source profiles under `profiles/` (a named list of clause-set keys plus an applicability context) and the default profiles built only from publishable clause sets.
 - The semantic-module contract (issue #13): a TypeSpec source importing
   `@agent-ix/semantic-core`, the emitted JSON Schema per object type
   shipped under `spec_objects_security/schemas/`, the manifest `semantic`

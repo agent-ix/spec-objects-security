@@ -32,18 +32,18 @@ pack joins a profile only through local configuration ([quoin FR-182](ix://agent
 | Metric | Target | Threshold | Method |
 |--------|--------|-----------|--------|
 | Shipped profile keys outside `schemaVersion`, `name`, `title`, `description`, `clauseSets`, `context` | 0 | 0 | Test |
-| Shipped profile entries whose declaring set has non-publishable rights | 0 | 0 | Test |
+| Shipped profile entries whose declaring module fails `quire publish-check` | 0 | 0 | Test |
 
 ## Acceptance Criteria
 
 | ID | Criteria | Verification |
 |----|----------|--------------|
 | NFR-002-AC-1 | Parsing every shipped profile finds no top-level key outside the six listed and no `clauseSets` entry field outside `authority`, `id`, `version`. | Test |
-| NFR-002-AC-2 | Every `authority` in a shipped profile appears in an allow-list of publishable authorities kept in the test; an authority outside it fails. | Test |
+| NFR-002-AC-2 | `quire publish-check --module <declaring module>` exits 0 for the declaring module of every key in every shipped profile; no authority list is kept in the test. | Test |
 
 ## Verification
 
-Both criteria are tests over the shipped profile files.
+Both criteria are tests over the shipped profile files; the licence signal is the engine's publishability check alone.
 
 ## Dependencies
 
