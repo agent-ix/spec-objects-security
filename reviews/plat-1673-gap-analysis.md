@@ -45,3 +45,7 @@ Examined requirement units:
 | ID | Severity | Summary | Refs |
 | --- | --- | --- | --- |
 | FND-001 | low | No findings (placeholder) | - |
+
+## Disposition pass 2
+
+The first pass had no findings to disposition. Rechecked the final head `2808f4385a2cbcef56b3d39668f1213b457f6183`, including the CLI pin, local CLI resolution, and repository ownership gate; no new FR-008 coverage gap was found. The clean-review placeholder remains unchanged.

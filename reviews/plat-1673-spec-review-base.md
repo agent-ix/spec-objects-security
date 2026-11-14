@@ -49,8 +49,17 @@ The FR-008 TC rows all changed to `✅`; TC-119's complete evidence is incomplet
 | FND | outcome | reason |
 | --- | --- | --- |
 | FND-001 | fixed | The test now checks strict-mode status 3 and the promoted error summary and severity. |
+| FND-001 | fixed | Rechecked on head `2808f4385a2cbcef56b3d39668f1213b457f6183`; both severity assertions remain in the test. |
 
 After excerpt (verbatim):
+
+```python
+assert strict.returncode == 3, strict.stderr
+assert "1 OKF bundle validation error(s)" in promoted.stderr, promoted.stderr
+assert not promoted_findings[0].startswith("warning:"), promoted.stderr
+```
+
+After excerpt (round 2, verbatim):
 
 ```python
 assert strict.returncode == 3, strict.stderr
