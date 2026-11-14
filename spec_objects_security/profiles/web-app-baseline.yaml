@@ -1,0 +1,11 @@
+schemaVersion: source-profile-v1
+name: web-app-baseline
+title: Web application baseline
+description: NIST SP 800-53 and OWASP ASVS sources for web applications.
+clauseSets:
+  - authority: nist
+    id: sp800-53
+    version: 5.2.0
+  - authority: owasp
+    id: asvs
+    version: 5.0.0

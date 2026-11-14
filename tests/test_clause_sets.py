@@ -261,11 +261,12 @@ def test_a_profile_binds_only_the_baseline_it_needs(tmp_path):
 
 
 @pytest.mark.trace("TC-182")
-def test_the_clause_files_ship_in_the_wheel_and_the_npm_tarball():
+def test_the_module_data_files_ship_in_the_wheel_and_the_npm_tarball():
     shipped = [
         PACKAGE_ROOT / p
         for p in yaml.safe_load(MANIFEST_PATH.read_text())["clause_sets"]
     ]
+    shipped.extend((PACKAGE_ROOT / "profiles").glob("*.yaml"))
     assert shipped
     with tempfile.TemporaryDirectory() as tmp:
         built = subprocess.run(

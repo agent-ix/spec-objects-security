@@ -16,6 +16,7 @@
     "manifest.yaml",
     "schemas/",
     "clauses/",
+    "profiles/",
     "skeletons/",
     "README.md",
     "LICENSE"
