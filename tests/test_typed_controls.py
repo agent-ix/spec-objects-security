@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import re
+from pathlib import Path
 
 import pytest
 import yaml
@@ -24,6 +25,7 @@ from tests.conftest import (
 
 BUNDLE = "agent-ix/spec-objects-security"
 SET = "example.invalid/std@1"
+FIXTURES = Path(__file__).parent / "fixtures"
 
 
 def control_skeleton() -> str:
@@ -601,22 +603,27 @@ def test_validated_fixtures_emit_exactly_the_keys_the_author_wrote(quire_engine)
         ("example.invalid/std@1", "EX-1"),
         ("example.invalid/std@1", "EX-2"),
     ]
+    exclusion_text = (
+        FIXTURES / "positive" / "scope-exclusion-temporary-exception.md"
+    ).read_text()
+    validated = validate(
+        quire_engine, "scope_exclusion", exclusion_text, bundle_package=BUNDLE
+    )
+    assert validated["is_valid"], validated["errors"]
+
     exclusion = extract_record(
-        quire_engine, "scope_exclusion", "ScopeExclusion.json", exclusion_skeleton()
+        quire_engine, "scope_exclusion", "ScopeExclusion.json", exclusion_text
     )
-    assert set(exclusion["record"]) == {
-        "set",
-        "clause",
-        "responsible",
-        "rationale",
-        "decision",
-        "decision_owner",
-        "approval_ref",
-        "expires_at",
+    assert exclusion["record"] == {
+        "set": "example.invalid/std@1",
+        "clause": "EX-1",
+        "responsible": "ix://agent-ix/spec-objects-security/COMP-001",
+        "rationale": (
+            "The deployment platform owns this clause for every service it hosts."
+        ),
+        "decision": "temporary_exception",
+        "decision_owner": "ix://agent-ix/spec-objects-security/SEC-OWNER-001",
+        "approval_ref": "APPROVAL-001",
+        "expires_at": "2026-11-14T12:00:00Z",
     }
-    assert exclusion["record"]["decision"] == "temporary_exception"
-    assert exclusion["record"]["decision_owner"] == (
-        "ix://agent-ix/spec-objects-security/SEC-OWNER-001"
-    )
-    assert exclusion["record"]["approval_ref"] == "APPROVAL-001"
-    assert exclusion["record"]["expires_at"] == "2026-11-14T12:00:00Z"
+    assert "owner" not in exclusion["record"]
