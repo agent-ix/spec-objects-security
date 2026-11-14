@@ -140,8 +140,8 @@ the Python package only: neither Node script is measured by it.
 | FR-013 | FR-013-AC-1..7 | TC-150..TC-156 | 🚧 AC-7 needs `quire validate --repo` (PLAT-1519); `quire trace`/`quire matrix` show no document edges (PLAT-1519), so AC-6 reads the edge with `quire extract` |
 | NFR-001 | NFR-001-AC-1..2, NFR-001-M-1..2 | TC-144, TC-145 | ✅ |
 | FR-020 | FR-020-AC-1..6 | TC-160..TC-165 | ✅ AC-6 covers the key-absence half only; activation is FR-001-AC-2 |
-| FR-021 | FR-021-AC-1..7 | TC-166..TC-172 | ✅ AC-4, AC-6 and AC-7 are inspections (human reviewer); AC-1, AC-2, AC-3 and AC-5 run over shipped profiles and are vacuous until one ships |
-| NFR-002 | NFR-002-AC-1..2, NFR-002-M-1..2 | TC-173, TC-174 | ✅ vacuous until a profile ships |
+| FR-021 | FR-021-AC-1..7 | TC-166..TC-172, TC-206 | ✅ AC-4, AC-6 and AC-7 are inspections (human reviewer); shipped-profile tests cover web-app-baseline |
+| NFR-002 | NFR-002-AC-1..2, NFR-002-M-1..2 | TC-173, TC-174 | ✅ web-app-baseline is shipped |
 | FR-014 | FR-014-AC-1..7 | TC-187..TC-193 | ✅ |
 | FR-015 | FR-015-AC-1..3 | TC-194..TC-196 | ✅ |
 | FR-016 | FR-016-AC-1..7 | TC-197..TC-203 | ✅ |
@@ -288,6 +288,7 @@ the Python package only: neither Node script is measured by it.
 | TC-172 | A published module's set for an intended source is listed in the matching profile | Manual | P2 | FR-021-AC-7 | 🚧 human reviewer |
 | TC-173 | Every shipped profile has only the six top-level keys and the three key fields | Unit | P1 | NFR-002-AC-1, NFR-002-M-1 | ✅ |
 | TC-174 | `quire publish-check` accepts every declaring module, with no authority list | Integration | P1 | NFR-002-AC-2, NFR-002-M-2 | ✅ |
+| TC-206 | The web-app baseline profile is shipped with exactly the NIST and OWASP keys and no context | Unit | P1 | FR-021-AC-1, FR-021-AC-5 | ✅ |
 | TC-175 | The manifest `clause_sets` names exactly `nist/sp800-53@5.2.0` and `owasp/asvs@5.0.0` | Unit | P0 | FR-017-AC-1 | ✅ |
 | TC-176 | Every declared set's `rights.text` is `none`, `original` or `explicitly_cleared` | Unit | P0 | FR-017-AC-2 | ✅ |
 | TC-177 | `quire publish-check --module` over this module exits 0 | Integration | P0 | FR-017-AC-3 | ✅ |
