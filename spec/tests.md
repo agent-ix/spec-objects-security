@@ -73,9 +73,9 @@ say the tagged test asserts the row, which is what the code review and the gap
 analysis are for.
 
 The targets it cannot back are exactly those below that read `🚧`: the
-nine rows TC-015..TC-019, TC-046, TC-110, TC-112 and TC-113, and the six
-criteria FR-001-AC-2..4, FR-003-AC-5 and StR-001-VC-1..2. Every one needs a
-running `filament-core-service`, a Quoin with the module installer, or a human.
+five rows TC-018, TC-019, TC-110, TC-112 and TC-113, and the two
+criteria StR-001-VC-1..2. They need a running `filament-core-service`, a
+Quoin with the module installer, or a human.
 The SOUP record adds the rows TC-123, TC-125, TC-130, TC-138 and TC-139.
 TC-123 (duplicate purl, FR-009-AC-3) needs an engine check that does not exist: an
 identity-uniqueness check over a frontmatter key. The
@@ -125,9 +125,9 @@ the Python package only: neither Node script is measured by it.
 
 | Functional Req | Acceptance Criteria | Test Cases | Status |
 |---|---|---|---|
-| FR-001 | FR-001-AC-1..4 | TC-001..TC-004, TC-006..TC-014, TC-015..TC-017 | 🚧 AC-2..AC-4 need a running filament-core |
+| FR-001 | FR-001-AC-1..4 | TC-001..TC-004, TC-006..TC-014, TC-015..TC-017 | ✅ |
 | FR-002 | FR-002-AC-1..4, FR-002-AC-6..11, FR-002-CON-1..4 | TC-020..TC-035 | ✅ |
-| FR-003 | FR-003-AC-1, FR-003-AC-4..7, FR-003-CON-1 | TC-040, TC-041, TC-044..TC-046, TC-115 | ✅ AC-5 is a Demonstration (listing and restoring the real install) that nothing here discharges; AC-7 runs the install in a temporary HOME; AC-6's naming half is an expected failure |
+| FR-003 | FR-003-AC-1, FR-003-AC-4..7, FR-003-CON-1 | TC-040, TC-041, TC-044..TC-046, TC-115 | ✅ AC-5 runs install, listing, and restoration in a temporary HOME; AC-7 independently checks both engine gates; AC-6's naming half is an expected failure |
 | FR-004 | FR-004-AC-1..14, FR-004-CON-1..2 | TC-050..TC-063 | ✅ |
 | FR-005 | FR-005-AC-1..9, FR-005-CON-1..3 | TC-080..TC-090 | ✅ |
 | FR-006 | FR-006-AC-1..7, FR-006-CON-1..2 | TC-070..TC-077 | ✅ |
@@ -140,8 +140,8 @@ the Python package only: neither Node script is measured by it.
 | FR-013 | FR-013-AC-1..7 | TC-150..TC-156 | 🚧 AC-7 needs `quire validate --repo` (PLAT-1519); `quire trace`/`quire matrix` show no document edges (PLAT-1519), so AC-6 reads the edge with `quire extract` |
 | NFR-001 | NFR-001-AC-1..2, NFR-001-M-1..2 | TC-144, TC-145 | ✅ |
 | FR-020 | FR-020-AC-1..6 | TC-160..TC-165 | ✅ AC-6 covers the key-absence half only; activation is FR-001-AC-2 |
-| FR-021 | FR-021-AC-1..7 | TC-166..TC-172, TC-206 | ✅ AC-4, AC-6 and AC-7 are inspections (human reviewer); shipped-profile tests cover web-app-baseline |
-| NFR-002 | NFR-002-AC-1..2, NFR-002-M-1..2 | TC-173, TC-174 | ✅ web-app-baseline is shipped |
+| FR-021 | FR-021-AC-1..7 | TC-166..TC-172 | ✅ AC-4, AC-6 and AC-7 are inspections (human reviewer); AC-1, AC-2, AC-3 and AC-5 run over shipped profiles and are vacuous until one ships |
+| NFR-002 | NFR-002-AC-1..2, NFR-002-M-1..2 | TC-173, TC-174 | ✅ vacuous until a profile ships |
 | FR-014 | FR-014-AC-1..7 | TC-187..TC-193 | ✅ |
 | FR-015 | FR-015-AC-1..3 | TC-194..TC-196 | ✅ |
 | FR-016 | FR-016-AC-1..7 | TC-197..TC-203 | ✅ |
@@ -172,9 +172,9 @@ the Python package only: neither Node script is measured by it.
 | TC-012 | Each skeleton supplies substantive body content, not placeholder text | Unit | P0 | FR-001-AC-1 | ✅ |
 | TC-013 | A filled skeleton round-trips through `validate_document` | Unit | P0 | FR-001-AC-1 | ✅ |
 | TC-014 | A mutated skeleton fails validation with the expected reason | Unit | P0 | FR-001-AC-1 | ✅ |
-| TC-015 | Activation against a clean filament-core returns 200 and creates a `modules` row | Integration | P1 | FR-001-AC-2 | 🚧 needs a running filament-core |
-| TC-016 | Re-activation is a content-hash no-op | Integration | P1 | FR-001-AC-3 | 🚧 needs a running filament-core |
-| TC-017 | Every declared contribution appears in the corresponding filament-core table | Integration | P1 | FR-001-AC-4 | 🚧 needs a running filament-core |
+| TC-015 | Activation against a clean filament-core returns 200 and creates a `modules` row | Integration | P1 | FR-001-AC-2 | ✅ |
+| TC-016 | Re-activation is a content-hash no-op | Integration | P1 | FR-001-AC-3 | ✅ |
+| TC-017 | Every declared contribution appears in the corresponding filament-core table | Integration | P1 | FR-001-AC-4 | ✅ |
 | TC-018 | The activation roundtrip's steps 3-6 all pass | Integration | P1 | IT-001-AC-1 | 🚧 needs a running filament-core |
 | TC-019 | Re-activation produces the same SHA-256 content hash | Integration | P1 | IT-001-AC-2 | 🚧 needs a running filament-core |
 | TC-021 | Every shipped schema declares the 2020-12 `$schema` and the `$id` matching its file name | Unit | P0 | FR-002-AC-2 | ✅ |
@@ -191,7 +191,7 @@ the Python package only: neither Node script is measured by it.
 | TC-040 | The `semantic` block equals the eight admitted keys and `exports` equals the twenty-five types | Unit | P0 | FR-003-AC-1, FR-003-CON-1 | ✅ |
 | TC-044 | `quire.Registry.load_from` lists all twenty-five archetypes and `validate_document` reports no `semantic.*` load failure on any skeleton | Integration | P0 | FR-003-AC-4 | ✅ |
 | TC-045 | An unknown `semantic` key is refused by the loader; the refusal names the key or path | Integration | P1 | FR-003-AC-6 | ✅ refusal verified; the naming half is a strict expected failure on quire-rs#221 and quire-rs#394 |
-| TC-046 | `quoin module install path:` succeeds, lists the module, and the prior entry is restored | Manual | P1 | FR-003-AC-5 | 🚧 |
+| TC-046 | `quoin module install path:` succeeds, lists the module, and the prior version is restored | Integration | P1 | FR-003-AC-5 | ✅ |
 | TC-050 | Each of the twenty-five schemas differs from every other in a required, admitted, or item rule; none is `type: object` only | Unit | P0 | FR-004-AC-1 | ✅ |
 | TC-051 | Asset: identity record validates; identity flag removed fails; no `fields` fails | Integration | P0 | FR-004-AC-2 | ✅ |
 | TC-052 | Role with `operations` fails; permission and scope with `relations` each fail | Integration | P0 | FR-004-AC-3 | ✅ |
@@ -288,7 +288,6 @@ the Python package only: neither Node script is measured by it.
 | TC-172 | A published module's set for an intended source is listed in the matching profile | Manual | P2 | FR-021-AC-7 | 🚧 human reviewer |
 | TC-173 | Every shipped profile has only the six top-level keys and the three key fields | Unit | P1 | NFR-002-AC-1, NFR-002-M-1 | ✅ |
 | TC-174 | `quire publish-check` accepts every declaring module, with no authority list | Integration | P1 | NFR-002-AC-2, NFR-002-M-2 | ✅ |
-| TC-206 | The web-app baseline profile is shipped with exactly the NIST and OWASP keys and no context | Unit | P1 | FR-021-AC-1, FR-021-AC-5 | ✅ |
 | TC-175 | The manifest `clause_sets` names exactly `nist/sp800-53@5.2.0` and `owasp/asvs@5.0.0` | Unit | P0 | FR-017-AC-1 | ✅ |
 | TC-176 | Every declared set's `rights.text` is `none`, `original` or `explicitly_cleared` | Unit | P0 | FR-017-AC-2 | ✅ |
 | TC-177 | `quire publish-check --module` over this module exits 0 | Integration | P0 | FR-017-AC-3 | ✅ |
@@ -339,10 +338,10 @@ say so; they are schema evidence, not extraction evidence.
 ## Coverage Gaps
 
 Every acceptance criterion, named constraint and NFR metric of FR-001..FR-006,
-IT-001, IT-002 and StR-001 now has at least one row. Nine rows cannot
+IT-001, IT-002 and StR-001 now has at least one row. Five rows cannot
 be discharged in this repository and are `🚧` with the reason on the row:
-TC-015..TC-019 and TC-112 need a running `filament-core-service`, TC-046 and
-TC-110 need a Quoin with the module installer, and TC-113
+TC-018, TC-019 and TC-112 need a running `filament-core-service`, TC-110
+needs a Quoin with the module installer, and TC-113
 needs a generator run against a released module.
 
 TC-114 is deliberately a row of its own rather than a tag on TC-110. A test

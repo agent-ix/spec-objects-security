@@ -59,6 +59,19 @@ def _quoin_install(module, tmp_path):
     )
 
 
+def _quoin_list(tmp_path):
+    home = tmp_path / "home"
+    env = {**os.environ, "HOME": str(home)}
+    env.pop("IX_CONFIG_ROOT", None)
+    return subprocess.run(
+        [_tool("quoin"), "module", "list", "--no-project-config"],
+        capture_output=True,
+        text=True,
+        cwd=tmp_path,
+        env=env,
+    )
+
+
 @pytest.mark.trace("TC-115", "FR-003-AC-7")
 def test_the_shipped_manifest_is_accepted_by_both_engines(tmp_path):
     module = _module(tmp_path)
@@ -87,3 +100,50 @@ def test_quoin_refuses_an_unknown_semantic_key_and_names_it(tmp_path):
     result = _quoin_install(module, tmp_path)
     assert result.returncode != 0
     assert "semantic.foo" in result.stderr + result.stdout, result.stderr
+
+
+@pytest.mark.trace("TC-046", "FR-003-AC-5")
+def test_quoin_install_lists_module_and_restores_previously_installed_version(
+    tmp_path,
+):
+    previous_module = _module(tmp_path / "previous")
+    previous_manifest = previous_module / "manifest.yaml"
+    previous_data = yaml.safe_load(previous_manifest.read_text())
+    previous_data["version"] = "0.1.0"
+    previous_manifest.write_text(yaml.safe_dump(previous_data, sort_keys=False))
+
+    # Seed a prior installed version with the same module identity. The
+    # temporary HOME makes the demonstration hermetic and lets the test
+    # explicitly restore that entry after installing the shipped version.
+    seeded = _quoin_install(previous_module, tmp_path)
+    assert seeded.returncode == 0, seeded.stderr + seeded.stdout
+    seeded_registry = tmp_path / "home" / ".ix" / "filament" / "registry.json"
+    assert seeded_registry.is_file()
+
+    shipped_module = _module(tmp_path / "shipped")
+    installed = _quoin_install(shipped_module, tmp_path)
+    assert installed.returncode == 0, installed.stderr + installed.stdout
+    listed = _quoin_list(tmp_path)
+    assert listed.returncode == 0, listed.stderr + listed.stdout
+    assert "spec-objects-security" in listed.stdout
+    installed_manifest = (
+        tmp_path
+        / "home"
+        / ".ix"
+        / "filament"
+        / "modules"
+        / "spec-objects-security"
+        / "manifest.yaml"
+    )
+    installed_data = yaml.safe_load(installed_manifest.read_text())
+    assert installed_data["version"] == "0.2.0"
+
+    restored = _quoin_install(previous_module, tmp_path)
+    assert restored.returncode == 0, restored.stderr + restored.stdout
+    restored_data = yaml.safe_load(installed_manifest.read_text())
+    assert restored_data["version"] == "0.1.0"
+    listed_after_restore = _quoin_list(tmp_path)
+    assert listed_after_restore.returncode == 0, (
+        listed_after_restore.stderr + listed_after_restore.stdout
+    )
+    assert "spec-objects-security" in listed_after_restore.stdout
