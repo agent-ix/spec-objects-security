@@ -18,8 +18,7 @@ import zipfile
 
 import pytest
 import yaml
-
-from tests.conftest import MANIFEST_PATH, PACKAGE_ROOT, REPO_ROOT, engine_tool
+from conftest import MANIFEST_PATH, PACKAGE_ROOT, REPO_ROOT, engine_tool
 
 CLAUSES_DIR = PACKAGE_ROOT / "clauses"
 NIST = ("nist", "sp800-53", "5.2.0")
@@ -293,6 +292,7 @@ def test_the_module_data_files_ship_in_the_wheel_and_the_npm_tarball():
         assert f"spec_objects_security/{relative}" in wheel, relative
         assert f"package/{relative}" in tarball, relative
     assert not (REPO_ROOT / "clauses").exists(), "postpack left a staged clauses dir"
+    assert not (REPO_ROOT / "profiles").exists(), "postpack left a staged profiles dir"
 
 
 def _record_and_render_matrix(tmp_path, source, key, context, clause_id):
