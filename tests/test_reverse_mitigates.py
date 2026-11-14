@@ -206,13 +206,16 @@ def test_finding_is_advisory_and_tunable(tmp_path):
     _nfr(tmp_path, "NFR-001", "security")
     strict = _registered(_validate(tmp_path, "--strict"))
     findings = _findings(strict)
+    assert strict.returncode == 3, strict.stderr
     assert len(findings) == 1, strict.stderr
     # The rule never promotes itself: under strict it is still a warning.
     assert findings[0].startswith("warning:"), strict.stderr
     promoted = _registered(_validate(tmp_path, "--severity", f"trace:{CHECK}=error"))
     assert promoted.returncode != 0, promoted.stderr
-    assert len(_findings(promoted)) == 1, promoted.stderr
-    assert not _findings(promoted)[0].startswith("warning:"), promoted.stderr
+    promoted_findings = _findings(promoted)
+    assert len(promoted_findings) == 1, promoted.stderr
+    assert "1 OKF bundle validation error(s)" in promoted.stderr, promoted.stderr
+    assert not promoted_findings[0].startswith("warning:"), promoted.stderr
 
 
 @pytest.mark.trace("TC-120", "FR-008-AC-6")

@@ -236,7 +236,7 @@ the Python package only: neither Node script is measured by it.
 | TC-116 | The manifest declares the `NFR` required relation with `where` on `quality_attribute` = `security`, `mitigates`, `to: [threat, risk]`, outgoing, `unjustified-security-nfr` | Unit | P0 | FR-008-AC-1 | ✅ |
 | TC-117 | A `security` NFR with no `mitigates` edge yields exactly one `unjustified-security-nfr` finding naming the NFR, the declaration, the selector field and `security`, exit 0 | Integration | P0 | FR-008-AC-2 | ✅ |
 | TC-118 | The same NFR with a `mitigates` edge to a threat in the same repository yields no finding; an NFR with another `quality_attribute` and no edge yields none | Integration | P0 | FR-008-AC-3, FR-008-AC-4 | ✅ |
-| TC-119 | Under `--okf --strict` the finding stays a `warning:`, and `--severity trace:unjustified-security-nfr=error` exits non-zero | Integration | P1 | FR-008-AC-5 | ✅ |
+| TC-119 | Under `--okf --strict` exit 3 and the finding stays a `warning:`; `--severity trace:unjustified-security-nfr=error` exits non-zero with an error finding | Integration | P1 | FR-008-AC-5 | ✅ |
 | TC-120 | `threat-has-control` and `risk-has-treatment` still declare `to: []` | Unit | P1 | FR-008-AC-6 | ✅ |
 | TC-146 | A security NFR with a `mitigates` edge to a risk in the same repository yields no finding | Integration | P0 | FR-008-AC-7 | ✅ |
 | TC-147 | `quire validate --okf --repo o/a=… --repo o/b=…` with the NFR in `o/a` mitigating a threat in `o/b` yields no finding | Integration | P0 | FR-008-AC-8 | ✅ |
