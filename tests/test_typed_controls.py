@@ -577,7 +577,7 @@ def test_no_computed_value_property_on_mapping_or_exclusion_schemas():
             ), (model, name)
 
 
-@pytest.mark.trace("TC-205", "NFR-003-AC-2", "NFR-003-M-2")
+@pytest.mark.trace("TC-205", "FR-016-AC-8", "NFR-003-AC-2", "NFR-003-M-2")
 def test_validated_fixtures_emit_exactly_the_keys_the_author_wrote(quire_engine):
     """
     Description:

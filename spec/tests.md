@@ -312,13 +312,13 @@ the Python package only: neither Node script is measured by it.
 | TC-196 | control mapping schema lists exactly set and clause | Unit | P0 | FR-015-AC-3 | ✅ |
 | TC-197 | scope exclusion schema is sealed and exported | Unit | P0 | FR-016-AC-1 | ✅ |
 | TC-198 | exclusion without responsible or rationale fails | Unit | P0 | FR-016-AC-2 | ✅ |
-| TC-199 | exclusion admits no decision status or approval | Unit | P0 | FR-016-AC-3 | ✅ |
+| TC-199 | exclusion admits no decision status or approval | Unit | P0 | FR-016-AC-3, FR-016-AC-9 | ✅ |
 | TC-200 | exclusion skeleton validates and each section is required | Unit | P0 | FR-016-AC-4 | ✅ |
 | TC-201 | responsible is a bare bundle id not a cross repository identity | Unit | P0 | FR-016-AC-7 | ✅ |
 | TC-202 | the empty exclusion record fails | Unit | P0 | FR-016-AC-5 | ✅ |
 | TC-203 | exclusion manifest entry requires four section body locators | Unit | P0 | FR-016-AC-6 | ✅ |
 | TC-204 | No property of the mapping or exclusion schemas is named or typed as a computed value | Unit | P0 | NFR-003-AC-1, NFR-003-M-1 | ✅ |
-| TC-205 | A validated control and exclusion emit exactly the keys the author wrote | Unit | P0 | NFR-003-AC-2, NFR-003-M-2 | ✅ |
+| TC-205 | A validated control and exclusion emit exactly the keys the author wrote | Unit | P0 | FR-016-AC-8, NFR-003-AC-2, NFR-003-M-2 | ✅ |
 
 ## Test Environment
 
