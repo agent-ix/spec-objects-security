@@ -28,22 +28,20 @@ REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent
 
 
 def engine_tool(name: str) -> str:
-    """The one lookup for an engine CLI: PATH first, then node_modules/.bin.
+    """The one lookup for an engine CLI: node_modules/.bin first, then PATH.
 
     Every test that shells out to `quire` or `quoin` uses this, so the suite
-    uses the runtime CLI selected by the environment, falling back to the
-    repository-local CLI only when PATH has none.
+    exercises a single engine rather than two.
     """
-    path = shutil.which(name)
-    if path is not None:
-        return path
     local = REPO_ROOT / "node_modules" / ".bin" / name
-    if local.exists():
-        return str(local)
-    pytest.fail(
-        f"the `{name}` CLI is in neither PATH nor node_modules/.bin; the tests "
-        "need the real engine. Run `npm ci` (both CLIs are devDependencies)."
-    )
+    path = str(local) if local.exists() else shutil.which(name)
+    if path is None:
+        pytest.fail(
+            f"the `{name}` CLI is in neither node_modules/.bin nor on PATH; the "
+            "tests need the real engine. Run `npm ci` (both CLIs are "
+            "devDependencies)."
+        )
+    return path
 
 
 PACKAGE_ROOT = REPO_ROOT / "spec_objects_security"
