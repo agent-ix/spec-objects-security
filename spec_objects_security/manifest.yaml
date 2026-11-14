@@ -714,14 +714,14 @@ traceability:
   # classification is the `quality_attribute` frontmatter field spec-artifacts-iso
   # already declares on `NFR`; `where` (quire-rs FR-058) narrows the obligation to
   # NFRs holding `security`, so a performance NFR is never reported. The NFR
-  # authors the edge, so `direction: outgoing`. `to: []` on purpose: the
-  # threat or risk an NFR answers usually lives in another repository, and a
-  # dangling edge cannot satisfy a constrained `to` (FR-058).
+  # authors the edge, so `direction: outgoing`. The threat or risk an NFR
+  # answers often lives in another repository; loading that repository into
+  # the corpus resolves the constrained `to` (FR-085).
   - name: security-nfr-has-mitigation-target
     from: NFR
     where: {field: quality_attribute, values: [security]}
     edges: [mitigates]
-    to: []
+    to: [threat, risk]
     direction: outgoing
     check: unjustified-security-nfr
   # A component that serves no requirement is unjustified scope (PLAT-1598).
