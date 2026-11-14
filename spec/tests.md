@@ -311,7 +311,7 @@ the Python package only: neither Node script is measured by it.
 | TC-195 | a third mapping column is a column unknown refusal | Unit | P0 | FR-015-AC-2 | ✅ |
 | TC-196 | control mapping schema lists exactly set and clause | Unit | P0 | FR-015-AC-3 | ✅ |
 | TC-197 | scope exclusion schema is sealed and exported | Unit | P0 | FR-016-AC-1 | ✅ |
-| TC-198 | required exclusion fields, SemanticIds and non-empty values are enforced | Unit | P0 | FR-016-AC-2 | ✅ |
+| TC-198 | missing required fields, invalid responsible/decision_owner SemanticIds and empty rationale/approval_ref fail | Unit | P0 | FR-016-AC-2 | ✅ |
 | TC-199 | exclusion decisions and conditional RFC 3339 expiry are validated | Unit | P0 | FR-016-AC-3, FR-016-AC-9 | ✅ |
 | TC-200 | exclusion skeleton validates and each section is required | Unit | P0 | FR-016-AC-4 | ✅ |
 | TC-201 | responsible is a bare bundle id not a cross repository identity | Unit | P0 | FR-016-AC-7 | ✅ |

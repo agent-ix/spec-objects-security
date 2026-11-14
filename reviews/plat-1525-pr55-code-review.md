@@ -29,3 +29,9 @@ Reviewed the PR #55 disposition contract in the module manifest, generated JSON 
 
 The code-review pass checked duplication, boundary behavior, the authored-section to schema contract, test intent, generated-schema assertions, and the diff's alignment with FR-016. No AssuranceProfile applies. No test or aggregate gate was run in this review pass; the code lead owns the post-review gate.
 
+
+## Dispositions
+
+| FND | Outcome | Reason |
+| --- | --- | --- |
+| FND-001 | still-open | The summary now covers AC-1..9 and TC-205, and TC-199/203 no longer contradict the typed decision and locator contract. However, TC-198 still does not name the new `decision_owner` and `approval_ref` assertions, so the catalog description remains incomplete against the finding. |
