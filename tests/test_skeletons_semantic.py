@@ -310,6 +310,7 @@ def test_the_repository_holds_no_corpus_or_vendored_fixture():
         "spec/",
         "spec_objects_security/",
         "tests/",
+        "reviews/",
         "typespec/",
         "scripts/",
         "plan/",
