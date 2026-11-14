@@ -200,6 +200,20 @@ def test_shipped_profile_names_are_among_the_three_defaults() -> None:
     assert names <= ALLOWED_NAMES, sorted(names - ALLOWED_NAMES)
 
 
+@pytest.mark.trace("TC-206", "FR-021-AC-1", "FR-021-AC-5")
+def test_web_app_baseline_profile_is_shipped_with_only_its_public_sets() -> None:
+    path = PROFILES_DIR / "web-app-baseline.yaml"
+    assert path.is_file()
+
+    profile = validate_profile(path)
+    assert profile["name"] == "web-app-baseline"
+    assert profile["clauseSets"] == [
+        {"authority": "nist", "id": "sp800-53", "version": "5.2.0"},
+        {"authority": "owasp", "id": "asvs", "version": "5.0.0"},
+    ]
+    assert "context" not in profile
+
+
 def declared_keys(module_dir: pathlib.Path) -> set[tuple[str, str, str]]:
     """The clause-set keys a module's manifest lists, read from its set files."""
     manifest = yaml.safe_load((module_dir / "manifest.yaml").read_text()) or {}

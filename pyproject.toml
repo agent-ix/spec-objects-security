@@ -14,6 +14,7 @@ include = [
     { path = "spec_objects_security/skeletons/*.md", format = ["sdist", "wheel"] },
     { path = "spec_objects_security/schemas/*.json", format = ["sdist", "wheel"] },
     { path = "spec_objects_security/clauses/*.json", format = ["sdist", "wheel"] },
+    { path = "spec_objects_security/profiles/*.yaml", format = ["sdist", "wheel"] },
 ]
 
 [tool.poetry.dependencies]
@@ -36,6 +37,7 @@ quire = { version = "^0.58.0", source = "internal-pypi" }
 # The reverse-mitigates tests (tests/test_reverse_mitigates.py) load the NFR archetype and its
 # `quality_attribute` field, which spec-artifacts-iso owns.
 spec-artifacts-iso = { version = "^0.25.0", source = "internal-pypi" }
+platform-test-kit = {version = "0.5.6", source = "internal-pypi"}
 
 [tool.poetry.scripts]
 build-tools = "scripts.build_tools:main"
@@ -59,11 +61,11 @@ cmd = "build-tools clean"
 help = "Remove build artifacts"
 
 [tool.poe.tasks.test]
-cmd = "pytest"
+cmd = "pytest -m 'not integration'"
 help = "Run tests with coverage"
 
 [tool.poe.tasks.test-integrations]
-cmd = "pytest tests_integration/ -v -s --no-cov -m integration"
+cmd = "pytest tests/test_activation_core.py -v -s --no-cov -m integration"
 help = "Run integration tests (requires Kind cluster)"
 
 [tool.poe.tasks.lint]

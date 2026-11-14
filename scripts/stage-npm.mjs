@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Stage the Filament-module payload for npm packaging.
 //
-// Non-destructive: copies manifest.yaml + schemas/ + skeletons/ + clauses/ from the inner
+// Non-destructive: copies manifest.yaml + schemas/ + skeletons/ + clauses/ + profiles/ from the inner
 // `spec_*` Python package dir up to the repo root, so the published npm tarball
 // IS the module root (manifest.yaml at the top, schema refs resolve relative to
 // it). The inner dir remains the single source of truth; the staged copies are
@@ -33,7 +33,7 @@ if (!inner) {
   process.exit(1);
 }
 
-const PAYLOAD = ["manifest.yaml", "schemas", "skeletons", "clauses"];
+const PAYLOAD = ["manifest.yaml", "schemas", "skeletons", "clauses", "profiles"];
 
 // `--clean` (run from `postpack`) removes the staged copies again. Leaving them
 // behind puts a `manifest.yaml` at the repository root, which every Filament

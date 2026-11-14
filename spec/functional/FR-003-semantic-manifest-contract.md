@@ -67,7 +67,7 @@ traceability rule keeps its meaning.
 |----|----------|--------------|
 | FR-003-AC-1 | The loaded `semantic` block equals the eight admitted keys with the values above, and `exports` equals the twenty-five object-type names. | Test |
 | FR-003-AC-4 | `quire.Registry.load_from([module dir])` lists all twenty-five archetypes and `validate_document` on each skeleton reports no `semantic.*` load failure. | Test |
-| FR-003-AC-5 | `quoin module install path:<module dir>` exits zero and `quoin module` lists `spec-objects-security`; the previously installed entry is restored afterwards. | Demonstration |
+| FR-003-AC-5 | `quoin module install path:<module dir>` exits zero and `quoin module` lists `spec-objects-security`; the previously installed entry is restored afterwards. | Test |
 | FR-003-AC-6 | A manifest copy whose `semantic` block gains a key `foo` is refused by Quire's loader. The refusal is verified; the half that requires the diagnostic to *name* `foo` or the path is an explicit expected failure while `agent-ix/quire-rs#221` and `agent-ix/quire-rs#394` are open. | Test |
 | FR-003-AC-7 | `quire validate --module <module dir>` and `quoin module install path:<module dir>` (with `HOME` pointed at a temporary directory, so the real install and registry are untouched) both accept the shipped manifest; a copy with an unknown top-level key is refused by `quire validate` naming `bogus_key`, and a copy with an unknown `semantic` key is refused by `quoin module install` naming `semantic.foo`. No copy of the schema is held here. | Test |
 

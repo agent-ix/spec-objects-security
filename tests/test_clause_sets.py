@@ -18,8 +18,7 @@ import zipfile
 
 import pytest
 import yaml
-
-from tests.conftest import MANIFEST_PATH, PACKAGE_ROOT, REPO_ROOT, engine_tool
+from conftest import MANIFEST_PATH, PACKAGE_ROOT, REPO_ROOT, engine_tool
 
 CLAUSES_DIR = PACKAGE_ROOT / "clauses"
 NIST = ("nist", "sp800-53", "5.2.0")
@@ -261,11 +260,12 @@ def test_a_profile_binds_only_the_baseline_it_needs(tmp_path):
 
 
 @pytest.mark.trace("TC-182")
-def test_the_clause_files_ship_in_the_wheel_and_the_npm_tarball():
+def test_the_module_data_files_ship_in_the_wheel_and_the_npm_tarball():
     shipped = [
         PACKAGE_ROOT / p
         for p in yaml.safe_load(MANIFEST_PATH.read_text())["clause_sets"]
     ]
+    shipped.extend((PACKAGE_ROOT / "profiles").glob("*.yaml"))
     assert shipped
     with tempfile.TemporaryDirectory() as tmp:
         built = subprocess.run(
@@ -292,6 +292,7 @@ def test_the_clause_files_ship_in_the_wheel_and_the_npm_tarball():
         assert f"spec_objects_security/{relative}" in wheel, relative
         assert f"package/{relative}" in tarball, relative
     assert not (REPO_ROOT / "clauses").exists(), "postpack left a staged clauses dir"
+    assert not (REPO_ROOT / "profiles").exists(), "postpack left a staged profiles dir"
 
 
 def _record_and_render_matrix(tmp_path, source, key, context, clause_id):
