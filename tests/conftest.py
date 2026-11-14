@@ -377,10 +377,12 @@ def schema_registry():
     registry = Registry().with_resources(resources)
 
     def validator_for(model: str):
-        from jsonschema import Draft202012Validator
+        from jsonschema import Draft202012Validator, FormatChecker
 
         schema = json.loads((SCHEMAS_DIR / f"{model}.json").read_text())
-        return Draft202012Validator(schema, registry=registry)
+        return Draft202012Validator(
+            schema, registry=registry, format_checker=FormatChecker()
+        )
 
     return validator_for
 

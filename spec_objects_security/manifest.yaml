@@ -672,6 +672,22 @@ object_types:
           from: section_body
           after_heading: Rationale
           required: true
+        decision:
+          from: section_body
+          after_heading: Decision
+          required: true
+        decision_owner:
+          from: section_body
+          after_heading: Decision owner
+          required: true
+        approval_ref:
+          from: section_body
+          after_heading: Approval ref
+          required: true
+        expires_at:
+          from: section_body
+          after_heading: Expires at
+          required: false
 
 # FR-043: concrete-term lexicon — security / identity / auth objects.
 # FR-058 (quire-rs): upward-trace completeness — the second half of

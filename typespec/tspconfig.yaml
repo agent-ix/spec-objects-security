@@ -4,3 +4,4 @@ options:
   "@typespec/json-schema":
     file-type: json
     emitter-output-dir: "{output-dir}"
+    polymorphic-models-strategy: oneOf

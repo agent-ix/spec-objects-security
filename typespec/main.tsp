@@ -807,14 +807,41 @@ model SoupRecord {
 }
 
 /**
- * A declaration that one clause of a clause set is outside the component, with
- * the party responsible for it. It is a boundary statement and never an
- * approval: it admits no decision, status or approval property.
+ * A declaration that one clause is outside the component and records the
+ * proposed disposition metadata. The disposition and approval reference are
+ * not approval; a separate Quoin attestation supplies human authorization.
  */
+@discriminator("decision")
 model ScopeExclusion {
   @pattern("^[!-.0-?A-~]{1,64}/[!-.0-?A-~]{1,64}@[!-.0-?A-~]{1,64}$") set: string;
   @pattern("^[!-~]{1,64}$") clause: string;
   responsible: SemanticId;
   @pattern("\\S") rationale: string;
+  @pattern("^(delegated|accepted_risk|temporary_exception)$") decision: string;
+  decision_owner: SemanticId;
+  @pattern("\\S") approval_ref: string;
+  @pattern("^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\\.[0-9]+)?(Z|[+-]([01][0-9]|2[0-3]):[0-5][0-9])$")
+  @format("date-time") expires_at?: string;
+}
+
+/** A delegated disposition does not carry an expiry. */
+model ScopeExclusionDelegated extends ScopeExclusion {
+  decision: "delegated";
+  expires_at?: never;
+  ...Record<never>;
+}
+
+/** An accepted risk disposition without an expiry. */
+model ScopeExclusionAcceptedRisk extends ScopeExclusion {
+  decision: "accepted_risk";
+  expires_at?: never;
+  ...Record<never>;
+}
+
+/** A temporary exception that is bounded by an explicit RFC 3339 expiry. */
+model ScopeExclusionTemporaryException extends ScopeExclusion {
+  decision: "temporary_exception";
+  @pattern("^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\\.[0-9]+)?(Z|[+-]([01][0-9]|2[0-3]):[0-5][0-9])$")
+  @format("date-time") expires_at: string;
   ...Record<never>;
 }
