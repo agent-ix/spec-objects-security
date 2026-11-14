@@ -144,7 +144,7 @@ the Python package only: neither Node script is measured by it.
 | NFR-002 | NFR-002-AC-1..2, NFR-002-M-1..2 | TC-173, TC-174 | ✅ vacuous until a profile ships |
 | FR-014 | FR-014-AC-1..7 | TC-187..TC-193 | ✅ |
 | FR-015 | FR-015-AC-1..3 | TC-194..TC-196 | ✅ |
-| FR-016 | FR-016-AC-1..7 | TC-197..TC-203 | ✅ |
+| FR-016 | FR-016-AC-1..9 | TC-197..TC-203, TC-205 | ✅ AC-8 is also exercised with NFR-003-AC-2 by TC-205; AC-9 covers the decision vocabulary and conditional RFC 3339 expiry in TC-199 |
 | NFR-003 | NFR-003-AC-1..2, NFR-003-M-1..2 | TC-204, TC-205 | ✅ |
 | FR-017 | FR-017-AC-1..7 | TC-175..TC-186 | ✅ `quire clauses` loads strictly and cannot load the real module (the object-type edges come from another module), so TC-181, TC-183, TC-185 and TC-186 evaluate a module that holds only the set files |
 
@@ -311,12 +311,12 @@ the Python package only: neither Node script is measured by it.
 | TC-195 | a third mapping column is a column unknown refusal | Unit | P0 | FR-015-AC-2 | ✅ |
 | TC-196 | control mapping schema lists exactly set and clause | Unit | P0 | FR-015-AC-3 | ✅ |
 | TC-197 | scope exclusion schema is sealed and exported | Unit | P0 | FR-016-AC-1 | ✅ |
-| TC-198 | exclusion without responsible or rationale fails | Unit | P0 | FR-016-AC-2 | ✅ |
-| TC-199 | exclusion admits no decision status or approval | Unit | P0 | FR-016-AC-3, FR-016-AC-9 | ✅ |
+| TC-198 | required exclusion fields, SemanticIds and non-empty values are enforced | Unit | P0 | FR-016-AC-2 | ✅ |
+| TC-199 | exclusion decisions and conditional RFC 3339 expiry are validated | Unit | P0 | FR-016-AC-3, FR-016-AC-9 | ✅ |
 | TC-200 | exclusion skeleton validates and each section is required | Unit | P0 | FR-016-AC-4 | ✅ |
 | TC-201 | responsible is a bare bundle id not a cross repository identity | Unit | P0 | FR-016-AC-7 | ✅ |
 | TC-202 | the empty exclusion record fails | Unit | P0 | FR-016-AC-5 | ✅ |
-| TC-203 | exclusion manifest entry requires four section body locators | Unit | P0 | FR-016-AC-6 | ✅ |
+| TC-203 | scope exclusion manifest declares required section locators and optional expiry | Unit | P0 | FR-016-AC-6 | ✅ |
 | TC-204 | No property of the mapping or exclusion schemas is named or typed as a computed value | Unit | P0 | NFR-003-AC-1, NFR-003-M-1 | ✅ |
 | TC-205 | A validated control and exclusion emit exactly the keys the author wrote | Unit | P0 | FR-016-AC-8, NFR-003-AC-2, NFR-003-M-2 | ✅ |
 
