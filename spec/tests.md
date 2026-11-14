@@ -233,15 +233,15 @@ the Python package only: neither Node script is measured by it.
 | TC-113 | A generator run (minijinja-cli) produces a valid artifact from a shipped skeleton and schema | Manual | P2 | StR-001-VC-2 | 🚧 needs a generator run against a released module |
 | TC-114 | The module directory a Quoin install would consume is complete and self-consistent: every export's schema file exists and carries its own `$id` | Unit | P1 | IT-002-SC-01 | ✅ precondition only; the install roundtrip itself is TC-110 |
 | TC-115 | The shipped manifest is accepted by `quire validate --module` and `quoin module install` (`HOME` pointed at a temporary directory); an unknown top-level key is refused by quire naming it, an unknown `semantic` key is refused by quoin naming `semantic.foo` | Integration | P0 | FR-003-AC-7 | ✅ |
-| TC-116 | The manifest declares the `NFR` required relation with `where` on `quality_attribute` = `security`, `mitigates`, `to: [threat, risk]`, outgoing, `unjustified-security-nfr` | Unit | P0 | FR-008-AC-1 | 🚧 |
+| TC-116 | The manifest declares the `NFR` required relation with `where` on `quality_attribute` = `security`, `mitigates`, `to: [threat, risk]`, outgoing, `unjustified-security-nfr` | Unit | P0 | FR-008-AC-1 | ✅ |
 | TC-117 | A `security` NFR with no `mitigates` edge yields exactly one `unjustified-security-nfr` finding naming the NFR, the declaration, the selector field and `security`, exit 0 | Integration | P0 | FR-008-AC-2 | ✅ |
-| TC-118 | The same NFR with a `mitigates` edge to a threat in the same repository yields no finding; an NFR with another `quality_attribute` and no edge yields none | Integration | P0 | FR-008-AC-3, FR-008-AC-4 | 🚧 |
-| TC-119 | Under `--okf --strict` the finding stays a `warning:`, and `--severity trace:unjustified-security-nfr=error` exits non-zero | Integration | P1 | FR-008-AC-5 | ✅ |
+| TC-118 | The same NFR with a `mitigates` edge to a threat in the same repository yields no finding; an NFR with another `quality_attribute` and no edge yields none | Integration | P0 | FR-008-AC-3, FR-008-AC-4 | ✅ |
+| TC-119 | Under `--okf --strict` exit 3 and the finding stays a `warning:`; `--severity trace:unjustified-security-nfr=error` exits non-zero with an error finding | Integration | P1 | FR-008-AC-5 | ✅ |
 | TC-120 | `threat-has-control` and `risk-has-treatment` still declare `to: []` | Unit | P1 | FR-008-AC-6 | ✅ |
-| TC-146 | A security NFR with a `mitigates` edge to a risk in the same repository yields no finding | Integration | P0 | FR-008-AC-7 | 🚧 |
-| TC-147 | `quire validate --okf --repo o/a=… --repo o/b=…` with the NFR in `o/a` mitigating a threat in `o/b` yields no finding | Integration | P0 | FR-008-AC-8 | 🚧 |
-| TC-148 | An NFR whose only `mitigates` edge targets a hazard yields the finding | Integration | P0 | FR-008-AC-9 | 🚧 |
-| TC-149 | An NFR whose only `mitigates` edge targets a threat in a repository not named by `--repo` yields the finding | Integration | P0 | FR-008-AC-10 | 🚧 |
+| TC-146 | A security NFR with a `mitigates` edge to a risk in the same repository yields no finding | Integration | P0 | FR-008-AC-7 | ✅ |
+| TC-147 | `quire validate --okf --repo o/a=… --repo o/b=…` with the NFR in `o/a` mitigating a threat in `o/b` yields no finding | Integration | P0 | FR-008-AC-8 | ✅ |
+| TC-148 | An NFR whose only `mitigates` edge targets a hazard yields the finding | Integration | P0 | FR-008-AC-9 | ✅ |
+| TC-149 | An NFR whose only `mitigates` edge targets a threat in a repository not named by `--repo` yields the finding | Integration | P0 | FR-008-AC-10 | ✅ |
 | TC-121 | The loaded manifest exports `soup_record` with a shipped schema, and its skeleton validates | Unit | P0 | FR-009-AC-1 | ✅ |
 | TC-122 | A `soup_record` document without its `purl` frontmatter key fails naming `purl`; a declaration record without a `purl` field row fails its schema | Unit | P0 | FR-009-AC-2 | ✅ |
 | TC-123 | Two `soup_record` documents with one purl yield one duplicate-identity report naming both | Integration | P0 | FR-009-AC-3 | 🚧 the engine has no identity-uniqueness check over a frontmatter key; strict expected failure |

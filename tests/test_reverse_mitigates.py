@@ -21,6 +21,7 @@ from tests.conftest import MANIFEST_PATH, PACKAGE_ROOT, SKELETONS_DIR, engine_to
 
 CHECK = "unjustified-security-nfr"
 THREAT_REF = "ix://agent-ix/spec-objects-security/THREAT-001"
+RISK_REF = "ix://agent-ix/spec-objects-security/RISK-001"
 
 
 def _iso() -> pathlib.Path:
@@ -52,6 +53,16 @@ def _threat(root):
     shutil.copy(SKELETONS_DIR / "threat.md", root / "THREAT-001.md")
 
 
+def _risk(root):
+    shutil.copy(SKELETONS_DIR / "risk.md", root / "RISK-001.md")
+
+
+def _hazard(root):
+    (root / "HAZARD-001.md").write_text(
+        "---\n" "type: hazard\n" "id: HAZARD-001\n" "---\n" "# Example hazard\n"
+    )
+
+
 def _validate(root, *flags):
     return subprocess.run(
         [
@@ -68,6 +79,15 @@ def _validate(root, *flags):
         capture_output=True,
         text=True,
     )
+
+
+def _validate_repos(repo_a, repo_b=None):
+    args = [engine_tool("quire"), "validate", "--okf"]
+    args.extend(("--repo", f"o/a={repo_a}"))
+    if repo_b is not None:
+        args.extend(("--repo", f"o/b={repo_b}"))
+    args.extend(("--module", str(_iso()), "--module", str(PACKAGE_ROOT)))
+    return subprocess.run(args, capture_output=True, text=True)
 
 
 def _registered(result):
@@ -89,11 +109,15 @@ def test_security_nfr_relation_is_declared_with_a_where_selector():
     manifest = yaml.safe_load(MANIFEST_PATH.read_text())
     relations = manifest["traceability"]["required_relations"]
     (relation,) = [r for r in relations if r["from"] == "NFR"]
-    assert relation["where"] == {"field": "quality_attribute", "values": ["security"]}
-    assert relation["edges"] == ["mitigates"]
-    assert relation["to"] == []
-    assert relation["direction"] == "outgoing"
-    assert relation["check"] == CHECK
+    assert relation == {
+        "name": "security-nfr-has-mitigation-target",
+        "from": "NFR",
+        "where": {"field": "quality_attribute", "values": ["security"]},
+        "edges": ["mitigates"],
+        "to": ["threat", "risk"],
+        "direction": "outgoing",
+        "check": CHECK,
+    }
 
 
 @pytest.mark.trace("TC-117", "FR-008-AC-2")
@@ -110,7 +134,7 @@ def test_security_nfr_without_a_mitigates_edge_is_reported(tmp_path):
 
 
 @pytest.mark.trace("TC-118", "FR-008-AC-3", "FR-008-AC-4")
-def test_mitigating_or_differently_classified_nfr_is_not_reported(tmp_path):
+def test_only_security_nfr_with_unresolved_target_is_reported(tmp_path):
     _threat(tmp_path)
     _nfr(tmp_path, "NFR-001", "security", [THREAT_REF])
     _nfr(tmp_path, "NFR-002", "security", ["ix://agent-ix/other-repo/THREAT-900"])
@@ -118,11 +142,63 @@ def test_mitigating_or_differently_classified_nfr_is_not_reported(tmp_path):
     _nfr(tmp_path, "NFR-004", "safety")
     result = _registered(_validate(tmp_path))
     assert result.returncode == 0, result.stderr
+    findings = _findings(result)
+    assert len(findings) == 1 and "NFR-002" in findings[0], result.stderr
+    assert all(
+        "NFR-003" not in finding and "NFR-004" not in finding for finding in findings
+    )
+
+
+@pytest.mark.trace("TC-146", "FR-008-AC-7")
+def test_security_nfr_mitigating_a_risk_is_not_reported(tmp_path):
+    _risk(tmp_path)
+    _nfr(tmp_path, "NFR-001", "security", [RISK_REF])
+    result = _registered(_validate(tmp_path))
+    assert result.returncode == 0, result.stderr
     assert _findings(result) == [], result.stderr
-    # Prove the rule is live over this very bundle: dropping one edge reports it.
-    _nfr(tmp_path, "NFR-002", "security")
-    findings = _findings(_validate(tmp_path))
-    assert len(findings) == 1 and "NFR-002" in findings[0], findings
+
+
+@pytest.mark.trace("TC-147", "FR-008-AC-8")
+def test_security_nfr_mitigating_a_loaded_cross_repository_threat_is_not_reported(
+    tmp_path,
+):
+    repo_a = tmp_path / "repo-a"
+    repo_b = tmp_path / "repo-b"
+    (repo_a / "spec").mkdir(parents=True)
+    (repo_b / "spec").mkdir(parents=True)
+    _nfr(repo_a / "spec", "NFR-001", "security", ["ix://o/b/THREAT-001"])
+    _threat(repo_b / "spec")
+    result = _registered(_validate_repos(repo_a, repo_b))
+    assert result.returncode == 0, result.stderr
+    assert _findings(result) == [], result.stderr
+
+
+@pytest.mark.trace("TC-148", "FR-008-AC-9")
+def test_security_nfr_mitigating_only_a_hazard_is_reported(tmp_path):
+    _hazard(tmp_path)
+    _nfr(
+        tmp_path,
+        "NFR-001",
+        "security",
+        ["ix://agent-ix/spec-objects-security/HAZARD-001"],
+    )
+    result = _registered(_validate(tmp_path))
+    findings = _findings(result)
+    assert len(findings) == 1, result.stderr
+    assert "NFR-001" in findings[0], findings
+
+
+@pytest.mark.trace("TC-149", "FR-008-AC-10")
+def test_security_nfr_mitigating_an_unloaded_cross_repository_threat_is_reported(
+    tmp_path,
+):
+    repo_a = tmp_path / "repo-a"
+    (repo_a / "spec").mkdir(parents=True)
+    _nfr(repo_a / "spec", "NFR-001", "security", ["ix://o/b/THREAT-001"])
+    result = _registered(_validate_repos(repo_a))
+    findings = _findings(result)
+    assert len(findings) == 1, result.stderr
+    assert "NFR-001" in findings[0], findings
 
 
 @pytest.mark.trace("TC-119", "FR-008-AC-5")
@@ -130,13 +206,16 @@ def test_finding_is_advisory_and_tunable(tmp_path):
     _nfr(tmp_path, "NFR-001", "security")
     strict = _registered(_validate(tmp_path, "--strict"))
     findings = _findings(strict)
+    assert strict.returncode == 3, strict.stderr
     assert len(findings) == 1, strict.stderr
     # The rule never promotes itself: under strict it is still a warning.
     assert findings[0].startswith("warning:"), strict.stderr
     promoted = _registered(_validate(tmp_path, "--severity", f"trace:{CHECK}=error"))
     assert promoted.returncode != 0, promoted.stderr
-    assert len(_findings(promoted)) == 1, promoted.stderr
-    assert not _findings(promoted)[0].startswith("warning:"), promoted.stderr
+    promoted_findings = _findings(promoted)
+    assert len(promoted_findings) == 1, promoted.stderr
+    assert "1 OKF bundle validation error(s)" in promoted.stderr, promoted.stderr
+    assert not promoted_findings[0].startswith("warning:"), promoted.stderr
 
 
 @pytest.mark.trace("TC-120", "FR-008-AC-6")
