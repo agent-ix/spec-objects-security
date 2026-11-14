@@ -26,3 +26,4 @@ description: "Index of artifacts in this directory."
 * [FR-017: The module declares the NIST SP 800-53 and OWASP ASVS clause sets with truthful rights metadata](./FR-017-module-declares-nist-and-asvs-clause-sets.md)
 * [FR-020: A source profile is a module data file naming clause sets and an applicability context](./FR-020-source-profile-format.md)
 * [FR-021: Default source profiles list only publishable clause sets and degrade while a pack is missing](./FR-021-default-source-profiles.md)
+* [FR-022: A SOUP record carries optional person-authored VEX statements](./FR-022-vex-statements-on-soup-records.md)
