@@ -43,3 +43,17 @@ The FR-008 TC rows all changed to `✅`; TC-119's complete evidence is incomplet
 | ID | Severity | Summary | Refs | Escape Cause |
 | --- | --- | --- | --- | --- |
 | FND-001 | medium | TC-119 does not assert the strict-mode exit code 3 or that explicit severity promotion produces an error. | tests/test_reverse_mitigates.py:207-215 | correct-requirement-no-evidence |
+
+## Dispositions
+
+| FND | outcome | reason |
+| --- | --- | --- |
+| FND-001 | fixed | The test now checks strict-mode status 3 and the promoted error summary and severity. |
+
+After excerpt (verbatim):
+
+```python
+assert strict.returncode == 3, strict.stderr
+assert "1 OKF bundle validation error(s)" in promoted.stderr, promoted.stderr
+assert not promoted_findings[0].startswith("warning:"), promoted.stderr
+```
