@@ -29,6 +29,11 @@ The rules are module data in the `flow_rules` form that [FR-025](./FR-025-contro
 uses and quire-rs FR-096 defines. **No engine change is made** beyond the `present: true` test that FR-096 already includes.
 Rule evaluation, path semantics, severity defaults and exit codes belong to FR-096 and the quire-cli relation report.
 
+Two existing upward rules contradict this definition of treated and are changed here: `threat-has-control`
+(`trace:uncontrolled-threat`) and `risk-has-treatment` (`trace:untreated-risk`) each require an incoming `mitigates` edge,
+so a threat accepted through a risk, and the accepting risk, would still be reported. `threat-has-control` is replaced by
+`threat-without-treatment`; `risk-has-treatment` is narrowed to risks whose `decision` is not `accepted`.
+
 The decision vocabulary on `risk` (`undecided`, `accepted`, `not_accepted`) is the vocabulary of spec-objects-safety
 `residual_risk` Determination. It is a frontmatter key here because `flow_rules` reads frontmatter only. The person who
 decided is named in the record; the date of the decision comes from git and is not a key.
@@ -66,13 +71,21 @@ an acceptance; those are person-authored ([NFR-005](../non-functional/NFR-005-th
   `accepted` and `not_accepted`.
 - `Risk` SHALL require a non-empty `decided_by` when `decision` is `accepted` or `not_accepted`. A risk with
   `decision: accepted` and no `decided_by`, or an empty one, SHALL fail validation naming `decided_by`.
-- `decided_by` SHALL be a person's name as written. The module SHALL NOT fill it from git, a tool identity or an agent, and
-  SHALL NOT accept a value on a risk whose `decision` is `undecided` as a decision.
+- `decided_by` SHALL be a person's name as written. The module SHALL NOT fill it from git, a tool identity or an agent, and SHALL reject a risk with `decision: undecided` and a `decided_by`, as spec-objects-safety `residual_risk` does: an undecided risk has no decider.
 - The schema SHALL carry no `default` for `decision` or `decided_by`. A risk with no `decision` fails validation: undecided is
   stated, never assumed.
 - The module SHALL NOT compute, score or order `likelihood` or `impact`, and SHALL NOT derive `decision` from either.
 - `decision` and `decided_by` SHALL be frontmatter keys and the sole authored source. This is a change to existing `risk`
-  documents, which gain a required key; the module keeps no reader for a `risk` without it.
+  documents, which gain a required key; the module keeps no reader for a `risk` without it. The `risk` skeleton, and every fixture of this module with `type: risk`,
+  SHALL be updated to carry `decision`.
+
+### Existing upward rules
+
+- The manifest SHALL NOT declare `threat-has-control`. Unconsidered threats are outside every threat model and get no
+  finding, as the rule below requires.
+- The manifest SHALL declare `risk-has-treatment` with `where: {field: decision, values: [undecided, not_accepted]}`
+  (quire-rs FR-058), so that a risk with `decision: accepted` owes no `mitigates` edge, and keep `to: []`.
+- This amends FR-008, whose text and AC-6 name `threat-has-control` and `risk-has-treatment`.
 
 ### Completeness rules
 
@@ -92,7 +105,11 @@ have a threat; a corpus without a `threat_model` yields no finding from any of t
 - `threat-without-treatment` SHALL treat a risk as accepting only when its `decision` is `accepted`; a risk with `undecided`
   or `not_accepted` SHALL NOT clear it. The rule reads `decision`; the requirement that an accepted risk names `decided_by` is
   enforced by validation above, so an accepted risk without a name cannot reach the rule.
-- The default severity of each rule is `error`. A project lowers it with `--severity trace:<name>=warning`.
+- The engine's default severity for a flow rule is `warning`. The manifest SHALL declare `grammar_severity` for
+  `trace:crossing-without-threat`, `trace:classified-sink-without-threat` and `trace:threat-without-treatment` as `error`.
+  A project lowers one with `--severity trace:<name>=warning`.
+- Every `present` condition SHALL set `field: id`. The `unless_any` condition on `arises_from` SHALL read the risk's
+  `field: decision` with `any_of: [accepted]`.
 - A `connection` that carries no `data_classification`, or crosses no `trust_boundary`, is not required to have a threat by
   `crossing-without-threat`.
 - Only an incoming `threatens` edge on the subject itself clears `crossing-without-threat` or
@@ -127,9 +144,10 @@ checks.
 | FR-027-AC-3 | A threat considered by a `threat_model`, mitigated by no control and with no risk arising from it, yields one finding under `trace:threat-without-treatment` naming `THREAT-1`. A `control` that `mitigates` it clears the finding. | Test |
 | FR-027-AC-4 | A `risk` with `decision: accepted`, `decided_by: "A. Person"` and `arises_from: THREAT-1` clears the AC-3 finding. A `risk` with `decision: undecided`, and one with `decision: not_accepted`, do not. | Test |
 | FR-027-AC-5 | The same corpus with its `threat_model` removed yields no finding under any of the three checks, and a corpus with no connection, sink or threat yields none. | Test |
-| FR-027-AC-6 | A `risk` with `decision: accepted` and no `decided_by`, and one with `decision: accepted` and an empty `decided_by`, fail `quire validate` naming `decided_by`. A `risk` with no `decision` fails. A `risk` with `decision: undecided` and no `decided_by` validates. `decision: maybe` fails. | Test |
+| FR-027-AC-6 | A `risk` with `decision: accepted` and no `decided_by`, and one with `decision: accepted` and an empty `decided_by`, fail `quire validate` naming `decided_by`. A `risk` with no `decision` fails. A `risk` with `decision: undecided` and no `decided_by` validates; one with `decision: undecided` and a `decided_by` fails. `decision: maybe` fails. The updated `risk` skeleton validates with zero errors. | Test |
 | FR-027-AC-7 | The `threat` manifest entry lists `asset`, `attack_surface`, `connection`, `data_sink` and `trust_boundary` in `allowed_links.threatens`; a `threat` that `threatens` each validates without a link diagnostic, and one that `threatens` a `risk` yields a link diagnostic. | Test |
-| FR-027-AC-8 | The three rule `check` values equal their names, each rule has a non-empty `rationale`, no rule names a remediation, and the FR-025 registry still holds exactly nine entries. `RiskDecision.json` has exactly three members; `Risk.json` carries no `default` for `decision` or `decided_by`. Every `any_of` value is a member of its field's enum. | Test |
+| FR-027-AC-8 | The three rule `check` values equal their names, each rule has a non-empty `rationale`, no rule names a remediation, and the FR-025 registry still holds exactly nine entries. `RiskDecision.json` has exactly three members; `Risk.json` carries no `default` for `decision` or `decided_by`. Every `any_of` value is a member of its field's enum. The manifest declares `grammar_severity` `error` for the three checks, and every `present` condition sets `field: id`. | Test |
+| FR-027-AC-10 | A corpus with a `threat_model` considering `THREAT-1`, an `arises_from` risk with `decision: accepted` and no control raises no `trace:uncontrolled-threat` and no `trace:untreated-risk`; the same risk with `decision: undecided` raises `trace:untreated-risk`. The manifest has no `threat-has-control` rule. | Test |
 | FR-027-AC-9 | The module declares no engine kind, archetype, verb or field outside `traceability.flow_rules` data for these rules, and no rule, rationale or README text names or quotes a paywalled standard; only STRIDE, OWASP free guidance and NIST SP 800-154 are named. | Inspection |
 
 ## Dependencies

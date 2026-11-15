@@ -71,7 +71,7 @@ hazards) is declared by `agent-ix/spec-objects-safety` FR-009.
 - Quire SHALL report nothing for an NFR whose `quality_attribute` is any other value.
 - The finding SHALL be a warning under `--okf` and under `--okf --strict`; unrelated errors that `--strict` raises (for example iso's `unowned-quality-characteristic`) are not this rule's.
 - When `--severity trace:unjustified-security-nfr=error` is given, Quire SHALL promote the finding to an error.
-- The manifest SHALL keep `to: []` on `threat-has-control` and `risk-has-treatment`.
+- The manifest SHALL keep `to: []` on `risk-has-treatment` ([FR-027](./FR-027-threat-treatment-and-completeness-rules.md) removes `threat-has-control` and narrows `risk-has-treatment`).
 
 ## Acceptance Criteria
 
@@ -82,7 +82,7 @@ hazards) is declared by `agent-ix/spec-objects-safety` FR-009.
 | FR-008-AC-3 | Giving that NFR a `mitigates` edge to a `threat` in the same repository removes the finding. | Test |
 | FR-008-AC-4 | An NFR whose `quality_attribute` is not `security` and which has no `mitigates` edge yields no `unjustified-security-nfr` finding. | Test |
 | FR-008-AC-5 | Under `--okf --strict` the finding is a warning and never an error; strict still exits 3 on warnings by design. `--severity trace:unjustified-security-nfr=error` promotes it and the run exits non-zero. | Test |
-| FR-008-AC-6 | `threat-has-control` and `risk-has-treatment` still declare `to: []` in the manifest. | Test |
+| FR-008-AC-6 | `risk-has-treatment` still declares `to: []` in the manifest. | Test |
 | FR-008-AC-7 | Giving that NFR a `mitigates` edge to a `risk` in the same repository removes the finding. | Test |
 | FR-008-AC-8 | `quire validate --okf --repo o/a=<A> --repo o/b=<B> --module $M` over a fixture where the NFR in `o/a` has a `mitigates` edge to a `threat` in `o/b` yields no `unjustified-security-nfr` finding. | Test |
 | FR-008-AC-9 | An NFR whose only `mitigates` edge targets a `hazard` in the same repository still yields the `unjustified-security-nfr` finding. | Test |
