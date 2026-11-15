@@ -1,6 +1,6 @@
 ---
 id: NFR-005
-title: "A threat, a rating and an acceptance reach a record only as written by a named person"
+title: "The module never derives or defaults a threat, a rating or an acceptance"
 type: NFR
 quality_attribute: maintainability
 relationships:
@@ -9,11 +9,11 @@ relationships:
   - target: "ix://agent-ix/spec-objects-security/FR-027"
     type: "constrains"
 ---
-# NFR-005: A threat, a rating and an acceptance reach a record only as written by a named person
+# NFR-005: The module never derives or defaults a threat, a rating or an acceptance
 
 ## Statement
 
-The module SHALL NOT derive, default or score a threat, a threat model's `considers` list, a risk's `likelihood` or `impact`, or a risk's `decision` or `decided_by`. Each comes only from the frontmatter a person wrote, and the person who led a model or decided a risk is named in the record.
+The module SHALL NOT derive, default or score a threat, a threat model's `considers` list, a risk's `likelihood` or `impact`, or a risk's `decision` or `decided_by`. Each value is the authored frontmatter string or edge and nothing else; `reviewed_by` and `decided_by` are authored strings the module neither fills nor checks against any identity.
 
 ## Scope
 
@@ -36,7 +36,7 @@ A threat the tool invented, or an acceptance nobody made, would read as a person
 | ID | Criteria | Verification |
 |----|----------|--------------|
 | NFR-005-AC-1 | `ThreatModel.json`, `Threat.json` and `Risk.json` carry no `default` for `method`, `reviewed_by`, `decision`, `decided_by`, `likelihood` or `impact`, and no manifest entry has an `assert` or default value for any of them. | Test |
-| NFR-005-AC-2 | A corpus in which a `connection` is covered by a `threat_model` that considers no threat produces no `threat`, no `considers` edge and no `risk` record; the only output is the finding of `trace:crossing-without-threat`. | Test |
+| NFR-005-AC-2 | A corpus in which a `connection` that carries a `data_classification` and crosses a `trust_boundary` is covered by a `threat_model` that considers no threat produces no `threat`, no `considers` edge and no `risk` record; of the three threat-model checks the only finding is `trace:crossing-without-threat` (starter rules of FR-025 are not counted). | Test |
 | NFR-005-AC-3 | A `risk` with `likelihood` and `impact` stated and no `decision` fails validation; no rule reads `likelihood` or `impact`, and no output carries a computed score. | Test |
 
 ## Verification

@@ -5,6 +5,8 @@ type: FR
 relationships:
   - target: "ix://agent-ix/spec-objects-security/US-001"
     type: "implements"
+  - target: "ix://agent-ix/spec-objects-security/FR-003"
+    type: "depends_on"
   - target: "ix://agent-ix/spec-objects-security/FR-004"
     type: "depends_on"
   - target: "ix://agent-ix/spec-objects-security/FR-005"
@@ -86,11 +88,18 @@ module. This requirement names no requirement id for the architecture objects un
 
 - The `threat_model` skeleton SHALL show every required key and section and SHALL validate with zero errors.
 
-### Person-authored documents
+### Exports
 
-- The module SHALL treat a committed `threat_model` or `threat` document as person-authored, and SHALL NOT distinguish a
-  document by author. An agent MAY propose a draft, but a draft counts only once a person commits it to the corpus; a draft
-  outside the corpus is never loaded and is not a model or a threat.
+- `threat_model` is the twenty-sixth object type. `semantic.exports` SHALL name it ([FR-003](./FR-003-semantic-manifest-contract.md)),
+  and it is one of the twenty-six types covered by the schema, skeleton and no-default contracts of
+  [FR-004](./FR-004-role-schemas.md), [FR-005](./FR-005-executable-skeletons.md) and
+  [FR-006](./FR-006-security-safe-declarations.md).
+
+## Rationale
+
+A committed `threat_model` or `threat` document is person-authored; the module does not distinguish a document by author, and
+a draft outside the corpus is never loaded. This is context for [NFR-005](../non-functional/NFR-005-threats-ratings-and-acceptance-are-person-authored.md),
+not a testable obligation of this requirement.
 
 ## Out of scope
 
@@ -113,6 +122,7 @@ module. This requirement names no requirement id for the architecture objects un
 | FR-026-AC-7 | `ThreatModel.json` carries no `default` for `method` or `reviewed_by`, and an extracted record has no `method` or `reviewed_by` key the author did not write. | Test |
 | FR-026-AC-8 | No manifest entry, rule text, skeleton or README added by this requirement names or quotes a paywalled standard; the only sources named are STRIDE, OWASP's free threat-modelling guidance and NIST SP 800-154. | Inspection |
 | FR-026-AC-9 | The module manifest declares `considers` and `covers` in `edge_types`; the module loads, and removing either declaration makes it fail to load naming the verb. | Test |
+| FR-026-AC-10 | `semantic.exports` names `threat_model` and has twenty-six entries; `ThreatModel.json` is emitted without `default` keys; the `threat_model` skeleton validates; the empty record `{}` fails `ThreatModel.json`. | Test |
 
 ## Dependencies
 

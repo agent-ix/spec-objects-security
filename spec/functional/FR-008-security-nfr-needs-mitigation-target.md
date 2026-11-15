@@ -18,8 +18,9 @@ relationships:
 
 ## Description
 
-`threat-has-control` and `risk-has-treatment` read the `mitigates` edge from the
-exposure end: a threat or risk nothing mitigates is reported. This requirement
+`risk-has-treatment` reads the `mitigates` edge from the exposure end: a risk
+nothing mitigates is reported ([FR-027](./FR-027-threat-treatment-and-completeness-rules.md)
+removes the matching `threat-has-control` rule). This requirement
 reads it from the requirement end. A non-functional requirement that claims to
 be about security and answers no threat or risk is scope nobody asked for, and
 no per-document check can see it.

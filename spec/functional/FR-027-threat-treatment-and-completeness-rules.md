@@ -11,6 +11,10 @@ relationships:
     type: "depends_on"
   - target: "ix://agent-ix/spec-objects-security/FR-026"
     type: "depends_on"
+  - target: "ix://agent-ix/spec-objects-security/FR-008"
+    type: "depends_on"
+  - target: "ix://agent-ix/quire-rs/FR-058"
+    type: "depends_on"
   - target: "ix://agent-ix/quire-rs/FR-096"
     type: "depends_on"
   - target: "ix://agent-ix/spec-objects-security/NFR-005"
@@ -71,7 +75,9 @@ an acceptance; those are person-authored ([NFR-005](../non-functional/NFR-005-th
   `accepted` and `not_accepted`.
 - `Risk` SHALL require a non-empty `decided_by` when `decision` is `accepted` or `not_accepted`. A risk with
   `decision: accepted` and no `decided_by`, or an empty one, SHALL fail validation naming `decided_by`.
-- `decided_by` SHALL be a person's name as written. The module SHALL NOT fill it from git, a tool identity or an agent, and SHALL reject a risk with `decision: undecided` and a `decided_by`, as spec-objects-safety `residual_risk` does: an undecided risk has no decider.
+- The module SHALL NOT fill `decided_by` from git, a tool identity or an agent.
+- The module SHALL reject a risk with `decision: undecided` and a `decided_by`, as spec-objects-safety `residual_risk` does: an undecided risk has no decider.
+- The conditional rule is enforced by the `Risk.json` record schema, as `if`/`then`/`else` over `decision` (`then`: `decided_by` required and non-empty; `else`: `decided_by` forbidden). `RiskFrontmatter.json` is open and constrains only the `decision` enum; a manifest locator's `required` flag cannot express the condition and is not used for it.
 - The schema SHALL carry no `default` for `decision` or `decided_by`. A risk with no `decision` fails validation: undecided is
   stated, never assumed.
 - The module SHALL NOT compute, score or order `likelihood` or `impact`, and SHALL NOT derive `decision` from either.
@@ -134,12 +140,12 @@ manifest data can be authored and schema-validated first. This requirement does 
 
 ## Acceptance Criteria
 
-AC-1 to AC-5 are draft ACs a to d of PLAT-1542 and evaluate the rule data through the engine. AC-6 to AC-9 are module-only
-checks.
+AC-1 to AC-5 and AC-10 are draft ACs a to d of PLAT-1542 and evaluate the rule data through the engine. AC-6 to AC-9 are
+module-only checks.
 
 | ID | Criteria | Verification |
 |----|----------|--------------|
-| FR-027-AC-1 | A connection `CONN-1` covered by a `threat_model`, carrying `CLASS-PHI` and crossing `BOUND-NET`, with no incoming `threatens`, yields one finding under `trace:crossing-without-threat` naming `CONN-1`. Adding `THREAT-1 --threatens--> CONN-1` clears it. | Test |
+| FR-027-AC-1 | A connection `CONN-1` covered by a `threat_model`, carrying `CLASS-PHI` and crossing `BOUND-NET`, with no incoming `threatens`, yields one finding under `trace:crossing-without-threat` naming `CONN-1`. Adding `THREAT-1 --threatens--> CONN-1` clears it. A covered connection that carries `CLASS-PHI` but crosses no `trust_boundary`, and one that crosses `BOUND-NET` but carries no `data_classification`, each yield no finding. A threat that `threatens` only `BOUND-NET` leaves the finding on `CONN-1`. | Test |
 | FR-027-AC-2 | A sink covered by a `threat_model` that receives a classification through `delivers_to` then `carries` and has no incoming `threatens` yields one finding under `trace:classified-sink-without-threat` naming it; a sink whose own `carries` reaches a classification does the same; a threat that `threatens` the sink clears it. | Test |
 | FR-027-AC-3 | A threat considered by a `threat_model`, mitigated by no control and with no risk arising from it, yields one finding under `trace:threat-without-treatment` naming `THREAT-1`. A `control` that `mitigates` it clears the finding. | Test |
 | FR-027-AC-4 | A `risk` with `decision: accepted`, `decided_by: "A. Person"` and `arises_from: THREAT-1` clears the AC-3 finding. A `risk` with `decision: undecided`, and one with `decision: not_accepted`, do not. | Test |
@@ -147,12 +153,12 @@ checks.
 | FR-027-AC-6 | A `risk` with `decision: accepted` and no `decided_by`, and one with `decision: accepted` and an empty `decided_by`, fail `quire validate` naming `decided_by`. A `risk` with no `decision` fails. A `risk` with `decision: undecided` and no `decided_by` validates; one with `decision: undecided` and a `decided_by` fails. `decision: maybe` fails. The updated `risk` skeleton validates with zero errors. | Test |
 | FR-027-AC-7 | The `threat` manifest entry lists `asset`, `attack_surface`, `connection`, `data_sink` and `trust_boundary` in `allowed_links.threatens`; a `threat` that `threatens` each validates without a link diagnostic, and one that `threatens` a `risk` yields a link diagnostic. | Test |
 | FR-027-AC-8 | The three rule `check` values equal their names, each rule has a non-empty `rationale`, no rule names a remediation, and the FR-025 registry still holds exactly nine entries. `RiskDecision.json` has exactly three members; `Risk.json` carries no `default` for `decision` or `decided_by`. Every `any_of` value is a member of its field's enum. The manifest declares `grammar_severity` `error` for the three checks, and every `present` condition sets `field: id`. | Test |
-| FR-027-AC-10 | A corpus with a `threat_model` considering `THREAT-1`, an `arises_from` risk with `decision: accepted` and no control raises no `trace:uncontrolled-threat` and no `trace:untreated-risk`; the same risk with `decision: undecided` raises `trace:untreated-risk`. The manifest has no `threat-has-control` rule. | Test |
 | FR-027-AC-9 | The module declares no engine kind, archetype, verb or field outside `traceability.flow_rules` data for these rules, and no rule, rationale or README text names or quotes a paywalled standard; only STRIDE, OWASP free guidance and NIST SP 800-154 are named. | Inspection |
+| FR-027-AC-10 | A corpus with a `threat_model` considering `THREAT-1`, an `arises_from` risk with `decision: accepted` and no control raises no `trace:uncontrolled-threat` and no `trace:untreated-risk`; the same risk with `decision: undecided`, and one with `decision: not_accepted`, each raise `trace:untreated-risk` (with no `mitigates` edge). The manifest has no `threat-has-control` rule. | Test |
 
 ## Dependencies
 
-- **Upstream**: [FR-004](./FR-004-role-schemas.md), [FR-025](./FR-025-control-safeguards-and-starter-flow-rules.md),
+- **Upstream**: [FR-004](./FR-004-role-schemas.md), [FR-008](./FR-008-security-nfr-needs-mitigation-target.md) (amended here), quire-rs FR-058 (`where` selector), [FR-025](./FR-025-control-safeguards-and-starter-flow-rules.md),
   [FR-026](./FR-026-threat-model-object.md); quire-rs FR-096; PLAT-1537 / PLAT-1538; PLAT-1657 (`covers`); the architecture
   objects `connection`, `data_sink` and the `crosses` edge.
 - **Downstream**: quoin FR-202 (the report reads the findings of these three checks), PLAT-1543, PLAT-1544.
