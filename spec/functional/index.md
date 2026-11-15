@@ -28,3 +28,4 @@ description: "Index of artifacts in this directory."
 * [FR-021: Default source profiles list only publishable clause sets and degrade while a pack is missing](./FR-021-default-source-profiles.md)
 * [FR-022: A SOUP record carries optional person-authored VEX statements](./FR-022-vex-statements-on-soup-records.md)
 * [FR-023: A data_classification states its regulated-data categories as a list separate from its confidentiality level](./FR-023-regulated-data-categories-on-data-classification.md)
+* [FR-025: A control states safeguards and protects a connection or data_sink, and the module ships the remediation vocabulary and starter flow rules](./FR-025-control-safeguards-and-starter-flow-rules.md)
