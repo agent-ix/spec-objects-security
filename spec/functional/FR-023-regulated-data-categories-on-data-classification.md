@@ -61,6 +61,11 @@ trust-boundary crossing edge on a connection is owned by PLAT-1532. Boundary-cro
   section form such as a `## Regulated Categories` section or a `## Properties` row for them, and the schema property
   `regulatedCategories` SHALL NOT be a record-sections key. The authored source of `level` stays as it is: its
   `## Properties` table row.
+- When a `## Regulated Categories` section appears without frontmatter `regulated_categories`, validation SHALL report an
+  error diagnostic `semantic.feature-not-extractable` with reason `frontmatter-owned`; the section data is never silently
+  dropped.
+- When a `## Regulated Categories` section and frontmatter `regulated_categories` both appear, validation SHALL report a
+  warning, and the record SHALL use only the frontmatter list.
 - `level` SHALL stay as it is, independent of the categories.
 - `health` SHALL NOT imply `personal`; the author states each category.
 - The schema SHALL carry no `default` for `regulatedCategories`
@@ -78,13 +83,14 @@ quire-rs requirement that owns the projection) must map the frontmatter key `reg
 a bad member is reported with its path.
 
 The module has `record-sections` enabled (FR-003), and by default quire-rs FR-081 reads a `## Regulated Categories` section
-into any readable schema property of that name, which would accept a section form of `regulatedCategories`. PLAT-1441 SHALL
-therefore also make `regulatedCategories` non-extractable from record-sections in this module, by treating it as an owned key
-the way FR-081 already treats the FR-075 systems members. The section is then ignored, not rejected: it is prose, the
-document still validates, and the record carries no `regulatedCategories` key unless frontmatter states one. PLAT-1441 carries
-the engine changes and their test cases: a valid list, an unknown member, an empty list, a duplicated member, an absent field,
-and a `## Regulated Categories` section attempt. This requirement does not promise
-that code. FR-023-AC-1 to AC-3, AC-6 and AC-8 hold only once it lands.
+into any readable schema property of that name, which would accept a section form of `regulatedCategories`. The engine SHALL
+therefore make `regulatedCategories` a frontmatter-owned key in this module, using the module-scoped ownership mechanism of
+quoin FR-123. This is module-scoped ownership, not a precedent from the FR-075 systems members. The engine SHALL report the
+two section cases as stated in Behavior: an error (`semantic.feature-not-extractable`, reason `frontmatter-owned`) for a
+section without frontmatter, and a warning for a section alongside frontmatter, with the record using only the frontmatter
+list. The engine changes and their test cases (a valid list, an unknown member, an empty list, a duplicated member, an absent
+field, a section-only error and a section-plus-frontmatter warning) are delivered by PLAT-1441. This requirement does not
+promise that code. FR-023-AC-1 to AC-3 and AC-6 to AC-10 hold only once the engine work lands.
 
 The `multiple: true` setting named in the ticket's design notes would produce a list inside a list and is therefore not
 used. Section forms are handled by the owned-key rule above.
@@ -107,13 +113,14 @@ used. Section forms are handled by the owned-key rule above.
 | FR-023-AC-4 | A classification without the field validates, and its record has no `regulatedCategories` key. No default is filled in. | Test |
 | FR-023-AC-5 | `RegulatedDataCategory.json` has exactly the members `health`, `personal`, `financial`, and no `unknown` member. | Test |
 | FR-023-AC-6 | `[health, personal]` and `[financial]` validate; a classification with `level: restricted` and `regulated_categories: [health]` validates, and one with `regulated_categories: [health]` and no `personal` validates, so neither axis implies the other. | Test |
-| FR-023-AC-7 | The `data_classification` locator for `regulated_categories` has `required: false` and no `multiple: true`, and the engine's record-sections extraction treats `regulatedCategories` as non-extractable, so no locator or section heading yields it. | Inspection |
-| FR-023-AC-9 | A classification that states the categories in a `## Regulated Categories` section and not in frontmatter validates, the section is ignored as prose, and the extracted record (record-sections enabled) has no `regulatedCategories` key. The same section alongside frontmatter `regulated_categories: [health]` leaves `regulatedCategories: ["health"]` unchanged. | Test |
+| FR-023-AC-7 | The `data_classification` locator for `regulated_categories` has `required: false` and no `multiple: true`. | Inspection |
 | FR-023-AC-8 | The `data_classification` skeleton shows `regulated_categories` and validates with zero errors. | Test |
+| FR-023-AC-9 | A classification with a `## Regulated Categories` section and no frontmatter `regulated_categories` fails `quire validate` with an error diagnostic `semantic.feature-not-extractable`, reason `frontmatter-owned`, and the extracted record has no `regulatedCategories` key. | Test |
+| FR-023-AC-10 | A classification with a `## Regulated Categories` section and frontmatter `regulated_categories: [health]` reports a warning, and the extracted record carries `regulatedCategories: ["health"]` from the frontmatter only. | Test |
 
 ## Dependencies
 
 - **Upstream**: [FR-004](./FR-004-role-schemas.md), [FR-006](./FR-006-security-safe-declarations.md); quire-rs FR-069 with the
-  frontmatter-to-`regulatedCategories` mapping, and FR-081 with `regulatedCategories` made non-extractable, that PLAT-1441 delivers
+  frontmatter-to-`regulatedCategories` mapping, and FR-081 with `regulatedCategories` frontmatter-owned (quoin FR-123), delivered by the PLAT-1441 engine work
 - **Constrained by**: [NFR-004](../non-functional/NFR-004-regulated-categories-and-level-are-never-derived.md)
 - **Downstream**: `agent-ix/spec-objects-architecture` FR-013 (the `carries` edge); PLAT-1440, PLAT-1441, PLAT-1532 (these tickets block on this spec)
