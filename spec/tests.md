@@ -137,7 +137,7 @@ the Python package only: neither Node script is measured by it.
 | FR-010 | FR-010-AC-1..4, FR-010-AC-6, FR-010-CON-1 | TC-129..TC-132, TC-134 | ✅ |
 | FR-011 | FR-011-AC-1..5, FR-011-CON-1 | TC-135..TC-139 | ✅ AC-4 and CON-1 need a human reviewer (TC-138) |
 | FR-012 | FR-012-AC-1..4 | TC-140..TC-143 | ✅ |
-| FR-013 | FR-013-AC-1..7 | TC-150..TC-156 | 🚧 AC-7 needs `quire validate --repo` (PLAT-1519); `quire trace`/`quire matrix` show no document edges (PLAT-1519), so AC-6 reads the edge with `quire extract` |
+| FR-013 | FR-013-AC-1..7 | TC-150..TC-156 | ✅ AC-6 reads the edge with `quire extract` |
 | NFR-001 | NFR-001-AC-1..2, NFR-001-M-1..2 | TC-144, TC-145 | ✅ |
 | FR-020 | FR-020-AC-1..6 | TC-160..TC-165 | ✅ AC-6 covers the key-absence half only; activation is FR-001-AC-2 |
 | FR-021 | FR-021-AC-1..7 | TC-166..TC-172 | ✅ AC-4, AC-6 and AC-7 are inspections (human reviewer); AC-1, AC-2, AC-3 and AC-5 run over shipped profiles and are vacuous until one ships |
@@ -272,7 +272,7 @@ the Python package only: neither Node script is measured by it.
 | TC-153 | A `serves` entry naming a document of another kind, or nothing, still yields the finding | Integration | P1 | FR-013-AC-4 | ✅ |
 | TC-154 | The finding is a warning and `--severity trace:soup-serves-no-requirement=error` promotes it | Integration | P1 | FR-013-AC-5 | ✅ |
 | TC-155 | The skeleton carries no `serves`; `quire extract` lists each `serves` entry as a `references` edge | Integration | P1 | FR-013-AC-6 | ✅ |
-| TC-156 | `quire validate --okf --repo o/a=… --repo o/b=…` with the record in `o/a` serving an `FR` in `o/b` yields no finding | Integration | P1 | FR-013-AC-7 | 🚧 the pinned CLI has no `--repo`; engine gap tracked in PLAT-1519 |
+| TC-156 | `quire validate --okf --repo` resolves a `serves` edge from a record in `agent-ix/other-repo` to an `FR` in `agent-ix/spec-objects-security` | Integration | P1 | FR-013-AC-7 | ✅ |
 | TC-160 | A fixture profile with every required key passes the profile test | Unit | P1 | FR-020-AC-1 | ✅ |
 | TC-161 | A profile missing a required key, or named differently from its file stem, fails | Unit | P1 | FR-020-AC-2 | ✅ |
 | TC-162 | A profile with an empty or repeated clause-set key fails | Unit | P1 | FR-020-AC-3 | ✅ |
