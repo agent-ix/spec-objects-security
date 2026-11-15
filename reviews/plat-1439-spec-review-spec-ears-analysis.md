@@ -46,3 +46,9 @@ Examined requirement units:
 | ID | Severity | Summary | Refs |
 | --- | --- | --- | --- |
 | FND-001 | low | The second sentence, 'A category reaches a record only as written by a person.', has no SHALL and covers only the category, while the title and first sentence cover category and level. Fold it into one SHALL clause covering both, or drop it as redundant. | spec/non-functional/NFR-004-regulated-categories-and-level-are-never-derived.md:16 |
+
+## Dispositions
+
+| FND | Outcome | Reason |
+| --- | --- | --- |
+| FND-001 | fixed | The NFR-004 statement is now one SHALL NOT clause that covers both category and level. After: "The module SHALL NOT derive or default a regulated-data category or a confidentiality level: a category comes only from the frontmatter `regulated_categories` field and a level only from the `## Properties` `level` row, each as written by a person, with no inference from any other field." |

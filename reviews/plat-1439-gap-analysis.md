@@ -46,3 +46,9 @@ Examined requirement units:
 | ID | Severity | Summary | Refs |
 | --- | --- | --- | --- |
 | FND-001 | medium | FR-023-AC-2 (and AC-3) cannot be bound to a passing test on the installed engine: a frontmatter-located `regulated_categories` is never checked against the data schema, so `[medical]`, `[]` and `[health, health]` validate. PLAT-1441 states quire-rs is not expected to change, so the criteria would land as strict expected failures or vacuous schema-only tests. Give the engine dependency an owner before PLAT-1441 starts (see SR-1603 FND-001). | spec/functional/FR-023-regulated-data-categories-on-data-classification.md:87-88, tests/test_soup_record.py:453-460 |
+
+## Dispositions
+
+| FND | Outcome | Reason |
+| --- | --- | --- |
+| FND-001 | fixed | d5f9abb rewrites FR-023 Engine impact: the engine change now has an owner (PLAT-1441), its test cases are listed, and FR-023-AC-1..3, AC-6 and AC-8 are gated on it landing. PLAT-1441's Where section already says to implement any engine change the spec names, in the quire-rs FR it names. After: "PLAT-1441 carries the engine change and its test cases: a valid list, an unknown member, an empty list, a duplicated member, an absent field, and a section-form attempt. This requirement does not promise that code. FR-023-AC-1 to AC-3, AC-6 and AC-8 hold only once it lands." |

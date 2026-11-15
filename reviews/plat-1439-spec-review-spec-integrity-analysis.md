@@ -47,3 +47,10 @@ Examined requirement units:
 | --- | --- | --- | --- |
 | FND-001 | low | FR-023 opens with ticket and id-numbering history ('Tracked by Linear PLAT-1439. The draft number FR-022 ... this is the next free id.') and NFR-004 with 'Tracked by Linear PLAT-1439.' (NFR-004:12). No other FR or NFR in this repo carries such a line. It is tracking record, not requirement content. Delete both lines. | spec/functional/FR-023-regulated-data-categories-on-data-classification.md:19, spec/non-functional/NFR-004-regulated-categories-and-level-are-never-derived.md:12 |
 | FND-002 | low | FR-023 `references` quire-rs FR-075 (model feature extraction tables) and lists FR-075, FR-090 and FR-091 as the FRs that need no amendment. None of them governs this mechanism. The FRs involved are quire-rs FR-011 (body-extraction DSL, `frontmatter_field`) and FR-069 (frontmatter projection into the record that `data_schema` validates), with FR-081 for record-sections. Point the reference at the FR actually relied on. | spec/functional/FR-023-regulated-data-categories-on-data-classification.md:14-15, spec/functional/FR-023-regulated-data-categories-on-data-classification.md:72 |
+
+## Dispositions
+
+| FND | Outcome | Reason |
+| --- | --- | --- |
+| FND-001 | fixed | Both tracking lines are deleted. In each file the H1 is now followed directly by the first section. After (FR-023): "# FR-023: A data_classification states its regulated-data categories as a list separate from its confidentiality level / ## Description". After (NFR-004): "# NFR-004: A regulated-data category or confidentiality level reaches a record only as written by a person / ## Statement". |
+| FND-002 | fixed | The FR-075 reference and the FR-075/FR-090/FR-091 no-amendment sentence are gone. The references now point at the mechanisms actually relied on. After: "- target: \"ix://agent-ix/quire-rs/FR-011\" type: \"references\" - target: \"ix://agent-ix/quire-rs/FR-069\" type: \"depends_on\" - target: \"ix://agent-ix/quire-rs/FR-081\" type: \"references\"". |

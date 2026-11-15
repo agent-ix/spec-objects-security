@@ -47,3 +47,10 @@ Examined requirement units:
 | --- | --- | --- | --- |
 | FND-001 | medium | FR-023 declares `depends_on` NFR-004 while NFR-004 `constrains` FR-023 and lists FR-023 as its Upstream, so the two form a cycle. The repo precedent puts the NFR downstream: NFR-001 constrains FR-009..011 and lists them as Upstream, and FR-011 lists NFR-001 as Downstream with no `depends_on`. Remove FR-023's `depends_on` NFR-004 edge, since `constrains` already records the link. | spec/functional/FR-023-regulated-data-categories-on-data-classification.md:12-13, spec/non-functional/NFR-004-regulated-categories-and-level-are-never-derived.md:6-8, spec/non-functional/NFR-004-regulated-categories-and-level-are-never-derived.md:49 |
 | FND-002 | medium | FR-023 needs engine enablement it does not list: validating a frontmatter-authored key against `data_schema` exists only on quire-rs main after v0.60.0 (#681, FR-069-AC-32..36) and is not in the installed engine. FR-023's Dependencies name only FR-004 and FR-006 upstream, and downstream PLAT-1441 inherits 'quire-rs is not expected to change'. Add the quire-rs FR and release as an upstream enablement dependency (see SR-1603 FND-001). | spec/functional/FR-023-regulated-data-categories-on-data-classification.md:95-98 |
+
+## Dispositions
+
+| FND | Outcome | Reason |
+| --- | --- | --- |
+| FND-001 | fixed | The FR-023 `depends_on` NFR-004 edge is removed from the frontmatter, and the link is recorded as a constraint, matching the NFR-001 precedent. After: "- **Constrained by**: [NFR-004](../non-functional/NFR-004-regulated-categories-and-level-are-never-derived.md)". |
+| FND-002 | fixed | Upstream now lists the engine enablement dependency, and the frontmatter carries `depends_on` quire-rs FR-069. No engine release is named because the mapping is not released yet. PLAT-1441 is named as the deliverer. After: "- **Upstream**: [FR-004](./FR-004-role-schemas.md), [FR-006](./FR-006-security-safe-declarations.md); quire-rs FR-069 with the frontmatter-to-`regulatedCategories` mapping that PLAT-1441 delivers". |
