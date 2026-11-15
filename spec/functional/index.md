@@ -27,3 +27,4 @@ description: "Index of artifacts in this directory."
 * [FR-020: A source profile is a module data file naming clause sets and an applicability context](./FR-020-source-profile-format.md)
 * [FR-021: Default source profiles list only publishable clause sets and degrade while a pack is missing](./FR-021-default-source-profiles.md)
 * [FR-022: A SOUP record carries optional person-authored VEX statements](./FR-022-vex-statements-on-soup-records.md)
+* [FR-023: A data_classification states its regulated-data categories as a list separate from its confidentiality level](./FR-023-regulated-data-categories-on-data-classification.md)
