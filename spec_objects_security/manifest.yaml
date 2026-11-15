@@ -251,6 +251,12 @@ object_types:
           from: section_body
           after_heading: Properties
           required: false
+        # FR-023: the regulated-data categories, authored only as a frontmatter
+        # list a person writes. Already a list, so no `multiple`; never defaulted.
+        regulatedCategories:
+          from: frontmatter_field
+          path: [regulated_categories]
+          required: false
 - name: trust_boundary
   allowed_links:
     contains: [asset, api_endpoint]

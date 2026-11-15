@@ -22,6 +22,14 @@
     "level": {
       "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/ConfidentialityLevel.json"
     },
+    "regulatedCategories": {
+      "type": "array",
+      "items": {
+        "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/RegulatedDataCategory.json"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
     "values": {
       "type": "array",
       "items": {

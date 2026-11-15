@@ -115,6 +115,17 @@ enum ConfidentialityLevel {
 }
 
 /**
+ * The regulated kind of data a classification covers. The set is closed and has
+ * no unassessed member: an absent `regulatedCategories` already means no
+ * category was stated. `health` does not imply `personal`; each is stated.
+ */
+enum RegulatedDataCategory {
+  health,
+  personal,
+  financial,
+}
+
+/**
  * How far a zone is trusted. `untrusted` is the unassessed member, because the
  * least-granting reading of "we never decided" is "we do not trust it".
  */
@@ -463,6 +474,11 @@ model DataClassification {
 
   clauses?: ClauseRef[];
   level?: ConfidentialityLevel;
+
+  @minItems(1)
+  @uniqueItems
+  regulatedCategories?: RegulatedDataCategory[];
+
   values?: EnumValue[];
   ...Record<never>;
 }
