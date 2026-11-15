@@ -11,3 +11,4 @@ description: "Index of artifacts in this directory."
 * [NFR-002: Published profiles name no licensed pack and carry no standard text](./NFR-002-profiles-never-name-or-carry-licensed-content.md)
 * [NFR-003: Clause references and scope exclusions state references and never derive coverage](./NFR-003-clause-references-state-and-never-derive.md)
 * [NFR-004: A regulated-data category or confidentiality level reaches a record only as written by a person](./NFR-004-regulated-categories-and-level-are-never-derived.md)
+* [NFR-005: A threat, a rating and an acceptance reach a record only as written by a named person](./NFR-005-threats-ratings-and-acceptance-are-person-authored.md)
