@@ -9,14 +9,14 @@ relationships:
     type: "depends_on"
   - target: "ix://agent-ix/spec-objects-security/FR-006"
     type: "depends_on"
-  - target: "ix://agent-ix/spec-objects-security/NFR-004"
+  - target: "ix://agent-ix/quire-rs/FR-011"
+    type: "references"
+  - target: "ix://agent-ix/quire-rs/FR-069"
     type: "depends_on"
-  - target: "ix://agent-ix/quire-rs/FR-075"
+  - target: "ix://agent-ix/quire-rs/FR-081"
     type: "references"
 ---
 # FR-023: A data_classification states its regulated-data categories as a list separate from its confidentiality level
-
-Tracked by Linear PLAT-1439. The draft number FR-022 in the ticket is taken by the VEX requirement; this is the next free id.
 
 ## Description
 
@@ -57,6 +57,10 @@ trust-boundary crossing edge on a connection is owned by PLAT-1532. Boundary-cro
 - The `data_classification` manifest entry SHALL extract the frontmatter list `regulated_categories` into
   `regulatedCategories` with a `frontmatter_field` locator that has `required: false`. The located value is already a list,
   so the locator sets no `multiple: true`, which would wrap the list in a second array (see Engine impact).
+- Frontmatter `regulated_categories` SHALL be the sole authored source of the categories. The module SHALL NOT accept a
+  section form such as a `## Regulated Categories` section or a `## Properties` row for them, and the schema property
+  `regulatedCategories` SHALL NOT be a record-sections key. The authored source of `level` stays as it is: its
+  `## Properties` table row.
 - `level` SHALL stay as it is, independent of the categories.
 - `health` SHALL NOT imply `personal`; the author states each category.
 - The schema SHALL carry no `default` for `regulatedCategories`
@@ -65,11 +69,18 @@ trust-boundary crossing edge on a connection is owned by PLAT-1532. Boundary-cro
 
 ## Engine impact
 
-No quire-rs change is needed. A `frontmatter_field` locator yields the located frontmatter value as one value; with
-`multiple: false` the record key is that list, and the extracted record is validated against the compiled `data_schema`
-(`src/loader/compile.rs`) as a whole, so `enum`, `minItems` and `uniqueItems` apply to the list and a bad member is reported
-with its path. The `multiple: true` setting named in the ticket's design notes would produce a list inside a list and is
-therefore not used. No quire-rs FR (FR-075, FR-090 or FR-091) needs amending.
+A quire-rs change is required, owned by PLAT-1441. Current quire-rs does not validate `body_extraction` values against the
+semantic `data_schema` (quire-rs FR-011 defines the extraction, and `data_schema` runs over the semantic declaration record),
+and the frontmatter projection of quire-rs FR-069 keeps the authored key, `regulated_categories`. Against the closed
+`DataClassification` schema that key is an unknown property, and `regulatedCategories` is never filled. So FR-069 (or the
+quire-rs requirement that owns the projection) must map the frontmatter key `regulated_categories` into the extracted
+`regulatedCategories` key before closed-schema validation, so that `enum`, `minItems` and `uniqueItems` apply to the list and
+a bad member is reported with its path. PLAT-1441 carries the engine change and its test cases: a valid list, an unknown
+member, an empty list, a duplicated member, an absent field, and a section-form attempt. This requirement does not promise
+that code. FR-023-AC-1 to AC-3, AC-6 and AC-8 hold only once it lands.
+
+The `multiple: true` setting named in the ticket's design notes would produce a list inside a list and is therefore not
+used. A section form is not accepted, so quire-rs FR-081 record-sections extraction does not apply to `regulatedCategories`.
 
 ## Out of scope
 
@@ -89,10 +100,13 @@ therefore not used. No quire-rs FR (FR-075, FR-090 or FR-091) needs amending.
 | FR-023-AC-4 | A classification without the field validates, and its record has no `regulatedCategories` key. No default is filled in. | Test |
 | FR-023-AC-5 | `RegulatedDataCategory.json` has exactly the members `health`, `personal`, `financial`, and no `unknown` member. | Test |
 | FR-023-AC-6 | `[health, personal]` and `[financial]` validate; a classification with `level: restricted` and `regulated_categories: [health]` validates, and one with `regulated_categories: [health]` and no `personal` validates, so neither axis implies the other. | Test |
-| FR-023-AC-7 | The `data_classification` locator for `regulated_categories` has `required: false` and no `multiple: true`, and the module needs no quire-rs change. | Inspection |
+| FR-023-AC-7 | The `data_classification` locator for `regulated_categories` has `required: false` and no `multiple: true`, and no locator or record-sections key accepts a section form of the categories. | Inspection |
+| FR-023-AC-9 | A classification that states the categories in a `## Regulated Categories` section and not in frontmatter extracts a record with no `regulatedCategories` key. | Test |
 | FR-023-AC-8 | The `data_classification` skeleton shows `regulated_categories` and validates with zero errors. | Test |
 
 ## Dependencies
 
-- **Upstream**: [FR-004](./FR-004-role-schemas.md), [FR-006](./FR-006-security-safe-declarations.md)
+- **Upstream**: [FR-004](./FR-004-role-schemas.md), [FR-006](./FR-006-security-safe-declarations.md); quire-rs FR-069 with the
+  frontmatter-to-`regulatedCategories` mapping that PLAT-1441 delivers
+- **Constrained by**: [NFR-004](../non-functional/NFR-004-regulated-categories-and-level-are-never-derived.md)
 - **Downstream**: `agent-ix/spec-objects-architecture` FR-013 (the `carries` edge); PLAT-1440, PLAT-1441, PLAT-1532 (these tickets block on this spec)

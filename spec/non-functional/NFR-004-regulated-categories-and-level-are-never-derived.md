@@ -9,11 +9,9 @@ relationships:
 ---
 # NFR-004: A regulated-data category or confidentiality level reaches a record only as written by a person
 
-Tracked by Linear PLAT-1439.
-
 ## Statement
 
-The module SHALL NOT derive or default a regulated-data category or a confidentiality level. A category reaches a record only as written by a person.
+The module SHALL NOT derive or default a regulated-data category or a confidentiality level: a category comes only from the frontmatter `regulated_categories` field and a level only from the `## Properties` `level` row, each as written by a person, with no inference from any other field.
 
 ## Scope
 
@@ -36,7 +34,7 @@ inference would hide health data from the rules that depend on it. An absent cat
 
 | ID | Criteria | Verification |
 |----|----------|--------------|
-| NFR-004-AC-1 | `DataClassification.json` carries no `default` for `regulatedCategories` or `level`, and the manifest entry declares no derivation of either. | Test |
+| NFR-004-AC-1 | `regulatedCategories` has the `regulated_categories` frontmatter locator as its only source and `level` has the `## Properties` `level` row as its only source; the `data_classification` manifest entry has no other locator that yields either key and no `assert` or default value for either, and `DataClassification.json` carries no `default` for either. | Test |
 | NFR-004-AC-2 | A classification whose fields are named like health or personal data (for example `patient_name`) but that states no `regulated_categories` extracts a record with no `regulatedCategories` key. | Test |
 | NFR-004-AC-3 | Validating a classification that states `regulated_categories: [health]` and no `personal` emits `["health"]` exactly, and a classification without `level` extracts no `level` key. | Test |
 
