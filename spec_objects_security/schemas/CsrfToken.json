@@ -24,7 +24,7 @@
     },
     "rotation_window": {
       "type": "string",
-      "pattern": "^P(\\d+[YMWD])+(T(\\d+[HMS])+)?$|^PT(\\d+[HMS])+$"
+      "pattern": "^P((\\d+Y(\\d+M)?(\\d+W)?(\\d+D)?|\\d+M(\\d+W)?(\\d+D)?|\\d+W(\\d+D)?|\\d+D)(T(\\d+H(\\d+M)?(\\d+S)?|\\d+M(\\d+S)?|\\d+S))?|T(\\d+H(\\d+M)?(\\d+S)?|\\d+M(\\d+S)?|\\d+S))$"
     }
   },
   "required": [

@@ -30,13 +30,13 @@ def _errors(validator_for, model: str, record: dict) -> list:
     return list(validator_for(model).iter_errors(record))
 
 
-@pytest.mark.trace("TC-218", "FR-004-AC-1")
+@pytest.mark.trace("TC-218", "FR-004-AC-15")
 @pytest.mark.parametrize(("model", "key"), MODELS.items())
 def test_the_key_is_optional_and_absence_validates(schema_registry, model, key):
     assert not _errors(schema_registry, model, _record(model))
 
 
-@pytest.mark.trace("TC-218", "FR-004-AC-1")
+@pytest.mark.trace("TC-218", "FR-004-AC-15")
 @pytest.mark.parametrize(
     ("model", "key", "value"),
     [
@@ -46,13 +46,16 @@ def test_the_key_is_optional_and_absence_validates(schema_registry, model, key):
         ("EncryptionKey", "rotation", "P1Y2M"),
         ("CsrfToken", "rotation_window", "PT30M"),
         ("CsrfToken", "rotation_window", "P1DT12H"),
+        ("CsrfToken", "rotation_window", "PT15M"),
+        ("EncryptionKey", "rotation", "P1Y2M3DT4H5M6S"),
+        ("EncryptionKey", "rotation", "P2W"),
     ],
 )
 def test_accepted_values(schema_registry, model, key, value):
     assert not _errors(schema_registry, model, _record(model, **{key: value}))
 
 
-@pytest.mark.trace("TC-218", "FR-004-AC-1")
+@pytest.mark.trace("TC-218", "FR-004-AC-15")
 @pytest.mark.parametrize(
     ("model", "key", "value"),
     [
@@ -65,13 +68,20 @@ def test_accepted_values(schema_registry, model, key, value):
         ("CsrfToken", "rotation_window", "30 minutes"),
         ("CsrfToken", "rotation_window", "PT"),
         ("CsrfToken", "rotation_window", 30),
+        ("EncryptionKey", "rotation", "P1D1Y"),
+        ("EncryptionKey", "rotation", "P1D2D"),
+        ("EncryptionKey", "rotation", "P1Y1Y"),
+        ("EncryptionKey", "rotation", "P1DT"),
+        ("CsrfToken", "rotation_window", "PT5M1H"),
+        ("CsrfToken", "rotation_window", "PT1H1H"),
+        ("CsrfToken", "rotation_window", "P1DT5S3M"),
     ],
 )
 def test_rejected_values(schema_registry, model, key, value):
     assert _errors(schema_registry, model, _record(model, **{key: value}))
 
 
-@pytest.mark.trace("TC-219", "FR-004-AC-1")
+@pytest.mark.trace("TC-219", "FR-004-AC-15")
 @pytest.mark.parametrize(
     ("kind", "old", "new"),
     [

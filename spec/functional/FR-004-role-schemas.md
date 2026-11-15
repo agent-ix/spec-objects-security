@@ -128,6 +128,7 @@ semantic-core release that renders `identity: false` is a breaking change to the
 | FR-004-AC-12 | A `type.target` of `ix://agent-ix/spec-objects-security/unresolved/Mystery` is accepted by the schema (it is a `SemanticId`) and reported by the extractor as `semantic.unresolved-type`; a `SemanticId`-tagged `Mystery` (no `ix://` prefix) is rejected by the schema. | Test |
 | FR-004-AC-13 | No module schema redeclares a semantic-core model; every grammar item is a `$ref` to semantic-core. | Test |
 | FR-004-AC-14 | A data-classification record with a `level` field validates; one without it fails; a record carrying `relations` fails. | Test |
+| FR-004-AC-15 | The `kind` (`MfaMethod`), `vector` (`Threat`), `rotation` (`EncryptionKey`) and `rotation_window` (`CsrfToken`) keys are each optional; a record without them validates, `kind` and `vector` accept non-empty strings and refuse an empty string or a non-string, and `rotation` and `rotation_window` accept ISO 8601 durations with unique components in the order year, month, week, day, then `T` hour, minute, second (`P90D`, `P1Y2M3DT4H5M6S`, `PT15M`) and refuse a bare `P` or `PT`, a trailing `T`, a repeated or out-of-order component, and non-duration text. | Test |
 
 ## Dependencies
 
