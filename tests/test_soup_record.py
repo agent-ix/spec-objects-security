@@ -656,6 +656,41 @@ def test_skeleton_carries_no_serves_and_extract_lists_the_authored_edge():
     assert {"target": "FR-100", "type": "references"} in edges, edges
 
 
+@pytest.mark.trace("TC-156", "FR-013-AC-7")
+def test_serves_edge_to_a_requirement_in_another_repository_is_resolved(
+    tmp_path,
+):
+    record_repo = tmp_path / "record-repo"
+    requirement_repo = tmp_path / "requirement-repo"
+    record_spec = record_repo / "spec"
+    requirement_spec = requirement_repo / "spec"
+    record_spec.mkdir(parents=True)
+    requirement_spec.mkdir(parents=True)
+    (record_spec / "soup.md").write_text(SERVED.read_text())
+    _requirement(requirement_spec)
+
+    result = subprocess.run(
+        [
+            engine_tool("quire"),
+            "validate",
+            "--okf",
+            "--repo",
+            f"agent-ix/other-repo={record_repo}",
+            "--repo",
+            f"agent-ix/spec-objects-security={requirement_repo}",
+            "--module",
+            str(_iso()),
+            "--module",
+            str(PACKAGE_ROOT),
+        ],
+        capture_output=True,
+        text=True,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert _findings(result) == [], result.stderr
+
+
 def test_the_worked_disposition_example_pairs_a_record_with_a_fact(quire_engine):
     text = (FIXTURES / "disposition-example.md").read_text()
     front = frontmatter(text)
