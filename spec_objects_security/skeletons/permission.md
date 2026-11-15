@@ -3,7 +3,7 @@ id: PERM-001
 title: "ExportTenantData"
 type: permission
 object: permission
-resource: "tenant/records"
+resource: "ix://tenant/records"
 verb: export
 ---
 <!-- permission authoring skeleton (spec-objects-security). Fill every section with

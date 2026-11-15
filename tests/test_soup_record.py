@@ -446,14 +446,10 @@ def test_a_soup_record_no_vulnerability_affects_has_no_finding(tmp_path, quire_e
 
 # -- Engine gaps ---------------------------------------------------------------
 #
-# Each test below states the behaviour the spec requires and fails today. They
-# are strict expected failures so the day the engine supplies the behaviour the
-# rows turn red and are noticed.
+# The engine validates the frontmatter record keys, so the tests below assert
+# the refusals directly. The one remaining strict expected failure marks a
+# projection the engine does not yet supply.
 
-ENGINE_RECORD_KEYS = (
-    "The engine does not validate the frontmatter record keys of an authored "
-    "document against the data schema."
-)
 ENGINE_PROJECTION = (
     "The engine does not project the frontmatter record keys of an authored "
     "document into the extracted record."
@@ -465,25 +461,21 @@ def refused_document(quire_engine, **keys) -> bool:
     return not validate_doc(quire_engine, bogus)["is_valid"]
 
 
-@pytest.mark.xfail(strict=True, reason=ENGINE_RECORD_KEYS)
 @pytest.mark.trace("TC-129", "FR-010-AC-1")
 def test_an_authored_document_with_an_invented_support_status_fails(quire_engine):
     assert refused_document(quire_engine, support_status="bogus_status")
 
 
-@pytest.mark.xfail(strict=True, reason=ENGINE_RECORD_KEYS)
 @pytest.mark.trace("TC-131", "FR-010-AC-3")
 def test_an_authored_document_with_a_bad_end_of_support_fails(quire_engine):
     assert refused_document(quire_engine, end_of_support="soon")
 
 
-@pytest.mark.xfail(strict=True, reason=ENGINE_RECORD_KEYS)
 @pytest.mark.trace("TC-124", "FR-009-AC-4")
 def test_an_authored_document_with_a_digest_fails(quire_engine):
     assert refused_document(quire_engine, digest='"sha256:00"')
 
 
-@pytest.mark.xfail(strict=True, reason=ENGINE_RECORD_KEYS)
 @pytest.mark.trace("TC-143", "FR-012-AC-4")
 def test_an_authored_document_with_a_severity_fails(quire_engine):
     assert refused_document(quire_engine, severity="high")

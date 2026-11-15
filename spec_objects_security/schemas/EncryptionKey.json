@@ -36,6 +36,10 @@
     },
     "algorithm": {
       "$ref": "https://schemas.agent-ix.org/semantic-core/0.4.4/Identifier.json"
+    },
+    "rotation": {
+      "type": "string",
+      "pattern": "^P((\\d+Y(\\d+M)?(\\d+D)?|\\d+M(\\d+D)?|\\d+D|\\d+W)(T(\\d+H(\\d+M)?(\\d+S)?|\\d+M(\\d+S)?|\\d+S))?|T(\\d+H(\\d+M)?(\\d+S)?|\\d+M(\\d+S)?|\\d+S))$"
     }
   },
   "required": [

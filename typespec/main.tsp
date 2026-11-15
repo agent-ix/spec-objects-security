@@ -115,6 +115,17 @@ enum ConfidentialityLevel {
 }
 
 /**
+ * The regulated kind of data a classification covers. The set is closed and has
+ * no unassessed member: an absent `regulatedCategories` already means no
+ * category was stated. `health` does not imply `personal`; each is stated.
+ */
+enum RegulatedDataCategory {
+  health,
+  personal,
+  financial,
+}
+
+/**
  * How far a zone is trusted. `untrusted` is the unassessed member, because the
  * least-granting reading of "we never decided" is "we do not trust it".
  */
@@ -358,6 +369,8 @@ model MfaMethod {
   clauses?: ClauseRef[];
   operations?: OperationDecl[];
   factor_kind?: MfaFactorKind;
+  @minLength(1)
+  kind?: string;
   ...Record<never>;
 }
 
@@ -381,6 +394,8 @@ model Threat {
   clauses?: ClauseRef[];
   relations?: RelationDecl[];
   stride_category?: StrideCategory;
+  @minLength(1)
+  vector?: string;
   exploits?: SemanticId[];
   ...Record<never>;
 }
@@ -463,6 +478,11 @@ model DataClassification {
 
   clauses?: ClauseRef[];
   level?: ConfidentialityLevel;
+
+  @minItems(1)
+  @uniqueItems
+  regulatedCategories?: RegulatedDataCategory[];
+
   values?: EnumValue[];
   ...Record<never>;
 }
@@ -570,6 +590,8 @@ model EncryptionKey {
   material_ref?: SemanticId;
   custodian?: SemanticId;
   algorithm?: Identifier;
+  @pattern("^P((\\d+Y(\\d+M)?(\\d+D)?|\\d+M(\\d+D)?|\\d+D|\\d+W)(T(\\d+H(\\d+M)?(\\d+S)?|\\d+M(\\d+S)?|\\d+S))?|T(\\d+H(\\d+M)?(\\d+S)?|\\d+M(\\d+S)?|\\d+S))$")
+  rotation?: string;
   ...Record<never>;
 }
 
@@ -605,6 +627,8 @@ model CsrfToken {
 
   clauses?: ClauseRef[];
   binds?: SemanticId;
+  @pattern("^P((\\d+Y(\\d+M)?(\\d+D)?|\\d+M(\\d+D)?|\\d+D|\\d+W)(T(\\d+H(\\d+M)?(\\d+S)?|\\d+M(\\d+S)?|\\d+S))?|T(\\d+H(\\d+M)?(\\d+S)?|\\d+M(\\d+S)?|\\d+S))$")
+  rotation_window?: string;
   ...Record<never>;
 }
 

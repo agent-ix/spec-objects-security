@@ -3,11 +3,15 @@ id: CLASS-001
 title: "DataRestricted"
 type: data_classification
 object: data_classification
+# Optional. A person states every category that applies (health, personal,
+# financial); it is never derived from field names or from `level`.
+regulated_categories: [health, personal]
 ---
 <!-- data_classification authoring skeleton (spec-objects-security). Fill every section with
      substantive content. Contract (manifest body_extraction asserts):
      - Frontmatter MUST carry id, title, type: data_classification,
-       object: data_classification.
+       object: data_classification. It MAY carry regulated_categories, a
+       non-empty list of unique members of health, personal, financial.
      - "## Handling" (H2, required): how data of this class is handled.
      - "## Properties" (H2): the typed declaration. DataClassification.json
        requires a `level` row. -->

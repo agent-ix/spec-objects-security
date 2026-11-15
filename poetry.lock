@@ -2180,17 +2180,17 @@ files = [
 
 [[package]]
 name = "quire"
-version = "0.58.0"
+version = "0.61.0"
 description = "Python bindings for quire-rs: parse, corpus load, and whole-spec queries (FR-023)."
 optional = false
 python-versions = ">=3.9"
 groups = ["dev"]
 files = [
-    {file = "quire-0.58.0-cp39-abi3-macosx_10_12_x86_64.whl", hash = "sha256:f5fbb30f06e318df2d16dec15e19025e304e933a51f1910f64b554a0cde567ef"},
-    {file = "quire-0.58.0-cp39-abi3-macosx_11_0_arm64.whl", hash = "sha256:d813529a4710fd810fdbca07ae1bb25f0605f7f08cc594c8824174f97d590c82"},
-    {file = "quire-0.58.0-cp39-abi3-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:b5427e3e8cd86a09fb3efd65911e6468f761274310bced19dc77ccad88f65aa8"},
-    {file = "quire-0.58.0-cp39-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:11576973110bea98cf127a8a8a218ad2e4aaccb07f773e954ffe451492650945"},
-    {file = "quire-0.58.0-cp39-abi3-win_amd64.whl", hash = "sha256:61aab5f85d7e4edd3c47027cd0e8e54ec250dade890c96cda6929080474723e2"},
+    {file = "quire-0.61.0-cp39-abi3-macosx_10_12_x86_64.whl", hash = "sha256:2e743c8a9fb9a4db5d24dd14b751145a7c02f68e3a85d5f2354aac179ff69e2a"},
+    {file = "quire-0.61.0-cp39-abi3-macosx_11_0_arm64.whl", hash = "sha256:f48d9c70ab0181d992a9dc8d7fb809ecce2caad06a185a3001b492f6e6597f36"},
+    {file = "quire-0.61.0-cp39-abi3-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:a16bf7864f69b90bde2d545d404dea10ff6908b7b035ba8597a3d27ec99f5635"},
+    {file = "quire-0.61.0-cp39-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:0b92c06cc82473ffab7a75182a17258ae8b3bdd9b08dbef3c905d0492dbceec8"},
+    {file = "quire-0.61.0-cp39-abi3-win_amd64.whl", hash = "sha256:1185c5b22d2dc066fa8cf67e1cbb2cf8b5f9886f60679d4f3a8b8d03745d4b1f"},
 ]
 
 [package.source]
@@ -2839,4 +2839,4 @@ propcache = ">=0.2.1"
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13,<3.14"
-content-hash = "371647c3f347defdccede099e7aaa4cc4d50727f82e4c6f69d0e090350273aba"
+content-hash = "fdb0147e8e61058925e517a9d5a421a19edcf71f9a9df17456c4408a22f99433"
