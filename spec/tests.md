@@ -132,8 +132,8 @@ the Python package only: neither Node script is measured by it.
 | FR-001 | FR-001-AC-1..4 | TC-001..TC-004, TC-006..TC-014, TC-015..TC-017 | ✅ |
 | FR-002 | FR-002-AC-1..4, FR-002-AC-6..11, FR-002-CON-1..4 | TC-020..TC-035 | ✅ |
 | FR-003 | FR-003-AC-1, FR-003-AC-4..7, FR-003-CON-1 | TC-040, TC-041, TC-044..TC-046, TC-115 | 🚧 AC-5 runs install, listing, and restoration in a temporary HOME; AC-7 independently checks both engine gates; AC-6's naming half is an expected failure |
-| FR-004 | FR-004-AC-1..15, FR-004-CON-1..2 | TC-050..TC-063, TC-218, TC-219 | ✅ |
-| FR-005 | FR-005-AC-1..9, FR-005-CON-1..3 | TC-080..TC-090 | ✅ |
+| FR-004 | FR-004-AC-1..15, FR-004-CON-1..2 | TC-050..TC-063, TC-218, TC-219 | 🚧 |
+| FR-005 | FR-005-AC-1..9, FR-005-CON-1..3 | TC-080..TC-090 | 🚧 |
 | FR-006 | FR-006-AC-1..7, FR-006-CON-1..2 | TC-070..TC-077 | ✅ |
 | FR-007 | FR-007-AC-1..2 | TC-091, TC-092 | ✅ |
 | FR-008 | FR-008-AC-1..10 | TC-116..TC-120, TC-146..TC-149 | 🚧 |
