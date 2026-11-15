@@ -41,9 +41,9 @@ identity the engine resolves an `ix://` target to a corpus document by its trail
 (`agent-ix/quire-rs` FR-085-AC-10), so a single-repository run matches a target to a same-id local document
 whatever its repository segment says.
 
-Two capabilities this requirement would use are not in the shipped engine and are tracked in PLAT-1519:
 `quire trace` and `quire matrix` do not display document-to-document edges, so `quire extract` is the
-way to read the edge today (AC-6); and `quire validate` has no `--repo`, so AC-7 is not yet exercised.
+way to read the edge today (AC-6). `quire validate --repo` exercises cross-repository resolution for
+AC-7 when both repositories are loaded into the same corpus.
 
 ## Inputs
 
@@ -77,7 +77,7 @@ way to read the edge today (AC-6); and `quire validate` has no `--repo`, so AC-7
 | FR-013-AC-4 | A `serves` list whose only entries name is a document of another kind, or an id that resolves to nothing, still yields the finding. | Test |
 | FR-013-AC-5 | `--severity trace:soup-serves-no-requirement=error` promotes the finding and the run exits non-zero. | Test |
 | FR-013-AC-6 | The `soup_record` skeleton carries no `serves` key, and `quire extract` over a record with a `serves` entry lists an edge of type `references` to the requirement. | Test |
-| FR-013-AC-7 | (Pending PLAT-1519.) `quire validate --okf --repo o/a=<A> --repo o/b=<B> --module $M` over a fixture where the record in `o/a` serves an `FR` in `o/b` yields no `soup-serves-no-requirement` finding. | Test |
+| FR-013-AC-7 | `quire validate --okf --repo o/a=<A> --repo o/b=<B> --module $M` over a fixture where the record in `o/a` serves an `FR` in `o/b` yields no `soup-serves-no-requirement` finding. | Test |
 
 ## Dependencies
 
