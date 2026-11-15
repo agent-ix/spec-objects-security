@@ -29,7 +29,8 @@
       "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/MfaFactorKind.json"
     },
     "kind": {
-      "type": "string"
+      "type": "string",
+      "minLength": 1
     }
   },
   "required": [

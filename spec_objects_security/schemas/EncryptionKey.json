@@ -38,7 +38,8 @@
       "$ref": "https://schemas.agent-ix.org/semantic-core/0.4.4/Identifier.json"
     },
     "rotation": {
-      "type": "string"
+      "type": "string",
+      "pattern": "^P(\\d+[YMWD])+(T(\\d+[HMS])+)?$|^PT(\\d+[HMS])+$"
     }
   },
   "required": [

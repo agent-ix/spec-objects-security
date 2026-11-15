@@ -23,7 +23,8 @@
       "$ref": "https://schemas.agent-ix.org/semantic-core/0.4.4/SemanticId.json"
     },
     "rotation_window": {
-      "type": "string"
+      "type": "string",
+      "pattern": "^P(\\d+[YMWD])+(T(\\d+[HMS])+)?$|^PT(\\d+[HMS])+$"
     }
   },
   "required": [

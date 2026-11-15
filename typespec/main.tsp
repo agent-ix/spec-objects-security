@@ -369,6 +369,7 @@ model MfaMethod {
   clauses?: ClauseRef[];
   operations?: OperationDecl[];
   factor_kind?: MfaFactorKind;
+  @minLength(1)
   kind?: string;
   ...Record<never>;
 }
@@ -393,6 +394,7 @@ model Threat {
   clauses?: ClauseRef[];
   relations?: RelationDecl[];
   stride_category?: StrideCategory;
+  @minLength(1)
   vector?: string;
   exploits?: SemanticId[];
   ...Record<never>;
@@ -588,6 +590,7 @@ model EncryptionKey {
   material_ref?: SemanticId;
   custodian?: SemanticId;
   algorithm?: Identifier;
+  @pattern("^P(\\d+[YMWD])+(T(\\d+[HMS])+)?$|^PT(\\d+[HMS])+$")
   rotation?: string;
   ...Record<never>;
 }
@@ -624,6 +627,7 @@ model CsrfToken {
 
   clauses?: ClauseRef[];
   binds?: SemanticId;
+  @pattern("^P(\\d+[YMWD])+(T(\\d+[HMS])+)?$|^PT(\\d+[HMS])+$")
   rotation_window?: string;
   ...Record<never>;
 }
