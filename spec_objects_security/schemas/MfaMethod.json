@@ -27,6 +27,9 @@
     },
     "factor_kind": {
       "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/MfaFactorKind.json"
+    },
+    "kind": {
+      "type": "string"
     }
   },
   "required": [

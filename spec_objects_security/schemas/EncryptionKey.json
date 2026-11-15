@@ -36,6 +36,9 @@
     },
     "algorithm": {
       "$ref": "https://schemas.agent-ix.org/semantic-core/0.4.4/Identifier.json"
+    },
+    "rotation": {
+      "type": "string"
     }
   },
   "required": [

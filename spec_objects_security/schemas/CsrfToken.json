@@ -21,6 +21,9 @@
     },
     "binds": {
       "$ref": "https://schemas.agent-ix.org/semantic-core/0.4.4/SemanticId.json"
+    },
+    "rotation_window": {
+      "type": "string"
     }
   },
   "required": [

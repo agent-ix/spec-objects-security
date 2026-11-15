@@ -387,7 +387,7 @@ object_types:
           path:
           - kind
           required: true
-        factor:
+        factor_kind:
           from: frontmatter_field
           path:
           - factor

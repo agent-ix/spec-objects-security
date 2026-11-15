@@ -369,6 +369,7 @@ model MfaMethod {
   clauses?: ClauseRef[];
   operations?: OperationDecl[];
   factor_kind?: MfaFactorKind;
+  kind?: string;
   ...Record<never>;
 }
 
@@ -392,6 +393,7 @@ model Threat {
   clauses?: ClauseRef[];
   relations?: RelationDecl[];
   stride_category?: StrideCategory;
+  vector?: string;
   exploits?: SemanticId[];
   ...Record<never>;
 }
@@ -586,6 +588,7 @@ model EncryptionKey {
   material_ref?: SemanticId;
   custodian?: SemanticId;
   algorithm?: Identifier;
+  rotation?: string;
   ...Record<never>;
 }
 
@@ -621,6 +624,7 @@ model CsrfToken {
 
   clauses?: ClauseRef[];
   binds?: SemanticId;
+  rotation_window?: string;
   ...Record<never>;
 }
 

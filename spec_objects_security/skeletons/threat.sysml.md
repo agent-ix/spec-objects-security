@@ -3,7 +3,7 @@ id: THREAT-001
 title: "RefreshTokenReplay"
 type: threat
 object: threat
-stride_category: Spoofing
+stride_category: spoofing
 vector: "exfiltrated refresh token replayed from attacker infrastructure"
 ---
 <!-- threat authoring skeleton, alternate Properties form. Declares exactly the

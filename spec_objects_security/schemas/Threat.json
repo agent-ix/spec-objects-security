@@ -28,6 +28,9 @@
     "stride_category": {
       "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/StrideCategory.json"
     },
+    "vector": {
+      "type": "string"
+    },
     "exploits": {
       "type": "array",
       "items": {

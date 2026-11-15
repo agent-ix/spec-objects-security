@@ -47,6 +47,10 @@ relationships:
     type: covers
   - target: "ix://agent-ix/spec-objects-security/NFR-003"
     type: covers
+  - target: "ix://agent-ix/spec-objects-security/FR-023"
+    type: covers
+  - target: "ix://agent-ix/spec-objects-security/NFR-004"
+    type: covers
 ---
 # Test Matrix
 
@@ -146,6 +150,8 @@ the Python package only: neither Node script is measured by it.
 | FR-015 | FR-015-AC-1..3 | TC-194..TC-196 | ✅ |
 | FR-016 | FR-016-AC-1..9 | TC-197..TC-203, TC-205 | ✅ AC-8 is also exercised with NFR-003-AC-2 by TC-205; AC-9 covers the decision vocabulary and conditional RFC 3339 expiry in TC-199 |
 | NFR-003 | NFR-003-AC-1..2, NFR-003-M-1..2 | TC-204, TC-205 | ✅ |
+| FR-023 | FR-023-AC-1..10 | TC-206..TC-217 | 🚧 AC-1..4 and AC-6 (extraction half), AC-8..10 need an engine with quire-rs#690 released and the pinned quire bumped; AC-5 and AC-7 and the schema halves of AC-1..4 and AC-6 run now |
+| NFR-004 | NFR-004-AC-1..3, NFR-004-M-1..2 | TC-207, TC-211, TC-213, TC-214 | 🚧 AC-1 runs now; AC-2 and AC-3 need the same engine |
 | FR-017 | FR-017-AC-1..7 | TC-175..TC-186 | ✅ `quire clauses` loads strictly and cannot load the real module (the object-type edges come from another module), so TC-181, TC-183, TC-185 and TC-186 evaluate a module that holds only the set files |
 
 ### Integration Test Coverage
@@ -319,6 +325,18 @@ the Python package only: neither Node script is measured by it.
 | TC-203 | scope exclusion manifest declares required section locators and optional expiry | Unit | P0 | FR-016-AC-6 | ✅ |
 | TC-204 | No property of the mapping or exclusion schemas is named or typed as a computed value | Unit | P0 | NFR-003-AC-1, NFR-003-M-1 | ✅ |
 | TC-205 | A validated control and exclusion emit exactly the keys the author wrote | Unit | P0 | FR-016-AC-8, NFR-003-AC-2, NFR-003-M-2 | ✅ |
+| TC-206 | `RegulatedDataCategory.json` has exactly `health`, `personal`, `financial` and no `unknown` | Unit | P0 | FR-023-AC-5 | ✅ |
+| TC-207 | `regulatedCategories` is an optional array of the enum with `minItems` 1, unique items and no default | Unit | P0 | FR-023-AC-1, NFR-004-AC-1, NFR-004-M-1 | ✅ |
+| TC-208 | Valid lists validate against the schema, alone and beside a `level`, so neither axis implies the other | Unit | P0 | FR-023-AC-6 | ✅ |
+| TC-209 | An unknown member, an empty list, a duplicate and a scalar are each refused by the schema | Unit | P0 | FR-023-AC-2, FR-023-AC-3 | ✅ |
+| TC-210 | A record without `regulatedCategories` validates against the schema | Unit | P0 | FR-023-AC-4 | ✅ |
+| TC-211 | The `regulatedCategories` and `level` keys each have exactly one source locator, no `assert` and no schema default | Unit | P0 | FR-023-AC-7, NFR-004-AC-1 | ✅ |
+| TC-212 | The `data_classification` skeleton shows `regulated_categories` and validates | Unit | P0 | FR-023-AC-8 | 🚧 needs quire-rs#690 released |
+| TC-213 | Valid fixtures validate and extract the list in authored order, with a `level` fixture extracting both keys | Unit | P0 | FR-023-AC-1, FR-023-AC-6, NFR-004-AC-3, NFR-004-M-2 | 🚧 needs quire-rs#690 released |
+| TC-214 | A classification without the field, including one with patient-named fields, extracts no `regulatedCategories`; one without `level` extracts no `level` | Unit | P0 | FR-023-AC-4, NFR-004-AC-2, NFR-004-AC-3, NFR-004-M-2 | 🚧 needs quire-rs#690 released |
+| TC-215 | An unknown member, an empty list, a duplicate and a scalar each fail `quire validate` with a distinct located message | Unit | P0 | FR-023-AC-2, FR-023-AC-3 | 🚧 needs quire-rs#690 released |
+| TC-216 | A `## Regulated Categories` section without frontmatter is an error diagnostic with reason `frontmatter-owned` and extracts no key | Unit | P0 | FR-023-AC-9 | 🚧 needs quire-rs#690 released |
+| TC-217 | A section beside frontmatter is a `frontmatter-owned` warning and the record keeps only the frontmatter list | Unit | P0 | FR-023-AC-10 | 🚧 needs quire-rs#690 released |
 
 ## Test Environment
 

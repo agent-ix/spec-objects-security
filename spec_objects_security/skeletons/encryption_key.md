@@ -3,7 +3,7 @@ id: KEY-001
 title: "TenantDataEncryptionKey"
 type: encryption_key
 object: encryption_key
-algorithm: AES-256-GCM
+algorithm: AES_256_GCM
 rotation: P90D
 ---
 <!-- encryption_key authoring skeleton (spec-objects-security). Fill every section with
