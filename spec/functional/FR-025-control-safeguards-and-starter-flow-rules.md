@@ -140,9 +140,12 @@ the `any_path` of `delivers_to` incoming then `carries` outgoing, together with 
   `edge`, `direction`, `from`, `field` and `value`, and a `sets` matches a zero-step `unless_any` condition by `field` and
   `value`. A starter rule names no `removes`.
 - In the sink rules, the `unless_any` condition "the sink's own `processor_agreement` is `covered`" is a zero-step condition
-  that exists only so that FR-096 accepts `obtain-processor-agreement` (a `sets`) at load. Because `match` requires
+  that exists only so that FR-096 accepts `obtain-processor-agreement` (a `sets`) at load. It is a load-time anchor and not an
+  independent behavior. Because `match` requires
   `processor_agreement` to be `not_covered` or `unknown`, it can never hold together with `match` and clears no denial. The
   way a person clears the denial by agreement is to set `covered`, which makes `match` fail.
+- The rule is named `health-in-log`, not `regulated-data-in-log`, because it matches `health` only; the PLAT-1540 name is
+  superseded by this one.
 - `health-in-log` SHALL match `health` only. A log that receives `personal` data is not denied by any starter rule, and a
   project declares its own rule for that.
 - No starter rule SHALL contain a value the engine infers. A rule reads authored frontmatter values and resolved edges only.
