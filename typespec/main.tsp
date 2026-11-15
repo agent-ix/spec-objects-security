@@ -590,7 +590,7 @@ model EncryptionKey {
   material_ref?: SemanticId;
   custodian?: SemanticId;
   algorithm?: Identifier;
-  @pattern("^P((\\d+Y(\\d+M)?(\\d+W)?(\\d+D)?|\\d+M(\\d+W)?(\\d+D)?|\\d+W(\\d+D)?|\\d+D)(T(\\d+H(\\d+M)?(\\d+S)?|\\d+M(\\d+S)?|\\d+S))?|T(\\d+H(\\d+M)?(\\d+S)?|\\d+M(\\d+S)?|\\d+S))$")
+  @pattern("^P((\\d+Y(\\d+M)?(\\d+D)?|\\d+M(\\d+D)?|\\d+D|\\d+W)(T(\\d+H(\\d+M)?(\\d+S)?|\\d+M(\\d+S)?|\\d+S))?|T(\\d+H(\\d+M)?(\\d+S)?|\\d+M(\\d+S)?|\\d+S))$")
   rotation?: string;
   ...Record<never>;
 }
@@ -627,7 +627,7 @@ model CsrfToken {
 
   clauses?: ClauseRef[];
   binds?: SemanticId;
-  @pattern("^P((\\d+Y(\\d+M)?(\\d+W)?(\\d+D)?|\\d+M(\\d+W)?(\\d+D)?|\\d+W(\\d+D)?|\\d+D)(T(\\d+H(\\d+M)?(\\d+S)?|\\d+M(\\d+S)?|\\d+S))?|T(\\d+H(\\d+M)?(\\d+S)?|\\d+M(\\d+S)?|\\d+S))$")
+  @pattern("^P((\\d+Y(\\d+M)?(\\d+D)?|\\d+M(\\d+D)?|\\d+D|\\d+W)(T(\\d+H(\\d+M)?(\\d+S)?|\\d+M(\\d+S)?|\\d+S))?|T(\\d+H(\\d+M)?(\\d+S)?|\\d+M(\\d+S)?|\\d+S))$")
   rotation_window?: string;
   ...Record<never>;
 }

@@ -49,6 +49,7 @@ def test_the_key_is_optional_and_absence_validates(schema_registry, model, key):
         ("CsrfToken", "rotation_window", "PT15M"),
         ("EncryptionKey", "rotation", "P1Y2M3DT4H5M6S"),
         ("EncryptionKey", "rotation", "P2W"),
+        ("EncryptionKey", "rotation", "P1Y2M3D"),
     ],
 )
 def test_accepted_values(schema_registry, model, key, value):
@@ -69,6 +70,12 @@ def test_accepted_values(schema_registry, model, key, value):
         ("CsrfToken", "rotation_window", "PT"),
         ("CsrfToken", "rotation_window", 30),
         ("EncryptionKey", "rotation", "P1D1Y"),
+        ("EncryptionKey", "rotation", "P1Y2W"),
+        ("EncryptionKey", "rotation", "P2W3D"),
+        ("EncryptionKey", "rotation", "P1Y1M1W1D"),
+        ("EncryptionKey", "rotation", "P1W1W"),
+        ("EncryptionKey", "rotation", "P0.5D"),
+        ("CsrfToken", "rotation_window", "PT0.5S"),
         ("EncryptionKey", "rotation", "P1D2D"),
         ("EncryptionKey", "rotation", "P1Y1Y"),
         ("EncryptionKey", "rotation", "P1DT"),
