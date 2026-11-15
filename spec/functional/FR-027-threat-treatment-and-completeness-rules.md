@@ -89,6 +89,12 @@ an acceptance; those are person-authored ([NFR-005](../non-functional/NFR-005-th
 
 - The manifest SHALL NOT declare `threat-has-control`. Unconsidered threats are outside every threat model and get no
   finding, as the rule below requires.
+- **Rationale for the loss of `trace:uncontrolled-threat`.** Removing `threat-has-control` removes that finding for every
+  threat. A corpus that lists threats but has no `threat_model`, which is every existing corpus, goes from one finding per
+  uncontrolled threat to none. This is intended: a threat outside every threat model has not been scoped for analysis, so
+  no one has stated that it must be treated, and the old rule also reported threats that a risk accepted. The check returns
+  for a threat as soon as a person adds a `threat_model` that `considers` it (`trace:threat-without-treatment`). A consumer
+  who wants the old behaviour for unscoped threats adds a `threat_model` that considers them.
 - The manifest SHALL declare `risk-has-treatment` with `where: {field: decision, values: [undecided, not_accepted]}`
   (quire-rs FR-058), so that a risk with `decision: accepted` owes no `mitigates` edge, and keep `to: []`.
 - This amends FR-008, whose text and AC-6 name `threat-has-control` and `risk-has-treatment`.

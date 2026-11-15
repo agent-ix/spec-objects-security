@@ -131,7 +131,7 @@ the Python package only: neither Node script is measured by it.
 |---|---|---|---|
 | FR-001 | FR-001-AC-1..4 | TC-001..TC-004, TC-006..TC-014, TC-015..TC-017 | ✅ |
 | FR-002 | FR-002-AC-1..4, FR-002-AC-6..11, FR-002-CON-1..4 | TC-020..TC-035 | ✅ |
-| FR-003 | FR-003-AC-1, FR-003-AC-4..7, FR-003-CON-1 | TC-040, TC-041, TC-044..TC-046, TC-115 | ✅ AC-5 runs install, listing, and restoration in a temporary HOME; AC-7 independently checks both engine gates; AC-6's naming half is an expected failure |
+| FR-003 | FR-003-AC-1, FR-003-AC-4..7, FR-003-CON-1 | TC-040, TC-041, TC-044..TC-046, TC-115 | 🚧 AC-5 runs install, listing, and restoration in a temporary HOME; AC-7 independently checks both engine gates; AC-6's naming half is an expected failure |
 | FR-004 | FR-004-AC-1..15, FR-004-CON-1..2 | TC-050..TC-063, TC-218, TC-219 | ✅ |
 | FR-005 | FR-005-AC-1..9, FR-005-CON-1..3 | TC-080..TC-090 | ✅ |
 | FR-006 | FR-006-AC-1..7, FR-006-CON-1..2 | TC-070..TC-077 | ✅ |
@@ -194,11 +194,11 @@ the Python package only: neither Node script is measured by it.
 | TC-031 | No `.npmrc`, no `file:`/`link:` dependency | Static | P2 | FR-002-CON-2 | ✅ |
 | TC-032 | `package-lock.json` resolves every package, `@agent-ix/semantic-core` included, from npmjs | Unit | P2 | FR-002-CON-4 | ✅ |
 | TC-035 | `.gitattributes` pins `eol=lf` and `npm pack` leaves nothing staged at the repository root | Unit | P1 | FR-002-AC-11 | ✅ |
-| TC-040 | The `semantic` block equals the eight admitted keys and `exports` equals the twenty-six types | Unit | P0 | FR-003-AC-1, FR-003-CON-1 | ✅ |
-| TC-044 | `quire.Registry.load_from` lists all twenty-six archetypes and `validate_document` reports no `semantic.*` load failure on any skeleton | Integration | P0 | FR-003-AC-4 | ✅ |
+| TC-040 | The `semantic` block equals the eight admitted keys and `exports` equals the twenty-six types | Unit | P0 | FR-003-AC-1, FR-003-CON-1 | 🚧 |
+| TC-044 | `quire.Registry.load_from` lists all twenty-six archetypes and `validate_document` reports no `semantic.*` load failure on any skeleton | Integration | P0 | FR-003-AC-4 | 🚧 |
 | TC-045 | An unknown `semantic` key is refused by the loader; the refusal names the key or path | Integration | P1 | FR-003-AC-6 | ✅ refusal verified; the naming half is a strict expected failure on quire-rs#221 and quire-rs#394 |
 | TC-046 | `quoin module install path:` succeeds, lists the module, and the prior version is restored | Integration | P1 | FR-003-AC-5 | ✅ |
-| TC-050 | Each of the twenty-six schemas differs from every other in a required, admitted, or item rule; none is `type: object` only | Unit | P0 | FR-004-AC-1 | ✅ |
+| TC-050 | Each of the twenty-six schemas differs from every other in a required, admitted, or item rule; none is `type: object` only | Unit | P0 | FR-004-AC-1 | 🚧 |
 | TC-051 | Asset: identity record validates; identity flag removed fails; no `fields` fails | Integration | P0 | FR-004-AC-2 | ✅ |
 | TC-052 | Role with `operations` fails; permission and scope with `relations` each fail | Integration | P0 | FR-004-AC-3 | ✅ |
 | TC-053 | Threat: `stride_category` row required; an invented STRIDE member fails | Integration | P0 | FR-004-AC-4 | ✅ |
@@ -208,7 +208,7 @@ the Python package only: neither Node script is measured by it.
 | TC-057 | Auth flow: one operation validates; empty `operations` fails; `relations` fails | Integration | P0 | FR-004-AC-8 | ✅ |
 | TC-058 | Audit event: `Timestamp` field and no identity validates; missing `Timestamp`, an identity row, or `operations` each fail | Integration | P0 | FR-004-AC-9 | ✅ |
 | TC-059 | Trust boundary: one clause and a `trust_level` row validates; each removal fails; an invented trust level fails | Integration | P1 | FR-004-AC-10 | ✅ |
-| TC-060 | The empty record `{}` fails against all twenty-six schemas | Unit | P0 | FR-004-AC-11, FR-004-CON-2 | ✅ |
+| TC-060 | The empty record `{}` fails against all twenty-six schemas | Unit | P0 | FR-004-AC-11, FR-004-CON-2 | 🚧 |
 | TC-061 | Placeholder `unresolved` target is accepted by the schema and reported by the extractor; a bare token is refused | Integration | P1 | FR-004-AC-12 | ✅ |
 | TC-062 | No module schema redeclares a semantic-core model; every grammar item is a `$ref` to semantic-core | Unit | P1 | FR-004-AC-13, FR-004-CON-1 | ✅ |
 | TC-063 | Data classification: `level` row required; `relations` refused | Integration | P1 | FR-004-AC-14 | ✅ |
@@ -220,7 +220,7 @@ the Python package only: neither Node script is measured by it.
 | TC-075 | `ControlEffectiveness` starts at `not_assessed` and `TrustLevel`'s unassessed member is `untrusted` | Unit | P1 | FR-006-AC-6 | ✅ |
 | TC-076 | No shipped schema uses `minContains` or `maxContains`, so no negative rule can invert | Unit | P0 | FR-006-AC-7 | ✅ |
 | TC-077 | No vocabulary member expresses "assume the permissive value" | Static | P2 | FR-006-CON-1 | ✅ |
-| TC-080 | Every skeleton (twenty-six plus three alternates) validates with no error | Integration | P0 | FR-005-AC-1 | ✅ |
+| TC-080 | Every skeleton (twenty-six plus three alternates) validates with no error | Integration | P0 | FR-005-AC-1 | 🚧 |
 | TC-081 | Table and `sysml` skeletons extract to identical normalized fields with the recorded forms | Integration | P0 | FR-005-AC-2, FR-005-CON-2 | ✅ |
 | TC-082 | Under the skeleton bundle index every skeleton extracts with zero errors and zero unresolved tokens | Integration | P0 | FR-005-AC-3 | ✅ |
 | TC-083 | Availability states per skeleton (fields, clauses, operations) match the type's declared set | Integration | P1 | FR-005-AC-4 | ✅ |
@@ -243,7 +243,7 @@ the Python package only: neither Node script is measured by it.
 | TC-117 | A `security` NFR with no `mitigates` edge yields exactly one `unjustified-security-nfr` finding naming the NFR, the declaration, the selector field and `security`, exit 0 | Integration | P0 | FR-008-AC-2 | ✅ |
 | TC-118 | The same NFR with a `mitigates` edge to a threat in the same repository yields no finding; an NFR with another `quality_attribute` and no edge yields none | Integration | P0 | FR-008-AC-3, FR-008-AC-4 | ✅ |
 | TC-119 | Under `--okf --strict` exit 3 and the finding stays a `warning:`; `--severity trace:unjustified-security-nfr=error` exits non-zero with an error finding | Integration | P1 | FR-008-AC-5 | ✅ |
-| TC-120 | `risk-has-treatment` still declares `to: []` and `threat-has-control` is absent | Unit | P1 | FR-008-AC-6 | ✅ |
+| TC-120 | `risk-has-treatment` still declares `to: []` and `threat-has-control` is absent | Unit | P1 | FR-008-AC-6 | 🚧 |
 | TC-146 | A security NFR with a `mitigates` edge to a risk in the same repository yields no finding | Integration | P0 | FR-008-AC-7 | ✅ |
 | TC-147 | `quire validate --okf --repo o/a=… --repo o/b=…` with the NFR in `o/a` mitigating a threat in `o/b` yields no finding | Integration | P0 | FR-008-AC-8 | ✅ |
 | TC-148 | An NFR whose only `mitigates` edge targets a hazard yields the finding | Integration | P0 | FR-008-AC-9 | ✅ |
