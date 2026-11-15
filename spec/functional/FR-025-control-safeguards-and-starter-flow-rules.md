@@ -15,8 +15,6 @@ relationships:
     type: "references"
   - target: "ix://agent-ix/spec-objects-architecture/FR-015"
     type: "depends_on"
-  - target: "ix://agent-ix/spec-objects-architecture/FR-014"
-    type: "depends_on"
 ---
 # FR-025: A control states safeguards and protects a connection or data_sink, and the module ships the remediation vocabulary and starter flow rules
 
@@ -47,8 +45,10 @@ depends on the trust-boundary requirement for the third.
 
 The `data_sink` object type and the `delivers_to` edge are owned by `agent-ix/spec-objects-architecture` FR-015. The
 `regulated_categories` field is owned by [FR-023](./FR-023-regulated-data-categories-on-data-classification.md). The
-`crosses` edge belongs to `agent-ix/spec-objects-architecture` FR-014 (PLAT-1532). The `trust_level` field of a
-`trust_boundary` belongs to this repository's FR-024 slot (PLAT-1532), which is reserved and not yet authored.
+`crosses` edge and the `trust_boundary` object are not yet owned by an authored requirement: the architecture requirement for
+`crosses` is supplied by spec-objects-architecture PR #51 / PLAT-1532, and this requirement names no requirement id for it
+until that lands. The `trust_level` field of a `trust_boundary` belongs to this repository's FR-024 slot (PLAT-1532), which is
+reserved and not yet authored.
 
 Where a rule has a public-law source, its rationale may cite: HIPAA 45 CFR 164.312(e)(1) (transmission security) and
 45 CFR 164.502(e) and 164.504(e) (business associate contracts); GDPR Art 28 (processor) and Art 32 (security of processing).
@@ -76,7 +76,8 @@ quotes no paywalled standard.
   `data_classification` manifest entry through `frontmatter_schema_ref`.
 - A `frontmatter_field` locator on the `control` manifest entry.
 - `protects: [externally-exposed, asset, connection, data_sink]` on the `control` manifest entry.
-- `traceability.remediations`: one entry per `Safeguard` member.
+- `traceability.remediations`: one entry per `Safeguard` member, plus `obtain-processor-agreement` and `remove-from-sink`
+  (nine entries).
 - `traceability.flow_rules`: the six starter rules below.
 - A `control` skeleton and fixtures that exercise each starter rule.
 
@@ -139,15 +140,20 @@ the `any_path` of `delivers_to` incoming then `carries` outgoing, together with 
 - Every remediation a starter rule names SHALL match that rule under FR-096: an `adds` matches an `unless_any` condition by
   `edge`, `direction`, `from`, `field` and `value`, and a `sets` matches a zero-step `unless_any` condition by `field` and
   `value`. A starter rule names no `removes`.
-- In the sink rules, the `unless_any` condition "the sink's own `processor_agreement` is `covered`" is a zero-step condition
-  that exists only so that FR-096 accepts `obtain-processor-agreement` (a `sets`) at load. It is a load-time anchor and not an
-  independent behavior. Because `match` requires
-  `processor_agreement` to be `not_covered` or `unknown`, it can never hold together with `match` and clears no denial. The
-  way a person clears the denial by agreement is to set `covered`, which makes `match` fail.
-- The rule is named `health-in-log`, not `regulated-data-in-log`, because it matches `health` only; the PLAT-1540 name is
-  superseded by this one.
-- `health-in-log` SHALL match `health` only. A log that receives `personal` data is not denied by any starter rule, and a
-  project declares its own rule for that.
+- In the sink rules, the `unless_any` condition "the sink's own `processor_agreement` is `covered`" SHALL be a zero-step
+  condition, so that FR-096 accepts `obtain-processor-agreement` (a `sets`) at load.
+- The rule named `health-in-log` SHALL match `health` only. A `kind: log` sink that receives only `personal` data is not
+  denied by `health-in-log`; it is denied only under `regulated-data-to-uncovered-processor`, and only when its
+  `processor_agreement` is `not_covered` or `unknown`. A project declares its own rule for any other log case.
+
+Rationale (not requirements):
+
+- The zero-step `covered` condition is a load-time anchor. Because `match` requires `processor_agreement` to be `not_covered`
+  or `unknown`, it never holds together with `match` and clears no denial. A person clears the denial by agreement by setting
+  `covered`, which makes `match` fail.
+- The rule is named `health-in-log`, not `regulated-data-in-log` (the name PLAT-1540 uses), because it matches `health` only.
+  This requirement's name is the one the module ships.
+
 - No starter rule SHALL contain a value the engine infers. A rule reads authored frontmatter values and resolved edges only.
 - The starter rules SHALL be declared so that a `data_sink` of `kind: llm_prompt` that receives `health` data, has
   `processor_agreement: not_covered` and has no protecting control satisfies the `match` of both
@@ -160,7 +166,7 @@ the `any_path` of `delivers_to` incoming then `carries` outgoing, together with 
 
 None of the behaviors above can be evaluated until quire-rs delivers `flow_rules` and `remediations` (FR-096, with FR-058 and
 FR-084 amended by cross-reference; quire-rs#691 is open and this requirement follows its text), the `delivers_to` edge and
-`data_sink` object exist in spec-objects-architecture (FR-015), the `crosses` edge exists in spec-objects-architecture FR-014,
+`data_sink` object exist in spec-objects-architecture (FR-015), the `crosses` edge exists in spec-objects-architecture (the requirement for it comes with PR #51 / PLAT-1532),
 and the `trust_level` field and its frontmatter schema exist in this repository's FR-024 (PLAT-1532). The `Safeguard` enum, the manifest `protects`
 targets and the remediation and rule entries are module data and can be authored and schema-validated first. The rule
 fixtures need the engine. This requirement does not promise that code.
@@ -179,7 +185,7 @@ declares no QSL.
   the quire-cli relation-report requirement.
 - The `data_sink` object type, its kinds and `processor_agreement` values, and the `delivers_to` verb: spec-objects-architecture
   FR-015.
-- The `crosses` edge: spec-objects-architecture FR-014. The `trust_level` field and its frontmatter schema: this repository's
+- The `crosses` edge: spec-objects-architecture (PR #51 / PLAT-1532). The `trust_level` field and its frontmatter schema: this repository's
   FR-024 (both PLAT-1532).
 - Records of processing (PLAT-1657), threat-model artifacts (milestone M3), runtime monitors, Cedar.
 - Automatic derivation of a category, trust level, processor-agreement state or safeguard, and any judgement that a stated
@@ -187,12 +193,13 @@ declares no QSL.
 
 ## Acceptance Criteria
 
-FR-025-AC-1 to AC-6 evaluate the module's rule data through the engine and need the quire-rs and spec-objects-architecture work
-above; they are held here as module fixtures (the draft ACs a to e of PLAT-1533). AC-7 needs the engine's load-time validation.
-AC-8 to AC-14 are module-only checks. Draft AC f (undeclared remediation, three path steps, duplicate name, an `adds` that
-matches nothing) is owned by quire-rs FR-096-AC-6 and AC-7. Draft ACs g, h, i and j (no finding without a modelled fact,
-byte-identical JSON, `--strict` exit codes, severity override) are owned by quire-rs FR-096 and the quire-cli relation-report
-requirement, where they are evaluated over the engine and not over this module's data; AC-6 holds the module-side fixture for g.
+FR-025-AC-1 to AC-6 and AC-13 evaluate the module's rule data through the engine and need the quire-rs and
+spec-objects-architecture work above; they are held here as module fixtures. AC-1 to AC-4 are draft ACs a to d of PLAT-1533,
+AC-7 is draft AC e and needs the engine's load-time validation, and AC-6 is the module-side fixture for draft AC g. AC-5 and
+AC-13 add per-rule and overlap fixtures. AC-8 to AC-12 and AC-14 are module-only checks. Draft AC f (undeclared remediation,
+three path steps, duplicate name, an `adds` that matches nothing) is owned by quire-rs FR-096-AC-6 and AC-7. Draft ACs g, h, i
+and j (no finding without a modelled fact, byte-identical JSON, `--strict` exit codes, severity override) are owned by quire-rs
+FR-096 and the quire-cli relation-report requirement, where they are evaluated over the engine and not over this module's data.
 
 | ID | Criteria | Verification |
 |----|----------|--------------|
@@ -208,12 +215,12 @@ requirement, where they are evaluated over the engine and not over this module's
 | FR-025-AC-10 | The remediation names are the seven `Safeguard` members plus `obtain-processor-agreement` and `remove-from-sink`. Every remediation a starter rule names matches that rule under FR-096: an `adds` matches an `unless_any` condition, a `sets` matches a zero-step `unless_any` condition, and no starter rule names a `removes`. | Inspection |
 | FR-025-AC-11 | `ControlFrontmatter.json` and `DataClassificationFrontmatter.json` exist and are open schemas. The first holds `safeguards` as a `Safeguard[]` and the second holds `regulated_categories` as a `RegulatedDataCategory[]`; the `control` and `data_classification` manifest entries reference them through `frontmatter_schema_ref`. Every starter-rule `any_of` value and every remediation `value` is a member of the enum of its field in the frontmatter schema of the end archetype that the module declares. | Test |
 | FR-025-AC-12 | Each starter rule's `check` equals its `name`, and each carries a non-empty `rationale`. Each rule's `remediations` are in the nine. | Test |
-| FR-025-AC-13 | A `data_sink` of `kind: llm_prompt` that receives `health` data, with `processor_agreement: not_covered` and no protecting control, is denied under both `trace:regulated-data-to-uncovered-processor` and `trace:health-in-llm-prompt-or-tool-call`, each naming the sink. A log sink receiving only `personal` data yields no denial from any starter rule. | Test |
+| FR-025-AC-13 | A `data_sink` of `kind: llm_prompt` that receives `health` data, with `processor_agreement: not_covered` and no protecting control, is denied under both `trace:regulated-data-to-uncovered-processor` and `trace:health-in-llm-prompt-or-tool-call`, each naming the sink. A `kind: log` sink receiving only `personal` data, with `processor_agreement: covered`, yields no denial from any starter rule; with `processor_agreement: not_covered` it is denied under `trace:regulated-data-to-uncovered-processor` and not under `trace:health-in-log`. | Test |
 | FR-025-AC-14 | The manifest declares no rule for transfer regions and no per-role purpose rule. The README records the per-role purpose gap. No remediation or rule text claims that a change makes a system compliant, and no rule text, rationale or README names or quotes a paywalled standard. | Inspection |
 
 ## Dependencies
 
 - **Upstream**: [FR-004](./FR-004-role-schemas.md), [FR-023](./FR-023-regulated-data-categories-on-data-classification.md);
-  quire-rs FR-096 (`flow_rules` and `remediations`); spec-objects-architecture FR-015 (`data_sink`, `delivers_to`); spec-objects-architecture FR-014
-  (`crosses`); this repository's FR-024 (`trust_level`, PLAT-1532)
+  quire-rs FR-096 (`flow_rules` and `remediations`); spec-objects-architecture FR-015 (`data_sink`, `delivers_to`); spec-objects-architecture `crosses`
+  requirement (PR #51 / PLAT-1532, no id yet); this repository's FR-024 (`trust_level`, PLAT-1532)
 - **Downstream**: PLAT-1479 (remediations), PLAT-1540 (starter rules), PLAT-1541 (solver lowering, waits on QSL-1900)
