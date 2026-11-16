@@ -2,21 +2,27 @@
 
 from __future__ import annotations
 
+import re
+
 import pytest
 
-from tests.conftest import CLAUSE, PACKAGE_ROOT, SKELETONS_DIR, field
+from tests.conftest import CLAUSE, PACKAGE_ROOT, SKELETONS_DIR, field, frontmatter
 from tests.test_regulated_categories import _extract, _schema
 from tests.test_threat_model import errors, target_doc, validate
 
-SAFEGUARDS = [
-    "encrypt-in-transit",
-    "encrypt-at-rest",
-    "anonymize",
-    "pseudonymize",
-    "obtain-consent",
-    "restrict-region",
-    "validate-before-display",
-]
+
+def _declared_safeguards() -> list[str]:
+    source = (PACKAGE_ROOT.parent / "typespec" / "main.tsp").read_text()
+    declaration = re.search(r"enum Safeguard\s*\{([^}]*)\}", source, re.DOTALL)
+    assert declaration is not None
+    return [
+        literal or identifier
+        for literal, identifier in re.findall(
+            r"^\s*(?:`([^`]+)`|([A-Za-z_][A-Za-z0-9_]*))\s*,\s*$",
+            declaration.group(1),
+            re.MULTILINE,
+        )
+    ]
 
 
 def _control_record(**extra) -> dict:
@@ -32,7 +38,7 @@ def test_safeguard_and_frontmatter_schemas_are_closed_where_required(
     schema_registry,
 ):
     safeguard = _schema("Safeguard")
-    assert safeguard["enum"] == SAFEGUARDS
+    assert safeguard["enum"] == _declared_safeguards()
 
     control = _schema("Control")
     safeguards = control["properties"]["safeguards"]
@@ -49,7 +55,7 @@ def test_safeguard_and_frontmatter_schemas_are_closed_where_required(
         ["shield"],
         ["remove-from-sink"],
         [],
-        ["encrypt-in-transit", "encrypt-in-transit"],
+        [_declared_safeguards()[0], _declared_safeguards()[0]],
         "encrypt-in-transit",
     ):
         assert not record_schema.is_valid(_control_record(safeguards=invalid)), invalid
@@ -115,16 +121,26 @@ def test_safeguards_are_optional_authored_frontmatter_and_the_skeleton_validates
     )
     assert "safeguards" not in absent["record"]
 
-    for invalid in (
-        ["shield"],
-        ["remove-from-sink"],
-        [],
-        ["encrypt-in-transit", "encrypt-in-transit"],
-    ):
-        frontmatter_schema = schema_registry("ControlFrontmatter")
-        assert not frontmatter_schema.is_valid(
-            {"id": "CTRL-1", "safeguards": invalid}
-        ), invalid
+    invalid_values = (
+        ("shield", ["shield"]),
+        ("remove-from-sink", ["remove-from-sink"]),
+        ("[]", []),
+        (
+            "duplicate",
+            [_declared_safeguards()[0], _declared_safeguards()[0]],
+        ),
+    )
+    frontmatter_validator = schema_registry("ControlFrontmatter")
+    for label, value in invalid_values:
+        document = skeleton.replace(
+            "safeguards: [encrypt-in-transit]", f"safeguards: {value}"
+        )
+        diagnostics = list(frontmatter_validator.iter_errors(frontmatter(document)))
+        assert diagnostics, label
+        assert any(
+            tuple(diagnostic.absolute_path)[:1] == ("safeguards",)
+            for diagnostic in diagnostics
+        ), diagnostics
 
 
 @pytest.mark.trace("TC-246", "FR-025-AC-9")
