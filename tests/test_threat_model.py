@@ -305,13 +305,8 @@ def test_threatens_does_not_allow_a_queue_target(tmp_path):
     assert "disallowed-edge-target" in out and "threatens" in out, out
 
 
-@pytest.mark.trace(
-    "TC-229",
-    "FR-026-AC-4",
-    "FR-026-AC-9",
-    "FR-026-AC-10",
-    "FR-027-AC-7",
-)
+@pytest.mark.trace("TC-229", "FR-026-AC-4", "FR-026-AC-9")
+@pytest.mark.trace("TC-229", "FR-027-AC-7")
 def test_manifest_declares_the_verbs_and_the_link_targets():
     manifest = yaml.safe_load(MANIFEST_PATH.read_text())
     assert {"covers", "considers"} <= set(manifest["edge_types"])
@@ -328,6 +323,11 @@ def test_manifest_declares_the_verbs_and_the_link_targets():
         "data_sink",
         "trust_boundary",
     ]
+
+
+@pytest.mark.trace("TC-239", "FR-026-AC-10")
+def test_threat_model_is_the_twenty_sixth_export():
+    manifest = yaml.safe_load(MANIFEST_PATH.read_text())
     assert "threat_model" in manifest["semantic"]["exports"]
     assert len(manifest["semantic"]["exports"]) == 26
 

@@ -153,7 +153,7 @@ the Python package only: neither Node script is measured by it.
 | FR-023 | FR-023-AC-1..10 | TC-206..TC-217 | ✅ AC-7 is an inspection |
 | NFR-004 | NFR-004-AC-1..3, NFR-004-M-1..2 | TC-207, TC-211, TC-213, TC-214 | ✅ |
 | FR-017 | FR-017-AC-1..7 | TC-175..TC-186 | ✅ `quire clauses` loads strictly and cannot load the real module (the object-type edges come from another module), so TC-181, TC-183, TC-185 and TC-186 evaluate a module that holds only the set files |
-| FR-026 | FR-026-AC-1..7, FR-026-AC-9..10 | TC-220..TC-232, TC-238 | ✅ |
+| FR-026 | FR-026-AC-1..7, FR-026-AC-9..10 | TC-220..TC-232, TC-238..TC-239 | ✅ |
 | FR-027 | FR-027-AC-6..7 | TC-233..TC-237 | ✅ |
 
 ### Integration Test Coverage
@@ -350,7 +350,7 @@ the Python package only: neither Node script is measured by it.
 | TC-226 | `covers` edges to a part, connection, data sink and trust boundary validate | Integration | P0 | FR-026-AC-4 | ✅ |
 | TC-227 | `covers` to a risk and `considers` to a control each yield a link diagnostic | Integration | P0 | FR-026-AC-5 | ✅ |
 | TC-228 | A threat model with a `covers` edge and no `considers` edge validates | Integration | P0 | FR-026-AC-5 | ✅ |
-| TC-229 | The manifest declares the scope and consideration links, the expanded threat targets and the threat-model export | Unit | P0 | FR-026-AC-4, FR-026-AC-9, FR-026-AC-10, FR-027-AC-7 | ✅ |
+| TC-229 | The manifest declares the scope and consideration links and the expanded threat targets | Unit | P0 | FR-026-AC-4, FR-026-AC-9, FR-027-AC-7 | ✅ |
 | TC-230 | A missing required threat-model section fails naming that section | Integration | P0 | FR-026-AC-6 | ✅ |
 | TC-231 | The threat-model schema has no defaults, requires its authored fields and extraction preserves their authored values | Integration | P0 | FR-026-AC-7, FR-026-AC-10 | ✅ |
 | TC-232 | Removing either declared threat-model edge verb causes module loading to report the undeclared verb | Integration | P0 | FR-026-AC-9 | ✅ |
@@ -360,6 +360,7 @@ the Python package only: neither Node script is measured by it.
 | TC-236 | Risk documents validate only when `decision` and `decided_by` satisfy the authored decision rule | Integration | P0 | FR-027-AC-6 | ✅ |
 | TC-237 | The risk skeleton states `decision: undecided` | Unit | P0 | FR-027-AC-6 | ✅ |
 | TC-238 | An empty `## Out of scope` section fails validation naming the section | Integration | P0 | FR-026-AC-6 | ✅ |
+| TC-239 | `semantic.exports` contains twenty-six types including `threat_model` | Unit | P0 | FR-026-AC-10 | ✅ |
 
 ## Test Environment
 
