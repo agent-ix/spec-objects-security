@@ -115,7 +115,7 @@ def test_sink_classification_is_found_through_either_data_path(
 
 
 @pytest.mark.trace("TC-266", "FR-027-AC-1", "FR-027-AC-5")
-def test_subject_target_clears_but_unscoped_or_incomplete_elements_stay_quiet(tmp_path):
+def test_subject_target_clears_and_unscoped_elements_stay_quiet(tmp_path):
     scope, _ = _rule_report(tmp_path / "fixture")
     threat = scope / "spec" / "THREAT-1.md"
     threat.write_text(
@@ -133,24 +133,38 @@ def test_subject_target_clears_but_unscoped_or_incomplete_elements_stay_quiet(tm
     quiet = _flow_report(scope, module)
     assert not (set(denial["rule"] for denial in quiet["denials"]) & RULES)
 
-    scope, _ = _rule_report(tmp_path / "incomplete")
+
+@pytest.mark.trace("TC-271", "FR-027-AC-1")
+@pytest.mark.parametrize("edge_to_remove", ["carries", "crosses"])
+def test_connection_without_either_crossing_precondition_is_not_reported(
+    tmp_path, edge_to_remove
+):
+    scope, _ = _rule_report(tmp_path / edge_to_remove)
     connection = scope / "spec" / "CONN-1.md"
+    edge_target = "CLASS-1" if edge_to_remove == "carries" else "BOUND-1"
     connection.write_text(
-        connection.read_text()
-        .replace("  - type: carries\n    target: CLASS-1\n", "")
-        .replace("  - type: crosses\n    target: BOUND-1\n", "")
-    )
-    sink = scope / "spec" / "SINK-1.md"
-    sink.write_text(
-        sink.read_text().replace(
-            "relationships:\n  - type: carries\n    target: CLASS-1\n", ""
+        connection.read_text().replace(
+            f"  - type: {edge_to_remove}\n    target: {edge_target}\n", ""
         )
     )
-    module = tmp_path / "incomplete-module"
+    manifest = yaml.safe_load(MANIFEST_PATH.read_text())
+    module = tmp_path / f"{edge_to_remove}-module"
     _module(module, manifest, include_threat_rules=True)
-    incomplete = _flow_report(scope, module)
-    assert not _denials(incomplete, "crossing-without-threat")
-    assert not _denials(incomplete, "classified-sink-without-threat")
+    report = _flow_report(scope, module)
+    assert not _denials(report, "crossing-without-threat")
+
+
+@pytest.mark.trace("TC-272", "FR-027-AC-5")
+def test_empty_corpus_is_quiet_for_all_threat_model_rules(tmp_path):
+    manifest = yaml.safe_load(MANIFEST_PATH.read_text())
+    module = tmp_path / "module"
+    _module(module, manifest, include_threat_rules=True)
+    scope = tmp_path / "empty"
+    (scope / "spec").mkdir(parents=True)
+
+    report = _flow_report(scope, module)
+
+    assert not (set(denial["rule"] for denial in report["denials"]) & RULES)
 
 
 @pytest.mark.trace("TC-267", "FR-027-AC-3", "FR-027-AC-4")

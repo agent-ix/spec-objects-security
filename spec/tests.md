@@ -388,6 +388,8 @@ the Python package only: neither Node script is measured by it.
 | TC-268 | Flow declarations, severity, remediation registry, risk treatment narrowing and its accepted-risk report match FR-027 | Integration | P0 | FR-027-AC-8, FR-027-AC-9, FR-027-AC-10 | ✅ |
 | TC-269 | The full manifest loads all three threat rules with the published ISO and architecture module roots | Integration | P0 | FR-027-AC-1, FR-027-AC-2, FR-027-AC-3 | ✅ |
 | TC-270 | The risk frontmatter enum schema is open, generated, and referenced by the risk archetype without defaults | Unit | P0 | FR-027-AC-8 | ✅ |
+| TC-271 | A connection lacking carries or crossing independently remains outside the crossing-threat rule | Integration | P0 | FR-027-AC-1 | ✅ |
+| TC-272 | An empty corpus remains quiet when all three threat-model flow rules are loaded | Integration | P0 | FR-027-AC-5 | ✅ |
 | TC-248 | Controller activity has scalar controller details, required context, and a valid covers connection | Integration | P0 | FR-028-AC-1 | ✅ |
 | TC-249 | Processor activity accepts its own identity, a non-empty controller list, and home regions without controller-only context | Unit | P0 | FR-028-AC-2 | ✅ |
 | TC-250 | Missing controller context or processor identity/controller-list requirements are rejected with field-named diagnostics | Unit | P0 | FR-028-AC-3 | ✅ |
