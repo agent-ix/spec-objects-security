@@ -5,10 +5,10 @@ description: US device cybersecurity statute, FDA guidance, and HIPAA Security R
 clauseSets:
   - authority: us-congress
     id: fdca-524b
-    version: 2026-10-15
+    version: "2026-10-15"
   - authority: us-fda
     id: premarket-cybersecurity
-    version: 2026-02-03
+    version: "2026-02-03"
   - authority: us-hhs
     id: 45-cfr-164-subpart-c
-    version: 2026-11-12
+    version: "2026-11-12"

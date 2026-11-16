@@ -202,7 +202,7 @@ def test_shipped_profile_names_are_among_the_three_defaults() -> None:
     assert names <= ALLOWED_NAMES, sorted(names - ALLOWED_NAMES)
 
 
-@pytest.mark.trace("TC-206", "FR-021-AC-1", "FR-021-AC-5")
+@pytest.mark.trace("TC-166", "FR-021-AC-1")
 def test_web_app_baseline_profile_is_shipped_with_only_its_public_sets() -> None:
     path = PROFILES_DIR / "web-app-baseline.yaml"
     assert path.is_file()
@@ -216,7 +216,7 @@ def test_web_app_baseline_profile_is_shipped_with_only_its_public_sets() -> None
     assert "context" not in profile
 
 
-@pytest.mark.trace("TC-206", "FR-021-AC-1", "FR-021-AC-2", "FR-021-AC-4")
+@pytest.mark.trace("TC-166", "FR-021-AC-1")
 def test_us_device_profile_names_the_published_public_sets() -> None:
     path = PROFILES_DIR / "us-device-cybersecurity-hipaa.yaml"
     assert path.is_file()
@@ -237,7 +237,7 @@ def test_us_device_profile_names_the_published_public_sets() -> None:
     assert "context" not in profile
 
 
-@pytest.mark.trace("TC-206", "FR-021-AC-1", "FR-021-AC-2", "FR-021-AC-4")
+@pytest.mark.trace("TC-166", "FR-021-AC-1")
 def test_eu_device_profile_names_the_published_public_sets() -> None:
     path = PROFILES_DIR / "eu-device-gdpr-ai-act.yaml"
     assert path.is_file()
@@ -336,7 +336,9 @@ def _shipped_keys(path: pathlib.Path) -> list[tuple[str, str, str]]:
     ]
 
 
-def assert_profile_keys_declared(path: pathlib.Path, modules: list[pathlib.Path]) -> None:
+def assert_profile_keys_declared(
+    path: pathlib.Path, modules: list[pathlib.Path]
+) -> None:
     for key in _shipped_keys(path):
         module = declaring_module(key, modules)
         assert module is not None, f"{path.stem}: no module declares {key}"
@@ -359,7 +361,9 @@ def test_a_profile_with_an_unpublished_version_fails_with_its_key(
     data["clauseSets"][0]["version"] = "unpublished-version"
     path = tmp_path / source.name
     path.write_text(yaml.safe_dump(data, sort_keys=False))
-    changed_key = tuple(data["clauseSets"][0][field] for field in ("authority", "id", "version"))
+    changed_key = tuple(
+        data["clauseSets"][0][field] for field in ("authority", "id", "version")
+    )
     with pytest.raises(AssertionError, match=re.escape(str(changed_key))):
         assert_profile_keys_declared(path, reference_modules)
 
