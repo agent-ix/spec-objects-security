@@ -516,6 +516,7 @@ object_types:
           after_heading: Invariants
           required: false
 - name: risk
+  frontmatter_schema_ref: schemas/RiskFrontmatter.json
   allowed_links:
     arises_from: [threat, vulnerability]
     references: [asset]

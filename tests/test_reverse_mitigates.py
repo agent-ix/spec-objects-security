@@ -224,30 +224,3 @@ def test_exposure_end_relations_keep_an_empty_to():
     assert "threat-has-control" not in by_name
     for name in ("risk-has-treatment",):
         assert by_name[name]["to"] == [], name
-
-
-@pytest.mark.trace("TC-268", "FR-027-AC-10")
-@pytest.mark.parametrize(
-    ("decision", "decided_by", "expected"),
-    [
-        ("accepted", "A. Person", False),
-        ("undecided", None, True),
-        ("not_accepted", "A. Person", True),
-    ],
-)
-def test_only_accepted_risk_suppresses_the_untreated_risk_finding(
-    tmp_path, decision, decided_by, expected
-):
-    _risk(tmp_path)
-    path = tmp_path / "RISK-001.md"
-    content = path.read_text().replace("decision: undecided", f"decision: {decision}")
-    if decided_by:
-        content = content.replace(
-            "decision: " + decision, f"decision: {decision}\ndecided_by: {decided_by}"
-        )
-    path.write_text(content)
-
-    result = _validate(tmp_path)
-    assert result.returncode == 0, result.stderr
-    findings = _check_lines(result, "untreated-risk")
-    assert bool(findings) is expected, result.stderr

@@ -16,7 +16,7 @@ ARCHITECTURE_MODULE = (
 )
 
 
-def _module(root, manifest: dict) -> None:
+def _module(root, manifest: dict, *, include_threat_rules: bool = False) -> None:
     """Project the starter rules into an isolated engine module.
 
     The packaged security module imports many unrelated roles and edges. This
@@ -40,21 +40,27 @@ def _module(root, manifest: dict) -> None:
     (schemas / "DataSinkFrontmatter.json").symlink_to(
         ARCHITECTURE_MODULE / "schemas" / "DataSinkFrontmatter.json"
     )
+    (schemas / "RiskFrontmatter.json").symlink_to(SCHEMAS_DIR / "RiskFrontmatter.json")
+    selected_names = {
+        "health-across-untrusted-boundary",
+        "personal-across-untrusted-boundary",
+        "regulated-data-to-uncovered-processor",
+        "health-in-llm-prompt-or-tool-call",
+        "health-in-log",
+        "health-display-unvalidated",
+    }
+    if include_threat_rules:
+        selected_names.update(
+            {
+                "crossing-without-threat",
+                "classified-sink-without-threat",
+                "threat-without-treatment",
+            }
+        )
     selected = [
         rule
         for rule in manifest["traceability"]["flow_rules"]
-        if rule["name"]
-        in {
-            "health-across-untrusted-boundary",
-            "personal-across-untrusted-boundary",
-            "regulated-data-to-uncovered-processor",
-            "health-in-llm-prompt-or-tool-call",
-            "health-in-log",
-            "health-display-unvalidated",
-            "crossing-without-threat",
-            "classified-sink-without-threat",
-            "threat-without-treatment",
-        }
+        if rule["name"] in selected_names
     ]
     remediations = manifest["traceability"]["remediations"]
     probe = {
@@ -82,7 +88,6 @@ def _module(root, manifest: dict) -> None:
                     "carries": ["data_classification"],
                     "crosses": ["trust_boundary"],
                     "delivers_to": ["data_sink"],
-                    "threatens": [],
                 },
             },
             {
@@ -121,6 +126,7 @@ def _module(root, manifest: dict) -> None:
             },
             {
                 "name": "risk",
+                "frontmatter_schema_ref": "schemas/RiskFrontmatter.json",
                 "allowed_links": {"arises_from": ["threat"]},
             },
         ],

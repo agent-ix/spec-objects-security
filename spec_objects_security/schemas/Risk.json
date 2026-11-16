@@ -38,7 +38,7 @@
       }
     },
     "decision": {
-      "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/DecisionState.json"
+      "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/RiskDecision.json"
     },
     "decided_by": {
       "type": "string",

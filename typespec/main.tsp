@@ -83,7 +83,7 @@ enum ThreatModelMethod {
 }
 
 /** The decision a person records on a risk. There is no default. */
-enum DecisionState {
+enum RiskDecision {
   undecided,
   accepted,
   not_accepted,
@@ -164,6 +164,11 @@ model DataClassificationFrontmatter {
   @minItems(1)
   @uniqueItems
   regulated_categories?: RegulatedDataCategory[];
+}
+
+/** Risk keys authored in frontmatter; other project metadata remains open. */
+model RiskFrontmatter {
+  decision?: RiskDecision;
 }
 
 /**
@@ -556,7 +561,7 @@ model Risk {
   likelihood?: Likelihood;
   impact?: Impact;
   arises_from?: SemanticId[];
-  decision: DecisionState;
+  decision: RiskDecision;
   @minLength(1) decided_by?: string;
   ...Record<never>;
 }
