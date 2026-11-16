@@ -13,7 +13,6 @@ import json
 import pathlib
 
 import pytest
-
 from conftest import (
     PACKAGE_ROOT,
     SCHEMAS_DIR,

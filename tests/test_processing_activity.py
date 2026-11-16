@@ -8,13 +8,12 @@ import subprocess
 
 import pytest
 import yaml
-
 from conftest import (
     MANIFEST_PATH,
+    PACKAGE_ROOT,
     SCHEMAS_DIR,
     SKELETONS_DIR,
     engine_tool,
-    PACKAGE_ROOT,
     validation_module_args,
 )
 
@@ -64,7 +63,7 @@ def test_frontmatter_schemas_have_no_module_sibling_refs():
         "DataClassificationFrontmatter",
     ):
         text = (SCHEMAS_DIR / f"{name}.json").read_text()
-        assert "\"$ref\"" not in text, name
+        assert '"$ref"' not in text, name
 
 
 @pytest.mark.trace("FR-028-AC-5", "FR-028-AC-6", "FR-028-AC-7")
@@ -74,7 +73,9 @@ def test_manifest_exports_processing_activity_and_declares_coverage():
     declared = next(
         o for o in manifest["object_types"] if o["name"] == "processing_activity"
     )
-    assert declared["frontmatter_schema_ref"] == "schemas/ProcessingActivityFrontmatter.json"
+    assert declared["frontmatter_schema_ref"] == (
+        "schemas/ProcessingActivityFrontmatter.json"
+    )
     assert declared["data_schema"]["schema"] == "schemas/ProcessingActivity.json"
     assert declared["allowed_links"]["covers"] == ["connection", "data_sink", "part"]
     req = manifest["traceability"]["required_relations"]
@@ -98,9 +99,7 @@ def test_skeleton_has_required_fields_and_covers_edge():
 def test_skeleton_validates_with_its_covered_connection(tmp_path):
     bundle = tmp_path / "bundle"
     bundle.mkdir()
-    shutil.copy(
-        SKELETONS_DIR / "processing_activity.md", bundle / "activity.md"
-    )
+    shutil.copy(SKELETONS_DIR / "processing_activity.md", bundle / "activity.md")
     (bundle / "connection.md").write_text(
         "---\n"
         "id: CONN-001\n"
