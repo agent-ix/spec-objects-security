@@ -7,14 +7,12 @@ relationships:
     type: depends_on
   - target: "ix://agent-ix/spec-objects-security/FR-023"
     type: depends_on
-  - target: "ix://agent-ix/spec-objects-architecture/FR-014"
-    type: depends_on
 ---
 # FR-024: A trust_boundary states its trust level as a required frontmatter value
 
 ## Description
 
-A trust boundary identifies the zone on its far side and the trust given to that zone. A field row in `## Properties` describes a value but does not supply the value to consumers. The authored boundary therefore states `trust_level` in frontmatter, where the extractor places it in the typed `TrustBoundary` record. Connection crossings are relationship edges owned by the connection and are specified by spec-objects-architecture FR-014; `TrustBoundary` carries no `crosses` record key.
+A trust boundary identifies the zone on its far side and the trust given to that zone. A field row in `## Properties` describes a value but does not supply the value to consumers. The authored boundary therefore states `trust_level` in frontmatter, where the extractor places it in the typed `TrustBoundary` record. The separate connection-to-boundary crossing edge is owned by the architecture module's FR-014; `TrustBoundary` carries no `crosses` record key, and trust-level extraction does not depend on that edge.
 
 ## Behavior
 
@@ -45,7 +43,7 @@ A trust boundary identifies the zone on its far side and the trust given to that
 
 - FR-004 defines the `TrustBoundary` record shape and the `TrustLevelField` item rule.
 - FR-023 defines the security module's typed frontmatter extraction pattern for authored enum values.
-- spec-objects-architecture FR-014 owns the connection-to-boundary `crosses` edge and its relation report.
+- spec-objects-architecture FR-014 owns connection-to-boundary `crosses` edges and their relation report. This separate edge consumes the typed trust-level value, but does not own its extraction.
 
 ## Licensing
 

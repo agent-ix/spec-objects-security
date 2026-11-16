@@ -2,41 +2,16 @@
 
 from __future__ import annotations
 
-import json
-
 import pytest
 
 from tests.conftest import (
     PACKAGE_ROOT,
-    SCHEMAS_DIR,
     SKELETONS_DIR,
     frontmatter,
-    object_type,
 )
+from tests.test_regulated_categories import _extract
 
 SKELETON = SKELETONS_DIR / "trust_boundary.md"
-
-
-def _extract(quire_engine, semantic_block, semantic_module, bundle_index, text: str):
-    docs = {}
-    for path in sorted(SCHEMAS_DIR.glob("*.json")):
-        schema = json.loads(path.read_text())
-        docs[schema["$id"]] = schema
-    return quire_engine.extract_semantic(
-        {
-            "markdown": text,
-            "module": {**semantic_module, "mappings": semantic_block["mappings"]},
-            "path": "trust_boundary.md",
-            "sourceIdentity": (
-                f"ix://agent-ix/spec-objects-security/{frontmatter(text)['id']}"
-            ),
-            "bundle": bundle_index,
-            "objectType": "trust_boundary",
-            "dataSchema": json.loads((SCHEMAS_DIR / "TrustBoundary.json").read_text()),
-            "schemaDocuments": docs,
-            "bodyExtraction": object_type("trust_boundary")["body_extraction"],
-        }
-    )
 
 
 @pytest.mark.trace("TC-221", "FR-024-AC-1", "FR-024-AC-2", "FR-024-AC-3")
@@ -66,13 +41,25 @@ def test_frontmatter_trust_level_is_extracted_and_not_derived_from_properties(
 ):
     text = SKELETON.read_text()
     extracted = _extract(
-        quire_engine, semantic_block, semantic_module, bundle_index, text
+        quire_engine,
+        semantic_block,
+        semantic_module,
+        "trust_boundary.md",
+        text,
+        kind="trust_boundary",
+        bundle=bundle_index,
     )
     assert extracted["record"]["trust_level"] == "untrusted"
 
     missing = text.replace("trust_level: untrusted\n", "")
     absent = _extract(
-        quire_engine, semantic_block, semantic_module, bundle_index, missing
+        quire_engine,
+        semantic_block,
+        semantic_module,
+        "trust_boundary.md",
+        missing,
+        kind="trust_boundary",
+        bundle=bundle_index,
     )
     assert "trust_level" not in (absent.get("record") or {})
     result = quire_engine.validate_document(

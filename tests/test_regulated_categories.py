@@ -52,18 +52,29 @@ def _validate(quire_engine, name: str) -> dict:
 
 
 def _extract(
-    quire_engine, semantic_block, semantic_module, name: str, text: str | None = None
+    quire_engine,
+    semantic_block,
+    semantic_module,
+    name: str,
+    text: str | None = None,
+    *,
+    kind: str = "data_classification",
+    bundle: dict | None = None,
 ) -> dict:
-    """Semantic extraction with the manifest's body extraction and mappings.
+    """Extract any record with the manifest's body extraction and mappings.
 
     Frontmatter-owned projection and the section diagnostics only run when the
-    archetype's `bodyExtraction` and the module `mappings` are supplied.
+    archetype's `bodyExtraction` and the module `mappings` are supplied. The
+    default keeps the regulated-category callers concise; other record kinds
+    pass their type and optional bundle index explicitly.
     """
     text = text if text is not None else (FIXTURES / name).read_text()
     docs = {}
     for path in sorted(SCHEMAS_DIR.glob("*.json")):
         doc = json.loads(path.read_text())
         docs[doc["$id"]] = doc
+    schema_name = object_type(kind)["data_schema"]["schema"].split("/")[-1]
+    schema_name = schema_name.removesuffix(".json")
     return quire_engine.extract_semantic(
         {
             "markdown": text,
@@ -72,16 +83,17 @@ def _extract(
             "sourceIdentity": (
                 f"ix://agent-ix/spec-objects-security/{frontmatter(text)['id']}"
             ),
-            "bundle": {
+            "bundle": bundle
+            or {
                 "package": "agent-ix/spec-objects-security",
                 "objects": [],
                 "enumerations": [],
                 "imports": {},
             },
-            "objectType": "data_classification",
-            "dataSchema": _schema("DataClassification"),
+            "objectType": kind,
+            "dataSchema": _schema(schema_name),
             "schemaDocuments": docs,
-            "bodyExtraction": object_type("data_classification")["body_extraction"],
+            "bodyExtraction": object_type(kind)["body_extraction"],
         }
     )
 
