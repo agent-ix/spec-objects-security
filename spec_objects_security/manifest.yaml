@@ -885,6 +885,34 @@ traceability:
     to: []
     direction: outgoing
     check: threat-model-covers-nothing
+  remediations:
+  - name: encrypt-in-transit
+    description: Add a control with this safeguard protecting the affected connection.
+    adds: {edge: protects, direction: incoming, from: control, field: safeguards, value: encrypt-in-transit}
+  - name: encrypt-at-rest
+    description: Add a control with this safeguard protecting the affected sink.
+    adds: {edge: protects, direction: incoming, from: control, field: safeguards, value: encrypt-at-rest}
+  - name: anonymize
+    description: Add a control with this safeguard protecting the affected connection or sink.
+    adds: {edge: protects, direction: incoming, from: control, field: safeguards, value: anonymize}
+  - name: pseudonymize
+    description: Add a control with this safeguard protecting the affected connection or sink.
+    adds: {edge: protects, direction: incoming, from: control, field: safeguards, value: pseudonymize}
+  - name: obtain-consent
+    description: Add a control with this safeguard protecting the affected connection or sink.
+    adds: {edge: protects, direction: incoming, from: control, field: safeguards, value: obtain-consent}
+  - name: restrict-region
+    description: Add a control with this safeguard protecting the affected connection or sink.
+    adds: {edge: protects, direction: incoming, from: control, field: safeguards, value: restrict-region}
+  - name: validate-before-display
+    description: Add a control with this safeguard protecting the affected connection or sink.
+    adds: {edge: protects, direction: incoming, from: control, field: safeguards, value: validate-before-display}
+  - name: obtain-processor-agreement
+    description: Set the affected sink's processor_agreement field to covered.
+    sets: {field: processor_agreement, value: covered}
+  - name: remove-from-sink
+    description: Remove the incoming delivers_to connection from the affected sink's first-step path.
+    removes: {edge: delivers_to, direction: incoming}
   #
   # A risk that transitively arises from itself states nothing, and no
   # per-document check can see it: the defect is a property of the graph.
