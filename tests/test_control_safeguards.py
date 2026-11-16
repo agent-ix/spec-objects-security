@@ -71,9 +71,12 @@ def test_safeguard_and_frontmatter_schemas_are_closed_where_required(
     )
 
     classification_frontmatter = _schema("DataClassificationFrontmatter")
-    assert classification_frontmatter["properties"]["regulated_categories"][
-        "items"
-    ]["enum"] == _schema("RegulatedDataCategory")["enum"]
+    assert (
+        classification_frontmatter["properties"]["regulated_categories"]["items"][
+            "enum"
+        ]
+        == _schema("RegulatedDataCategory")["enum"]
+    )
     assert schema_registry("DataClassificationFrontmatter").is_valid(
         {"id": "CLASS-1", "regulated_categories": ["health"], "owner": "Ada"}
     )
