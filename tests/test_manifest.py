@@ -80,7 +80,7 @@ def test_lexicon_entries_are_whole() -> None:
     )
 
 
-@pytest.mark.trace("TC-007", "FR-001-AC-1", "FR-026-AC-4")
+@pytest.mark.trace("TC-007", "FR-001-AC-1")
 def test_threat_and_risk_coverage_is_declared_not_coded() -> None:
     """TC-007: agent-ix/spec-objects-security#5: upward coverage is manifest data.
 
