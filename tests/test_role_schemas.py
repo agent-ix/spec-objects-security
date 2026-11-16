@@ -232,6 +232,12 @@ MINIMAL = {
         "method": "stride_per_element",
         "reviewed_by": "A. Person",
     },
+    "ProcessingActivity": {
+        "role": "processor",
+        "processor": "Processor; privacy@example.invalid",
+        "controller": ["Controller; privacy@example.invalid"],
+        "home_regions": ["eu"],
+    },
     "ScopeExclusion": {
         "set": "example.invalid/std@1",
         "clause": "EX-1",

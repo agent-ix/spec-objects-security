@@ -79,9 +79,6 @@
     "controller",
     "home_regions"
   ],
-  "unevaluatedProperties": {
-    "not": {}
-  },
   "description": "Person-authored context for one covered processing activity (FR-028).",
   "allOf": [
     {

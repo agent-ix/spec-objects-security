@@ -231,7 +231,6 @@ model ProcessingActivityFrontmatter {
   @minItems(1) purposes?: NonBlankText[];
   @minItems(1) data_subject_categories?: NonBlankText[];
   retention?: NonBlankText;
-  ...Record<never>;
 }
 
 /** Processing activity declaration record; authored frontmatter is projected without defaults. */

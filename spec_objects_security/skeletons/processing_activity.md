@@ -38,4 +38,7 @@ to a connection, data_sink or part. Region entries follow data_sink.region:
 ISO 3166-1 alpha-2, eu or eea. Do not infer any omitted field. -->
 # [PA-001] Customer support processing
 
-Describe the activity's authored context and any additional gaps here.
+Describe the person-authored context that is not present in the flow model.
+State what the activity covers, how the named purposes apply, and where the
+declared relationships begin and end. List facts that are unavailable under
+Gaps; do not infer a missing value from code, a sink name, or runtime behavior.

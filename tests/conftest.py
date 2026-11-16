@@ -105,6 +105,7 @@ OBJECT_TYPES = (
     "soup_record",
     "scope_exclusion",
     "threat_model",
+    "processing_activity",
 )
 
 MODEL_OF = {
@@ -134,6 +135,7 @@ MODEL_OF = {
     "soup_record": "SoupRecord",
     "scope_exclusion": "ScopeExclusion",
     "threat_model": "ThreatModel",
+    "processing_activity": "ProcessingActivity",
 }
 
 MARKER_MODELS = (
@@ -213,7 +215,7 @@ VOCABULARIES = {
 # `TrustBoundary` whose `trust_level` defaulted to `trusted`, and defaulted
 # grant rows on `role`, `permission` and `scope` all validated. The ticket gate
 # reads "No schema default grants permission, trust, or control effectiveness",
-# so the guard is now on all twenty-six (FR-006).
+# so the guard is now on every exported object type (FR-006).
 DEFAULT_REFUSING = OBJECT_TYPES
 
 FIELD_BEARING = (
