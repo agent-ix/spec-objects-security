@@ -3,11 +3,12 @@ id: BOUND-001
 title: "TenantNetworkEdge"
 type: trust_boundary
 object: trust_boundary
+trust_level: untrusted
 ---
 <!-- trust_boundary authoring skeleton (spec-objects-security). Fill every section with
      substantive content. Contract (manifest body_extraction asserts):
      - Frontmatter MUST carry id, title, type: trust_boundary,
-       object: trust_boundary.
+       object: trust_boundary and a `trust_level` from `TrustLevel`.
      - "## Boundary" (H2, required) holds a fenced `mermaid` diagram.
      - "## Properties" (H2): requires an identity row and a `trust_level` row.
      - "## Invariants" (H2): TrustBoundary.json requires at least one clause —

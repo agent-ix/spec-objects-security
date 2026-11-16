@@ -1,10 +1,9 @@
 """One role-distinct declaration schema per security object type.
 
-Every record here is **hand-built**. The keys these criteria exercise beyond
-`fields`, `clauses` and `operations` are not populated by the extractor of the
-pinned wheel (`agent-ix/quoin#335` owns the mapping), so this file is schema
-evidence and never extraction evidence. The extraction path is exercised in
-`test_skeletons_semantic.py`.
+Every record here is **hand-built**. Most keys these criteria exercise beyond
+`fields`, `clauses` and `operations` are not populated by the extractor; this
+file is schema evidence and never extraction evidence. The `trust_level`
+frontmatter extraction path has separate coverage in `test_trust_boundary.py`.
 """
 
 from __future__ import annotations
@@ -165,8 +164,8 @@ def test_audit_event_declares_an_occurrence_and_not_a_record(schema_registry):
     assert not validator.is_valid({"fields": [occurrence], "relations": []})
 
 
-@pytest.mark.trace("TC-059", "FR-004-AC-10")
-def test_trust_boundary_admits_no_crossing_it_has_not_ruled_on(schema_registry):
+@pytest.mark.trace("TC-059", "FR-004-AC-10", "TC-220", "FR-024-AC-5")
+def test_trust_boundary_schema_refuses_crosses_record_key(schema_registry):
     validator = schema_registry("TrustBoundary")
     fields = [field("boundary_id", "UUID", identity=True), field("trust_level")]
     assert validator.is_valid({"fields": fields, "clauses": [CLAUSE]})
@@ -175,6 +174,9 @@ def test_trust_boundary_admits_no_crossing_it_has_not_ruled_on(schema_registry):
     assert not validator.is_valid({"fields": [fields[0]], "clauses": [CLAUSE]})
     assert not validator.is_valid(
         {"fields": fields, "clauses": [CLAUSE], "trust_level": "absolute"}
+    )
+    assert not validator.is_valid(
+        {"fields": fields, "clauses": [CLAUSE], "crosses": ["BOUND-OTHER"]}
     )
 
 

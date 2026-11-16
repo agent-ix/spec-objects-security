@@ -273,6 +273,10 @@ object_types:
         id: *id001
         title: *id002
         type: *id003
+        trust_level:
+          from: frontmatter_field
+          path: [trust_level]
+          required: true
         boundary:
           from: code_block
           after_heading: Boundary
