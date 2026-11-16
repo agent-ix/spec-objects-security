@@ -1,6 +1,6 @@
 ---
 id: PA-001
-title: "Customer support processing"
+title: CustomerSupportProcessing
 type: processing_activity
 object: processing_activity
 role: controller
