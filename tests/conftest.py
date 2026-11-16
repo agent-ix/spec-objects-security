@@ -44,6 +44,18 @@ def engine_tool(name: str) -> str:
     return path
 
 
+def validation_module_args(security_module: pathlib.Path | None = None) -> list[str]:
+    """Load this module with its cross-module object types and edge registries."""
+    architecture_module = (
+        pathlib.Path(__file__).resolve().parent.parent
+        / "node_modules"
+        / "@agent-ix"
+        / "spec-objects-architecture"
+    )
+    modules = [security_module or PACKAGE_ROOT, architecture_module]
+    return [arg for module in modules for arg in ("--module", str(module))]
+
+
 PACKAGE_ROOT = REPO_ROOT / "spec_objects_security"
 MANIFEST_PATH = PACKAGE_ROOT / "manifest.yaml"
 SCHEMAS_DIR = PACKAGE_ROOT / "schemas"

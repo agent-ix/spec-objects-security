@@ -8,7 +8,6 @@ and attesters use ``example.invalid``.
 from __future__ import annotations
 
 import json
-import os
 import pathlib
 import shutil
 import subprocess
@@ -278,11 +277,21 @@ def test_the_module_data_files_ship_in_the_wheel_and_the_npm_tarball():
         with zipfile.ZipFile(next(pathlib.Path(tmp).glob("*.whl"))) as archive:
             wheel = set(archive.namelist())
         packed = subprocess.run(
-            ["npm", "pack", "--pack-destination", tmp],
+            [
+                "npm",
+                "pack",
+                "--pack-destination",
+                tmp,
+                "--userconfig",
+                "/dev/null",
+                "--cache",
+                tmp,
+                "--registry",
+                "https://registry.npmjs.org/",
+            ],
             cwd=str(REPO_ROOT),
             capture_output=True,
             text=True,
-            env={**os.environ, "npm_config_registry": "https://registry.npmjs.org/"},
         )
         assert packed.returncode == 0, packed.stderr
         with tarfile.open(next(pathlib.Path(tmp).glob("*.tgz"))) as archive:

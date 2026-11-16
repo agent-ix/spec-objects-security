@@ -426,7 +426,7 @@ def test_affects_edge_to_soup_validates_and_to_a_threat_is_disallowed(
         if line.endswith("[disallowed-edge-target]")
     ]
     assert len(bad) == 1, bad
-    assert "(object type 'threat')" in bad[0], bad[0]
+    assert "target type 'threat'" in bad[0], bad[0]
 
 
 @pytest.mark.trace("TC-142", "FR-012-AC-3")
