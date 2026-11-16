@@ -2180,17 +2180,17 @@ files = [
 
 [[package]]
 name = "quire"
-version = "0.61.0"
+version = "0.62.0"
 description = "Python bindings for quire-rs: parse, corpus load, and whole-spec queries (FR-023)."
 optional = false
 python-versions = ">=3.9"
 groups = ["dev"]
 files = [
-    {file = "quire-0.61.0-cp39-abi3-macosx_10_12_x86_64.whl", hash = "sha256:2e743c8a9fb9a4db5d24dd14b751145a7c02f68e3a85d5f2354aac179ff69e2a"},
-    {file = "quire-0.61.0-cp39-abi3-macosx_11_0_arm64.whl", hash = "sha256:f48d9c70ab0181d992a9dc8d7fb809ecce2caad06a185a3001b492f6e6597f36"},
-    {file = "quire-0.61.0-cp39-abi3-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:a16bf7864f69b90bde2d545d404dea10ff6908b7b035ba8597a3d27ec99f5635"},
-    {file = "quire-0.61.0-cp39-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:0b92c06cc82473ffab7a75182a17258ae8b3bdd9b08dbef3c905d0492dbceec8"},
-    {file = "quire-0.61.0-cp39-abi3-win_amd64.whl", hash = "sha256:1185c5b22d2dc066fa8cf67e1cbb2cf8b5f9886f60679d4f3a8b8d03745d4b1f"},
+    {file = "quire-0.62.0-cp39-abi3-macosx_10_12_x86_64.whl", hash = "sha256:06e3ccb9171c15e6fdebf9dddcf316e87f6e84be2c6c04c64851ea6b569bb201"},
+    {file = "quire-0.62.0-cp39-abi3-macosx_11_0_arm64.whl", hash = "sha256:8f50237ac0ef71e4ce64e05bfd958ce2db0c0e2ad80147d1e9f4a30c8340569a"},
+    {file = "quire-0.62.0-cp39-abi3-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:d34490aa25a2abce0b92577fb04d6843b6496358f998d04da6466519c795cb57"},
+    {file = "quire-0.62.0-cp39-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:0cd67d74829be27c6895c74bd90725133326dd2563db79658400b9a70998f27e"},
+    {file = "quire-0.62.0-cp39-abi3-win_amd64.whl", hash = "sha256:42143863f0f4d430b15e3a3f034d76e439c9f5a250ec66d994965b18691239da"},
 ]
 
 [package.source]
@@ -2839,4 +2839,4 @@ propcache = ">=0.2.1"
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13,<3.14"
-content-hash = "fdb0147e8e61058925e517a9d5a421a19edcf71f9a9df17456c4408a22f99433"
+content-hash = "ade1e189f4d18e30026fe9301a3f7b157659d8e8e45debb552f27128fced969d"
