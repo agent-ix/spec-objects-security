@@ -154,6 +154,8 @@ the Python package only: neither Node script is measured by it.
 | FR-024 | FR-024-AC-1..7 | TC-220..TC-223 | ✅ |
 | NFR-004 | NFR-004-AC-1..3, NFR-004-M-1..2 | TC-207, TC-211, TC-213, TC-214 | ✅ |
 | FR-017 | FR-017-AC-1..7 | TC-175..TC-186 | ✅ `quire clauses` loads strictly and cannot load the real module (the object-type edges come from another module), so TC-181, TC-183, TC-185 and TC-186 evaluate a module that holds only the set files |
+| FR-026 | FR-026-AC-1..7, FR-026-AC-9..10 | TC-224..TC-236, TC-242..TC-243 | ✅ |
+| FR-027 | FR-027-AC-6..7 | TC-237..TC-241 | ✅ |
 
 ### Integration Test Coverage
 
@@ -344,6 +346,26 @@ the Python package only: neither Node script is measured by it.
 | TC-221 | trust_boundary requires frontmatter trust_level and refuses an absent or out-of-vocabulary value | Unit | P0 | FR-024-AC-1, FR-024-AC-2, FR-024-AC-3 | ✅ |
 | TC-222 | trust_level is extracted from frontmatter to the typed record key and is not derived from the Properties row | Unit | P0 | FR-024-AC-4, FR-024-AC-7 | ✅ |
 | TC-223 | the trust_boundary skeleton states an authored trust_level and validates | Unit | P0 | FR-024-AC-6 | ✅ |
+| TC-224 | A threat model with a method, reviewer, covered connection, considered threat and all required sections validates | Integration | P0 | FR-026-AC-1 | ✅ |
+| TC-225 | The threat-model skeleton validates | Integration | P0 | FR-026-AC-1, FR-026-AC-10 | ✅ |
+| TC-226 | `method: guesswork` fails validation naming `method` | Integration | P0 | FR-026-AC-2 | ✅ |
+| TC-227 | `ThreatModelMethod.json` has exactly the two declared members | Unit | P0 | FR-026-AC-2 | ✅ |
+| TC-228 | A missing or empty `reviewed_by` fails validation naming the field | Integration | P0 | FR-026-AC-3 | ✅ |
+| TC-229 | A threat model without a `covers` edge fails with the declared completeness diagnostic | Integration | P0 | FR-026-AC-4 | ✅ |
+| TC-230 | `covers` edges to a part, connection, data sink and trust boundary validate | Integration | P0 | FR-026-AC-4 | ✅ |
+| TC-231 | `covers` to a risk and `considers` to a control each yield a link diagnostic | Integration | P0 | FR-026-AC-5 | ✅ |
+| TC-232 | A threat model with a `covers` edge and no `considers` edge validates | Integration | P0 | FR-026-AC-5 | ✅ |
+| TC-233 | The manifest declares the scope and consideration links and the expanded threat targets | Unit | P0 | FR-026-AC-4, FR-026-AC-9, FR-027-AC-7 | ✅ |
+| TC-234 | A missing required threat-model section fails naming that section | Integration | P0 | FR-026-AC-6 | ✅ |
+| TC-235 | The threat-model schema has no defaults, requires its authored fields and extraction preserves their authored values | Integration | P0 | FR-026-AC-7, FR-026-AC-10 | ✅ |
+| TC-236 | Removing either declared threat-model edge verb causes module loading to report the undeclared verb | Integration | P0 | FR-026-AC-9 | ✅ |
+| TC-237 | A threat edge to a connection validates | Integration | P0 | FR-027-AC-7 | ✅ |
+| TC-238 | A threat edge to a queue yields a disallowed-target diagnostic | Integration | P0 | FR-027-AC-7 | ✅ |
+| TC-239 | Risk decision schema accepts valid decisions and rejects missing or inconsistent decision fields | Unit | P0 | FR-027-AC-6 | ✅ |
+| TC-240 | Risk documents validate only when `decision` and `decided_by` satisfy the authored decision rule | Integration | P0 | FR-027-AC-6 | ✅ |
+| TC-241 | The risk skeleton states `decision: undecided` | Unit | P0 | FR-027-AC-6 | ✅ |
+| TC-242 | An empty `## Out of scope` section fails validation naming the section | Integration | P0 | FR-026-AC-6 | ✅ |
+| TC-243 | `semantic.exports` contains twenty-six types including `threat_model` | Unit | P0 | FR-026-AC-10 | ✅ |
 
 ## Test Environment
 

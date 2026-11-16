@@ -111,6 +111,7 @@ def test_threat_and_risk_coverage_is_declared_not_coded() -> None:
         "risk-has-treatment",
         "security-nfr-has-mitigation-target",
         "soup-record-serves-requirement",
+        "threat-model-covers-something",
     }
     assert by_name["threat-has-control"]["from"] == "threat"
     assert by_name["risk-has-treatment"]["from"] == "risk"
@@ -121,6 +122,7 @@ def test_threat_and_risk_coverage_is_declared_not_coded() -> None:
         "untreated-risk",
         "unjustified-security-nfr",
         "soup-serves-no-requirement",
+        "threat-model-covers-nothing",
     }
     assert len(checks) == len(by_name), "each relation is independently tunable"
 
@@ -139,6 +141,9 @@ def test_threat_and_risk_coverage_is_declared_not_coded() -> None:
         elif name == "soup-record-serves-requirement":
             # FR-013: the reviewer authors the edge on the record.
             assert relation["from"] == "soup_record"
+            assert relation["direction"] == "outgoing"
+        elif name == "threat-model-covers-something":
+            assert relation["from"] == "threat_model"
             assert relation["direction"] == "outgoing"
         else:
             assert relation["direction"] == "incoming"

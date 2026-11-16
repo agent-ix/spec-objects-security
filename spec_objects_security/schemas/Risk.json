@@ -36,10 +36,18 @@
       "items": {
         "$ref": "https://schemas.agent-ix.org/semantic-core/0.4.4/SemanticId.json"
       }
+    },
+    "decision": {
+      "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/DecisionState.json"
+    },
+    "decided_by": {
+      "type": "string",
+      "minLength": 1
     }
   },
   "required": [
-    "fields"
+    "fields",
+    "decision"
   ],
   "unevaluatedProperties": {
     "not": {}
@@ -72,6 +80,39 @@
               "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/DefaultedField.json"
             }
           }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "decision": {
+            "enum": [
+              "accepted",
+              "not_accepted"
+            ]
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "decided_by"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "decision": {
+            "const": "undecided"
+          }
+        }
+      },
+      "then": {
+        "not": {
+          "required": [
+            "decided_by"
+          ]
         }
       }
     }

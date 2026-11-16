@@ -110,9 +110,10 @@ def test_the_assessment_types_require_the_rows_that_score_them(schema_registry):
     assert not vuln.is_valid({"fields": [identity]})
     risk = schema_registry("Risk")
     both = [identity, field("likelihood"), field("impact")]
-    assert risk.is_valid({"fields": both})
-    assert not risk.is_valid({"fields": [identity, field("likelihood")]})
-    assert not risk.is_valid({"fields": [identity, field("impact")]})
+    decided = {"decision": "undecided"}
+    assert risk.is_valid({"fields": both, **decided})
+    assert not risk.is_valid({"fields": [identity, field("likelihood")], **decided})
+    assert not risk.is_valid({"fields": [identity, field("impact")], **decided})
     finding = schema_registry("AuditFinding")
     assert finding.is_valid({"fields": [identity, field("status")]})
     assert not finding.is_valid({"fields": [identity]})
@@ -207,7 +208,8 @@ MINIMAL = {
             field("a", "UUID", identity=True),
             field("likelihood"),
             field("impact"),
-        ]
+        ],
+        "decision": "undecided",
     },
     "AuditFinding": {"fields": [field("a", "UUID", identity=True), field("status")]},
     "DataClassification": {
@@ -225,6 +227,11 @@ MINIMAL = {
     "AuthFlow": {"operations": [OPERATION]},
     "AuditEvent": {"fields": [field("occurred_at", "Timestamp")]},
     "SoupRecord": {"fields": [field("a", "UUID", identity=True), field("purl")]},
+    "ThreatModel": {
+        "fields": [field("a", "UUID", identity=True)],
+        "method": "stride_per_element",
+        "reviewed_by": "A. Person",
+    },
     "ScopeExclusion": {
         "set": "example.invalid/std@1",
         "clause": "EX-1",
