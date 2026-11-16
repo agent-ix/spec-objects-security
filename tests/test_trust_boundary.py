@@ -65,13 +65,19 @@ def test_frontmatter_trust_level_is_extracted_and_not_derived_from_properties(
     quire_engine, semantic_block, semantic_module, bundle_index
 ):
     text = SKELETON.read_text()
-    extracted = _extract(quire_engine, semantic_block, semantic_module, bundle_index, text)
+    extracted = _extract(
+        quire_engine, semantic_block, semantic_module, bundle_index, text
+    )
     assert extracted["record"]["trust_level"] == "untrusted"
 
     missing = text.replace("trust_level: untrusted\n", "")
-    absent = _extract(quire_engine, semantic_block, semantic_module, bundle_index, missing)
+    absent = _extract(
+        quire_engine, semantic_block, semantic_module, bundle_index, missing
+    )
     assert "trust_level" not in (absent.get("record") or {})
-    result = quire_engine.validate_document("trust_boundary", str(PACKAGE_ROOT), missing)
+    result = quire_engine.validate_document(
+        "trust_boundary", str(PACKAGE_ROOT), missing
+    )
     assert not result["is_valid"]
     assert any("trust_level" in str(error) for error in result["errors"])
 
