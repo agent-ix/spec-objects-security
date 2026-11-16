@@ -36,3 +36,15 @@ Observed finding: FR-024 depends on architecture FR-014 even though trust-level 
 
 - `FR-024` (examined): “relationships: depends_on FR-004; depends_on FR-023; depends_on architecture FR-014.”
 - `FR-014` (context_only): “FR-014 reports each crossing target with its trust_level, requiring the TrustBoundary trust_level field.”
+
+## Dispositions
+
+| FND | outcome | reason |
+| --- | --- | --- |
+| FND-001 | fixed | FR-024 no longer has a `depends_on` edge to architecture FR-014; the text says extraction is independent of the crossing edge. |
+
+## Dispositions
+
+| FND | outcome | reason |
+| --- | --- | --- |
+| FND-001 | fixed | FR-024 no longer declares a `depends_on` edge to FR-014 and explicitly says trust-level extraction does not depend on the crossing edge. |

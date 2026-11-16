@@ -36,3 +36,15 @@ Observed finding: The new _extract helper repeats the semantic extraction setup 
 
 - `tests/test_trust_boundary.py::_extract` (examined): “Semantic extraction helper loads schemas and invokes extract_semantic with the module mappings, source identity, data schema, and body extraction.”
 - `tests/test_regulated_categories.py::_extract` (context_only): “Existing helper performs the same semantic extraction setup with schema documents, module mappings, source identity, and bodyExtraction.”
+
+## Dispositions
+
+| FND | outcome | reason |
+| --- | --- | --- |
+| FND-001 | fixed | The trust-boundary test now reuses the generalized `_extract` helper from `test_regulated_categories.py`. |
+
+## Dispositions
+
+| FND | outcome | reason |
+| --- | --- | --- |
+| FND-001 | fixed | The extraction logic is generalized in `test_regulated_categories.py::_extract`, and `test_trust_boundary.py` now reuses it with the trust_boundary schema and bundle. |
