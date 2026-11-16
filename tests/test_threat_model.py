@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 import re
+import shutil
 import subprocess
 
 import pytest
@@ -53,12 +54,41 @@ def threat_model(
     )
 
 
-def validate(tmp_path, documents: dict[str, str]) -> subprocess.CompletedProcess:
+def validate(
+    tmp_path, documents: dict[str, str], *, include_queue_type: bool = False
+) -> subprocess.CompletedProcess:
+    bundle = tmp_path / "bundle"
+    bundle.mkdir()
     for name, text in documents.items():
-        (tmp_path / name).write_text(text)
+        (bundle / name).write_text(text)
+    module = PACKAGE_ROOT
+    if include_queue_type:
+        module = tmp_path / "modules" / "spec_objects_security"
+        shutil.copytree(PACKAGE_ROOT, module)
+        manifest_path = module / "manifest.yaml"
+        manifest = yaml.safe_load(manifest_path.read_text())
+        manifest["semantic"]["exports"].append("queue")
+        manifest["object_types"].append(
+            {
+                "name": "queue",
+                "data_schema": {"schema": "schemas/Queue.json"},
+                "body_extraction": {"yield_pattern": {"match": {}}},
+            }
+        )
+        manifest_path.write_text(yaml.safe_dump(manifest, sort_keys=False))
+        (module / "schemas" / "Queue.json").write_text(
+            json.dumps(
+                {
+                    "$id": "https://schemas.agent-ix.org/test/Queue.json",
+                    "$schema": "https://json-schema.org/draft/2020-12/schema",
+                    "type": "object",
+                    "additionalProperties": True,
+                }
+            )
+        )
     return subprocess.run(
-        [engine_tool("quire"), "validate", "--okf", "--module", str(PACKAGE_ROOT)]
-        + [str(tmp_path)],
+        [engine_tool("quire"), "validate", "--okf", "--module", str(module)]
+        + [str(bundle)],
         capture_output=True,
         text=True,
     )
@@ -201,6 +231,7 @@ def test_threatens_does_not_allow_a_queue_target(tmp_path):
             "queue.md": target_doc("queue", "QUEUE-1"),
             "threat.md": threat_threatening("QUEUE-1"),
         },
+        include_queue_type=True,
     )
     out = result.stdout + result.stderr
     assert "disallowed-edge-target" in out and "threatens" in out, out
