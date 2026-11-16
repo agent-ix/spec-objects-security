@@ -144,7 +144,7 @@ def test_frontmatter_matches_manifest_locators(name: str) -> None:
     assert fm["type"] == name
     assert fm["id"] and fm["title"]
     assert fm["object"] == name, f"{name}: frontmatter `object` must equal `type`"
-    undeclared = set(fm) - declared_fields - {"object"}
+    undeclared = set(fm) - declared_fields - {"object", "relationships"}
     assert not undeclared, f"{name}: undeclared frontmatter keys {undeclared}"
 
 

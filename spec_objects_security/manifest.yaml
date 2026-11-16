@@ -32,6 +32,7 @@ semantic:
   - soup_record
   - scope_exclusion
   - threat_model
+  - processing_activity
   imports: {}
   targets: [json-schema, markdown]
   mappings: [typed-table, sysml-fence, ocl-clause, record-sections]
@@ -756,6 +757,58 @@ object_types:
           from: section_body
           after_heading: Properties
           required: false
+- name: processing_activity
+  frontmatter_schema_ref: schemas/ProcessingActivityFrontmatter.json
+  allowed_links:
+    covers: [connection, data_sink, part]
+  data_schema:
+    schema: schemas/ProcessingActivity.json
+  body_extraction:
+    yield_pattern:
+      match:
+        id: *id004
+        title: *id005
+        type: *id006
+        role:
+          from: frontmatter_field
+          path: [role]
+          required: true
+        controller:
+          from: frontmatter_field
+          path: [controller]
+          required: true
+        home_regions:
+          from: frontmatter_field
+          path: [home_regions]
+          required: true
+        processor:
+          from: frontmatter_field
+          path: [processor]
+          required: false
+        joint_controllers:
+          from: frontmatter_field
+          path: [joint_controllers]
+          required: false
+        representative:
+          from: frontmatter_field
+          path: [representative]
+          required: false
+        dpo_contact:
+          from: frontmatter_field
+          path: [dpo_contact]
+          required: false
+        purposes:
+          from: frontmatter_field
+          path: [purposes]
+          required: false
+        data_subject_categories:
+          from: frontmatter_field
+          path: [data_subject_categories]
+          required: false
+        retention:
+          from: frontmatter_field
+          path: [retention]
+          required: false
 
 # FR-043: concrete-term lexicon — security / identity / auth objects.
 # FR-058 (quire-rs): upward-trace completeness — the second half of
@@ -784,6 +837,12 @@ traceability:
     to: []
     direction: incoming
     check: untreated-risk
+  - name: processing-activity-covers-nothing
+    from: processing_activity
+    edges: [covers]
+    to: [connection, data_sink, part]
+    direction: outgoing
+    check: processing-activity-covers-nothing
   # `direction: incoming` throughout, because the mitigation is authored from
   # the control's or requirement's end — a control says what it mitigates. A
   # threat listing its own controls would duplicate the fact and let the two

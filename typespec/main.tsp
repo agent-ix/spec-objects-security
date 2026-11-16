@@ -195,6 +195,68 @@ enum MfaFactorKind {
   `unknown`,
 }
 
+/** The role this activity plays for the processing it describes. */
+enum ProcessingRole {
+  controller,
+  processor,
+}
+
+/** Non-empty person-authored text used for names, contacts, purposes and retention. */
+@minLength(1)
+scalar NonBlankText extends string;
+
+/** Same location vocabulary as architecture's data_sink.region. */
+@pattern("^([A-Z]{2}|eu|eea)$")
+scalar RegionCode extends string;
+
+/** Person-authored context for one covered processing activity (FR-028). */
+@extension(
+  "allOf",
+  #[
+    #{ `if`: #{ `properties`: #{ role: #{ `const`: "controller" } }, `required`: #["role"] },
+       `then`: #{ `properties`: #{ controller: #{ `$ref`: "NonBlankText.json" } }, `required`: #["purposes", "data_subject_categories", "retention"] } },
+    #{ `if`: #{ `properties`: #{ role: #{ `const`: "processor" } }, `required`: #["role"] },
+       `then`: #{ `properties`: #{ controller: #{ `type`: "array", `minItems`: 1, `items`: #{ `$ref`: "NonBlankText.json" } } }, `required`: #["processor"], `not`: #{ `required`: #["joint_controllers"] } } }
+  ]
+)
+model ProcessingActivityFrontmatter {
+  role: ProcessingRole;
+  controller: NonBlankText | NonBlankText[];
+  @minItems(1)
+  home_regions: RegionCode[];
+  processor?: NonBlankText;
+  @minItems(1) joint_controllers?: NonBlankText[];
+  representative?: NonBlankText;
+  dpo_contact?: NonBlankText;
+  @minItems(1) purposes?: NonBlankText[];
+  @minItems(1) data_subject_categories?: NonBlankText[];
+  retention?: NonBlankText;
+}
+
+/** Processing activity declaration record; authored frontmatter is projected without defaults. */
+@extension(
+  "allOf",
+  #[
+    #{ `if`: #{ `properties`: #{ role: #{ `const`: "controller" } }, `required`: #["role"] },
+       `then`: #{ `properties`: #{ controller: #{ `$ref`: "NonBlankText.json" } }, `required`: #["purposes", "data_subject_categories", "retention"] } },
+    #{ `if`: #{ `properties`: #{ role: #{ `const`: "processor" } }, `required`: #["role"] },
+       `then`: #{ `properties`: #{ controller: #{ `type`: "array", `minItems`: 1, `items`: #{ `$ref`: "NonBlankText.json" } } }, `required`: #["processor"], `not`: #{ `required`: #["joint_controllers"] } } }
+  ]
+)
+model ProcessingActivity {
+  role: ProcessingRole;
+  controller: NonBlankText | NonBlankText[];
+  @minItems(1) home_regions: RegionCode[];
+  processor?: NonBlankText;
+  @minItems(1) joint_controllers?: NonBlankText[];
+  representative?: NonBlankText;
+  dpo_contact?: NonBlankText;
+  @minItems(1) purposes?: NonBlankText[];
+  @minItems(1) data_subject_categories?: NonBlankText[];
+  retention?: NonBlankText;
+  ...Record<never>;
+}
+
 // ---------------------------------------------------------------------------
 // Support records
 // ---------------------------------------------------------------------------

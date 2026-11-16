@@ -112,6 +112,7 @@ def test_threat_and_risk_coverage_is_declared_not_coded() -> None:
         "security-nfr-has-mitigation-target",
         "soup-record-serves-requirement",
         "threat-model-covers-something",
+        "processing-activity-covers-nothing",
     }
     assert by_name["threat-has-control"]["from"] == "threat"
     assert by_name["risk-has-treatment"]["from"] == "risk"
@@ -123,6 +124,7 @@ def test_threat_and_risk_coverage_is_declared_not_coded() -> None:
         "unjustified-security-nfr",
         "soup-serves-no-requirement",
         "threat-model-covers-nothing",
+        "processing-activity-covers-nothing",
     }
     assert len(checks) == len(by_name), "each relation is independently tunable"
 
@@ -144,6 +146,9 @@ def test_threat_and_risk_coverage_is_declared_not_coded() -> None:
             assert relation["direction"] == "outgoing"
         elif name == "threat-model-covers-something":
             assert relation["from"] == "threat_model"
+            assert relation["direction"] == "outgoing"
+        elif name == "processing-activity-covers-nothing":
+            assert relation["from"] == "processing_activity"
             assert relation["direction"] == "outgoing"
         else:
             assert relation["direction"] == "incoming"

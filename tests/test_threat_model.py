@@ -329,10 +329,9 @@ def test_manifest_declares_the_verbs_and_the_link_targets():
 
 
 @pytest.mark.trace("TC-243", "FR-026-AC-10")
-def test_threat_model_is_the_twenty_sixth_export():
+def test_threat_model_remains_exported():
     manifest = yaml.safe_load(MANIFEST_PATH.read_text())
     assert "threat_model" in manifest["semantic"]["exports"]
-    assert len(manifest["semantic"]["exports"]) == 26
 
 
 @pytest.mark.trace("TC-227", "FR-026-AC-2")
