@@ -8,9 +8,11 @@ rules in ``validate_profile`` are the definition.
 
 from __future__ import annotations
 
+import importlib
 import json
 import os
 import pathlib
+import re
 import subprocess
 
 import pytest
@@ -214,6 +216,41 @@ def test_web_app_baseline_profile_is_shipped_with_only_its_public_sets() -> None
     assert "context" not in profile
 
 
+@pytest.mark.trace("TC-206", "FR-021-AC-1", "FR-021-AC-2", "FR-021-AC-4")
+def test_us_device_profile_names_the_published_public_sets() -> None:
+    path = PROFILES_DIR / "us-device-cybersecurity-hipaa.yaml"
+    assert path.is_file()
+    profile = validate_profile(path)
+    assert profile["clauseSets"] == [
+        {"authority": "us-congress", "id": "fdca-524b", "version": "2026-10-15"},
+        {
+            "authority": "us-fda",
+            "id": "premarket-cybersecurity",
+            "version": "2026-02-03",
+        },
+        {
+            "authority": "us-hhs",
+            "id": "45-cfr-164-subpart-c",
+            "version": "2026-11-12",
+        },
+    ]
+    assert "context" not in profile
+
+
+@pytest.mark.trace("TC-206", "FR-021-AC-1", "FR-021-AC-2", "FR-021-AC-4")
+def test_eu_device_profile_names_the_published_public_sets() -> None:
+    path = PROFILES_DIR / "eu-device-gdpr-ai-act.yaml"
+    assert path.is_file()
+    profile = validate_profile(path)
+    assert profile["clauseSets"] == [
+        {"authority": "eu", "id": "mdr-2017-745", "version": "2026-07-19"},
+        {"authority": "eu-mdcg", "id": "mdcg-2019-16", "version": "rev1"},
+        {"authority": "eu", "id": "gdpr-2016-679", "version": "2016-05-04"},
+        {"authority": "eu", "id": "ai-act-2024-1689", "version": "2026-07-27"},
+    ]
+    assert "context" not in profile
+
+
 def declared_keys(module_dir: pathlib.Path) -> set[tuple[str, str, str]]:
     """The clause-set keys a module's manifest lists, read from its set files."""
     manifest = yaml.safe_load((module_dir / "manifest.yaml").read_text()) or {}
@@ -248,7 +285,15 @@ def reference_modules(tmp_path_factory: pytest.TempPathFactory) -> list[pathlib.
     )
     assert result.returncode == 0, result.stderr
     installed = sorted((home / "filament" / "modules").glob("*"))
-    return [PACKAGE_ROOT, *(d for d in installed if (d / "manifest.yaml").is_file())]
+    published_packs = [
+        pathlib.Path(importlib.import_module(package).__file__).parent
+        for package in ("spec_clauses_us_health", "spec_clauses_eu_law")
+    ]
+    return [
+        PACKAGE_ROOT,
+        *(d for d in installed if (d / "manifest.yaml").is_file()),
+        *published_packs,
+    ]
 
 
 def declaring_module(
@@ -291,14 +336,32 @@ def _shipped_keys(path: pathlib.Path) -> list[tuple[str, str, str]]:
     ]
 
 
+def assert_profile_keys_declared(path: pathlib.Path, modules: list[pathlib.Path]) -> None:
+    for key in _shipped_keys(path):
+        module = declaring_module(key, modules)
+        assert module is not None, f"{path.stem}: no module declares {key}"
+
+
 @pytest.mark.trace("TC-167", "FR-021-AC-2")
 @pytest.mark.parametrize("path", shipped_profiles(), ids=lambda p: p.stem)
 def test_every_shipped_key_is_declared_by_a_reference_module(
     path: pathlib.Path, reference_modules: list[pathlib.Path]
 ) -> None:
-    for key in _shipped_keys(path):
-        module = declaring_module(key, reference_modules)
-        assert module, f"{path.stem}: no module declares {key}"
+    assert_profile_keys_declared(path, reference_modules)
+
+
+@pytest.mark.trace("TC-167", "FR-021-AC-2")
+def test_a_profile_with_an_unpublished_version_fails_with_its_key(
+    tmp_path: pathlib.Path, reference_modules: list[pathlib.Path]
+) -> None:
+    source = PROFILES_DIR / "us-device-cybersecurity-hipaa.yaml"
+    data = validate_profile(source)
+    data["clauseSets"][0]["version"] = "unpublished-version"
+    path = tmp_path / source.name
+    path.write_text(yaml.safe_dump(data, sort_keys=False))
+    changed_key = tuple(data["clauseSets"][0][field] for field in ("authority", "id", "version"))
+    with pytest.raises(AssertionError, match=re.escape(str(changed_key))):
+        assert_profile_keys_declared(path, reference_modules)
 
 
 @pytest.mark.trace("TC-168", "TC-174", "FR-021-AC-3", "NFR-002-AC-2", "NFR-002-M-2")

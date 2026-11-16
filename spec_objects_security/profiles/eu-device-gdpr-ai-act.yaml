@@ -1,0 +1,17 @@
+schemaVersion: source-profile-v1
+name: eu-device-gdpr-ai-act
+title: EU device, GDPR, and AI Act
+description: EU medical-device, data-protection, and high-risk AI sources.
+clauseSets:
+  - authority: eu
+    id: mdr-2017-745
+    version: 2026-07-19
+  - authority: eu-mdcg
+    id: mdcg-2019-16
+    version: rev1
+  - authority: eu
+    id: gdpr-2016-679
+    version: 2016-05-04
+  - authority: eu
+    id: ai-act-2024-1689
+    version: 2026-07-27

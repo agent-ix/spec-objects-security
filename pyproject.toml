@@ -38,6 +38,8 @@ quire = { version = "^0.61.0", source = "internal-pypi" }
 # `quality_attribute` field, which spec-artifacts-iso owns.
 spec-artifacts-iso = { version = "^0.25.0", source = "internal-pypi" }
 platform-test-kit = {version = "0.5.6", source = "internal-pypi"}
+spec-clauses-us-health = { version = "^0.1.0", source = "internal-pypi" }
+spec-clauses-eu-law = { version = "^0.1.0", source = "internal-pypi" }
 
 [tool.poetry.scripts]
 build-tools = "scripts.build_tools:main"

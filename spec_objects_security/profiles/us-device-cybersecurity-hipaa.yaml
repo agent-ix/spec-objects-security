@@ -1,0 +1,14 @@
+schemaVersion: source-profile-v1
+name: us-device-cybersecurity-hipaa
+title: US device cybersecurity and HIPAA
+description: US device cybersecurity statute, FDA guidance, and HIPAA Security Rule sources.
+clauseSets:
+  - authority: us-congress
+    id: fdca-524b
+    version: 2026-10-15
+  - authority: us-fda
+    id: premarket-cybersecurity
+    version: 2026-02-03
+  - authority: us-hhs
+    id: 45-cfr-164-subpart-c
+    version: 2026-11-12
