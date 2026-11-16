@@ -19,10 +19,12 @@ A trust boundary identifies the zone on its far side and the trust given to that
 ## Behavior
 
 - Each `trust_boundary` SHALL author frontmatter `trust_level` with exactly one value from the existing `TrustLevel` enumeration: `untrusted`, `semi_trusted`, `trusted`, or `unknown`.
-- `trust_level` SHALL be required in the frontmatter locator and SHALL be extracted to the `trust_level` record key.
+- The manifest locator for `trust_boundary` SHALL require frontmatter `trust_level`.
+- The manifest locator for `trust_boundary` SHALL extract frontmatter `trust_level` to the record key `trust_level`.
 - A missing `trust_level` SHALL make `quire validate` fail with a diagnostic naming `trust_level`.
 - An out-of-vocabulary value SHALL make `quire validate` fail with a diagnostic naming the value.
-- The emitted `TrustBoundary` schema SHALL admit the typed `trust_level` key and SHALL reject the retired `crosses` record key. Crossing relationships are authored on connections.
+- The emitted `TrustBoundary` schema SHALL admit the typed `trust_level` key.
+- The emitted `TrustBoundary` schema SHALL reject the retired `crosses` record key. Crossing relationships are authored on connections.
 - The existing `fields` row for `trust_level` remains required by FR-004-AC-10 and its `TrustLevelField` item rule. The row and the frontmatter value serve distinct purposes: the row documents a boundary property, while the frontmatter value is the extracted machine-readable value.
 - The trust-boundary skeleton SHALL include a valid frontmatter `trust_level`.
 - No trust level is inferred from a boundary name, diagram, relation, or property row.
