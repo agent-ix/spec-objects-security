@@ -239,7 +239,7 @@ model ProcessingActivityFrontmatter {
   "allOf",
   #[
     #{ `if`: #{ `properties`: #{ role: #{ `const`: "controller" } }, `required`: #["role"] },
-       `then`: #{ `required`: #["purposes", "data_subject_categories", "retention"] } },
+       `then`: #{ `properties`: #{ controller: #{ `$ref`: "NonBlankText.json" } }, `required`: #["purposes", "data_subject_categories", "retention"] } },
     #{ `if`: #{ `properties`: #{ role: #{ `const`: "processor" } }, `required`: #["role"] },
        `then`: #{ `properties`: #{ controller: #{ `type`: "array", `minItems`: 1, `items`: #{ `$ref`: "NonBlankText.json" } } }, `required`: #["processor"], `not`: #{ `required`: #["joint_controllers"] } } }
   ]

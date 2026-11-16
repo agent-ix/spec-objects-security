@@ -41,7 +41,7 @@ The security module SHALL let a person describe one processing activity and iden
 ### Coverage edges
 
 - The module manifest SHALL declare the `processing_activity` object type and allow `covers` targets of `connection`, `data_sink` and `part`.
-- Each `processing_activity` SHALL have at least one outgoing `covers` edge to one of those types.
+- The manifest SHALL declare a required-relation check for outgoing `covers` edges to those types. When an activity has no such edge, Quire SHALL emit a located warning naming the activity and the declared check; the warning is advisory and does not make `quire validate` exit non-zero.
 - A `covers` edge to any other object type or to a missing target SHALL fail validation with a located edge diagnostic.
 - A `covers` edge to a `queue` SHALL fail as a wrong-kind edge.
 
@@ -58,7 +58,7 @@ The security module SHALL let a person describe one processing activity and iden
 | FR-028-AC-2 | A processor activity with a processor name and contact, a non-empty controller list and home regions validates without `purposes`, `data_subject_categories` or `retention`. | Test |
 | FR-028-AC-3 | A controller activity without `retention`, `purposes` or `data_subject_categories`, and a processor activity without its own `processor` identity/contact or with an empty controller list, each fail with a diagnostic naming the missing or invalid field. | Test |
 | FR-028-AC-4 | An unknown role, an empty home-region list, or a home-region value outside the stated vocabulary fails validation. | Test |
-| FR-028-AC-5 | A `processing_activity` with no `covers` edge fails validation; an edge to a `connection`, `data_sink` or `part` validates. | Test |
+| FR-028-AC-5 | A `processing_activity` with no `covers` edge emits a located warning naming the activity and declared check; an edge to a `connection`, `data_sink` or `part` validates. | Test |
 | FR-028-AC-6 | A `covers` edge to a `queue` fails with a wrong-kind diagnostic, and an edge to an absent target fails with a dangling-target diagnostic. | Test |
 | FR-028-AC-7 | The module exports `processing_activity`; its generated schema and skeleton pass the module schema-drift and `quire validate` checks. | Test |
 | FR-028-AC-8 | Omitting any optional authored field leaves it absent in the extracted record; no omitted value is populated from another field, artifact, code or runtime source. | Test |

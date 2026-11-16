@@ -82,6 +82,11 @@
         ]
       },
       "then": {
+        "properties": {
+          "controller": {
+            "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/NonBlankText.json"
+          }
+        },
         "required": [
           "purposes",
           "data_subject_categories",

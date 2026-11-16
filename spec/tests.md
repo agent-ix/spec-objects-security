@@ -157,6 +157,7 @@ the Python package only: neither Node script is measured by it.
 | FR-017 | FR-017-AC-1..7 | TC-175..TC-186 | ✅ `quire clauses` loads strictly and cannot load the real module (the object-type edges come from another module), so TC-181, TC-183, TC-185 and TC-186 evaluate a module that holds only the set files |
 | FR-026 | FR-026-AC-1..7, FR-026-AC-9..10 | TC-224..TC-236, TC-242..TC-243 | ✅ |
 | FR-027 | FR-027-AC-6..7 | TC-237..TC-241 | ✅ |
+| FR-028 | FR-028-AC-1..8 | TC-248..TC-255 | ✅ |
 
 ### Integration Test Coverage
 
@@ -371,6 +372,14 @@ the Python package only: neither Node script is measured by it.
 | TC-245 | Control safeguards are optional authored frontmatter, are extracted when present, and the skeleton validates | Integration | P0 | FR-025-AC-8, FR-025-AC-9 | ✅ |
 | TC-246 | A control protects a connection and a data sink without a disallowed-target diagnostic | Integration | P0 | FR-025-AC-9 | ✅ |
 | TC-247 | Control and data-classification manifests reference their open frontmatter schemas and declare the field locators | Unit | P0 | FR-025-AC-9, FR-025-AC-11 | ✅ |
+| TC-248 | Controller activity has scalar controller details, required context, and a valid covers connection | Integration | P0 | FR-028-AC-1 | ✅ |
+| TC-249 | Processor activity accepts its own identity, a non-empty controller list, and home regions without controller-only context | Unit | P0 | FR-028-AC-2 | ✅ |
+| TC-250 | Missing controller context or processor identity/controller-list requirements are rejected with field-named diagnostics | Unit | P0 | FR-028-AC-3 | ✅ |
+| TC-251 | Unknown role, empty home-region list and an unsupported region value are rejected | Unit | P0 | FR-028-AC-4 | ✅ |
+| TC-252 | An activity without a covers edge emits the declared located advisory warning | Integration | P0 | FR-028-AC-5 | ✅ |
+| TC-253 | A covers edge to a queue yields a wrong-kind diagnostic and a missing target yields a dangling-target diagnostic | Integration | P0 | FR-028-AC-6 | ✅ |
+| TC-254 | The processing-activity schemas are generated without drift, the manifest exports the object, and its skeleton validates | Integration | P0 | FR-028-AC-7 | ✅ |
+| TC-255 | Optional processing-activity frontmatter remains absent from the extracted processor record when omitted | Integration | P0 | FR-028-AC-8 | ✅ |
 
 ## Test Environment
 
