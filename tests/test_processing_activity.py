@@ -29,7 +29,7 @@ def run_bundle(tmp_path, activity: str, targets: dict[str, str]):
             engine_tool("quire"),
             "validate",
             "--okf",
-            *validation_module_args(PACKAGE_ROOT),
+            *validation_module_args(PACKAGE_ROOT, include_iso=True),
             str(bundle),
         ],
         capture_output=True,

@@ -52,16 +52,19 @@ def iso_module_path() -> pathlib.Path:
     return pathlib.Path(iso_spec.origin).parent
 
 
-def validation_module_args(security_module: pathlib.Path | None = None) -> list[str]:
-    """Load ISO, security, and architecture registries used by the fixtures."""
-    iso_module = iso_module_path()
+def validation_module_args(
+    security_module: pathlib.Path | None = None, *, include_iso: bool = False
+) -> list[str]:
+    """Load the security and architecture registries used by the fixtures."""
     architecture_module = (
         pathlib.Path(__file__).resolve().parent.parent
         / "node_modules"
         / "@agent-ix"
         / "spec-objects-architecture"
     )
-    modules = [iso_module, security_module or PACKAGE_ROOT, architecture_module]
+    modules = [security_module or PACKAGE_ROOT, architecture_module]
+    if include_iso:
+        modules.insert(0, iso_module_path())
     return [arg for module in modules for arg in ("--module", str(module))]
 
 

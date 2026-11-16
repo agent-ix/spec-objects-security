@@ -68,7 +68,7 @@ def _validate(root, *flags):
             "validate",
             "--okf",
             *flags,
-            *validation_module_args(PACKAGE_ROOT),
+            *validation_module_args(PACKAGE_ROOT, include_iso=True),
             str(root),
         ],
         capture_output=True,
@@ -81,7 +81,7 @@ def _validate_repos(repo_a, repo_b=None):
     args.extend(("--repo", f"o/a={repo_a}"))
     if repo_b is not None:
         args.extend(("--repo", f"o/b={repo_b}"))
-    args.extend(validation_module_args(PACKAGE_ROOT))
+    args.extend(validation_module_args(PACKAGE_ROOT, include_iso=True))
     return subprocess.run(args, capture_output=True, text=True)
 
 

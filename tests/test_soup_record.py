@@ -29,6 +29,7 @@ from tests.conftest import (
     engine_tool,
     field,
     frontmatter,
+    iso_module_path,
     object_type,
     validation_module_args,
 )
@@ -362,7 +363,7 @@ def _validate(root, *flags):
             "validate",
             "--okf",
             *flags,
-            *validation_module_args(PACKAGE_ROOT),
+            *validation_module_args(PACKAGE_ROOT, include_iso=True),
             str(root),
         ],
         capture_output=True,
@@ -541,7 +542,9 @@ SERVED = FIXTURES / "served.md"
 
 def _requirement(root, req_id="FR-100"):
     """An FR from the installed iso skeleton, standing in for the served requirement."""
-    text = (_iso() / "skeletons" / "fr.md").read_text().replace("FR-001", req_id)
+    text = (iso_module_path() / "skeletons" / "fr.md").read_text().replace(
+        "FR-001", req_id
+    )
     (root / f"{req_id}.md").write_text(text)
 
 
@@ -660,7 +663,7 @@ def test_serves_edge_to_a_requirement_in_another_repository_is_resolved(
             f"agent-ix/other-repo={record_repo}",
             "--repo",
             f"agent-ix/spec-objects-security={requirement_repo}",
-            *validation_module_args(PACKAGE_ROOT),
+            *validation_module_args(PACKAGE_ROOT, include_iso=True),
         ],
         capture_output=True,
         text=True,
