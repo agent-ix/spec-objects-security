@@ -494,6 +494,11 @@ def test_all_six_rules_load_against_published_sink_schema_and_reject_bad_enum(
         check=False,
     )
     assert invalid.returncode != 0
+    invalid_diagnostic = invalid.stdout + invalid.stderr
+    assert "health-in-llm-prompt-or-tool-call" in invalid_diagnostic
+    assert "medical" in invalid_diagnostic
+    assert "regulated_categories" in invalid_diagnostic
+    assert str(invalid_module / "manifest.yaml") in invalid_diagnostic
 
     invalid_remediation_manifest = yaml.safe_load(
         (PACKAGE_ROOT / "manifest.yaml").read_text()
@@ -522,6 +527,12 @@ def test_all_six_rules_load_against_published_sink_schema_and_reject_bad_enum(
         check=False,
     )
     assert invalid_remediation.returncode != 0
+    remediation_diagnostic = invalid_remediation.stdout + invalid_remediation.stderr
+    assert "health-across-untrusted-boundary" in remediation_diagnostic
+    assert "encrypt-in-transit" in remediation_diagnostic
+    assert (
+        str(invalid_remediation_module / "manifest.yaml") in remediation_diagnostic
+    )
 
 
 @pytest.mark.trace("TC-263", "FR-025-AC-14")
