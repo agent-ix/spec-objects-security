@@ -168,6 +168,7 @@ def test_missing_covers_edge_emits_located_advisory_warning(tmp_path):
         skeleton,
         {"connection.md": target_doc("connection", "CONN-001")},
     )
+    assert result.returncode == 0, result.stdout + result.stderr
     output = result.stdout + result.stderr
     assert "activity.md" in output
     assert "processing-activity-covers-nothing" in output
