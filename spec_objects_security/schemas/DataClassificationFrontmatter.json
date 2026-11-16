@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/DataClassificationFrontmatter.json",
+  "type": "object",
+  "properties": {
+    "regulated_categories": {
+      "type": "array",
+      "items": {
+        "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/RegulatedDataCategory.json"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    }
+  },
+  "description": "Frontmatter keys authored on a data-classification document."
+}

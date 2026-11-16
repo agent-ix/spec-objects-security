@@ -29,6 +29,14 @@
     "effectiveness": {
       "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/ControlEffectiveness.json"
     },
+    "safeguards": {
+      "type": "array",
+      "items": {
+        "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/Safeguard.json"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
     "mitigates": {
       "type": "array",
       "items": {

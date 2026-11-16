@@ -234,6 +234,7 @@ object_types:
           after_heading: Invariants
           required: false
 - name: data_classification
+  frontmatter_schema_ref: schemas/DataClassificationFrontmatter.json
   allowed_links:
     classifies: [persistable, externally-exposed, sensitive]
     references: [data_classification]
@@ -470,10 +471,11 @@ object_types:
           after_heading: Properties
           required: false
 - name: control
+  frontmatter_schema_ref: schemas/ControlFrontmatter.json
   allowed_links:
     mitigates: [threat, risk, vulnerability, hazard, failure_mode]
     implements: [policy]
-    protects: [externally-exposed, asset]
+    protects: [externally-exposed, asset, connection, data_sink]
   data_schema:
     schema: schemas/Control.json
   body_extraction:
@@ -489,6 +491,10 @@ object_types:
         effectiveness:
           from: section_body
           after_heading: Effectiveness
+          required: false
+        safeguards:
+          from: frontmatter_field
+          path: [safeguards]
           required: false
         # FR-005: the typed `## Properties` table the
         # semantic layer reads. Optional, so existing artifacts stay valid.

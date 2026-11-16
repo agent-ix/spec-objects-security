@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/ControlFrontmatter.json",
+  "type": "object",
+  "properties": {
+    "safeguards": {
+      "type": "array",
+      "items": {
+        "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/Safeguard.json"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    }
+  },
+  "description": "Frontmatter keys authored on a control document."
+}
