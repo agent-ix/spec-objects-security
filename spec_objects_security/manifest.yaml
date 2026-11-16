@@ -31,6 +31,7 @@ semantic:
   - audit_finding
   - soup_record
   - scope_exclusion
+  - threat_model
   imports: {}
   targets: [json-schema, markdown]
   mappings: [typed-table, sysml-fence, ocl-clause, record-sections]
@@ -45,6 +46,9 @@ nav:
     label: Security
     icon: ShieldCheck
     order: 54
+edge_types:
+  covers: { description: "A source document covers a target: the target is in its scope.", category: governance }
+  considers: { description: "Threat model considers the threat at the target.", category: governance }
 archetypes: []
 grammars: []
 artifact_types: []
@@ -423,7 +427,7 @@ object_types:
           required: false
 - name: threat
   allowed_links:
-    threatens: [asset, attack_surface]
+    threatens: [asset, attack_surface, connection, data_sink, trust_boundary]
     exploits: [vulnerability]
   data_schema:
     schema: schemas/Threat.json
@@ -515,6 +519,16 @@ object_types:
           path:
           - impact
           required: true
+        decision:
+          from: frontmatter_field
+          path:
+          - decision
+          required: true
+        decided_by:
+          from: frontmatter_field
+          path:
+          - decided_by
+          required: false
         # FR-005: the typed `## Properties` table the
         # semantic layer reads. Optional, so existing artifacts stay valid.
         properties:
@@ -693,6 +707,44 @@ object_types:
         expires_at:
           from: section_body
           after_heading: Expires at
+          required: false
+- name: threat_model
+  allowed_links:
+    covers: [part, connection, data_sink, trust_boundary]
+    considers: [threat]
+  data_schema:
+    schema: schemas/ThreatModel.json
+  body_extraction:
+    yield_pattern:
+      match:
+        id: *id004
+        title: *id005
+        type: *id006
+        method:
+          from: frontmatter_field
+          path:
+          - method
+          required: true
+        reviewed_by:
+          from: frontmatter_field
+          path:
+          - reviewed_by
+          required: true
+        scope:
+          from: section_body
+          after_heading: Scope
+          required: true
+        assumptions:
+          from: section_body
+          after_heading: Assumptions
+          required: true
+        out_of_scope:
+          from: section_body
+          after_heading: Out of scope
+          required: true
+        properties:
+          from: section_body
+          after_heading: Properties
           required: false
 
 # FR-043: concrete-term lexicon — security / identity / auth objects.

@@ -73,6 +73,22 @@ enum Impact {
   `unknown`,
 }
 
+/**
+ * How a threat model was worked: STRIDE applied to each element, or to each
+ * interaction between elements. There is no `unknown` or `none` member.
+ */
+enum ThreatModelMethod {
+  stride_per_element,
+  stride_per_interaction,
+}
+
+/** The decision a person records on a risk. There is no default. */
+enum DecisionState {
+  undecided,
+  accepted,
+  not_accepted,
+}
+
 /** The STRIDE class of a threat. `unknown` states that it was not classified. */
 enum StrideCategory {
   spoofing,
@@ -427,7 +443,15 @@ model Vulnerability {
   #[
     #{ properties: #{ fields: #{ contains: #{ `$ref`: "LikelihoodField.json" } } } },
     #{ properties: #{ fields: #{ contains: #{ `$ref`: "ImpactField.json" } } } },
-    #{ properties: #{ fields: #{ items: #{ not: #{ `$ref`: "DefaultedField.json" } } } } }
+    #{ properties: #{ fields: #{ items: #{ not: #{ `$ref`: "DefaultedField.json" } } } } },
+    #{
+      `if`: #{ properties: #{ decision: #{ `enum`: #["accepted", "not_accepted"] } } },
+      `then`: #{ required: #["decided_by"] }
+    },
+    #{
+      `if`: #{ properties: #{ decision: #{ `const`: "undecided" } } },
+      `then`: #{ not: #{ required: #["decided_by"] } }
+    }
   ]
 )
 model Risk {
@@ -440,6 +464,31 @@ model Risk {
   likelihood?: Likelihood;
   impact?: Impact;
   arises_from?: SemanticId[];
+  decision: DecisionState;
+  @minLength(1) decided_by?: string;
+  ...Record<never>;
+}
+
+/**
+ * A scoped threat analysis a person wrote. `covers` and `considers` are edges
+ * authored in the document's relationships, not members here. There is no
+ * default for `method` or `reviewed_by`.
+ */
+@extension(
+  "allOf",
+  #[
+    #{ properties: #{ fields: #{ items: #{ not: #{ `$ref`: "DefaultedField.json" } } } } }
+  ]
+)
+model ThreatModel {
+  @minItems(1)
+  @contains(IdentityField)
+  fields: FieldDecl[];
+
+  clauses?: ClauseRef[];
+  relations?: RelationDecl[];
+  method: ThreatModelMethod;
+  @minLength(1) reviewed_by: string;
   ...Record<never>;
 }
 

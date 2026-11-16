@@ -5,11 +5,14 @@ type: risk
 object: risk
 likelihood: possible
 impact: major
+decision: undecided
 ---
 <!-- risk authoring skeleton (spec-objects-security). Fill every section with
      substantive content. Contract (manifest body_extraction asserts):
      - Frontmatter MUST carry id, title, type: risk, object: risk,
-       likelihood and impact.
+       likelihood, impact and decision (undecided, accepted or
+       not_accepted; `decided_by` is required unless undecided, refused when
+       undecided).
      - "## Properties" (H2): the typed declaration. Risk.json requires both a
        `likelihood` row and an `impact` row: a risk scored on one axis is
        not scored. -->

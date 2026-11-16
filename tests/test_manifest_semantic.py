@@ -121,7 +121,8 @@ def test_two_records_of_different_types_are_distinguishable_by_schema_alone(
             field("risk_id", "UUID", identity=True),
             field("likelihood"),
             field("impact"),
-        ]
+        ],
+        "decision": "undecided",
     }
     assert schema_registry("Secret").is_valid(secret)
     assert not schema_registry("Risk").is_valid(secret)
