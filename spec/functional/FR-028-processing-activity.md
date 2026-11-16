@@ -33,8 +33,8 @@ The security module SHALL let a person describe one processing activity and iden
 - `ProcessingActivity` SHALL require `role`, `controller` and a non-empty `home_regions` list.
 - `role` SHALL be exactly `controller` or `processor`.
 - When `role` is `controller`, `controller` SHALL be one non-empty name-and-contact string; `purposes`, `data_subject_categories` and `retention` SHALL each be present and non-empty.
-- When `role` is `processor`, `controller` SHALL be a non-empty list of non-empty name-and-contact strings, one for each controller the processor acts for. `purposes`, `data_subject_categories` and `retention` MAY be absent; the dossier takes categories of processing from covered sinks.
-- `joint_controllers` SHALL be an optional list of non-empty name-and-contact strings. `representative` and `dpo_contact` SHALL be optional non-empty text.
+- When `role` is `processor`, `processor` SHALL be a non-empty name-and-contact string for the processor itself, and `controller` SHALL be a non-empty list of non-empty name-and-contact strings, one for each controller it acts for. `purposes`, `data_subject_categories` and `retention` MAY be absent; the dossier takes categories of processing from covered sinks.
+- `joint_controllers` SHALL be an optional list of non-empty name-and-contact strings for a controller activity. `representative` and `dpo_contact` SHALL be optional non-empty text.
 - Each `home_regions` member SHALL be an ISO 3166-1 alpha-2 country code or `eu` or `eea`, using the same vocabulary as `data_sink.region`.
 - The schema SHALL NOT provide a default for any authored field or derive a value from another field.
 
@@ -55,8 +55,8 @@ The security module SHALL let a person describe one processing activity and iden
 | ID | Criteria | Verification |
 |----|----------|--------------|
 | FR-028-AC-1 | A controller activity with controller details, purposes, data-subject categories, retention, home regions and a valid `covers` edge validates. | Test |
-| FR-028-AC-2 | A processor activity with a non-empty controller list and home regions validates without `purposes`, `data_subject_categories` or `retention`. | Test |
-| FR-028-AC-3 | A controller activity without `retention`, `purposes` or `data_subject_categories`, and a processor activity with an empty controller list, each fail with a diagnostic naming the missing or invalid field. | Test |
+| FR-028-AC-2 | A processor activity with a processor name and contact, a non-empty controller list and home regions validates without `purposes`, `data_subject_categories` or `retention`. | Test |
+| FR-028-AC-3 | A controller activity without `retention`, `purposes` or `data_subject_categories`, and a processor activity without its own `processor` identity/contact or with an empty controller list, each fail with a diagnostic naming the missing or invalid field. | Test |
 | FR-028-AC-4 | An unknown role, an empty home-region list, or a home-region value outside the stated vocabulary fails validation. | Test |
 | FR-028-AC-5 | A `processing_activity` with no `covers` edge fails validation; an edge to a `connection`, `data_sink` or `part` validates. | Test |
 | FR-028-AC-6 | A `covers` edge to a `queue` fails with a wrong-kind diagnostic, and an edge to an absent target fails with a dangling-target diagnostic. | Test |
