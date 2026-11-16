@@ -131,11 +131,21 @@ def errors(result: subprocess.CompletedProcess) -> list[str]:
 
 @pytest.mark.trace("TC-224", "FR-026-AC-1")
 def test_threat_model_with_covers_and_considers_validates(tmp_path):
+    control = (
+        (SKELETONS_DIR / "control.md")
+        .read_text()
+        .replace(
+            "safeguards: [encrypt-in-transit]",
+            "safeguards: [encrypt-in-transit]\n"
+            "relationships:\n  - type: mitigates\n    target: THREAT-1",
+        )
+    )
     docs = {
         **world(),
         "tm.md": threat_model(
             relationships=(("covers", "CONN-1"), ("considers", "THREAT-1"))
         ),
+        "control.md": control,
     }
     result = validate(tmp_path, docs)
     assert result.returncode == 0 and not errors(result), result.stderr

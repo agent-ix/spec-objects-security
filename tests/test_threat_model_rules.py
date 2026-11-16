@@ -214,14 +214,6 @@ def test_rule_declarations_are_tunable_remediation_free_and_do_not_change_regist
         "values": ["undecided", "not_accepted"],
     }
     enum = yaml.safe_load((SCHEMAS_DIR / "RiskDecision.json").read_text())
-    assert enum["enum"] == ["undecided", "accepted", "not_accepted"]
-    frontmatter = yaml.safe_load((SCHEMAS_DIR / "RiskFrontmatter.json").read_text())
-    assert set(frontmatter["properties"]) == {"decision"}
-    assert "additionalProperties" not in frontmatter
-    assert "required" not in frontmatter
-    risk = yaml.safe_load((SCHEMAS_DIR / "Risk.json").read_text())
-    for key in ("decision", "decided_by"):
-        assert "default" not in risk["properties"][key]
     enum_values = {"decision": enum["enum"]}
     for name in RULES:
         for condition in [
@@ -231,6 +223,28 @@ def test_rule_declarations_are_tunable_remediation_free_and_do_not_change_regist
             if "any_of" in condition:
                 assert set(condition["any_of"]) <= set(enum_values[condition["field"]])
     assert "risk" in {obj["name"] for obj in manifest["object_types"]}
+
+
+@pytest.mark.trace("TC-270", "FR-027-AC-8")
+def test_risk_frontmatter_schema_is_open_enum_only_and_referenced():
+    manifest = yaml.safe_load(MANIFEST_PATH.read_text())
+    risk_archetype = next(
+        archetype
+        for archetype in manifest["object_types"]
+        if archetype["name"] == "risk"
+    )
+    assert risk_archetype["frontmatter_schema_ref"] == "schemas/RiskFrontmatter.json"
+
+    enum = yaml.safe_load((SCHEMAS_DIR / "RiskDecision.json").read_text())
+    assert enum["enum"] == ["undecided", "accepted", "not_accepted"]
+    frontmatter = yaml.safe_load((SCHEMAS_DIR / "RiskFrontmatter.json").read_text())
+    assert set(frontmatter["properties"]) == {"decision"}
+    assert "additionalProperties" not in frontmatter
+    assert "required" not in frontmatter
+    assert frontmatter["properties"]["decision"]["enum"] == enum["enum"]
+    risk = yaml.safe_load((SCHEMAS_DIR / "Risk.json").read_text())
+    for key in ("decision", "decided_by"):
+        assert "default" not in risk["properties"][key]
 
 
 @pytest.mark.trace("TC-268", "FR-027-AC-10")
