@@ -90,8 +90,8 @@ module. This requirement names no requirement id for the architecture objects un
 
 ### Exports
 
-- `threat_model` is the twenty-sixth object type. `semantic.exports` SHALL name it ([FR-003](./FR-003-semantic-manifest-contract.md)),
-  and it is one of the twenty-six types covered by the schema, skeleton and no-default contracts of
+- `threat_model` is one of the twenty-seven object types. `semantic.exports` SHALL name it ([FR-003](./FR-003-semantic-manifest-contract.md)),
+  and it is one of the twenty-seven types covered by the schema, skeleton and no-default contracts of
   [FR-004](./FR-004-role-schemas.md), [FR-005](./FR-005-executable-skeletons.md) and
   [FR-006](./FR-006-security-safe-declarations.md).
 
@@ -122,7 +122,7 @@ not a testable obligation of this requirement.
 | FR-026-AC-7 | `ThreatModel.json` carries no `default` for `method` or `reviewed_by`, and an extracted record has no `method` or `reviewed_by` key the author did not write. | Test |
 | FR-026-AC-8 | No manifest entry, rule text, skeleton or README added by this requirement names or quotes a paywalled standard; the only sources named are STRIDE, OWASP's free threat-modelling guidance and NIST SP 800-154. | Inspection |
 | FR-026-AC-9 | The module manifest declares `considers` and `covers` in `edge_types`; the module loads, and removing either declaration makes it fail to load naming the verb. | Test |
-| FR-026-AC-10 | `semantic.exports` names `threat_model` and has twenty-six entries; `ThreatModel.json` is emitted without `default` keys; the `threat_model` skeleton validates; the empty record `{}` fails `ThreatModel.json`. | Test |
+| FR-026-AC-10 | `semantic.exports` names `threat_model` and has twenty-seven entries; `ThreatModel.json` is emitted without `default` keys; the `threat_model` skeleton validates; the empty record `{}` fails `ThreatModel.json`. | Test |
 
 ## Dependencies
 

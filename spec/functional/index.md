@@ -32,3 +32,4 @@ description: "Index of artifacts in this directory."
 * [FR-025: A control states safeguards and protects a connection or data_sink, and the module ships the remediation vocabulary and starter flow rules](./FR-025-control-safeguards-and-starter-flow-rules.md)
 * [FR-026: A threat_model states its method, who led it, what it covers and which threats it considers](./FR-026-threat-model-object.md)
 * [FR-027: A threat targets model elements, a risk records a named person's decision, and the module ships the threat-model completeness flow rules](./FR-027-threat-treatment-and-completeness-rules.md)
+* [FR-028: A processing_activity states the person-authored context for records of processing](./FR-028-processing-activity.md)

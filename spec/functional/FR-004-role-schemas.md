@@ -31,7 +31,7 @@ rules.
 
 ## Outputs
 
-- Twenty-six object-type models, each emitted as `schemas/<Model>.json`,
+- Twenty-seven object-type models, each emitted as `schemas/<Model>.json`,
   sealed (`unevaluatedProperties: {not: {}}`).
 - Support models emitted as sibling files: the open marker models
   `IdentityField`, `DefaultedField`, `OccurrenceField`, `OccurrenceTypeRef`,
@@ -40,7 +40,8 @@ rules.
   records `ControlMapping` and `FlowStep`; and the closed graded vocabularies
   `Severity`, `Likelihood`, `Impact`, `StrideCategory`, `ControlEffectiveness`,
   `FindingStatus`, `ConfidentialityLevel`, `TrustLevel`, `SecretLifecycle`,
-  `MfaFactorKind`.
+  `MfaFactorKind`; and the processing-activity support schemas `ProcessingRole`,
+  `ProcessingActivityFrontmatter`, `NonBlankText` and `RegionCode`.
 
 ## Behavior
 
@@ -80,6 +81,7 @@ semantic-core release that renders `identity: false` is a breaking change to the
 | session_config | `SessionConfig` | `clauses` | `fields`, `binds_flow: SemanticId` | `clauses` has ≥ 1 item; `operations` and `relations` forbidden |
 | auth_flow | `AuthFlow` | `operations` | `fields`, `clauses`, `steps: FlowStep[]` | `operations` has ≥ 1 item — a flow is its exchanges; `fields` has 0 defaulted fields; `relations` forbidden |
 | audit_event | `AuditEvent` | `fields` | `clauses`, `source: SemanticId` | `fields` has ≥ 1 item, 0 identity fields, ≥ 1 occurrence field, and 0 defaulted fields; `operations` and `relations` forbidden |
+| processing_activity | `ProcessingActivity` | `role`, `controller`, `home_regions` | `joint_controllers`, `representative`, `dpo_contact`, `purposes`, `data_subject_categories`, `retention` | `role` is `controller` or `processor`; role-specific constraints are defined by FR-028; `home_regions` has ≥ 1 item |
 
 - The keys `mappings` and `effectiveness` of `control` are populated by the `record-sections` mapping (`agent-ix/quire-rs` FR-081) from the `## Mappings` and `## Effectiveness` sections, as [FR-014](./FR-014-control-mappings-are-clause-references.md) defines; the extractor still does not populate the other keys listed below.
 - `ControlMapping` SHALL be `{ set: string, clause: string }` as [FR-014](./FR-014-control-mappings-are-clause-references.md) defines it.
@@ -108,13 +110,13 @@ semantic-core release that renders `identity: false` is a breaking change to the
 | ID | Constraint | Type | Validation |
 |----|------------|------|------------|
 | FR-004-CON-1 | No model SHALL redeclare a semantic-core model or scalar; the module namespace contributes archetype shapes only (semantic-core NFR-014 kernel discipline). | Architecture | Test |
-| FR-004-CON-2 | The empty record `{}` SHALL fail every one of the twenty-six types, because every type has a non-empty required set. | Integrity | Test |
+| FR-004-CON-2 | The empty record `{}` SHALL fail every one of the twenty-seven types, because every type has a non-empty required set. | Integrity | Test |
 
 ## Acceptance Criteria
 
 | ID | Criteria | Verification |
 |----|----------|--------------|
-| FR-004-AC-1 | Each of the twenty-six shipped object-type schemas differs from every other in at least one required key, admitted key, or item rule listed in the table; a schema with only `type: object` is absent. | Test |
+| FR-004-AC-1 | Each of the twenty-seven shipped object-type schemas differs from every other in at least one required key, admitted key, or item rule listed in the table; a schema with only `type: object` is absent. | Test |
 | FR-004-AC-2 | An asset record with one identity field validates against `Asset.json`; the same record with the identity flag removed fails; a record with no `fields` fails. | Test |
 | FR-004-AC-3 | A role record validates; a record carrying `operations` fails. A permission and a scope record each fail when they carry `relations`. | Test |
 | FR-004-AC-4 | A threat record with a `stride_category` field validates; the same record without that field fails; a `stride_category` outside `StrideCategory` fails. | Test |
@@ -124,7 +126,7 @@ semantic-core release that renders `identity: false` is a breaking change to the
 | FR-004-AC-8 | An auth-flow record with one operation validates; an empty `operations` array fails; a record carrying `relations` fails. | Test |
 | FR-004-AC-9 | An audit-event record with a `Timestamp` field and no identity field validates against `AuditEvent.json`; a record whose only fields are non-`Timestamp` fails; a record with an identity field fails; a record with `operations` fails. | Test |
 | FR-004-AC-10 | A trust-boundary record with one clause and a `trust_level` field validates; the same record without `clauses` fails; a `trust_level` outside `TrustLevel` fails. | Test |
-| FR-004-AC-11 | The empty record `{}` fails against all twenty-six schemas. | Test |
+| FR-004-AC-11 | The empty record `{}` fails against all twenty-seven schemas. | Test |
 | FR-004-AC-12 | A `type.target` of `ix://agent-ix/spec-objects-security/unresolved/Mystery` is accepted by the schema (it is a `SemanticId`) and reported by the extractor as `semantic.unresolved-type`; a `SemanticId`-tagged `Mystery` (no `ix://` prefix) is rejected by the schema. | Test |
 | FR-004-AC-13 | No module schema redeclares a semantic-core model; every grammar item is a `$ref` to semantic-core. | Test |
 | FR-004-AC-14 | A data-classification record with a `level` field validates; one without it fails; a record carrying `relations` fails. | Test |
