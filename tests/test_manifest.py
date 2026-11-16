@@ -107,19 +107,20 @@ def test_threat_and_risk_coverage_is_declared_not_coded() -> None:
     by_name = {r["name"]: r for r in model["required_relations"]}
 
     assert set(by_name) == {
-        "threat-has-control",
         "risk-has-treatment",
         "security-nfr-has-mitigation-target",
         "soup-record-serves-requirement",
         "threat-model-covers-something",
         "processing-activity-covers-nothing",
     }
-    assert by_name["threat-has-control"]["from"] == "threat"
     assert by_name["risk-has-treatment"]["from"] == "risk"
+    assert by_name["risk-has-treatment"]["where"] == {
+        "field": "decision",
+        "values": ["undecided", "not_accepted"],
+    }
 
     checks = {r["check"] for r in by_name.values()}
     assert checks == {
-        "uncontrolled-threat",
         "untreated-risk",
         "unjustified-security-nfr",
         "soup-serves-no-requirement",

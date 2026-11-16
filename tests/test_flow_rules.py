@@ -51,6 +51,9 @@ def _module(root, manifest: dict) -> None:
             "health-in-llm-prompt-or-tool-call",
             "health-in-log",
             "health-display-unvalidated",
+            "crossing-without-threat",
+            "classified-sink-without-threat",
+            "threat-without-treatment",
         }
     ]
     remediations = manifest["traceability"]["remediations"]
@@ -68,6 +71,9 @@ def _module(root, manifest: dict) -> None:
             "trust_boundary": {
                 "description": "A boundary between zones with different trust levels."
             },
+            "threat_model": {"description": "A threat model."},
+            "threat": {"description": "A threat."},
+            "risk": {"description": "A risk."},
         },
         "archetypes": [
             {
@@ -76,6 +82,7 @@ def _module(root, manifest: dict) -> None:
                     "carries": ["data_classification"],
                     "crosses": ["trust_boundary"],
                     "delivers_to": ["data_sink"],
+                    "threatens": [],
                 },
             },
             {
@@ -89,12 +96,32 @@ def _module(root, manifest: dict) -> None:
             {
                 "name": "control",
                 "frontmatter_schema_ref": "schemas/ControlFrontmatter.json",
-                "allowed_links": {"protects": ["connection", "data_sink"]},
+                "allowed_links": {
+                    "protects": ["connection", "data_sink"],
+                    "mitigates": ["threat"],
+                },
             },
             {
                 "name": "data_sink",
                 "frontmatter_schema_ref": "schemas/DataSinkFrontmatter.json",
                 "allowed_links": {"carries": ["data_classification"]},
+            },
+            {
+                "name": "threat_model",
+                "allowed_links": {
+                    "covers": ["connection", "data_sink"],
+                    "considers": ["threat"],
+                },
+            },
+            {
+                "name": "threat",
+                "allowed_links": {
+                    "threatens": ["connection", "data_sink", "trust_boundary"]
+                },
+            },
+            {
+                "name": "risk",
+                "allowed_links": {"arises_from": ["threat"]},
             },
         ],
         "edge_types": {
@@ -106,6 +133,26 @@ def _module(root, manifest: dict) -> None:
             },
             "protects": {
                 "description": "Protects a connection.",
+                "category": "governance",
+            },
+            "covers": {
+                "description": "Threat model covers element.",
+                "category": "governance",
+            },
+            "considers": {
+                "description": "Threat model considers threat.",
+                "category": "governance",
+            },
+            "threatens": {
+                "description": "Threat targets element.",
+                "category": "governance",
+            },
+            "mitigates": {
+                "description": "Control mitigates threat.",
+                "category": "governance",
+            },
+            "arises_from": {
+                "description": "Risk arises from threat.",
                 "category": "governance",
             },
         },
