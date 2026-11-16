@@ -350,6 +350,43 @@ def test_sink_rules_deny_each_risky_flow_and_accept_the_declared_remediation(
     assert not any(denial["rule"] == rule for denial in cleared["denials"])
 
 
+@pytest.mark.trace("TC-259", "FR-025-AC-4")
+def test_llm_sink_unknown_agreement_is_denied_but_covered_is_not(tmp_path):
+    source_manifest = yaml.safe_load((PACKAGE_ROOT / "manifest.yaml").read_text())
+    module = tmp_path / "module"
+    _module(module, source_manifest)
+
+    unknown_scope = tmp_path / "unknown-corpus"
+    (unknown_scope / "spec").mkdir(parents=True)
+    _sink_case(
+        unknown_scope,
+        sink_id="SINK-UNKNOWN",
+        kind="llm_prompt",
+        category="health",
+        agreement="unknown",
+    )
+    unknown_report = _flow_report(unknown_scope, module)
+    assert any(
+        denial["rule"] == "health-in-llm-prompt-or-tool-call"
+        for denial in unknown_report["denials"]
+    )
+
+    covered_scope = tmp_path / "covered-corpus"
+    (covered_scope / "spec").mkdir(parents=True)
+    _sink_case(
+        covered_scope,
+        sink_id="SINK-COVERED",
+        kind="llm_prompt",
+        category="health",
+        agreement="covered",
+    )
+    covered_report = _flow_report(covered_scope, module)
+    assert not any(
+        denial["rule"] == "health-in-llm-prompt-or-tool-call"
+        for denial in covered_report["denials"]
+    )
+
+
 @pytest.mark.trace("TC-260", "FR-025-AC-6", "FR-025-AC-13")
 def test_sink_rules_read_both_paths_and_do_not_extend_health_log_to_personal_data(
     tmp_path,
@@ -394,7 +431,7 @@ def test_sink_rules_read_both_paths_and_do_not_extend_health_log_to_personal_dat
     assert empty_report["denials"] == []
 
 
-@pytest.mark.trace("TC-261", "FR-025-AC-7", "FR-025-AC-11")
+@pytest.mark.trace("TC-261", "FR-025-AC-7", "FR-025-AC-11", "FR-025-AC-12")
 def test_all_six_rules_load_against_published_sink_schema_and_reject_bad_enum(
     tmp_path,
 ):
