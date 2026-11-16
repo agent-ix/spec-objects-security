@@ -810,6 +810,12 @@ traceability:
     to: [FR, NFR, StR]
     direction: outgoing
     check: soup-serves-no-requirement
+  - name: threat-model-covers-something
+    from: threat_model
+    edges: [covers]
+    to: []
+    direction: outgoing
+    check: threat-model-covers-nothing
   #
   # A risk that transitively arises from itself states nothing, and no
   # per-document check can see it: the defect is a property of the graph.
