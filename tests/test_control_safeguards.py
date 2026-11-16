@@ -207,7 +207,7 @@ def test_manifest_declares_safeguard_and_classification_frontmatter():
     }
 
 
-@pytest.mark.trace("TC-248", "FR-025-AC-10")
+@pytest.mark.trace("TC-256", "FR-025-AC-10")
 def test_manifest_declares_the_nine_remediations_with_exact_changes():
     import yaml
 
