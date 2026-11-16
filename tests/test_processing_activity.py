@@ -9,7 +9,7 @@ import subprocess
 import pytest
 import yaml
 
-from tests.conftest import (
+from conftest import (
     MANIFEST_PATH,
     SCHEMAS_DIR,
     SKELETONS_DIR,

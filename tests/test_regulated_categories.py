@@ -14,7 +14,7 @@ import pathlib
 
 import pytest
 
-from tests.conftest import (
+from conftest import (
     PACKAGE_ROOT,
     SCHEMAS_DIR,
     field,
