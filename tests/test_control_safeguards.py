@@ -246,4 +246,4 @@ def test_manifest_declares_the_nine_remediations_with_exact_changes():
     assert remove["removes"] == {"edge": "delivers_to", "direction": "incoming"}
     assert not ({"adds", "sets"} & remove.keys())
     assert all(item.get("description", "").strip() for item in remediations)
-    assert "first-step" in remove["description"]
+    assert "first path step" in remove["description"]

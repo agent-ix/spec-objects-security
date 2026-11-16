@@ -911,7 +911,7 @@ traceability:
     description: Set the affected sink's processor_agreement field to covered.
     sets: {field: processor_agreement, value: covered}
   - name: remove-from-sink
-    description: Remove the incoming delivers_to connection from the affected sink's first-step path.
+    description: Remove the connection's delivers_to relationship to this sink when it is the first path step.
     removes: {edge: delivers_to, direction: incoming}
   #
   # A risk that transitively arises from itself states nothing, and no
