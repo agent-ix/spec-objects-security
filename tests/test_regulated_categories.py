@@ -118,6 +118,14 @@ def test_the_vocabulary_is_exactly_health_personal_financial():
     assert "unknown" not in schema["enum"]
 
 
+@pytest.mark.trace("TC-206", "FR-023-AC-5")
+def test_frontmatter_category_enum_is_self_contained_for_quires_validator():
+    frontmatter_schema = _schema("DataClassificationFrontmatter")
+    categories = frontmatter_schema["properties"]["regulated_categories"]
+    assert categories["items"]["enum"] == MEMBERS
+    assert "$ref" not in categories["items"]
+
+
 @pytest.mark.trace("TC-207", "FR-023-AC-1", "NFR-004-AC-1", "NFR-004-M-1")
 def test_the_property_is_an_optional_non_empty_unique_list_without_default():
     schema = _schema("DataClassification")
