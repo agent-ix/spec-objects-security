@@ -1,0 +1,20 @@
+<!-- reviewer repo=agent-ix/spec-objects-security visibility=public quoin=0.35.0 module=spec-objects-security@9bf425fc id=SR-1616 method=spec-review/ears-conformance lang=spec pr=spec-objects-security#65 model=gpt-6.1-sol run=3548c9d2-949f-427a-9f73-a76ca26647b9 -->
+
+
+
++++ [reviewer data]
+
+```yaml
+clean: true
+scope:
+- id: FR-024
+  path: spec/functional/FR-024-trust-boundary-trust-level.md
+  role: examined
+  excerpt: 'Each trust_boundary SHALL author frontmatter trust_level with exactly
+    one value from the existing TrustLevel enumeration: untrusted, semi_trusted, trusted,
+    or unknown.'
+findings: []
+bindings: []
+```
+
++++

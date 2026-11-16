@@ -526,7 +526,6 @@ model TrustBoundary {
 
   relations?: RelationDecl[];
   trust_level?: TrustLevel;
-  crosses?: SemanticId[];
   ...Record<never>;
 }
 
