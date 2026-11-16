@@ -131,7 +131,7 @@ def test_missing_role_specific_fields_fail_with_field_named_schema_errors(
     }
     errors = list(validator.iter_errors(processor))
     assert any("processor" in error.message for error in errors), errors
-    assert any("controller" in error.message for error in errors), errors
+    assert any(error.json_path.startswith("$.controller") for error in errors), errors
 
 
 @pytest.mark.trace("TC-251", "FR-028-AC-4")
