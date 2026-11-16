@@ -542,8 +542,10 @@ SERVED = FIXTURES / "served.md"
 
 def _requirement(root, req_id="FR-100"):
     """An FR from the installed iso skeleton, standing in for the served requirement."""
-    text = (iso_module_path() / "skeletons" / "fr.md").read_text().replace(
-        "FR-001", req_id
+    text = (
+        (iso_module_path() / "skeletons" / "fr.md")
+        .read_text()
+        .replace("FR-001", req_id)
     )
     (root / f"{req_id}.md").write_text(text)
 
@@ -591,9 +593,9 @@ def test_record_with_a_serves_entry_is_not_reported(tmp_path):
     assert result.returncode == 0, result.stderr
     assert _findings(result) == [], result.stderr
     # The verb must come from the iso edge registry, not be invented here.
-    registry = yaml.safe_load(
-        (iso_module_path() / "manifest.yaml").read_text()
-    )["edge_types"]
+    registry = yaml.safe_load((iso_module_path() / "manifest.yaml").read_text())[
+        "edge_types"
+    ]
     manifest = yaml.safe_load(MANIFEST_PATH.read_text())
     (relation,) = [
         r
