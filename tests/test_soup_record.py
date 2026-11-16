@@ -12,7 +12,6 @@ engine behaviour. All fixture components are fictional.
 from __future__ import annotations
 
 import copy
-import importlib.util
 import json
 import pathlib
 import re
@@ -31,6 +30,7 @@ from tests.conftest import (
     field,
     frontmatter,
     object_type,
+    validation_module_args,
 )
 from tests.test_skeletons_semantic import CREDENTIAL_SHAPES, extract
 
@@ -355,13 +355,6 @@ def test_a_validated_fixture_emits_exactly_the_keys_written(
 # -- FR-012: the vulnerability affects edge (engine) --------------------------
 
 
-def _iso() -> pathlib.Path:
-    spec = importlib.util.find_spec("spec_artifacts_iso")
-    if spec is None or not spec.origin:
-        pytest.fail("spec-artifacts-iso is not installed; run `poetry install`")
-    return pathlib.Path(spec.origin).parent
-
-
 def _validate(root, *flags):
     return subprocess.run(
         [
@@ -369,10 +362,7 @@ def _validate(root, *flags):
             "validate",
             "--okf",
             *flags,
-            "--module",
-            str(_iso()),
-            "--module",
-            str(PACKAGE_ROOT),
+            *validation_module_args(PACKAGE_ROOT),
             str(root),
         ],
         capture_output=True,
@@ -670,10 +660,7 @@ def test_serves_edge_to_a_requirement_in_another_repository_is_resolved(
             f"agent-ix/other-repo={record_repo}",
             "--repo",
             f"agent-ix/spec-objects-security={requirement_repo}",
-            "--module",
-            str(_iso()),
-            "--module",
-            str(PACKAGE_ROOT),
+            *validation_module_args(PACKAGE_ROOT),
         ],
         capture_output=True,
         text=True,
