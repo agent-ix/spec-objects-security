@@ -151,8 +151,9 @@ the Python package only: neither Node script is measured by it.
 | FR-016 | FR-016-AC-1..9 | TC-197..TC-203, TC-205 | ✅ AC-8 is also exercised with NFR-003-AC-2 by TC-205; AC-9 covers the decision vocabulary and conditional RFC 3339 expiry in TC-199 |
 | NFR-003 | NFR-003-AC-1..2, NFR-003-M-1..2 | TC-204, TC-205 | ✅ |
 | FR-023 | FR-023-AC-1..10 | TC-206..TC-217 | ✅ AC-7 is an inspection |
-| FR-024 | FR-024-AC-1..7 | TC-220..TC-223 | ✅ |
-| FR-025 | FR-025-AC-8..11 | TC-244..TC-247, TC-256 | 🚧 AC-11 starter-rule enum coverage remains with PLAT-1540; other FR-025 criteria remain with their owning tickets |
+| FR-024 | FR-024-AC-1..8 | TC-220..TC-223, TC-257 | ✅ |
+| FR-025 | FR-025-AC-1..6, FR-025-AC-8..14 | TC-258..TC-263, TC-244..TC-247, TC-256 | ✅ |
+| FR-025 | FR-025-AC-7 | TC-261 | 🚧 Both invalid modules are rejected; the current engine CLI does not include the rule, value, or remediation name in its diagnostic |
 | NFR-004 | NFR-004-AC-1..3, NFR-004-M-1..2 | TC-207, TC-211, TC-213, TC-214 | ✅ |
 | FR-017 | FR-017-AC-1..7 | TC-175..TC-186 | ✅ `quire clauses` loads strictly and cannot load the real module (the object-type edges come from another module), so TC-181, TC-183, TC-185 and TC-186 evaluate a module that holds only the set files |
 | FR-026 | FR-026-AC-1..7, FR-026-AC-9..10 | TC-224..TC-236, TC-242..TC-243 | ✅ |
@@ -348,6 +349,7 @@ the Python package only: neither Node script is measured by it.
 | TC-221 | trust_boundary requires frontmatter trust_level and refuses an absent or out-of-vocabulary value | Unit | P0 | FR-024-AC-1, FR-024-AC-2, FR-024-AC-3 | ✅ |
 | TC-222 | trust_level is extracted from frontmatter to the typed record key and is not derived from the Properties row | Unit | P0 | FR-024-AC-4, FR-024-AC-7 | ✅ |
 | TC-223 | the trust_boundary skeleton states an authored trust_level and validates | Unit | P0 | FR-024-AC-6 | ✅ |
+| TC-257 | TrustBoundaryFrontmatter exposes the required trust_level enum to flow-rule validation | Unit | P0 | FR-024-AC-8 | ✅ |
 | TC-224 | A threat model with a method, reviewer, covered connection, considered threat and all required sections validates | Integration | P0 | FR-026-AC-1 | ✅ |
 | TC-225 | The threat-model skeleton validates | Integration | P0 | FR-026-AC-1, FR-026-AC-10 | ✅ |
 | TC-226 | `method: guesswork` fails validation naming `method` | Integration | P0 | FR-026-AC-2 | ✅ |
@@ -373,6 +375,12 @@ the Python package only: neither Node script is measured by it.
 | TC-246 | A control protects a connection and a data sink without a disallowed-target diagnostic | Integration | P0 | FR-025-AC-9 | ✅ |
 | TC-247 | Control and data-classification manifests reference their open frontmatter schemas and declare the field locators | Unit | P0 | FR-025-AC-9, FR-025-AC-11 | ✅ |
 | TC-256 | The nine remediation declarations have the exact action, direction, field, value, description and order required by FR-025 | Unit | P0 | FR-025-AC-10 | ✅ |
+| TC-258 | The health and personal connection flow rules deny unprotected crossings and clear with an encrypt-in-transit control | Integration | P0 | FR-025-AC-1, FR-025-AC-2 | ✅ |
+| TC-259 | Sink rules deny uncovered regulated data and apply the expected agreement and safeguard conditions | Integration | P0 | FR-025-AC-3, FR-025-AC-4, FR-025-AC-5 | ✅ |
+| TC-260 | Empty flows are quiet and overlapping health sink findings retain both applicable rules | Integration | P0 | FR-025-AC-6, FR-025-AC-13 | ✅ |
+| TC-261 | Six rules load against published frontmatter schemas and reject invalid rule and remediation values | Integration | P0 | FR-025-AC-7, FR-025-AC-11, FR-025-AC-12 | 🚧 rejection passes; load diagnostics omit the invalid names and values |
+| TC-262 | Each starter rule has fail/pass fixtures and a remediation that clears its finding | Integration | P0 | FR-025-AC-5 | ✅ |
+| TC-263 | Starter rules and README preserve the declared privacy scope and public-source limits | Inspection | P0 | FR-025-AC-14 | ✅ |
 | TC-248 | Controller activity has scalar controller details, required context, and a valid covers connection | Integration | P0 | FR-028-AC-1 | ✅ |
 | TC-249 | Processor activity accepts its own identity, a non-empty controller list, and home regions without controller-only context | Unit | P0 | FR-028-AC-2 | ✅ |
 | TC-250 | Missing controller context or processor identity/controller-list requirements are rejected with field-named diagnostics | Unit | P0 | FR-028-AC-3 | ✅ |

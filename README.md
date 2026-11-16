@@ -64,6 +64,17 @@ This module adds the following object kinds (frontmatter `type:` value in parent
 | Policy | `policy` | A normative security policy, with a `Policy` section stating the policy text. |
 | Audit finding | `audit_finding` | A security-audit finding, with a `Recommendation` section stating the remediation recommendation. |
 
+## Privacy and data-flow guidance
+
+The starter flow rules identify data paths that need review. They do not decide whether a safeguard is adequate or establish compliance.
+
+- HIPAA transmission security: [45 CFR § 164.312(e)(1)](https://www.ecfr.gov/current/title-45/subtitle-A/subchapter-C/part-164/subpart-C/section-164.312).
+- HIPAA business associates: [45 CFR § 164.502(e)](https://www.ecfr.gov/current/title-45/subtitle-A/subchapter-C/part-164/subpart-E/section-164.502) and [§ 164.504(e)](https://www.ecfr.gov/current/title-45/subtitle-A/subchapter-C/part-164/subpart-E/section-164.504).
+- GDPR: [Articles 28 and 32](https://eur-lex.europa.eu/eli/reg/2016/679/oj/) cover processor obligations and security of processing, including pseudonymisation and encryption.
+- LLM privacy: [OWASP GenAI Security Project’s Top 10 for LLM Applications](https://genai.owasp.org/resource/owasp-genai-llm-top-10-2026/) includes guidance on sensitive information disclosure.
+
+The model does not map roles to purposes and data categories. A project that needs those checks defines its own role-to-purpose rules.
+
 ## How this module is used
 
 ### With quoin (recommended)
