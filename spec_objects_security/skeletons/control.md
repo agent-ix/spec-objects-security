@@ -3,10 +3,12 @@ id: CTRL-001
 title: "RefreshTokenRotation"
 type: control
 object: control
+safeguards: [encrypt-in-transit]
 ---
 <!-- control authoring skeleton (spec-objects-security). Fill every section with
      substantive content. Contract (manifest body_extraction asserts):
      - Frontmatter MUST carry id, title, type: control, object: control.
+     - Optional safeguards are the seven values in the Safeguard vocabulary.
      - "## Mappings" (H2, optional): a Set / Clause table, one row per clause
        of a clause set this control answers. Set is the key
        authority/id@version; no standard text belongs here. Threats and risks

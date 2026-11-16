@@ -141,6 +141,31 @@ enum RegulatedDataCategory {
   financial,
 }
 
+/** Safeguards a person may state for a control. */
+enum Safeguard {
+  `encrypt-in-transit`,
+  `encrypt-at-rest`,
+  anonymize,
+  pseudonymize,
+  `obtain-consent`,
+  `restrict-region`,
+  `validate-before-display`,
+}
+
+/** Frontmatter keys authored on a control document. */
+model ControlFrontmatter {
+  @minItems(1)
+  @uniqueItems
+  safeguards?: Safeguard[];
+}
+
+/** Frontmatter keys authored on a data-classification document. */
+model DataClassificationFrontmatter {
+  @minItems(1)
+  @uniqueItems
+  regulated_categories?: RegulatedDataCategory[];
+}
+
 /**
  * How far a zone is trusted. `untrusted` is the unassessed member, because the
  * least-granting reading of "we never decided" is "we do not trust it".
@@ -730,6 +755,9 @@ model Control {
 
   operations?: OperationDecl[];
   effectiveness?: ControlEffectiveness;
+  @minItems(1)
+  @uniqueItems
+  safeguards?: Safeguard[];
   mitigates?: SemanticId[];
   mappings?: ControlMapping[];
   ...Record<never>;

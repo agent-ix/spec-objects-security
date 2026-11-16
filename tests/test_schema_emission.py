@@ -6,7 +6,6 @@ Every assertion reads the `$id` base from `tests/conftest.py`.
 from __future__ import annotations
 
 import json
-import os
 import pathlib
 import shutil
 import subprocess
@@ -149,11 +148,21 @@ def test_the_built_wheel_contains_every_exported_schema():
 def test_the_npm_tarball_ships_the_manifest_beside_its_schemas():
     with tempfile.TemporaryDirectory() as tmp:
         pack = subprocess.run(
-            ["npm", "pack", "--pack-destination", tmp],
+            [
+                "npm",
+                "pack",
+                "--pack-destination",
+                tmp,
+                "--userconfig",
+                "/dev/null",
+                "--cache",
+                tmp,
+                "--registry",
+                "https://registry.npmjs.org/",
+            ],
             cwd=str(REPO_ROOT),
             capture_output=True,
             text=True,
-            env={**os.environ, "npm_config_registry": "https://registry.npmjs.org/"},
         )
         assert pack.returncode == 0, pack.stderr
         tarball = next(pathlib.Path(tmp).glob("*.tgz"))

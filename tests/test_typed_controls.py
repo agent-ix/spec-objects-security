@@ -597,7 +597,8 @@ def test_validated_fixtures_emit_exactly_the_keys_the_author_wrote(quire_engine)
         quire_engine, "control", "Control.json", control_skeleton()
     )
     record = control["record"]
-    assert set(record) == {"mappings", "effectiveness"}
+    assert set(record) == {"mappings", "effectiveness", "safeguards"}
+    assert record["safeguards"] == ["encrypt-in-transit"]
     assert all(set(row) == {"set", "clause"} for row in record["mappings"])
     assert [(r["set"], r["clause"]) for r in record["mappings"]] == [
         ("example.invalid/std@1", "EX-1"),

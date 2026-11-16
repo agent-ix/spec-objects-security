@@ -18,6 +18,7 @@ from tests.conftest import (
     SKELETONS_DIR,
     engine_tool,
     field,
+    validation_module_args,
 )
 
 
@@ -89,7 +90,12 @@ def validate(
             )
         manifest_path.write_text(yaml.safe_dump(manifest, sort_keys=False))
     return subprocess.run(
-        [engine_tool("quire"), "validate", "--okf", "--module", str(module)]
+        [
+            engine_tool("quire"),
+            "validate",
+            "--okf",
+            *validation_module_args(module),
+        ]
         + [str(bundle)],
         capture_output=True,
         text=True,
@@ -205,9 +211,7 @@ def test_covers_each_allowed_model_element(tmp_path):
             relationships=tuple(("covers", ident) for ident in targets.values())
         ),
     }
-    result = validate(
-        tmp_path, docs, extra_object_types=("part", "connection", "data_sink")
-    )
+    result = validate(tmp_path, docs)
     out = result.stdout + result.stderr
     assert "disallowed-edge-target" not in out, out
 
@@ -299,7 +303,6 @@ def test_threatens_does_not_allow_a_queue_target(tmp_path):
             "queue.md": target_doc("queue", "QUEUE-1"),
             "threat.md": threat_threatening("QUEUE-1"),
         },
-        extra_object_types=("queue",),
     )
     out = result.stdout + result.stderr
     assert "disallowed-edge-target" in out and "threatens" in out, out
