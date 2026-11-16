@@ -77,7 +77,12 @@ def test_safeguard_and_frontmatter_schemas_are_closed_where_required(
 
 @pytest.mark.trace("TC-245", "FR-025-AC-8", "FR-025-AC-9")
 def test_safeguards_are_optional_authored_frontmatter_and_the_skeleton_validates(
-    tmp_path, quire_engine, semantic_block, semantic_module, bundle_index
+    tmp_path,
+    quire_engine,
+    semantic_block,
+    semantic_module,
+    bundle_index,
+    schema_registry,
 ):
     skeleton = (SKELETONS_DIR / "control.md").read_text()
     result = validate(tmp_path, {"control.md": skeleton})
