@@ -6,7 +6,16 @@
     "safeguards": {
       "type": "array",
       "items": {
-        "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/Safeguard.json"
+        "type": "string",
+        "enum": [
+          "encrypt-in-transit",
+          "encrypt-at-rest",
+          "anonymize",
+          "pseudonymize",
+          "obtain-consent",
+          "restrict-region",
+          "validate-before-display"
+        ]
       },
       "minItems": 1,
       "uniqueItems": true

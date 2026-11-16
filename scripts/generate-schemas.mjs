@@ -112,6 +112,37 @@ function normalize(schemas, base, moduleFiles, coreBase) {
   for (const [name, schema] of schemas) walk(name, schema);
 }
 
+/**
+ * Frontmatter validators compile without the module schema registry (FR-069).
+ * Keep their closed enum members inline so validation stays offline while the
+ * regular data schemas can continue to reference the shared enum schemas.
+ */
+function inlineFrontmatterEnums(schemas) {
+  const byId = new Map(
+    schemas.map(([, schema]) => [schema.$id, schema]).filter(([id]) => id),
+  );
+  for (const [name, schema] of schemas) {
+    if (!name.endsWith("Frontmatter.json")) continue;
+    const visit = (node) => {
+      if (Array.isArray(node)) {
+        for (const item of node) visit(item);
+        return;
+      }
+      if (!node || typeof node !== "object") return;
+      if (typeof node.$ref === "string") {
+        const target = byId.get(node.$ref);
+        if (target && Array.isArray(target.enum)) {
+          delete node.$ref;
+          node.type = target.type;
+          node.enum = [...target.enum];
+        }
+      }
+      for (const value of Object.values(node)) visit(value);
+    };
+    visit(schema);
+  }
+}
+
 function render(schema) {
   return `${JSON.stringify(schema, null, 2)}\n`;
 }
@@ -138,6 +169,7 @@ function emit() {
     }
     const moduleFiles = new Set(mine.map(([name]) => name));
     normalize(mine, base, moduleFiles, semanticCoreBase());
+    inlineFrontmatterEnums(mine);
     const rendered = new Map(mine.map(([name, schema]) => [name, render(schema)]));
 
     return rendered;

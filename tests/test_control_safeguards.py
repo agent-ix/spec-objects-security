@@ -61,8 +61,9 @@ def test_safeguard_and_frontmatter_schemas_are_closed_where_required(
         assert not record_schema.is_valid(_control_record(safeguards=invalid)), invalid
 
     control_frontmatter = _schema("ControlFrontmatter")
-    assert control_frontmatter["properties"]["safeguards"]["items"]["$ref"].endswith(
-        "/Safeguard.json"
+    assert (
+        control_frontmatter["properties"]["safeguards"]["items"]["enum"]
+        == safeguard["enum"]
     )
     assert "required" not in control_frontmatter
     assert schema_registry("ControlFrontmatter").is_valid(
@@ -70,9 +71,9 @@ def test_safeguard_and_frontmatter_schemas_are_closed_where_required(
     )
 
     classification_frontmatter = _schema("DataClassificationFrontmatter")
-    assert classification_frontmatter["properties"]["regulated_categories"]["items"][
-        "$ref"
-    ].endswith("/RegulatedDataCategory.json")
+    assert classification_frontmatter["properties"]["regulated_categories"][
+        "items"
+    ]["enum"] == _schema("RegulatedDataCategory")["enum"]
     assert schema_registry("DataClassificationFrontmatter").is_valid(
         {"id": "CLASS-1", "regulated_categories": ["health"], "owner": "Ada"}
     )
