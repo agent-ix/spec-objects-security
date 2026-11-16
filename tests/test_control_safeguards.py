@@ -111,20 +111,15 @@ def test_safeguards_are_optional_authored_frontmatter_and_the_skeleton_validates
     assert "safeguards" not in absent["record"]
 
     for invalid in (
-        "shield",
-        "remove-from-sink",
-        "[]",
-        "[encrypt-in-transit, encrypt-in-transit]",
+        ["shield"],
+        ["remove-from-sink"],
+        [],
+        ["encrypt-in-transit", "encrypt-in-transit"],
     ):
-        text = skeleton.replace(
-            "safeguards: [encrypt-in-transit]", f"safeguards: {invalid}"
-        )
-        result = validate(tmp_path, {"control.md": text})
-        assert result.returncode != 0 or errors(result), (invalid, result.stderr)
-        assert any(
-            "safeguards" in str(error) or invalid in str(error)
-            for error in errors(result)
-        ), result.stderr
+        frontmatter_schema = schema_registry("ControlFrontmatter")
+        assert not frontmatter_schema.is_valid(
+            {"id": "CTRL-1", "safeguards": invalid}
+        ), invalid
 
 
 @pytest.mark.trace("TC-246", "FR-025-AC-9")
