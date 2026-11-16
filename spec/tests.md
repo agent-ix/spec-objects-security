@@ -152,7 +152,7 @@ the Python package only: neither Node script is measured by it.
 | NFR-003 | NFR-003-AC-1..2, NFR-003-M-1..2 | TC-204, TC-205 | ✅ |
 | FR-023 | FR-023-AC-1..10 | TC-206..TC-217 | ✅ AC-7 is an inspection |
 | FR-024 | FR-024-AC-1..7 | TC-220..TC-223 | ✅ |
-| FR-025 | FR-025-AC-8..9, FR-025-AC-11 | TC-244..TC-247 | 🚧 AC-11 starter-rule enum coverage remains with PLAT-1540; other FR-025 criteria remain with their owning tickets |
+| FR-025 | FR-025-AC-8..11 | TC-244..TC-247, TC-256 | 🚧 AC-11 starter-rule enum coverage remains with PLAT-1540; other FR-025 criteria remain with their owning tickets |
 | NFR-004 | NFR-004-AC-1..3, NFR-004-M-1..2 | TC-207, TC-211, TC-213, TC-214 | ✅ |
 | FR-017 | FR-017-AC-1..7 | TC-175..TC-186 | ✅ `quire clauses` loads strictly and cannot load the real module (the object-type edges come from another module), so TC-181, TC-183, TC-185 and TC-186 evaluate a module that holds only the set files |
 | FR-026 | FR-026-AC-1..7, FR-026-AC-9..10 | TC-224..TC-236, TC-242..TC-243 | ✅ |
@@ -372,6 +372,7 @@ the Python package only: neither Node script is measured by it.
 | TC-245 | Control safeguards are optional authored frontmatter, are extracted when present, and the skeleton validates | Integration | P0 | FR-025-AC-8, FR-025-AC-9 | ✅ |
 | TC-246 | A control protects a connection and a data sink without a disallowed-target diagnostic | Integration | P0 | FR-025-AC-9 | ✅ |
 | TC-247 | Control and data-classification manifests reference their open frontmatter schemas and declare the field locators | Unit | P0 | FR-025-AC-9, FR-025-AC-11 | ✅ |
+| TC-256 | The nine remediation declarations have the exact action, direction, field, value, description and order required by FR-025 | Unit | P0 | FR-025-AC-10 | ✅ |
 | TC-248 | Controller activity has scalar controller details, required context, and a valid covers connection | Integration | P0 | FR-028-AC-1 | ✅ |
 | TC-249 | Processor activity accepts its own identity, a non-empty controller list, and home regions without controller-only context | Unit | P0 | FR-028-AC-2 | ✅ |
 | TC-250 | Missing controller context or processor identity/controller-list requirements are rejected with field-named diagnostics | Unit | P0 | FR-028-AC-3 | ✅ |

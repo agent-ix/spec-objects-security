@@ -94,7 +94,7 @@ def validate(
             engine_tool("quire"),
             "validate",
             "--okf",
-            *validation_module_args(module),
+            *validation_module_args(module, include_iso=True),
         ]
         + [str(bundle)],
         capture_output=True,
@@ -118,7 +118,14 @@ def errors(result: subprocess.CompletedProcess) -> list[str]:
         line
         for line in (result.stdout + result.stderr).splitlines()
         if line
-        and not line.startswith(("warning:", "UnknownEdgeType:", "UnknownRole:"))
+        and not line.startswith(
+            (
+                "warning:",
+                "UnknownEdgeType:",
+                "UnknownRole:",
+                "DuplicateEdgeType: 'covers' contributed by modules",
+            )
+        )
     ]
 
 

@@ -8,8 +8,6 @@ selector of quire-rs FR-058; nothing is copied into this repository.
 
 from __future__ import annotations
 
-import importlib.util
-import pathlib
 import re
 import shutil
 import subprocess
@@ -17,23 +15,23 @@ import subprocess
 import pytest
 import yaml
 
-from tests.conftest import MANIFEST_PATH, PACKAGE_ROOT, SKELETONS_DIR, engine_tool
+from tests.conftest import (
+    MANIFEST_PATH,
+    PACKAGE_ROOT,
+    SKELETONS_DIR,
+    engine_tool,
+    iso_module_path,
+    validation_module_args,
+)
 
 CHECK = "unjustified-security-nfr"
 THREAT_REF = "ix://agent-ix/spec-objects-security/THREAT-001"
 RISK_REF = "ix://agent-ix/spec-objects-security/RISK-001"
 
 
-def _iso() -> pathlib.Path:
-    spec = importlib.util.find_spec("spec_artifacts_iso")
-    if spec is None or not spec.origin:
-        pytest.fail("spec-artifacts-iso is not installed; run `poetry install`")
-    return pathlib.Path(spec.origin).parent
-
-
 def _nfr(root, nfr_id, quality_attribute, mitigates=()):
     """Write an NFR from the iso skeleton, with one `mitigates` edge per target."""
-    text = (_iso() / "skeletons" / "nfr.md").read_text()
+    text = (iso_module_path() / "skeletons" / "nfr.md").read_text()
     text = text.replace("NFR-001", nfr_id)
     text = re.sub(
         r"^quality_attribute: .*$",
@@ -70,10 +68,7 @@ def _validate(root, *flags):
             "validate",
             "--okf",
             *flags,
-            "--module",
-            str(_iso()),
-            "--module",
-            str(PACKAGE_ROOT),
+            *validation_module_args(PACKAGE_ROOT, include_iso=True),
             str(root),
         ],
         capture_output=True,
@@ -86,7 +81,7 @@ def _validate_repos(repo_a, repo_b=None):
     args.extend(("--repo", f"o/a={repo_a}"))
     if repo_b is not None:
         args.extend(("--repo", f"o/b={repo_b}"))
-    args.extend(("--module", str(_iso()), "--module", str(PACKAGE_ROOT)))
+    args.extend(validation_module_args(PACKAGE_ROOT, include_iso=True))
     return subprocess.run(args, capture_output=True, text=True)
 
 

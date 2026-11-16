@@ -205,3 +205,45 @@ def test_manifest_declares_safeguard_and_classification_frontmatter():
         "path": ["regulated_categories"],
         "required": False,
     }
+
+
+@pytest.mark.trace("TC-256", "FR-025-AC-10")
+def test_manifest_declares_the_nine_remediations_with_exact_changes():
+    import yaml
+
+    manifest = yaml.safe_load((PACKAGE_ROOT / "manifest.yaml").read_text())
+    remediations = manifest["traceability"]["remediations"]
+    expected_safeguards = (
+        "encrypt-in-transit",
+        "encrypt-at-rest",
+        "anonymize",
+        "pseudonymize",
+        "obtain-consent",
+        "restrict-region",
+        "validate-before-display",
+    )
+    assert [entry["name"] for entry in remediations] == [
+        *expected_safeguards,
+        "obtain-processor-agreement",
+        "remove-from-sink",
+    ]
+    for name in expected_safeguards:
+        entry = next(item for item in remediations if item["name"] == name)
+        assert entry["adds"] == {
+            "edge": "protects",
+            "direction": "incoming",
+            "from": "control",
+            "field": "safeguards",
+            "value": name,
+        }
+        assert not ({"sets", "removes"} & entry.keys())
+    agreement = next(
+        item for item in remediations if item["name"] == "obtain-processor-agreement"
+    )
+    assert agreement["sets"] == {"field": "processor_agreement", "value": "covered"}
+    assert not ({"adds", "removes"} & agreement.keys())
+    remove = next(item for item in remediations if item["name"] == "remove-from-sink")
+    assert remove["removes"] == {"edge": "delivers_to", "direction": "incoming"}
+    assert not ({"adds", "sets"} & remove.keys())
+    assert all(item.get("description", "").strip() for item in remediations)
+    assert "first path step" in remove["description"]

@@ -15,6 +15,7 @@ Two policies are enforced here and nowhere else:
 from __future__ import annotations
 
 import functools
+import importlib.util
 import json
 import pathlib
 import re
@@ -44,8 +45,17 @@ def engine_tool(name: str) -> str:
     return path
 
 
-def validation_module_args(security_module: pathlib.Path | None = None) -> list[str]:
-    """Load this module with its cross-module object types and edge registries."""
+def iso_module_path() -> pathlib.Path:
+    iso_spec = importlib.util.find_spec("spec_artifacts_iso")
+    if iso_spec is None or not iso_spec.origin:
+        pytest.fail("spec-artifacts-iso is not installed; run `poetry install`")
+    return pathlib.Path(iso_spec.origin).parent
+
+
+def validation_module_args(
+    security_module: pathlib.Path | None = None, *, include_iso: bool = False
+) -> list[str]:
+    """Load the security and architecture registries used by the fixtures."""
     architecture_module = (
         pathlib.Path(__file__).resolve().parent.parent
         / "node_modules"
@@ -53,6 +63,8 @@ def validation_module_args(security_module: pathlib.Path | None = None) -> list[
         / "spec-objects-architecture"
     )
     modules = [security_module or PACKAGE_ROOT, architecture_module]
+    if include_iso:
+        modules.insert(0, iso_module_path())
     return [arg for module in modules for arg in ("--module", str(module))]
 
 

@@ -12,7 +12,6 @@ engine behaviour. All fixture components are fictional.
 from __future__ import annotations
 
 import copy
-import importlib.util
 import json
 import pathlib
 import re
@@ -30,7 +29,9 @@ from tests.conftest import (
     engine_tool,
     field,
     frontmatter,
+    iso_module_path,
     object_type,
+    validation_module_args,
 )
 from tests.test_skeletons_semantic import CREDENTIAL_SHAPES, extract
 
@@ -355,13 +356,6 @@ def test_a_validated_fixture_emits_exactly_the_keys_written(
 # -- FR-012: the vulnerability affects edge (engine) --------------------------
 
 
-def _iso() -> pathlib.Path:
-    spec = importlib.util.find_spec("spec_artifacts_iso")
-    if spec is None or not spec.origin:
-        pytest.fail("spec-artifacts-iso is not installed; run `poetry install`")
-    return pathlib.Path(spec.origin).parent
-
-
 def _validate(root, *flags):
     return subprocess.run(
         [
@@ -369,10 +363,7 @@ def _validate(root, *flags):
             "validate",
             "--okf",
             *flags,
-            "--module",
-            str(_iso()),
-            "--module",
-            str(PACKAGE_ROOT),
+            *validation_module_args(PACKAGE_ROOT, include_iso=True),
             str(root),
         ],
         capture_output=True,
@@ -551,7 +542,11 @@ SERVED = FIXTURES / "served.md"
 
 def _requirement(root, req_id="FR-100"):
     """An FR from the installed iso skeleton, standing in for the served requirement."""
-    text = (_iso() / "skeletons" / "fr.md").read_text().replace("FR-001", req_id)
+    text = (
+        (iso_module_path() / "skeletons" / "fr.md")
+        .read_text()
+        .replace("FR-001", req_id)
+    )
     (root / f"{req_id}.md").write_text(text)
 
 
@@ -598,7 +593,9 @@ def test_record_with_a_serves_entry_is_not_reported(tmp_path):
     assert result.returncode == 0, result.stderr
     assert _findings(result) == [], result.stderr
     # The verb must come from the iso edge registry, not be invented here.
-    registry = yaml.safe_load((_iso() / "manifest.yaml").read_text())["edge_types"]
+    registry = yaml.safe_load((iso_module_path() / "manifest.yaml").read_text())[
+        "edge_types"
+    ]
     manifest = yaml.safe_load(MANIFEST_PATH.read_text())
     (relation,) = [
         r
@@ -670,10 +667,7 @@ def test_serves_edge_to_a_requirement_in_another_repository_is_resolved(
             f"agent-ix/other-repo={record_repo}",
             "--repo",
             f"agent-ix/spec-objects-security={requirement_repo}",
-            "--module",
-            str(_iso()),
-            "--module",
-            str(PACKAGE_ROOT),
+            *validation_module_args(PACKAGE_ROOT, include_iso=True),
         ],
         capture_output=True,
         text=True,
