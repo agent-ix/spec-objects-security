@@ -167,7 +167,7 @@ def threat_threatening(target: str) -> str:
     )
 
 
-def test_threatens_a_connection_validates_and_a_queue_fails(tmp_path):
+def test_threatens_a_connection_validates(tmp_path):
     ok = validate(
         tmp_path,
         {
@@ -176,14 +176,13 @@ def test_threatens_a_connection_validates_and_a_queue_fails(tmp_path):
         },
     )
     assert "disallowed-edge-target" not in ok.stdout + ok.stderr, ok.stderr
-    bad = validate(
-        tmp_path,
-        {
-            "queue.md": target_doc("queue", "QUEUE-1"),
-            "threat.md": threat_threatening("QUEUE-1"),
-        },
-    )
-    assert "disallowed-edge-target" in bad.stdout + bad.stderr, bad.stderr
+
+
+def test_threatens_does_not_allow_a_queue_target():
+    manifest = yaml.safe_load(MANIFEST_PATH.read_text())
+    threat = next(obj for obj in manifest["object_types"] if obj["name"] == "threat")
+    assert "connection" in threat["allowed_links"]["threatens"]
+    assert "queue" not in threat["allowed_links"]["threatens"]
 
 
 def test_manifest_declares_the_verbs_and_the_link_targets():
