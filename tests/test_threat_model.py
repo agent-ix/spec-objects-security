@@ -19,9 +19,10 @@ from tests.conftest import (
     field,
 )
 
+
 def target_doc(kind: str, ident: str) -> str:
     front = f'id: {ident}\ntitle: "{ident}"\ntype: {kind}\nobject: {kind}\n'
-    return f"---\n{front}---\n# {ident}\n'
+    return f"---\n{front}---\n# {ident}\n"
 
 
 def edges(*pairs: tuple[str, str]) -> str:
