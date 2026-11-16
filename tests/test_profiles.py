@@ -8,7 +8,6 @@ rules in ``validate_profile`` are the definition.
 
 from __future__ import annotations
 
-import importlib
 import json
 import os
 import pathlib
@@ -28,6 +27,10 @@ ALLOWED_NAMES = {
     "eu-device-gdpr-ai-act",
     "web-app-baseline",
 }
+PUBLISHED_PACK_SOURCES = (
+    "github:agent-ix/spec-clauses-us-health//spec_clauses_us_health@v0.1.0",
+    "github:agent-ix/spec-clauses-eu-law//spec_clauses_eu_law@v0.1.0",
+)
 
 
 class ProfileError(ValueError):
@@ -268,8 +271,7 @@ def declared_keys(module_dir: pathlib.Path) -> set[tuple[str, str, str]]:
 
 @pytest.fixture(scope="session")
 def reference_modules(tmp_path_factory: pytest.TempPathFactory) -> list[pathlib.Path]:
-    """The reference module set: the modules `quoin module
-    ensure-defaults` installs into a fresh home, plus this module.
+    """The reference module set: Quoin defaults, both published packs, and us.
 
     Built from scratch rather than read from an ambient install, so a stale or
     unpublished local module cannot make a profile pass or fail. It is only
@@ -277,22 +279,39 @@ def reference_modules(tmp_path_factory: pytest.TempPathFactory) -> list[pathlib.
     """
     home = tmp_path_factory.mktemp("reference-home")
     result = subprocess.run(
-        [engine_tool("quoin"), "module", "ensure-defaults"],
-        env={**os.environ, "IX_HOME": str(home)},
+        [
+            engine_tool("quoin"),
+            "module",
+            "ensure-defaults",
+            "--config-root",
+            str(home),
+        ],
+        env=os.environ.copy(),
         capture_output=True,
         text=True,
         check=False,
     )
     assert result.returncode == 0, result.stderr
+    for source in PUBLISHED_PACK_SOURCES:
+        result = subprocess.run(
+            [
+                engine_tool("quoin"),
+                "module",
+                "install",
+                source,
+                "--config-root",
+                str(home),
+            ],
+            env=os.environ.copy(),
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        assert result.returncode == 0, f"{source}: {result.stderr}"
     installed = sorted((home / "filament" / "modules").glob("*"))
-    published_packs = [
-        pathlib.Path(importlib.import_module(package).__file__).parent
-        for package in ("spec_clauses_us_health", "spec_clauses_eu_law")
-    ]
     return [
         PACKAGE_ROOT,
         *(d for d in installed if (d / "manifest.yaml").is_file()),
-        *published_packs,
     ]
 
 
