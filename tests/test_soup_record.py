@@ -591,7 +591,9 @@ def test_record_with_a_serves_entry_is_not_reported(tmp_path):
     assert result.returncode == 0, result.stderr
     assert _findings(result) == [], result.stderr
     # The verb must come from the iso edge registry, not be invented here.
-    registry = yaml.safe_load((_iso() / "manifest.yaml").read_text())["edge_types"]
+    registry = yaml.safe_load(
+        (iso_module_path() / "manifest.yaml").read_text()
+    )["edge_types"]
     manifest = yaml.safe_load(MANIFEST_PATH.read_text())
     (relation,) = [
         r
