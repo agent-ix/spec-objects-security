@@ -89,10 +89,11 @@ def test_threat_and_risk_coverage_is_declared_not_coded() -> None:
     no verb and no direction.
 
     Criteria:
-      * ``threat`` and ``risk`` each carry an obligation to be mitigated;
-      * each has its OWN ``trace:<check>`` key so it is independently tunable
-        (quire-rs FR-057) — a repository can promote uncontrolled threats to
-        ``error`` while risk treatment is still being backfilled;
+      * only risks whose decision is undecided or not accepted require an
+        incoming mitigation; accepted risks are handled by the threat-model
+        flow rule;
+      * the relation check stays independently tunable through its own
+        ``trace:<check>`` key (quire-rs FR-057);
       * ``direction`` is ``incoming`` for the exposure-end relations: a control
         says what it mitigates, and a threat listing its own controls would
         duplicate the fact. The one exception is the reverse NFR relation
@@ -107,19 +108,20 @@ def test_threat_and_risk_coverage_is_declared_not_coded() -> None:
     by_name = {r["name"]: r for r in model["required_relations"]}
 
     assert set(by_name) == {
-        "threat-has-control",
         "risk-has-treatment",
         "security-nfr-has-mitigation-target",
         "soup-record-serves-requirement",
         "threat-model-covers-something",
         "processing-activity-covers-nothing",
     }
-    assert by_name["threat-has-control"]["from"] == "threat"
     assert by_name["risk-has-treatment"]["from"] == "risk"
+    assert by_name["risk-has-treatment"]["where"] == {
+        "field": "decision",
+        "values": ["undecided", "not_accepted"],
+    }
 
     checks = {r["check"] for r in by_name.values()}
     assert checks == {
-        "uncontrolled-threat",
         "untreated-risk",
         "unjustified-security-nfr",
         "soup-serves-no-requirement",

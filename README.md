@@ -55,9 +55,9 @@ This module adds the following object kinds (frontmatter `type:` value in parent
 | Password policy | `password_policy` | A password policy, with a `Rules` section enumerating the enforced password rules. |
 | MFA method | `mfa_method` | A multi-factor authentication method, with frontmatter `kind` (method kind) and optional `factor` (auth factor class). |
 | JWT claim | `jwt_claim` | A JWT/token claim, with a `Schema` section carrying a JSON code block of the claim's JSON Schema. |
-| Threat | `threat` | A threat, with frontmatter `stride_category` (STRIDE class) and `vector` (the attack vector). |
+| Threat | `threat` | A threat, with frontmatter `stride_category` (STRIDE class) and `vector` (the attack vector); it can target connections, sinks and trust boundaries. |
 | Control | `control` | A security control, with a `Mappings` section mapping it to the threats, risks and standards it addresses. |
-| Risk | `risk` | A risk-register entry, with frontmatter `likelihood` and `impact` qualitative ratings driving its score. |
+| Risk | `risk` | A risk-register entry, with qualitative `likelihood` and `impact` ratings and an authored `decision`; accepted or rejected decisions name `decided_by`. |
 | Vulnerability | `vulnerability` | A vulnerability, with frontmatter `severity` and optional `cve_id` linking the public advisory. |
 | Asset | `asset` | A protected asset, with a `Description` section describing the asset and why it matters. |
 | Attack surface | `attack_surface` | An attack surface, with an `Entry Points` section enumerating the externally reachable entry points. |
@@ -66,7 +66,7 @@ This module adds the following object kinds (frontmatter `type:` value in parent
 
 ## Privacy and data-flow guidance
 
-The starter flow rules identify data paths that need review. They do not decide whether a safeguard is adequate or establish compliance.
+The starter flow rules identify data paths that need review. They do not decide whether a safeguard is adequate or establish compliance. Threat-model flow rules require a threat on each covered classified connection crossing a boundary and each covered classified sink, and require every considered threat to have a mitigating control or an accepted, named risk. They do not generate threats or judge a person's risk decision.
 
 - HIPAA transmission security: [45 CFR § 164.312(e)(1)](https://www.ecfr.gov/current/title-45/subtitle-A/subchapter-C/part-164/subpart-C/section-164.312).
 - HIPAA business associates: [45 CFR § 164.502(e)](https://www.ecfr.gov/current/title-45/subtitle-A/subchapter-C/part-164/subpart-E/section-164.502) and [§ 164.504(e)](https://www.ecfr.gov/current/title-45/subtitle-A/subchapter-C/part-164/subpart-E/section-164.504).

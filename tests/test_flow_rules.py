@@ -16,7 +16,7 @@ ARCHITECTURE_MODULE = (
 )
 
 
-def _module(root, manifest: dict) -> None:
+def _module(root, manifest: dict, *, include_threat_rules: bool = False) -> None:
     """Project the starter rules into an isolated engine module.
 
     The packaged security module imports many unrelated roles and edges. This
@@ -40,18 +40,27 @@ def _module(root, manifest: dict) -> None:
     (schemas / "DataSinkFrontmatter.json").symlink_to(
         ARCHITECTURE_MODULE / "schemas" / "DataSinkFrontmatter.json"
     )
+    (schemas / "RiskFrontmatter.json").symlink_to(SCHEMAS_DIR / "RiskFrontmatter.json")
+    selected_names = {
+        "health-across-untrusted-boundary",
+        "personal-across-untrusted-boundary",
+        "regulated-data-to-uncovered-processor",
+        "health-in-llm-prompt-or-tool-call",
+        "health-in-log",
+        "health-display-unvalidated",
+    }
+    if include_threat_rules:
+        selected_names.update(
+            {
+                "crossing-without-threat",
+                "classified-sink-without-threat",
+                "threat-without-treatment",
+            }
+        )
     selected = [
         rule
         for rule in manifest["traceability"]["flow_rules"]
-        if rule["name"]
-        in {
-            "health-across-untrusted-boundary",
-            "personal-across-untrusted-boundary",
-            "regulated-data-to-uncovered-processor",
-            "health-in-llm-prompt-or-tool-call",
-            "health-in-log",
-            "health-display-unvalidated",
-        }
+        if rule["name"] in selected_names
     ]
     remediations = manifest["traceability"]["remediations"]
     probe = {
@@ -68,6 +77,9 @@ def _module(root, manifest: dict) -> None:
             "trust_boundary": {
                 "description": "A boundary between zones with different trust levels."
             },
+            "threat_model": {"description": "A threat model."},
+            "threat": {"description": "A threat."},
+            "risk": {"description": "A risk."},
         },
         "archetypes": [
             {
@@ -89,12 +101,33 @@ def _module(root, manifest: dict) -> None:
             {
                 "name": "control",
                 "frontmatter_schema_ref": "schemas/ControlFrontmatter.json",
-                "allowed_links": {"protects": ["connection", "data_sink"]},
+                "allowed_links": {
+                    "protects": ["connection", "data_sink"],
+                    "mitigates": ["threat"],
+                },
             },
             {
                 "name": "data_sink",
                 "frontmatter_schema_ref": "schemas/DataSinkFrontmatter.json",
                 "allowed_links": {"carries": ["data_classification"]},
+            },
+            {
+                "name": "threat_model",
+                "allowed_links": {
+                    "covers": ["connection", "data_sink"],
+                    "considers": ["threat"],
+                },
+            },
+            {
+                "name": "threat",
+                "allowed_links": {
+                    "threatens": ["connection", "data_sink", "trust_boundary"]
+                },
+            },
+            {
+                "name": "risk",
+                "frontmatter_schema_ref": "schemas/RiskFrontmatter.json",
+                "allowed_links": {"arises_from": ["threat"]},
             },
         ],
         "edge_types": {
@@ -106,6 +139,26 @@ def _module(root, manifest: dict) -> None:
             },
             "protects": {
                 "description": "Protects a connection.",
+                "category": "governance",
+            },
+            "covers": {
+                "description": "Threat model covers element.",
+                "category": "governance",
+            },
+            "considers": {
+                "description": "Threat model considers threat.",
+                "category": "governance",
+            },
+            "threatens": {
+                "description": "Threat targets element.",
+                "category": "governance",
+            },
+            "mitigates": {
+                "description": "Control mitigates threat.",
+                "category": "governance",
+            },
+            "arises_from": {
+                "description": "Risk arises from threat.",
                 "category": "governance",
             },
         },

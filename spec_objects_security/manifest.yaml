@@ -2,6 +2,10 @@ manifest_version: 1.0.0
 name: spec-objects-security
 version: 0.2.0
 description: 'Filament Module: tier-2 security and identity ObjectTypes (threats, controls, auth flows, secrets, policies)'
+grammar_severity:
+  trace:crossing-without-threat: error
+  trace:classified-sink-without-threat: error
+  trace:threat-without-treatment: error
 semantic:
   contract_version: 1.0.0
   package: agent-ix/spec-objects-security
@@ -512,6 +516,7 @@ object_types:
           after_heading: Invariants
           required: false
 - name: risk
+  frontmatter_schema_ref: schemas/RiskFrontmatter.json
   allowed_links:
     arises_from: [threat, vulnerability]
     references: [asset]
@@ -995,19 +1000,96 @@ traceability:
     check: health-display-unvalidated
     rationale: Health data shown on a screen needs validation before display.
     remediations: [validate-before-display]
+  - name: crossing-without-threat
+    subject: [connection]
+    match:
+    - path:
+      - edge: covers
+        direction: incoming
+        to: [threat_model]
+      field: id
+      present: true
+    - path:
+      - edge: carries
+        direction: outgoing
+        to: [data_classification]
+      field: id
+      present: true
+    - path:
+      - edge: crosses
+        direction: outgoing
+        to: [trust_boundary]
+      field: id
+      present: true
+    unless_any:
+    - path:
+      - edge: threatens
+        direction: incoming
+        to: [threat]
+      field: id
+      present: true
+    check: crossing-without-threat
+    rationale: A covered connection carrying classified data across a trust boundary needs a threat in its threat model.
+  - name: classified-sink-without-threat
+    subject: [data_sink]
+    match:
+    - path:
+      - edge: covers
+        direction: incoming
+        to: [threat_model]
+      field: id
+      present: true
+    - any_path:
+      - - edge: delivers_to
+          direction: incoming
+          to: [connection]
+        - edge: carries
+          direction: outgoing
+          to: [data_classification]
+      - - edge: carries
+          direction: outgoing
+          to: [data_classification]
+      field: id
+      present: true
+    unless_any:
+    - path:
+      - edge: threatens
+        direction: incoming
+        to: [threat]
+      field: id
+      present: true
+    check: classified-sink-without-threat
+    rationale: A covered sink receiving classified data needs a threat in its threat model.
+  - name: threat-without-treatment
+    subject: [threat]
+    match:
+    - path:
+      - edge: considers
+        direction: incoming
+        to: [threat_model]
+      field: id
+      present: true
+    unless_any:
+    - path:
+      - edge: mitigates
+        direction: incoming
+        to: [control]
+      field: id
+      present: true
+    - path:
+      - edge: arises_from
+        direction: incoming
+        to: [risk]
+      field: decision
+      any_of: [accepted]
+    check: threat-without-treatment
+    rationale: A threat considered in a threat model needs a mitigating control or an explicitly accepted risk.
   required_relations:
-  # STRIDE without coverage is a list. A threat with no inbound `mitigates` is
-  # one somebody enumerated and then left.
-  - name: threat-has-control
-    from: threat
-    edges: [mitigates]
-    to: []
-    direction: incoming
-    check: uncontrolled-threat
   # The same statement about the scored artefact rather than the mechanism: a
   # risk with no treatment was assessed and then dropped.
   - name: risk-has-treatment
     from: risk
+    where: {field: decision, values: [undecided, not_accepted]}
     edges: [mitigates]
     to: []
     direction: incoming
