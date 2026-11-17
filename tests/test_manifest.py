@@ -46,6 +46,18 @@ def test_dossier_flow_rules_select_only_the_authored_facts_it_needs() -> None:
     manifest = yaml.safe_load(MANIFEST_PATH.read_text())
     rules = {rule["name"]: rule for rule in manifest["traceability"]["flow_rules"]}
     expected_fields = {
+        "dossier-processing-activity-core-facts": {
+            "role",
+            "controller",
+            "home_regions",
+        },
+        "dossier-processing-activity-processor-facts": {"processor"},
+        "dossier-processing-activity-joint-controller-facts": {"joint_controllers"},
+        "dossier-processing-activity-representative-facts": {"representative"},
+        "dossier-processing-activity-dpo-facts": {"dpo_contact"},
+        "dossier-processing-activity-purpose-facts": {"purposes"},
+        "dossier-processing-activity-data-subject-facts": {"data_subject_categories"},
+        "dossier-processing-activity-retention-facts": {"retention"},
         "dossier-data-sink-facts": {
             "processor",
             "audience_roles",

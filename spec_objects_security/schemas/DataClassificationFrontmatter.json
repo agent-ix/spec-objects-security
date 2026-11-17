@@ -3,6 +3,9 @@
   "$id": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/DataClassificationFrontmatter.json",
   "type": "object",
   "properties": {
+    "title": {
+      "type": "string"
+    },
     "regulated_categories": {
       "type": "array",
       "items": {
@@ -17,5 +20,8 @@
       "uniqueItems": true
     }
   },
+  "required": [
+    "title"
+  ],
   "description": "Frontmatter keys authored on a data-classification document."
 }

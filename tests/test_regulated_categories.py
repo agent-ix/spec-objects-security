@@ -125,6 +125,23 @@ def test_frontmatter_category_enum_is_self_contained_for_quires_validator():
     assert "$ref" not in categories["items"]
 
 
+@pytest.mark.trace("TC-273", "FR-028-AC-9")
+def test_classification_title_is_declared_for_the_dossier_flow_selector(
+    schema_registry,
+):
+    path = (
+        pathlib.Path(__file__).resolve().parent
+        / "fixtures/flow_rules/health-in-llm-prompt-or-tool-call/pass/spec/CLASS-001.md"
+    )
+    authored = frontmatter(path.read_text())
+    schema = _schema("DataClassificationFrontmatter")
+    assert schema["properties"]["title"] == {"type": "string"}
+    assert schema["required"] == ["title"]
+    validator = schema_registry("DataClassificationFrontmatter")
+    assert validator.is_valid(authored)
+    assert not validator.is_valid({**authored, "title": 7})
+
+
 @pytest.mark.trace("TC-207", "FR-023-AC-1", "NFR-004-AC-1", "NFR-004-M-1")
 def test_the_property_is_an_optional_non_empty_unique_list_without_default():
     schema = _schema("DataClassification")

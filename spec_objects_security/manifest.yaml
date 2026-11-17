@@ -1102,6 +1102,108 @@ traceability:
       present: true
     check: dossier-processing-activity-coverage-facts
     rationale: The records-of-processing dossier reads the activity's authored coverage edges from the flow report.
+  - name: dossier-processing-activity-core-facts
+    subject: [processing_activity]
+    match:
+    - path: []
+      field: role
+      present: true
+    - path: []
+      field: controller
+      present: true
+    - path: []
+      field: home_regions
+      present: true
+    unless_any:
+    - path: []
+      field: id
+      present: true
+    check: dossier-processing-activity-core-facts
+    rationale: The records-of-processing dossier reports the activity's authored role, controller and home regions.
+  - name: dossier-processing-activity-processor-facts
+    subject: [processing_activity]
+    match:
+    - path: []
+      field: processor
+      present: true
+    unless_any:
+    - path: []
+      field: id
+      present: true
+    check: dossier-processing-activity-processor-facts
+    rationale: The records-of-processing dossier reports an authored processor contact when present.
+  - name: dossier-processing-activity-joint-controller-facts
+    subject: [processing_activity]
+    match:
+    - path: []
+      field: joint_controllers
+      present: true
+    unless_any:
+    - path: []
+      field: id
+      present: true
+    check: dossier-processing-activity-joint-controller-facts
+    rationale: The records-of-processing dossier reports authored joint controllers when present.
+  - name: dossier-processing-activity-representative-facts
+    subject: [processing_activity]
+    match:
+    - path: []
+      field: representative
+      present: true
+    unless_any:
+    - path: []
+      field: id
+      present: true
+    check: dossier-processing-activity-representative-facts
+    rationale: The records-of-processing dossier reports an authored representative when present.
+  - name: dossier-processing-activity-dpo-facts
+    subject: [processing_activity]
+    match:
+    - path: []
+      field: dpo_contact
+      present: true
+    unless_any:
+    - path: []
+      field: id
+      present: true
+    check: dossier-processing-activity-dpo-facts
+    rationale: The records-of-processing dossier reports an authored DPO contact when present.
+  - name: dossier-processing-activity-purpose-facts
+    subject: [processing_activity]
+    match:
+    - path: []
+      field: purposes
+      present: true
+    unless_any:
+    - path: []
+      field: id
+      present: true
+    check: dossier-processing-activity-purpose-facts
+    rationale: The records-of-processing dossier reports authored purposes when present.
+  - name: dossier-processing-activity-data-subject-facts
+    subject: [processing_activity]
+    match:
+    - path: []
+      field: data_subject_categories
+      present: true
+    unless_any:
+    - path: []
+      field: id
+      present: true
+    check: dossier-processing-activity-data-subject-facts
+    rationale: The records-of-processing dossier reports authored data-subject categories when present.
+  - name: dossier-processing-activity-retention-facts
+    subject: [processing_activity]
+    match:
+    - path: []
+      field: retention
+      present: true
+    unless_any:
+    - path: []
+      field: id
+      present: true
+    check: dossier-processing-activity-retention-facts
+    rationale: The records-of-processing dossier reports authored retention when present.
   - name: dossier-data-sink-facts
     subject: [data_sink]
     match:
