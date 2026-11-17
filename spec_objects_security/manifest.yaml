@@ -41,6 +41,8 @@ semantic:
 clause_sets:
 - clauses/nist-sp800-53-5.2.0.json
 - clauses/owasp-asvs-5.0.0.json
+roles:
+  trust_boundary: {description: A boundary between zones with different trust levels.}
 nav:
   category:
     slug: security
@@ -267,6 +269,7 @@ object_types:
   allowed_links:
     contains: [asset, api_endpoint]
     references: [trust_boundary]
+  frontmatter_schema_ref: schemas/TrustBoundaryFrontmatter.json
   data_schema:
     schema: schemas/TrustBoundary.json
   body_extraction:
@@ -820,6 +823,178 @@ object_types:
 # evidence of an unaddressed exposure. Nothing that reads a document on its own
 # can see it; only reading the edge set upward can.
 traceability:
+  flow_rules:
+  - name: health-across-untrusted-boundary
+    subject: [connection]
+    match:
+    - path:
+      - edge: carries
+        direction: outgoing
+        to: [data_classification]
+      field: regulated_categories
+      any_of: [health]
+    - path:
+      - edge: crosses
+        direction: outgoing
+        to: [trust_boundary]
+      field: trust_level
+      any_of: [untrusted, unknown]
+    unless_any:
+    - path:
+      - edge: protects
+        direction: incoming
+        to: [control]
+      field: safeguards
+      any_of: [encrypt-in-transit]
+    check: health-across-untrusted-boundary
+    rationale: Health data crossing an untrusted boundary needs an encrypt-in-transit safeguard.
+    remediations: [encrypt-in-transit]
+  - name: personal-across-untrusted-boundary
+    subject: [connection]
+    match:
+    - path:
+      - edge: carries
+        direction: outgoing
+        to: [data_classification]
+      field: regulated_categories
+      any_of: [personal]
+    - path:
+      - edge: crosses
+        direction: outgoing
+        to: [trust_boundary]
+      field: trust_level
+      any_of: [untrusted, unknown]
+    unless_any:
+    - path:
+      - edge: protects
+        direction: incoming
+        to: [control]
+      field: safeguards
+      any_of: [encrypt-in-transit]
+    check: personal-across-untrusted-boundary
+    rationale: Personal data crossing an untrusted boundary needs an encrypt-in-transit safeguard.
+    remediations: [encrypt-in-transit]
+  - name: regulated-data-to-uncovered-processor
+    subject: [data_sink]
+    match:
+    - any_path:
+      - - edge: delivers_to
+          direction: incoming
+          to: [connection]
+        - edge: carries
+          direction: outgoing
+          to: [data_classification]
+      - - edge: carries
+          direction: outgoing
+          to: [data_classification]
+      field: regulated_categories
+      any_of: [health, personal]
+    - path: []
+      field: processor_agreement
+      any_of: [not_covered, unknown]
+    unless_any:
+    - path:
+      - edge: protects
+        direction: incoming
+        to: [control]
+      field: safeguards
+      any_of: [anonymize]
+    - path: []
+      field: processor_agreement
+      any_of: [covered]
+    check: regulated-data-to-uncovered-processor
+    rationale: Health or personal data reaching a sink needs an agreement or anonymization safeguard.
+    remediations: [obtain-processor-agreement, anonymize]
+  - name: health-in-llm-prompt-or-tool-call
+    subject: [data_sink]
+    match:
+    - path: []
+      field: kind
+      any_of: [llm_prompt, tool_call]
+    - any_path:
+      - - edge: delivers_to
+          direction: incoming
+          to: [connection]
+        - edge: carries
+          direction: outgoing
+          to: [data_classification]
+      - - edge: carries
+          direction: outgoing
+          to: [data_classification]
+      field: regulated_categories
+      any_of: [health]
+    - path: []
+      field: processor_agreement
+      any_of: [not_covered, unknown]
+    unless_any:
+    - path:
+      - edge: protects
+        direction: incoming
+        to: [control]
+      field: safeguards
+      any_of: [anonymize, pseudonymize]
+    - path: []
+      field: processor_agreement
+      any_of: [covered]
+    check: health-in-llm-prompt-or-tool-call
+    rationale: Health data sent to a model prompt or tool call needs an agreement or privacy safeguard.
+    remediations: [obtain-processor-agreement, anonymize, pseudonymize]
+  - name: health-in-log
+    subject: [data_sink]
+    match:
+    - path: []
+      field: kind
+      any_of: [log]
+    - any_path:
+      - - edge: delivers_to
+          direction: incoming
+          to: [connection]
+        - edge: carries
+          direction: outgoing
+          to: [data_classification]
+      - - edge: carries
+          direction: outgoing
+          to: [data_classification]
+      field: regulated_categories
+      any_of: [health]
+    unless_any:
+    - path:
+      - edge: protects
+        direction: incoming
+        to: [control]
+      field: safeguards
+      any_of: [pseudonymize]
+    check: health-in-log
+    rationale: Health data reaching a log needs a pseudonymization safeguard.
+    remediations: [pseudonymize]
+  - name: health-display-unvalidated
+    subject: [data_sink]
+    match:
+    - path: []
+      field: kind
+      any_of: [ui_screen]
+    - any_path:
+      - - edge: delivers_to
+          direction: incoming
+          to: [connection]
+        - edge: carries
+          direction: outgoing
+          to: [data_classification]
+      - - edge: carries
+          direction: outgoing
+          to: [data_classification]
+      field: regulated_categories
+      any_of: [health]
+    unless_any:
+    - path:
+      - edge: protects
+        direction: incoming
+        to: [control]
+      field: safeguards
+      any_of: [validate-before-display]
+    check: health-display-unvalidated
+    rationale: Health data shown on a screen needs validation before display.
+    remediations: [validate-before-display]
   required_relations:
   # STRIDE without coverage is a list. A threat with no inbound `mitigates` is
   # one somebody enumerated and then left.

@@ -177,6 +177,11 @@ enum TrustLevel {
   `unknown`,
 }
 
+/** Frontmatter keys authored on a trust-boundary document. */
+model TrustBoundaryFrontmatter {
+  trust_level: TrustLevel;
+}
+
 /** Where secret material is in its life. `unknown` states that it was not tracked. */
 enum SecretLifecycle {
   proposed,

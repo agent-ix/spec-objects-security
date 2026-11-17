@@ -2,16 +2,42 @@
 
 from __future__ import annotations
 
+import json
+
 import pytest
 
 from tests.conftest import (
     PACKAGE_ROOT,
+    SCHEMAS_DIR,
     SKELETONS_DIR,
     frontmatter,
+    load_manifest,
 )
 from tests.test_regulated_categories import _extract
 
 SKELETON = SKELETONS_DIR / "trust_boundary.md"
+
+
+@pytest.mark.trace("TC-257", "FR-024-AC-8")
+def test_trust_boundary_frontmatter_schema_declares_the_engine_vocabulary():
+    manifest = load_manifest()
+    trust_boundary = next(
+        item for item in manifest["object_types"] if item["name"] == "trust_boundary"
+    )
+    assert trust_boundary["frontmatter_schema_ref"] == (
+        "schemas/TrustBoundaryFrontmatter.json"
+    )
+
+    schema = json.loads((SCHEMAS_DIR / "TrustBoundaryFrontmatter.json").read_text())
+    assert schema["type"] == "object"
+    assert "additionalProperties" not in schema
+    assert schema["required"] == ["trust_level"]
+    assert schema["properties"]["trust_level"]["enum"] == [
+        "untrusted",
+        "semi_trusted",
+        "trusted",
+        "unknown",
+    ]
 
 
 @pytest.mark.trace("TC-221", "FR-024-AC-1", "FR-024-AC-2", "FR-024-AC-3")

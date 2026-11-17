@@ -19,6 +19,9 @@ A trust boundary identifies the zone on its far side and the trust given to that
 - Each `trust_boundary` SHALL author frontmatter `trust_level` with exactly one value from the existing `TrustLevel` enumeration: `untrusted`, `semi_trusted`, `trusted`, or `unknown`.
 - The manifest locator for `trust_boundary` SHALL require frontmatter `trust_level`.
 - The manifest locator for `trust_boundary` SHALL extract frontmatter `trust_level` to the record key `trust_level`.
+- `TrustBoundaryFrontmatter.json` SHALL be an open frontmatter schema with required `trust_level`, whose enum is exactly
+  `untrusted`, `semi_trusted`, `trusted`, and `unknown`; the `trust_boundary` manifest entry SHALL reference it through
+  `frontmatter_schema_ref`, so flow-rule validation can resolve the field and its enum.
 - A missing `trust_level` SHALL make `quire validate` fail with a diagnostic naming `trust_level`.
 - An out-of-vocabulary value SHALL make `quire validate` fail with a diagnostic naming the value.
 - The emitted `TrustBoundary` schema SHALL admit the typed `trust_level` key.
@@ -38,6 +41,7 @@ A trust boundary identifies the zone on its far side and the trust given to that
 | FR-024-AC-5 | The `TrustBoundary` schema rejects a record containing `crosses`, while a valid typed `trust_level` is admitted; the `TrustLevelField` item rule remains. | Test |
 | FR-024-AC-6 | The trust-boundary skeleton carries valid frontmatter `trust_level` and validates. | Test |
 | FR-024-AC-7 | A trust level is not derived from the `## Properties` row: removing frontmatter leaves no extracted `trust_level` and validation fails. | Test |
+| FR-024-AC-8 | `TrustBoundaryFrontmatter.json` is an open schema with the required `trust_level` enum and is referenced by the `trust_boundary` manifest entry. | Test |
 
 ## Dependencies
 
