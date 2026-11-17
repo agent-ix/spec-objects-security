@@ -41,6 +41,45 @@ def test_no_duplicate_object_type_names() -> None:
     assert len(names) == len(set(names)), f"duplicate names: {names}"
 
 
+@pytest.mark.trace("TC-273", "FR-028-AC-9")
+def test_dossier_flow_rules_select_only_the_authored_facts_it_needs() -> None:
+    manifest = yaml.safe_load(MANIFEST_PATH.read_text())
+    rules = {rule["name"]: rule for rule in manifest["traceability"]["flow_rules"]}
+    expected_fields = {
+        "dossier-data-sink-facts": {
+            "processor",
+            "audience_roles",
+            "region",
+            "purpose",
+        },
+        "dossier-classification-title-facts": {"title"},
+    }
+    for name, fields in expected_fields.items():
+        rule = rules[name]
+        assert {condition["field"] for condition in rule["match"]} == fields
+        assert all(condition.get("present") is True for condition in rule["match"])
+        assert rule["unless_any"] == [{"path": [], "field": "id", "present": True}]
+
+    coverage = rules["dossier-processing-activity-coverage-facts"]
+    assert coverage["subject"] == ["processing_activity"]
+    assert coverage["match"][0]["field"] == "id"
+    assert coverage["match"][0]["path"] == [
+        {
+            "edge": "covers",
+            "direction": "outgoing",
+            "to": ["connection", "data_sink", "part"],
+        }
+    ]
+
+    delivery = rules["dossier-part-delivery-facts"]
+    assert delivery["subject"] == ["part"]
+    assert delivery["match"][0]["path"] == [
+        {"edge": "delivers_to", "direction": "outgoing", "to": ["data_sink"]}
+    ]
+    for rule in (coverage, delivery):
+        assert rule["unless_any"] == [{"path": [], "field": "id", "present": True}]
+
+
 @pytest.mark.trace("TC-006", "FR-001-AC-1")
 def test_lexicon_entries_are_whole() -> None:
     """TC-006: Every lexicon entry is exactly `{definition: <non-empty string>}`.

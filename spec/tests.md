@@ -398,6 +398,7 @@ the Python package only: neither Node script is measured by it.
 | TC-253 | A covers edge to a queue yields a wrong-kind diagnostic and a missing target yields a dangling-target diagnostic | Integration | P0 | FR-028-AC-6 | ✅ |
 | TC-254 | The processing-activity schemas are generated without drift, the manifest exports the object, and its skeleton validates | Integration | P0 | FR-028-AC-7 | ✅ |
 | TC-255 | Optional processing-activity frontmatter remains absent from the extracted processor record when omitted | Integration | P0 | FR-028-AC-8 | ✅ |
+| TC-273 | Flow-rule selectors expose the dossier's authored model fields and coverage edges without findings | Unit | P0 | FR-028-AC-9 | ✅ |
 
 ## Test Environment
 

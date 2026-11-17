@@ -1084,6 +1084,72 @@ traceability:
       any_of: [accepted]
     check: threat-without-treatment
     rationale: A threat considered in a threat model needs a mitigating control or an explicitly accepted risk.
+  # FR-207 consumes model facts only through quire.flow-report/v1. These
+  # no-finding selectors make the authored dossier fields and coverage edges
+  # part of that report without assigning them a security judgement.
+  - name: dossier-processing-activity-coverage-facts
+    subject: [processing_activity]
+    match:
+    - path:
+      - edge: covers
+        direction: outgoing
+        to: [connection, data_sink, part]
+      field: id
+      present: true
+    unless_any:
+    - path: []
+      field: id
+      present: true
+    check: dossier-processing-activity-coverage-facts
+    rationale: The records-of-processing dossier reads the activity's authored coverage edges from the flow report.
+  - name: dossier-data-sink-facts
+    subject: [data_sink]
+    match:
+    - path: []
+      field: processor
+      present: true
+    - path: []
+      field: audience_roles
+      present: true
+    - path: []
+      field: region
+      present: true
+    - path: []
+      field: purpose
+      present: true
+    unless_any:
+    - path: []
+      field: id
+      present: true
+    check: dossier-data-sink-facts
+    rationale: The records-of-processing dossier reports authored recipient and location context from the flow report.
+  - name: dossier-classification-title-facts
+    subject: [data_classification]
+    match:
+    - path: []
+      field: title
+      present: true
+    unless_any:
+    - path: []
+      field: id
+      present: true
+    check: dossier-classification-title-facts
+    rationale: The records-of-processing dossier names classifications by their authored title from the flow report.
+  - name: dossier-part-delivery-facts
+    subject: [part]
+    match:
+    - path:
+      - edge: delivers_to
+        direction: outgoing
+        to: [data_sink]
+      field: id
+      present: true
+    unless_any:
+    - path: []
+      field: id
+      present: true
+    check: dossier-part-delivery-facts
+    rationale: The records-of-processing dossier follows authored part delivery edges through the flow report.
   required_relations:
   # The same statement about the scored artefact rather than the mechanism: a
   # risk with no treatment was assessed and then dropped.
