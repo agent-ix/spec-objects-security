@@ -161,6 +161,7 @@ model ControlFrontmatter {
 
 /** Frontmatter keys authored on a data-classification document. */
 model DataClassificationFrontmatter {
+  title: string;
   @minItems(1)
   @uniqueItems
   regulated_categories?: RegulatedDataCategory[];

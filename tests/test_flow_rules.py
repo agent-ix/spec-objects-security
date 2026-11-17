@@ -3,13 +3,14 @@
 from __future__ import annotations
 
 import json
+import os
+import pathlib
 import shutil
 import subprocess
 
 import pytest
 import yaml
-
-from tests.conftest import PACKAGE_ROOT, SCHEMAS_DIR, engine_tool
+from conftest import PACKAGE_ROOT, SCHEMAS_DIR, engine_tool, iso_module_path
 
 ARCHITECTURE_MODULE = (
     PACKAGE_ROOT.parent / "node_modules" / "@agent-ix" / "spec-objects-architecture"
@@ -195,6 +196,137 @@ def _flow_report(scope, module) -> dict:
     )
     assert result.returncode == 0, result.stderr
     return json.loads(result.stdout)
+
+
+@pytest.mark.trace("TC-273", "FR-028-AC-9")
+def test_dossier_facts_are_visible_in_flow_report_for_plat_fixture(tmp_path):
+    fixture_value = os.environ.get("PLAT1658_ARCHITECTURE_FIXTURE_ROOT")
+    if not fixture_value:
+        pytest.skip(
+            "set PLAT1658_ARCHITECTURE_FIXTURE_ROOT to the PLAT fixture checkout"
+        )
+    fixture_root = pathlib.Path(fixture_value).resolve()
+    assert fixture_root.is_dir(), fixture_root
+    architecture_module = fixture_root.parents[3] / "spec_objects_architecture"
+    assert (architecture_module / "manifest.yaml").is_file(), architecture_module
+    iso_module_value = os.environ.get("PLAT1658_SPEC_ARTIFACTS_ISO_MODULE")
+    iso_module = (
+        pathlib.Path(iso_module_value) if iso_module_value else iso_module_path()
+    )
+
+    activity = tmp_path / "activity"
+    activity_docs = activity / "spec" / "model"
+    activity_docs.mkdir(parents=True)
+    (activity_docs / "PA-001.md").write_text(
+        "---\n"
+        "id: PA-001\n"
+        "title: Support processing\n"
+        "type: processing_activity\n"
+        "role: controller\n"
+        'controller: "Example Controller; privacy@example.invalid"\n'
+        "home_regions: [eu]\n"
+        "joint_controllers: [Joint Controller]\n"
+        "representative: Representative\n"
+        "dpo_contact: dpo@example.invalid\n"
+        "purposes: [provide-support]\n"
+        "data_subject_categories: [customers]\n"
+        "retention: support-period\n"
+        "relationships:\n"
+        "  - target: ix://example/fixtures/CONN-DELIVERS\n"
+        "    type: covers\n"
+        "  - target: ix://example/fixtures/PART-DELIVERS\n"
+        "    type: covers\n"
+        "---\n"
+        "# Support processing\n"
+    )
+    (activity_docs / "PA-002.md").write_text(
+        "---\n"
+        "id: PA-002\n"
+        "title: Processor work\n"
+        "type: processing_activity\n"
+        "role: processor\n"
+        "processor: Processor Co; processor@example.invalid\n"
+        "controller: [Controller Co; controller@example.invalid]\n"
+        "home_regions: [US]\n"
+        "relationships:\n"
+        "  - target: ix://example/fixtures/CONN-DELIVERS\n"
+        "    type: covers\n"
+        "---\n"
+        "# Processor work\n"
+    )
+    module_args = [
+        arg
+        for module in (
+            PACKAGE_ROOT,
+            architecture_module,
+            iso_module,
+        )
+        for arg in ("--module", str(module))
+    ]
+    result = subprocess.run(
+        [
+            engine_tool("quire"),
+            "relations",
+            "--repo",
+            f"example/fixtures={fixture_root}",
+            "--repo",
+            f"example/pa={activity}",
+            *module_args,
+            "--flow",
+            "--json",
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
+    report = json.loads(result.stdout)
+
+    activities = {item["id"]: item for item in report["facts"]["processing_activity"]}
+    controller = activities["PA-001"]
+    assert {
+        "role",
+        "controller",
+        "home_regions",
+        "joint_controllers",
+        "representative",
+        "dpo_contact",
+        "purposes",
+        "data_subject_categories",
+        "retention",
+    } <= set(controller["fields"])
+    assert {(edge["edge"], edge["target"]["id"]) for edge in controller["edges"]} == {
+        ("covers", "CONN-DELIVERS"),
+        ("covers", "PART-DELIVERS"),
+    }
+    assert {"processor", "controller", "home_regions"} <= set(
+        activities["PA-002"]["fields"]
+    )
+    sink = next(
+        item for item in report["facts"]["data_sink"] if item["id"] == "SINK-LLM-PROMPT"
+    )
+    assert {
+        "processor",
+        "audience_roles",
+        "region",
+        "purpose",
+    } <= set(sink["fields"])
+    classification = next(
+        item
+        for item in report["facts"]["data_classification"]
+        if item["id"] == "CLASS-PHI"
+    )
+    assert classification["fields"]["title"] == "HealthData"
+    part = next(
+        item for item in report["facts"]["part"] if item["id"] == "PART-DELIVERS"
+    )
+    assert any(
+        edge["edge"] == "delivers_to" and edge["target"]["id"] == "SINK-LLM-PROMPT"
+        for edge in part["edges"]
+    )
+    assert not [
+        denial for denial in report["denials"] if denial["rule"].startswith("dossier-")
+    ]
 
 
 @pytest.mark.trace("TC-258", "FR-025-AC-1", "FR-025-AC-2")

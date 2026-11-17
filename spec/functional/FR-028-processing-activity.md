@@ -50,6 +50,13 @@ The security module SHALL let a person describe one processing activity and iden
 - The `processing_activity` skeleton SHALL show both role forms, the required fields for each form and a valid `covers` edge.
 - The skeleton SHALL validate with `quire validate`.
 
+### Dossier flow facts
+
+- The module SHALL select authored `role`, `controller` and `home_regions` fields on `processing_activity`, and any authored `processor`, `joint_controllers`, `representative`, `dpo_contact`, `purposes`, `data_subject_categories` and `retention` fields, in `traceability.flow_rules`.
+- The module SHALL select outgoing `covers` targets on `processing_activity` and outgoing `delivers_to` targets on `part` in `traceability.flow_rules`, so FR-096 facts can carry those authored edges.
+- The module SHALL select `processor`, `audience_roles`, `region` and `purpose` on `data_sink`, and `title` on `data_classification`, so a downstream dossier can report these authored facts.
+- These selectors SHALL NOT emit a finding for a source document with an authored `id`; they expose facts without judging the data-flow model.
+
 ## Acceptance Criteria
 
 | ID | Criteria | Verification |
@@ -62,6 +69,7 @@ The security module SHALL let a person describe one processing activity and iden
 | FR-028-AC-6 | A `covers` edge to a `queue` fails with a wrong-kind diagnostic, and an edge to an absent target fails with a dangling-target diagnostic. | Test |
 | FR-028-AC-7 | The module exports `processing_activity`; its generated schema and skeleton pass the module schema-drift and `quire validate` checks. | Test |
 | FR-028-AC-8 | Omitting any optional authored field leaves it absent in the extracted record; no omitted value is populated from another field, artifact, code or runtime source. | Test |
+| FR-028-AC-9 | FR-096 flow rules expose activity `role`, `controller`, `home_regions`, and any authored `processor`, `joint_controllers`, `representative`, `dpo_contact`, `purposes`, `data_subject_categories` and `retention`; activity `covers` and part `delivers_to` edges; sink `processor`, `audience_roles`, `region` and `purpose`; and classification `title`, without a finding on documents with an authored `id`. | Test |
 
 ## Dependencies
 
