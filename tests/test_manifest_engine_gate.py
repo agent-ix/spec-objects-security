@@ -41,7 +41,7 @@ def _quire_validate(module, tmp_path):
             _tool("quire"),
             "validate",
             "--okf",
-            *validation_module_args(module, include_iso=True),
+            *validation_module_args(module),
             str(docs),
         ],
         capture_output=True,

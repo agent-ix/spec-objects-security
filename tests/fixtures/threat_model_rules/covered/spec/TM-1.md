@@ -6,9 +6,9 @@ object: threat_model
 method: stride_per_element
 reviewed_by: Person
 relationships:
-  - type: covers
+  - type: scopes
     target: CONN-1
-  - type: covers
+  - type: scopes
     target: SINK-1
   - type: considers
     target: THREAT-1

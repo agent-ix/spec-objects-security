@@ -13,7 +13,7 @@ reviewed_by: "A. Person"
        stride_per_interaction) and reviewed_by (the person who led the analysis).
      - "## Properties" (H2): the typed declaration; ThreatModel.json requires
        an identity row.
-     - Author at least one `covers` edge (part, connection, data_sink or
+     - Author at least one `scopes` edge (part, connection, data_sink or
        trust_boundary) in `relationships`; `considers` edges (threat) are
        optional.
      - "## Scope", "## Assumptions" and "## Out of scope" (H2) are required and

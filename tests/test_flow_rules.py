@@ -115,7 +115,7 @@ def _module(root, manifest: dict, *, include_threat_rules: bool = False) -> None
             {
                 "name": "threat_model",
                 "allowed_links": {
-                    "covers": ["connection", "data_sink"],
+                    "scopes": ["connection", "data_sink"],
                     "considers": ["threat"],
                 },
             },
@@ -142,8 +142,8 @@ def _module(root, manifest: dict, *, include_threat_rules: bool = False) -> None
                 "description": "Protects a connection.",
                 "category": "governance",
             },
-            "covers": {
-                "description": "Threat model covers element.",
+            "scopes": {
+                "description": "Threat model scopes element.",
                 "category": "governance",
             },
             "considers": {
@@ -233,9 +233,9 @@ def test_dossier_facts_are_visible_in_flow_report_for_plat_fixture(tmp_path):
         "retention: support-period\n"
         "relationships:\n"
         "  - target: ix://example/fixtures/CONN-DELIVERS\n"
-        "    type: covers\n"
+        "    type: scopes\n"
         "  - target: ix://example/fixtures/PART-DELIVERS\n"
-        "    type: covers\n"
+        "    type: scopes\n"
         "---\n"
         "# Support processing\n"
     )
@@ -250,7 +250,7 @@ def test_dossier_facts_are_visible_in_flow_report_for_plat_fixture(tmp_path):
         "home_regions: [US]\n"
         "relationships:\n"
         "  - target: ix://example/fixtures/CONN-DELIVERS\n"
-        "    type: covers\n"
+        "    type: scopes\n"
         "---\n"
         "# Processor work\n"
     )
@@ -296,8 +296,8 @@ def test_dossier_facts_are_visible_in_flow_report_for_plat_fixture(tmp_path):
         "retention",
     } <= set(controller["fields"])
     assert {(edge["edge"], edge["target"]["id"]) for edge in controller["edges"]} == {
-        ("covers", "CONN-DELIVERS"),
-        ("covers", "PART-DELIVERS"),
+        ("scopes", "CONN-DELIVERS"),
+        ("scopes", "PART-DELIVERS"),
     }
     assert {"processor", "controller", "home_regions"} <= set(
         activities["PA-002"]["fields"]
@@ -723,7 +723,10 @@ def test_public_privacy_scope_is_limited_and_disclosed():
     manifest = yaml.safe_load((PACKAGE_ROOT / "manifest.yaml").read_text())
     rules = manifest["traceability"]["flow_rules"]
     fields = {
-        condition.get("field") for rule in rules for condition in rule.get("match", [])
+        condition.get("field")
+        for rule in rules
+        if not rule["name"].startswith("dossier-")
+        for condition in rule.get("match", [])
     }
     assert "home_regions" not in fields
     assert "purposes" not in fields

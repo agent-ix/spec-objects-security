@@ -355,10 +355,10 @@ the Python package only: neither Node script is measured by it.
 | TC-226 | `method: guesswork` fails validation naming `method` | Integration | P0 | FR-026-AC-2 | ✅ |
 | TC-227 | `ThreatModelMethod.json` has exactly the two declared members | Unit | P0 | FR-026-AC-2 | ✅ |
 | TC-228 | A missing or empty `reviewed_by` fails validation naming the field | Integration | P0 | FR-026-AC-3 | ✅ |
-| TC-229 | A threat model without a `covers` edge fails with the declared completeness diagnostic | Integration | P0 | FR-026-AC-4 | ✅ |
-| TC-230 | `covers` edges to a part, connection, data sink and trust boundary validate | Integration | P0 | FR-026-AC-4 | ✅ |
-| TC-231 | `covers` to a risk and `considers` to a control each yield a link diagnostic | Integration | P0 | FR-026-AC-5 | ✅ |
-| TC-232 | A threat model with a `covers` edge and no `considers` edge validates | Integration | P0 | FR-026-AC-5 | ✅ |
+| TC-229 | A threat model without a `scopes` edge fails with the declared completeness diagnostic | Integration | P0 | FR-026-AC-4 | ✅ |
+| TC-230 | `scopes` edges to a part, connection, data sink and trust boundary validate | Integration | P0 | FR-026-AC-4 | ✅ |
+| TC-231 | `scopes` to a risk and `considers` to a control each yield a link diagnostic | Integration | P0 | FR-026-AC-5 | ✅ |
+| TC-232 | A threat model with a `scopes` edge and no `considers` edge validates | Integration | P0 | FR-026-AC-5 | ✅ |
 | TC-233 | The manifest declares the scope and consideration links and the expanded threat targets | Unit | P0 | FR-026-AC-4, FR-026-AC-9, FR-027-AC-7 | ✅ |
 | TC-234 | A missing required threat-model section fails naming that section | Integration | P0 | FR-026-AC-6 | ✅ |
 | TC-235 | The threat-model schema has no defaults, requires its authored fields and extraction preserves their authored values | Integration | P0 | FR-026-AC-7, FR-026-AC-10 | ✅ |
@@ -390,15 +390,15 @@ the Python package only: neither Node script is measured by it.
 | TC-270 | The risk frontmatter enum schema is open, generated, and referenced by the risk archetype without defaults | Unit | P0 | FR-027-AC-8 | ✅ |
 | TC-271 | A connection lacking carries or crossing independently remains outside the crossing-threat rule | Integration | P0 | FR-027-AC-1 | ✅ |
 | TC-272 | An empty corpus remains quiet when all three threat-model flow rules are loaded | Integration | P0 | FR-027-AC-5 | ✅ |
-| TC-248 | Controller activity has scalar controller details, required context, and a valid covers connection | Integration | P0 | FR-028-AC-1 | ✅ |
+| TC-248 | Controller activity has scalar controller details, required context, and a valid scopes connection | Integration | P0 | FR-028-AC-1 | ✅ |
 | TC-249 | Processor activity accepts its own identity, a non-empty controller list, and home regions without controller-only context | Unit | P0 | FR-028-AC-2 | ✅ |
 | TC-250 | Missing controller context or processor identity/controller-list requirements are rejected with field-named diagnostics | Unit | P0 | FR-028-AC-3 | ✅ |
 | TC-251 | Unknown role, empty home-region list and an unsupported region value are rejected | Unit | P0 | FR-028-AC-4 | ✅ |
-| TC-252 | An activity without a covers edge emits the declared located advisory warning | Integration | P0 | FR-028-AC-5 | ✅ |
-| TC-253 | A covers edge to a queue yields a wrong-kind diagnostic and a missing target yields a dangling-target diagnostic | Integration | P0 | FR-028-AC-6 | ✅ |
+| TC-252 | An activity without a scopes edge emits the declared located advisory warning | Integration | P0 | FR-028-AC-5 | ✅ |
+| TC-253 | A scopes edge to a queue yields a wrong-kind diagnostic and a missing target yields a dangling-target diagnostic | Integration | P0 | FR-028-AC-6 | ✅ |
 | TC-254 | The processing-activity schemas are generated without drift, the manifest exports the object, and its skeleton validates | Integration | P0 | FR-028-AC-7 | ✅ |
 | TC-255 | Optional processing-activity frontmatter remains absent from the extracted processor record when omitted | Integration | P0 | FR-028-AC-8 | ✅ |
-| TC-273 | Flow-rule selectors expose the dossier's authored model fields and coverage edges without findings | Unit | P0 | FR-028-AC-9 | ✅ |
+| TC-273 | Flow-rule selectors expose the dossier's authored model fields and scope edges without findings | Unit | P0 | FR-028-AC-9 | ✅ |
 
 ## Test Environment
 

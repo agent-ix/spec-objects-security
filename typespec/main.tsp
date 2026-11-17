@@ -568,7 +568,7 @@ model Risk {
 }
 
 /**
- * A scoped threat analysis a person wrote. `covers` and `considers` are edges
+ * A scoped threat analysis a person wrote. `scopes` and `considers` are edges
  * authored in the document's relationships, not members here. There is no
  * default for `method` or `reviewed_by`.
  */
