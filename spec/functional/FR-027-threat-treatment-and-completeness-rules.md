@@ -131,7 +131,7 @@ have a threat; a corpus without a `threat_model` yields no finding from any of t
 ## Engine impact
 
 None of the rule behaviors can be evaluated until quire-rs delivers `flow_rules` (FR-096, including `present: true`; the
-`traceability.flow_rules` loader of PLAT-1537/PLAT-1538), the `covers` verb (PLAT-1657) exists in this module's manifest,
+`traceability.flow_rules` loader of PLAT-1537/PLAT-1538), spec-artifacts-iso supplies the canonical `covers` verb,
 and the `connection`, `data_sink` and `crosses` objects exist in spec-objects-architecture. The enum, link, `Risk` and
 manifest data can be authored and schema-validated first. This requirement does not promise that code.
 
@@ -165,6 +165,6 @@ module-only checks.
 ## Dependencies
 
 - **Upstream**: [FR-004](./FR-004-role-schemas.md), [FR-008](./FR-008-security-nfr-needs-mitigation-target.md) (amended here), quire-rs FR-058 (`where` selector), [FR-025](./FR-025-control-safeguards-and-starter-flow-rules.md),
-  [FR-026](./FR-026-threat-model-object.md); quire-rs FR-096; PLAT-1537 / PLAT-1538; PLAT-1657 (`covers`); the architecture
+  [FR-026](./FR-026-threat-model-object.md); quire-rs FR-096; PLAT-1537 / PLAT-1538; spec-artifacts-iso (`covers`); the architecture
   objects `connection`, `data_sink` and the `crosses` edge.
 - **Downstream**: quoin FR-202 (the report reads the findings of these three checks), PLAT-1543, PLAT-1544.

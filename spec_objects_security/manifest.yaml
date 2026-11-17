@@ -54,7 +54,6 @@ nav:
     icon: ShieldCheck
     order: 54
 edge_types:
-  covers: { description: "A source document covers a target: the target is in its scope.", category: governance }
   considers: { description: "Threat model considers the threat at the target.", category: governance }
 archetypes: []
 grammars: []

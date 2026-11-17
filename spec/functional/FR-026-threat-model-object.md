@@ -31,10 +31,10 @@ A `threat_model` is a document a person writes. It does not generate threats, ra
 The method names a free, public technique: STRIDE applied per element or per interaction, as described in OWASP's free
 threat-modelling guidance and in NIST SP 800-154 (free). This requirement names and quotes no paywalled standard.
 
-The `covers` verb is declared in this module's manifest `edge_types` by PLAT-1657 and is reused here, as a generic scope
-verb (a source document covers a target); this requirement adds no second verb for scope. Until PLAT-1657 lands, `covers` is
-a hard upstream dependency of this requirement. This requirement declares the new verb `considers` in the same `edge_types`
-block, with a description (a threat model considers a threat) and the same category as `covers`. The objects `connection`, `data_sink` and `part`, and the `crosses` edge, are owned by
+The `covers` verb is owned by spec-artifacts-iso as a generic traceability relation (a source document covers a target).
+This module reuses that canonical edge and SHALL NOT declare a duplicate. A resolved module set loading this module SHALL
+include spec-artifacts-iso. This requirement declares the new verb `considers` in this module's `edge_types` block, with a
+description (a threat model considers a threat). The objects `connection`, `data_sink` and `part`, and the `crosses` edge, are owned by
 `agent-ix/spec-objects-architecture` (PR #51 / PLAT-1532 and PR #52 / PLAT-1440); `trust_boundary` is declared by this
 module. This requirement names no requirement id for the architecture objects until those land.
 
@@ -67,8 +67,9 @@ module. This requirement names no requirement id for the architecture objects un
 
 ### Edges
 
-- The module manifest SHALL declare `considers` in `edge_types`. The module SHALL NOT load a `threat_model` entry or a rule
-  that uses `covers` or `considers` unless both verbs are declared.
+- The module manifest SHALL declare `considers` in `edge_types` and SHALL NOT declare `covers`. A resolved module set
+  loading a `threat_model` entry or a rule that uses `covers` SHALL include spec-artifacts-iso, which declares the canonical
+  `covers` edge. Loading a rule that uses `considers` without its local declaration SHALL fail naming that verb.
 - The `threat_model` manifest entry SHALL list `allowed_links.covers: [part, connection, data_sink, trust_boundary]` and
   `allowed_links.considers: [threat]`.
 - A `threat_model` SHALL declare at least one `covers` edge. A `threat_model` with no `covers` edge SHALL fail validation,
@@ -121,12 +122,13 @@ not a testable obligation of this requirement.
 | FR-026-AC-6 | A `threat_model` missing `## Assumptions`, and one whose `## Out of scope` is empty, each fail validation naming the section. | Test |
 | FR-026-AC-7 | `ThreatModel.json` carries no `default` for `method` or `reviewed_by`, and an extracted record has no `method` or `reviewed_by` key the author did not write. | Test |
 | FR-026-AC-8 | No manifest entry, rule text, skeleton or README added by this requirement names or quotes a paywalled standard; the only sources named are STRIDE, OWASP's free threat-modelling guidance and NIST SP 800-154. | Inspection |
-| FR-026-AC-9 | The module manifest declares `considers` and `covers` in `edge_types`; the module loads, and removing either declaration makes it fail to load naming the verb. | Test |
+| FR-026-AC-9 | The security manifest declares `considers` and does not declare `covers`; the resolved module set includes spec-artifacts-iso's canonical `covers` declaration and loads a threat_model using it. Removing the ISO declaration makes loading fail naming `covers`; removing security's `considers` declaration makes loading fail naming `considers`. | Test |
 | FR-026-AC-10 | `semantic.exports` names `threat_model`; `ThreatModel.json` is emitted without `default` keys; the `threat_model` skeleton validates; the empty record `{}` fails `ThreatModel.json`. | Test |
 
 ## Dependencies
 
 - **Upstream**: [FR-004](./FR-004-role-schemas.md), [FR-005](./FR-005-executable-skeletons.md),
-  [FR-006](./FR-006-security-safe-declarations.md), [FR-025](./FR-025-control-safeguards-and-starter-flow-rules.md); the
-  `covers` verb (PLAT-1657, hard blocker); spec-objects-architecture `part`, `connection`, `data_sink` (PLAT-1532, PLAT-1440, PR #51/#52).
+  [FR-006](./FR-006-security-safe-declarations.md), [FR-025](./FR-025-control-safeguards-and-starter-flow-rules.md);
+  spec-artifacts-iso owns the canonical `covers` edge; spec-objects-architecture owns `part`, `connection`, `data_sink`
+  (PLAT-1532, PLAT-1440, PR #51/#52).
 - **Downstream**: [FR-027](./FR-027-threat-treatment-and-completeness-rules.md), quoin FR-202, PLAT-1543.

@@ -55,7 +55,10 @@ def iso_module_path() -> pathlib.Path:
 def validation_module_args(
     security_module: pathlib.Path | None = None, *, include_iso: bool = False
 ) -> list[str]:
-    """Load the security and architecture registries used by the fixtures."""
+    """Load security and architecture registries, plus ISO when requested.
+
+    ISO supplies the canonical `covers` edge reused by security's scopes.
+    """
     architecture_module = (
         pathlib.Path(__file__).resolve().parent.parent
         / "node_modules"

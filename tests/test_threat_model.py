@@ -18,6 +18,7 @@ from tests.conftest import (
     SKELETONS_DIR,
     engine_tool,
     field,
+    iso_module_path,
     validation_module_args,
 )
 
@@ -123,13 +124,12 @@ def errors(result: subprocess.CompletedProcess) -> list[str]:
                 "warning:",
                 "UnknownEdgeType:",
                 "UnknownRole:",
-                "DuplicateEdgeType: 'covers' contributed by modules",
             )
         )
     ]
 
 
-@pytest.mark.trace("TC-224", "FR-026-AC-1")
+@pytest.mark.trace("TC-224", "FR-026-AC-1", "FR-026-AC-9")
 def test_threat_model_with_covers_and_considers_validates(tmp_path):
     control = (
         (SKELETONS_DIR / "control.md")
@@ -329,8 +329,15 @@ def test_threatens_does_not_allow_a_queue_target(tmp_path):
 @pytest.mark.trace("TC-233", "FR-027-AC-7")
 def test_manifest_declares_the_verbs_and_the_link_targets():
     manifest = yaml.safe_load(MANIFEST_PATH.read_text())
-    assert {"covers", "considers"} <= set(manifest["edge_types"])
+    assert "covers" not in manifest["edge_types"]
+    assert "considers" in manifest["edge_types"]
     assert manifest["edge_types"]["considers"]["category"] == "governance"
+    iso_manifest = yaml.safe_load((iso_module_path() / "manifest.yaml").read_text())
+    assert iso_manifest["edge_types"]["covers"] == {
+        "description": "A test/matrix covers the target requirement.",
+        "category": "traceability",
+        "inverse": "covered_by",
+    }
     types = {o["name"]: o for o in manifest["object_types"]}
     assert types["threat_model"]["allowed_links"] == {
         "covers": ["part", "connection", "data_sink", "trust_boundary"],
@@ -397,10 +404,13 @@ def test_threat_model_schema_requires_method_and_reviewed_by_and_has_no_default(
 
 @pytest.mark.trace("TC-236", "FR-026-AC-9")
 @pytest.mark.parametrize("verb", ["covers", "considers"])
-def test_module_load_reports_an_undeclared_threat_model_verb(tmp_path, verb):
-    module = tmp_path / "module"
-    shutil.copytree(PACKAGE_ROOT, module)
-    manifest_path = module / "manifest.yaml"
+def test_module_load_reports_a_missing_threat_model_verb_owner(tmp_path, verb):
+    security_module = tmp_path / "module" / "spec_objects_security"
+    shutil.copytree(PACKAGE_ROOT, security_module)
+    iso_module = tmp_path / "module" / "spec_artifacts_iso"
+    shutil.copytree(iso_module_path(), iso_module)
+    owner_module = iso_module if verb == "covers" else security_module
+    manifest_path = owner_module / "manifest.yaml"
     manifest = yaml.safe_load(manifest_path.read_text())
     del manifest["edge_types"][verb]
     manifest_path.write_text(yaml.safe_dump(manifest, sort_keys=False))
@@ -413,7 +423,8 @@ def test_module_load_reports_an_undeclared_threat_model_verb(tmp_path, verb):
             "validate",
             "--okf",
             "--module",
-            str(module),
+            str(iso_module),
+            *validation_module_args(security_module),
             str(bundle),
         ],
         capture_output=True,
