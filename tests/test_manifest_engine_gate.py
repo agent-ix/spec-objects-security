@@ -17,7 +17,7 @@ import subprocess
 import pytest
 import yaml
 
-from tests.conftest import PACKAGE_ROOT, SKELETONS_DIR
+from tests.conftest import PACKAGE_ROOT, SKELETONS_DIR, validation_module_args
 from tests.conftest import engine_tool as _tool
 
 
@@ -37,7 +37,13 @@ def _quire_validate(module, tmp_path):
     docs.mkdir(exist_ok=True)
     shutil.copy(SKELETONS_DIR / "control.md", docs / "control.md")
     return subprocess.run(
-        [_tool("quire"), "validate", "--okf", "--module", str(module), str(docs)],
+        [
+            _tool("quire"),
+            "validate",
+            "--okf",
+            *validation_module_args(module),
+            str(docs),
+        ],
         capture_output=True,
         text=True,
     )

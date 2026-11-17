@@ -50,7 +50,7 @@ def target_doc(kind: str, ident: str) -> str:
 
 
 @pytest.mark.trace("TC-248", "FR-028-AC-1", "TC-254", "FR-028-AC-7")
-def test_controller_skeleton_with_covered_connection_validates(tmp_path):
+def test_controller_skeleton_with_scoped_connection_validates(tmp_path):
     skeleton = (SKELETONS_DIR / "processing_activity.md").read_text()
     result = run_bundle(
         tmp_path,
@@ -72,7 +72,7 @@ def frontmatter_doc(**changes) -> str:
         "data_subject_categories": '["customers"]',
         "retention": '"support period"',
         "home_regions": "[eu]",
-        "relationships": "\n  - target: CONN-001\n    type: covers",
+        "relationships": "\n  - target: CONN-001\n    type: scopes",
     }
     values.update(changes)
     fields = "".join(f"{key}: {value}\n" for key, value in values.items())
@@ -158,10 +158,10 @@ def test_unknown_role_and_invalid_home_regions_fail_naming_the_field(schema_regi
 
 
 @pytest.mark.trace("TC-252", "FR-028-AC-5")
-def test_missing_covers_edge_emits_located_advisory_warning(tmp_path):
+def test_missing_scopes_edge_emits_located_advisory_warning(tmp_path):
     skeleton = (SKELETONS_DIR / "processing_activity.md").read_text()
     skeleton = skeleton.replace(
-        "relationships:\n  - target: CONN-001\n    type: covers\n", ""
+        "relationships:\n  - target: CONN-001\n    type: scopes\n", ""
     )
     result = run_bundle(
         tmp_path,
@@ -171,8 +171,8 @@ def test_missing_covers_edge_emits_located_advisory_warning(tmp_path):
     assert result.returncode == 0, result.stdout + result.stderr
     output = result.stdout + result.stderr
     assert "activity.md" in output
-    assert "processing-activity-covers-nothing" in output
-    assert "has no 'covers' edge" in output
+    assert "processing-activity-scopes-nothing" in output
+    assert "has no 'scopes' edge" in output
 
 
 @pytest.mark.trace("TC-253", "FR-028-AC-6")
@@ -180,7 +180,7 @@ def test_missing_covers_edge_emits_located_advisory_warning(tmp_path):
     ("target", "kind", "expected"),
     [("QUEUE-001", "queue", "disallowed"), ("MISSING-1", None, "dangling")],
 )
-def test_invalid_covers_target_reports_wrong_kind_or_dangling(
+def test_invalid_scopes_target_reports_wrong_kind_or_dangling(
     tmp_path, target, kind, expected
 ):
     skeleton = (
@@ -205,11 +205,11 @@ def test_manifest_exports_schema_and_skeleton_for_processing_activity():
         "schemas/ProcessingActivityFrontmatter.json"
     )
     assert declared["data_schema"]["schema"] == "schemas/ProcessingActivity.json"
-    assert declared["allowed_links"]["covers"] == ["connection", "data_sink", "part"]
+    assert declared["allowed_links"]["scopes"] == ["connection", "data_sink", "part"]
     required = manifest["traceability"]["required_relations"]
     assert any(
         item["from"] == "processing_activity"
-        and item["edges"] == ["covers"]
+        and item["edges"] == ["scopes"]
         and item["to"] == ["connection", "data_sink", "part"]
         for item in required
     )

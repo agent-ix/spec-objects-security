@@ -72,12 +72,12 @@ def test_dossier_flow_rules_select_only_the_authored_facts_it_needs() -> None:
         assert all(condition.get("present") is True for condition in rule["match"])
         assert rule["unless_any"] == [{"path": [], "field": "id", "present": True}]
 
-    coverage = rules["dossier-processing-activity-coverage-facts"]
-    assert coverage["subject"] == ["processing_activity"]
-    assert coverage["match"][0]["field"] == "id"
-    assert coverage["match"][0]["path"] == [
+    scope = rules["dossier-processing-activity-scope-facts"]
+    assert scope["subject"] == ["processing_activity"]
+    assert scope["match"][0]["field"] == "id"
+    assert scope["match"][0]["path"] == [
         {
-            "edge": "covers",
+            "edge": "scopes",
             "direction": "outgoing",
             "to": ["connection", "data_sink", "part"],
         }
@@ -88,7 +88,7 @@ def test_dossier_flow_rules_select_only_the_authored_facts_it_needs() -> None:
     assert delivery["match"][0]["path"] == [
         {"edge": "delivers_to", "direction": "outgoing", "to": ["data_sink"]}
     ]
-    for rule in (coverage, delivery):
+    for rule in (scope, delivery):
         assert rule["unless_any"] == [{"path": [], "field": "id", "present": True}]
 
 
@@ -162,8 +162,8 @@ def test_threat_and_risk_coverage_is_declared_not_coded() -> None:
         "risk-has-treatment",
         "security-nfr-has-mitigation-target",
         "soup-record-serves-requirement",
-        "threat-model-covers-something",
-        "processing-activity-covers-nothing",
+        "threat-model-scopes-something",
+        "processing-activity-scopes-nothing",
     }
     assert by_name["risk-has-treatment"]["from"] == "risk"
     assert by_name["risk-has-treatment"]["where"] == {
@@ -176,8 +176,8 @@ def test_threat_and_risk_coverage_is_declared_not_coded() -> None:
         "untreated-risk",
         "unjustified-security-nfr",
         "soup-serves-no-requirement",
-        "threat-model-covers-nothing",
-        "processing-activity-covers-nothing",
+        "threat-model-scopes-nothing",
+        "processing-activity-scopes-nothing",
     }
     assert len(checks) == len(by_name), "each relation is independently tunable"
 
@@ -197,10 +197,10 @@ def test_threat_and_risk_coverage_is_declared_not_coded() -> None:
             # FR-013: the reviewer authors the edge on the record.
             assert relation["from"] == "soup_record"
             assert relation["direction"] == "outgoing"
-        elif name == "threat-model-covers-something":
+        elif name == "threat-model-scopes-something":
             assert relation["from"] == "threat_model"
             assert relation["direction"] == "outgoing"
-        elif name == "processing-activity-covers-nothing":
+        elif name == "processing-activity-scopes-nothing":
             assert relation["from"] == "processing_activity"
             assert relation["direction"] == "outgoing"
         else:

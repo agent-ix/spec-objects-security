@@ -25,7 +25,7 @@ relationships:
 ## Description
 
 For a threat model to mean anything, a threat must be able to target the model's connections, sinks and boundaries; a threat
-left untreated must be accepted by a named person; and the model must say which covered elements still lack a threat or a
+left untreated must be accepted by a named person; and the model must say which scoped elements still lack a threat or a
 treatment. The module SHALL (1) widen `threat.threatens`, (2) add a person's decision to `risk`, and (3) ship three
 `traceability.flow_rules` that report the gaps.
 
@@ -103,13 +103,13 @@ an acceptance; those are person-authored ([NFR-005](../non-functional/NFR-005-th
 
 The module SHALL ship these three `flow_rules`, each with a non-empty `rationale`, a `check` equal to its `name`, and no
 `remediations` (a remediation names a change the registry of FR-025 defines; the nine entries stay unchanged and a
-threat, a control or a person's decision is not one of them). Only an element covered by a `threat_model` is required to
+threat, a control or a person's decision is not one of them). Only an element scoped by a `threat_model` is required to
 have a threat; a corpus without a `threat_model` yields no finding from any of the three.
 
 | Rule name and check | Subject | Match | Unless any |
 |---------------------|---------|-------|------------|
-| `crossing-without-threat` | `connection` | incoming `covers` from a `threat_model` (`present`); outgoing `carries` to a `data_classification` (`present`); outgoing `crosses` to a `trust_boundary` (`present`) | incoming `threatens` from a `threat` (`present`) |
-| `classified-sink-without-threat` | `data_sink` | incoming `covers` from a `threat_model` (`present`); `any_path` of `delivers_to` incoming then `carries` outgoing, together with the sink's own `carries`, reaching a `data_classification` (`present`) | incoming `threatens` from a `threat` (`present`) |
+| `crossing-without-threat` | `connection` | incoming `scopes` from a `threat_model` (`present`); outgoing `carries` to a `data_classification` (`present`); outgoing `crosses` to a `trust_boundary` (`present`) | incoming `threatens` from a `threat` (`present`) |
+| `classified-sink-without-threat` | `data_sink` | incoming `scopes` from a `threat_model` (`present`); `any_path` of `delivers_to` incoming then `carries` outgoing, together with the sink's own `carries`, reaching a `data_classification` (`present`) | incoming `threatens` from a `threat` (`present`) |
 | `threat-without-treatment` | `threat` | incoming `considers` from a `threat_model` (`present`) | incoming `mitigates` from a `control` (`present`); incoming `arises_from` from a `risk` whose `decision` is in `accepted` |
 
 - Every `any_of` value in these rules SHALL be a member of the enum of that field in the target archetype's frontmatter schema;
@@ -131,7 +131,7 @@ have a threat; a corpus without a `threat_model` yields no finding from any of t
 ## Engine impact
 
 None of the rule behaviors can be evaluated until quire-rs delivers `flow_rules` (FR-096, including `present: true`; the
-`traceability.flow_rules` loader of PLAT-1537/PLAT-1538), the `covers` verb (PLAT-1657) exists in this module's manifest,
+`traceability.flow_rules` loader of PLAT-1537/PLAT-1538), FR-026 declares the security-owned `scopes` relation, distinct from ISO `covers`,
 and the `connection`, `data_sink` and `crosses` objects exist in spec-objects-architecture. The enum, link, `Risk` and
 manifest data can be authored and schema-validated first. This requirement does not promise that code.
 
@@ -151,8 +151,8 @@ module-only checks.
 
 | ID | Criteria | Verification |
 |----|----------|--------------|
-| FR-027-AC-1 | A connection `CONN-1` covered by a `threat_model`, carrying `CLASS-PHI` and crossing `BOUND-NET`, with no incoming `threatens`, yields one finding under `trace:crossing-without-threat` naming `CONN-1`. Adding `THREAT-1 --threatens--> CONN-1` clears it. A covered connection that carries `CLASS-PHI` but crosses no `trust_boundary`, and one that crosses `BOUND-NET` but carries no `data_classification`, each yield no finding. A threat that `threatens` only `BOUND-NET` leaves the finding on `CONN-1`. | Test |
-| FR-027-AC-2 | A sink covered by a `threat_model` that receives a classification through `delivers_to` then `carries` and has no incoming `threatens` yields one finding under `trace:classified-sink-without-threat` naming it; a sink whose own `carries` reaches a classification does the same; a threat that `threatens` the sink clears it. | Test |
+| FR-027-AC-1 | A connection `CONN-1` scoped by a `threat_model`, carrying `CLASS-PHI` and crossing `BOUND-NET`, with no incoming `threatens`, yields one finding under `trace:crossing-without-threat` naming `CONN-1`. Adding `THREAT-1 --threatens--> CONN-1` clears it. A scoped connection that carries `CLASS-PHI` but crosses no `trust_boundary`, and one that crosses `BOUND-NET` but carries no `data_classification`, each yield no finding. A threat that `threatens` only `BOUND-NET` leaves the finding on `CONN-1`. | Test |
+| FR-027-AC-2 | A sink scoped by a `threat_model` that receives a classification through `delivers_to` then `carries` and has no incoming `threatens` yields one finding under `trace:classified-sink-without-threat` naming it; a sink whose own `carries` reaches a classification does the same; a threat that `threatens` the sink clears it. | Test |
 | FR-027-AC-3 | A threat considered by a `threat_model`, mitigated by no control and with no risk arising from it, yields one finding under `trace:threat-without-treatment` naming `THREAT-1`. A `control` that `mitigates` it clears the finding. | Test |
 | FR-027-AC-4 | A `risk` with `decision: accepted`, `decided_by: "A. Person"` and `arises_from: THREAT-1` clears the AC-3 finding. A `risk` with `decision: undecided`, and one with `decision: not_accepted`, do not. | Test |
 | FR-027-AC-5 | The same corpus with its `threat_model` removed yields no finding under any of the three checks, and a corpus with no connection, sink or threat yields none. | Test |
@@ -165,6 +165,6 @@ module-only checks.
 ## Dependencies
 
 - **Upstream**: [FR-004](./FR-004-role-schemas.md), [FR-008](./FR-008-security-nfr-needs-mitigation-target.md) (amended here), quire-rs FR-058 (`where` selector), [FR-025](./FR-025-control-safeguards-and-starter-flow-rules.md),
-  [FR-026](./FR-026-threat-model-object.md); quire-rs FR-096; PLAT-1537 / PLAT-1538; PLAT-1657 (`covers`); the architecture
+  [FR-026](./FR-026-threat-model-object.md); quire-rs FR-096; PLAT-1537 / PLAT-1538; FR-026 (`scopes`); the architecture
   objects `connection`, `data_sink` and the `crosses` edge.
 - **Downstream**: quoin FR-202 (the report reads the findings of these three checks), PLAT-1543, PLAT-1544.

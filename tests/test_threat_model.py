@@ -18,6 +18,7 @@ from tests.conftest import (
     SKELETONS_DIR,
     engine_tool,
     field,
+    iso_module_path,
     validation_module_args,
 )
 
@@ -38,7 +39,7 @@ def threat_model(
     *,
     method: str | None = "stride_per_element",
     reviewed_by: str | None = '"A. Person"',
-    relationships: tuple[tuple[str, str], ...] = (("covers", "CONN-1"),),
+    relationships: tuple[tuple[str, str], ...] = (("scopes", "CONN-1"),),
     sections: tuple[str, ...] = ("Scope", "Assumptions", "Out of scope"),
 ) -> str:
     front = 'id: TM-1\ntitle: "TM"\ntype: threat_model\nobject: threat_model\n'
@@ -123,14 +124,13 @@ def errors(result: subprocess.CompletedProcess) -> list[str]:
                 "warning:",
                 "UnknownEdgeType:",
                 "UnknownRole:",
-                "DuplicateEdgeType: 'covers' contributed by modules",
             )
         )
     ]
 
 
-@pytest.mark.trace("TC-224", "FR-026-AC-1")
-def test_threat_model_with_covers_and_considers_validates(tmp_path):
+@pytest.mark.trace("TC-224", "FR-026-AC-1", "FR-026-AC-9")
+def test_threat_model_with_scopes_and_considers_validates(tmp_path):
     control = (
         (SKELETONS_DIR / "control.md")
         .read_text()
@@ -143,7 +143,7 @@ def test_threat_model_with_covers_and_considers_validates(tmp_path):
     docs = {
         **world(),
         "tm.md": threat_model(
-            relationships=(("covers", "CONN-1"), ("considers", "THREAT-1"))
+            relationships=(("scopes", "CONN-1"), ("considers", "THREAT-1"))
         ),
         "control.md": control,
     }
@@ -208,14 +208,14 @@ def test_empty_out_of_scope_section_fails_naming_it(quire_engine):
 
 
 @pytest.mark.trace("TC-229", "FR-026-AC-4")
-def test_no_covers_edge_fails(tmp_path):
+def test_no_scopes_edge_fails(tmp_path):
     result = validate(tmp_path, {**world(), "tm.md": threat_model(relationships=())})
     out = result.stdout + result.stderr
-    assert "threat-model-covers-nothing" in out, out
+    assert "threat-model-scopes-nothing" in out, out
 
 
 @pytest.mark.trace("TC-230", "FR-026-AC-4")
-def test_covers_each_allowed_model_element(tmp_path):
+def test_scopes_each_allowed_model_element(tmp_path):
     targets = {
         "part": "PART-1",
         "connection": "CONN-1",
@@ -225,7 +225,7 @@ def test_covers_each_allowed_model_element(tmp_path):
     docs = {
         **{f"{kind}.md": target_doc(kind, ident) for kind, ident in targets.items()},
         "tm.md": threat_model(
-            relationships=tuple(("covers", ident) for ident in targets.values())
+            relationships=tuple(("scopes", ident) for ident in targets.values())
         ),
     }
     result = validate(tmp_path, docs)
@@ -234,25 +234,25 @@ def test_covers_each_allowed_model_element(tmp_path):
 
 
 @pytest.mark.trace("TC-231", "FR-026-AC-5")
-def test_covers_risk_and_considers_control_are_disallowed(tmp_path):
+def test_scopes_risk_and_considers_control_are_disallowed(tmp_path):
     docs = {
         **world(),
         "risk.md": target_doc("risk", "RISK-1"),
         "control.md": target_doc("control", "CONTROL-1"),
     }
-    covers_risk = validate(
+    scopes_risk = validate(
         tmp_path,
-        {**docs, "tm.md": threat_model(relationships=(("covers", "RISK-1"),))},
+        {**docs, "tm.md": threat_model(relationships=(("scopes", "RISK-1"),))},
     )
-    covers_out = covers_risk.stdout + covers_risk.stderr
-    assert "disallowed-edge-target" in covers_out and "covers" in covers_out
+    scopes_out = scopes_risk.stdout + scopes_risk.stderr
+    assert "disallowed-edge-target" in scopes_out and "scopes" in scopes_out
 
     considers_control = validate(
         tmp_path,
         {
             **docs,
             "tm.md": threat_model(
-                relationships=(("covers", "CONN-1"), ("considers", "CONTROL-1"))
+                relationships=(("scopes", "CONN-1"), ("considers", "CONTROL-1"))
             ),
         },
     )
@@ -261,22 +261,22 @@ def test_covers_risk_and_considers_control_are_disallowed(tmp_path):
 
 
 @pytest.mark.trace("TC-232", "FR-026-AC-5")
-def test_threat_model_with_covers_and_no_considers_validates(tmp_path):
+def test_threat_model_with_scopes_and_no_considers_validates(tmp_path):
     result = validate(
         tmp_path,
-        {**world(), "tm.md": threat_model(relationships=(("covers", "CONN-1"),))},
+        {**world(), "tm.md": threat_model(relationships=(("scopes", "CONN-1"),))},
     )
     out = result.stdout + result.stderr
     assert "disallowed-edge-target" not in out, out
 
 
-def test_covers_to_a_role_is_a_wrong_kind_link(tmp_path):
+def test_scopes_to_a_role_is_a_wrong_kind_link(tmp_path):
     result = validate(
         tmp_path,
-        {**world(), "tm.md": threat_model(relationships=(("covers", "ROLE-1"),))},
+        {**world(), "tm.md": threat_model(relationships=(("scopes", "ROLE-1"),))},
     )
     out = result.stdout + result.stderr
-    assert "disallowed-edge-target" in out and "covers" in out, out
+    assert "disallowed-edge-target" in out and "scopes" in out, out
 
 
 def test_considers_to_a_missing_id_is_dangling(tmp_path):
@@ -285,7 +285,7 @@ def test_considers_to_a_missing_id_is_dangling(tmp_path):
         {
             **world(),
             "tm.md": threat_model(
-                relationships=(("covers", "CONN-1"), ("considers", "THREAT-404"))
+                relationships=(("scopes", "CONN-1"), ("considers", "THREAT-404"))
             ),
         },
     )
@@ -329,11 +329,18 @@ def test_threatens_does_not_allow_a_queue_target(tmp_path):
 @pytest.mark.trace("TC-233", "FR-027-AC-7")
 def test_manifest_declares_the_verbs_and_the_link_targets():
     manifest = yaml.safe_load(MANIFEST_PATH.read_text())
-    assert {"covers", "considers"} <= set(manifest["edge_types"])
+    assert {"scopes", "considers"} <= set(manifest["edge_types"])
+    assert "covers" not in manifest["edge_types"]
     assert manifest["edge_types"]["considers"]["category"] == "governance"
+    iso_manifest = yaml.safe_load((iso_module_path() / "manifest.yaml").read_text())
+    assert iso_manifest["edge_types"]["covers"] == {
+        "description": "A test/matrix covers the target requirement.",
+        "category": "traceability",
+        "inverse": "covered_by",
+    }
     types = {o["name"]: o for o in manifest["object_types"]}
     assert types["threat_model"]["allowed_links"] == {
-        "covers": ["part", "connection", "data_sink", "trust_boundary"],
+        "scopes": ["part", "connection", "data_sink", "trust_boundary"],
         "considers": ["threat"],
     }
     assert types["threat"]["allowed_links"]["threatens"] == [
@@ -396,11 +403,13 @@ def test_threat_model_schema_requires_method_and_reviewed_by_and_has_no_default(
 
 
 @pytest.mark.trace("TC-236", "FR-026-AC-9")
-@pytest.mark.parametrize("verb", ["covers", "considers"])
-def test_module_load_reports_an_undeclared_threat_model_verb(tmp_path, verb):
-    module = tmp_path / "module"
-    shutil.copytree(PACKAGE_ROOT, module)
-    manifest_path = module / "manifest.yaml"
+@pytest.mark.parametrize("verb", ["scopes", "considers"])
+def test_module_load_reports_a_missing_threat_model_verb_owner(tmp_path, verb):
+    security_module = tmp_path / "module" / "spec_objects_security"
+    shutil.copytree(PACKAGE_ROOT, security_module)
+    iso_module = tmp_path / "module" / "spec_artifacts_iso"
+    shutil.copytree(iso_module_path(), iso_module)
+    manifest_path = security_module / "manifest.yaml"
     manifest = yaml.safe_load(manifest_path.read_text())
     del manifest["edge_types"][verb]
     manifest_path.write_text(yaml.safe_dump(manifest, sort_keys=False))
@@ -413,7 +422,8 @@ def test_module_load_reports_an_undeclared_threat_model_verb(tmp_path, verb):
             "validate",
             "--okf",
             "--module",
-            str(module),
+            str(iso_module),
+            *validation_module_args(security_module),
             str(bundle),
         ],
         capture_output=True,

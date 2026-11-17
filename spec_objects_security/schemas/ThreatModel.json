@@ -41,7 +41,7 @@
   "unevaluatedProperties": {
     "not": {}
   },
-  "description": "A scoped threat analysis a person wrote. `covers` and `considers` are edges\nauthored in the document's relationships, not members here. There is no\ndefault for `method` or `reviewed_by`.",
+  "description": "A scoped threat analysis a person wrote. `scopes` and `considers` are edges\nauthored in the document's relationships, not members here. There is no\ndefault for `method` or `reviewed_by`.",
   "allOf": [
     {
       "properties": {

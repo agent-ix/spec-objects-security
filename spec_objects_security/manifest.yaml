@@ -54,7 +54,7 @@ nav:
     icon: ShieldCheck
     order: 54
 edge_types:
-  covers: { description: "A source document covers a target: the target is in its scope.", category: governance }
+  scopes: { description: "A security model or processing activity scopes a target element.", category: governance }
   considers: { description: "Threat model considers the threat at the target.", category: governance }
 archetypes: []
 grammars: []
@@ -729,7 +729,7 @@ object_types:
           required: false
 - name: threat_model
   allowed_links:
-    covers: [part, connection, data_sink, trust_boundary]
+    scopes: [part, connection, data_sink, trust_boundary]
     considers: [threat]
   data_schema:
     schema: schemas/ThreatModel.json
@@ -768,7 +768,7 @@ object_types:
 - name: processing_activity
   frontmatter_schema_ref: schemas/ProcessingActivityFrontmatter.json
   allowed_links:
-    covers: [connection, data_sink, part]
+    scopes: [connection, data_sink, part]
   data_schema:
     schema: schemas/ProcessingActivity.json
   body_extraction:
@@ -1004,7 +1004,7 @@ traceability:
     subject: [connection]
     match:
     - path:
-      - edge: covers
+      - edge: scopes
         direction: incoming
         to: [threat_model]
       field: id
@@ -1029,12 +1029,12 @@ traceability:
       field: id
       present: true
     check: crossing-without-threat
-    rationale: A covered connection carrying classified data across a trust boundary needs a threat in its threat model.
+    rationale: A scoped connection carrying classified data across a trust boundary needs a threat in its threat model.
   - name: classified-sink-without-threat
     subject: [data_sink]
     match:
     - path:
-      - edge: covers
+      - edge: scopes
         direction: incoming
         to: [threat_model]
       field: id
@@ -1059,7 +1059,7 @@ traceability:
       field: id
       present: true
     check: classified-sink-without-threat
-    rationale: A covered sink receiving classified data needs a threat in its threat model.
+    rationale: A scoped sink receiving classified data needs a threat in its threat model.
   - name: threat-without-treatment
     subject: [threat]
     match:
@@ -1085,13 +1085,13 @@ traceability:
     check: threat-without-treatment
     rationale: A threat considered in a threat model needs a mitigating control or an explicitly accepted risk.
   # FR-207 consumes model facts only through quire.flow-report/v1. These
-  # no-finding selectors make the authored dossier fields and coverage edges
+  # no-finding selectors make the authored dossier fields and scope edges
   # part of that report without assigning them a security judgement.
-  - name: dossier-processing-activity-coverage-facts
+  - name: dossier-processing-activity-scope-facts
     subject: [processing_activity]
     match:
     - path:
-      - edge: covers
+      - edge: scopes
         direction: outgoing
         to: [connection, data_sink, part]
       field: id
@@ -1100,8 +1100,8 @@ traceability:
     - path: []
       field: id
       present: true
-    check: dossier-processing-activity-coverage-facts
-    rationale: The records-of-processing dossier reads the activity's authored coverage edges from the flow report.
+    check: dossier-processing-activity-scope-facts
+    rationale: The records-of-processing dossier reads the activity's authored scope edges from the flow report.
   - name: dossier-processing-activity-core-facts
     subject: [processing_activity]
     match:
@@ -1262,12 +1262,12 @@ traceability:
     to: []
     direction: incoming
     check: untreated-risk
-  - name: processing-activity-covers-nothing
+  - name: processing-activity-scopes-nothing
     from: processing_activity
-    edges: [covers]
+    edges: [scopes]
     to: [connection, data_sink, part]
     direction: outgoing
-    check: processing-activity-covers-nothing
+    check: processing-activity-scopes-nothing
   # `direction: incoming` throughout, because the mitigation is authored from
   # the control's or requirement's end — a control says what it mitigates. A
   # threat listing its own controls would duplicate the fact and let the two
@@ -1304,12 +1304,12 @@ traceability:
     to: [FR, NFR, StR]
     direction: outgoing
     check: soup-serves-no-requirement
-  - name: threat-model-covers-something
+  - name: threat-model-scopes-something
     from: threat_model
-    edges: [covers]
+    edges: [scopes]
     to: []
     direction: outgoing
-    check: threat-model-covers-nothing
+    check: threat-model-scopes-nothing
   remediations:
   - name: encrypt-in-transit
     description: Add a control with this safeguard protecting the affected connection.

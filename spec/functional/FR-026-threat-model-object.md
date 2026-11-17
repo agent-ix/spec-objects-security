@@ -1,6 +1,6 @@
 ---
 id: FR-026
-title: "A threat_model states its method, who led it, what it covers and which threats it considers"
+title: "A threat_model states its method, who led it, its scope and the threats considered"
 type: FR
 relationships:
   - target: "ix://agent-ix/spec-objects-security/US-001"
@@ -18,30 +18,28 @@ relationships:
   - target: "ix://agent-ix/spec-objects-security/NFR-005"
     type: "constrained_by"
 ---
-# FR-026: A threat_model states its method, who led it, what it covers and which threats it considers
+# FR-026: A threat_model states its method, who led it, its scope and the threats considered
 
 ## Description
 
 The model already records what data each connection carries, which trust boundaries it crosses, where data lands and which
 controls protect it. The module already has `threat`, `control`, `risk` and `asset`. Nothing yet says which part of the model
 a person has analysed for threats, so no rule can ask "was this crossing considered?". The module SHALL add a
-`threat_model` object type that scopes an analysis to the parts of the model it covers and names the threats it considered.
+`threat_model` object type that scopes an analysis to model elements and names the threats it considered.
 
 A `threat_model` is a document a person writes. It does not generate threats, rate them or conclude that a system is secure.
 The method names a free, public technique: STRIDE applied per element or per interaction, as described in OWASP's free
 threat-modelling guidance and in NIST SP 800-154 (free). This requirement names and quotes no paywalled standard.
 
-The `covers` verb is declared in this module's manifest `edge_types` by PLAT-1657 and is reused here, as a generic scope
-verb (a source document covers a target); this requirement adds no second verb for scope. Until PLAT-1657 lands, `covers` is
-a hard upstream dependency of this requirement. This requirement declares the new verb `considers` in the same `edge_types`
-block, with a description (a threat model considers a threat) and the same category as `covers`. The objects `connection`, `data_sink` and `part`, and the `crosses` edge, are owned by
+The `scopes` verb is a security-owned relation distinct from ISO's `covers` requirement-coverage edge. This module's
+`edge_types` block declares `scopes` for model elements and `considers` for threats; neither relation aliases the ISO verb. The objects `connection`, `data_sink` and `part`, and the `crosses` edge, are owned by
 `agent-ix/spec-objects-architecture` (PR #51 / PLAT-1532 and PR #52 / PLAT-1440); `trust_boundary` is declared by this
 module. This requirement names no requirement id for the architecture objects until those land.
 
 ## Inputs
 
 - A `threat_model` document: frontmatter `id`, `title`, `type: threat_model`, `object: threat_model`, `method`,
-  `reviewed_by`; edges `covers` and `considers`; body sections `## Scope`, `## Assumptions`, `## Out of scope`.
+  `reviewed_by`; edges `scopes` and `considers`; body sections `## Scope`, `## Assumptions`, `## Out of scope`.
 - The `ThreatModel` model in `typespec/main.tsp` and the `threat_model` entry of `spec_objects_security/manifest.yaml`.
 
 ## Outputs
@@ -67,15 +65,16 @@ module. This requirement names no requirement id for the architecture objects un
 
 ### Edges
 
-- The module manifest SHALL declare `considers` in `edge_types`. The module SHALL NOT load a `threat_model` entry or a rule
-  that uses `covers` or `considers` unless both verbs are declared.
-- The `threat_model` manifest entry SHALL list `allowed_links.covers: [part, connection, data_sink, trust_boundary]` and
+- The module manifest SHALL declare `scopes` and `considers` in `edge_types`. The security `scopes` edge is distinct from
+  ISO's `covers` edge, whose target is a requirement and whose source is a test or matrix. Removing either security edge
+  declaration SHALL make loading a rule that uses it fail naming the verb; ISO's `covers` declaration SHALL NOT satisfy it.
+- The `threat_model` manifest entry SHALL list `allowed_links.scopes: [part, connection, data_sink, trust_boundary]` and
   `allowed_links.considers: [threat]`.
-- A `threat_model` SHALL declare at least one `covers` edge. A `threat_model` with no `covers` edge SHALL fail validation,
-  because a model that covers nothing scopes nothing.
-- A `considers` edge MAY be absent. A model that covers an element and considers no threat is the case the completeness rules
+- A `threat_model` SHALL declare at least one `scopes` edge. A `threat_model` with no `scopes` edge SHALL fail validation,
+  because a model that scopes nothing has no analyzed elements.
+- A `considers` edge MAY be absent. A model that scopes an element and considers no threat is the case the completeness rules
   of [FR-027](./FR-027-threat-treatment-and-completeness-rules.md) report.
-- A `covers` edge to a document that is not a `part`, `connection`, `data_sink` or `trust_boundary`, and a `considers` edge
+- A `scopes` edge to a document that is not a `part`, `connection`, `data_sink` or `trust_boundary`, and a `considers` edge
   to a document that is not a `threat`, SHALL be refused with a link diagnostic.
 
 ### Body
@@ -113,20 +112,21 @@ not a testable obligation of this requirement.
 
 | ID | Criteria | Verification |
 |----|----------|--------------|
-| FR-026-AC-1 | A `threat_model` with `method: stride_per_element`, `reviewed_by: "A. Person"`, one `covers` edge to a `connection`, one `considers` edge to a `threat` and the three body sections validates with zero errors; so does the skeleton. | Test |
+| FR-026-AC-1 | A `threat_model` with `method: stride_per_element`, `reviewed_by: "A. Person"`, one `scopes` edge to a `connection`, one `considers` edge to a `threat` and the three body sections validates with zero errors; so does the skeleton. | Test |
 | FR-026-AC-2 | `method: guesswork` fails `quire validate` with a message naming `method`. `ThreatModelMethod.json` has exactly the two members and no `unknown` or `none`. | Test |
 | FR-026-AC-3 | A `threat_model` with no `reviewed_by` fails validation naming `reviewed_by`; one with `reviewed_by: ""` fails. | Test |
-| FR-026-AC-4 | A `threat_model` with no `covers` edge fails validation. One with `covers` edges to a `part`, a `connection`, a `data_sink` and a `trust_boundary` validates without a link diagnostic. | Test |
-| FR-026-AC-5 | A `covers` edge to a `risk` and a `considers` edge to a `control` each yield a link diagnostic naming the edge. A `threat_model` with `covers` and no `considers` validates. | Test |
+| FR-026-AC-4 | A `threat_model` with no `scopes` edge fails validation. One with `scopes` edges to a `part`, a `connection`, a `data_sink` and a `trust_boundary` validates without a link diagnostic. | Test |
+| FR-026-AC-5 | A `scopes` edge to a `risk` and a `considers` edge to a `control` each yield a link diagnostic naming the edge. A `threat_model` with `scopes` and no `considers` validates. | Test |
 | FR-026-AC-6 | A `threat_model` missing `## Assumptions`, and one whose `## Out of scope` is empty, each fail validation naming the section. | Test |
 | FR-026-AC-7 | `ThreatModel.json` carries no `default` for `method` or `reviewed_by`, and an extracted record has no `method` or `reviewed_by` key the author did not write. | Test |
 | FR-026-AC-8 | No manifest entry, rule text, skeleton or README added by this requirement names or quotes a paywalled standard; the only sources named are STRIDE, OWASP's free threat-modelling guidance and NIST SP 800-154. | Inspection |
-| FR-026-AC-9 | The module manifest declares `considers` and `covers` in `edge_types`; the module loads, and removing either declaration makes it fail to load naming the verb. | Test |
+| FR-026-AC-9 | The security manifest declares `scopes` and `considers`; ISO's `covers` remains a separate requirement-coverage edge. Removing either security declaration makes loading fail naming that verb. | Test |
 | FR-026-AC-10 | `semantic.exports` names `threat_model`; `ThreatModel.json` is emitted without `default` keys; the `threat_model` skeleton validates; the empty record `{}` fails `ThreatModel.json`. | Test |
 
 ## Dependencies
 
 - **Upstream**: [FR-004](./FR-004-role-schemas.md), [FR-005](./FR-005-executable-skeletons.md),
-  [FR-006](./FR-006-security-safe-declarations.md), [FR-025](./FR-025-control-safeguards-and-starter-flow-rules.md); the
-  `covers` verb (PLAT-1657, hard blocker); spec-objects-architecture `part`, `connection`, `data_sink` (PLAT-1532, PLAT-1440, PR #51/#52).
+  [FR-006](./FR-006-security-safe-declarations.md), [FR-025](./FR-025-control-safeguards-and-starter-flow-rules.md);
+  security owns `scopes` for model-element scope; spec-artifacts-iso owns `covers` for test/matrix requirement coverage; spec-objects-architecture owns `part`, `connection`, `data_sink`
+  (PLAT-1532, PLAT-1440, PR #51/#52).
 - **Downstream**: [FR-027](./FR-027-threat-treatment-and-completeness-rules.md), quoin FR-202, PLAT-1543.

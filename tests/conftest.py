@@ -17,6 +17,7 @@ from __future__ import annotations
 import functools
 import importlib.util
 import json
+import os
 import pathlib
 import re
 import shutil
@@ -55,9 +56,15 @@ def iso_module_path() -> pathlib.Path:
 def validation_module_args(
     security_module: pathlib.Path | None = None, *, include_iso: bool = False
 ) -> list[str]:
-    """Load the security and architecture registries used by the fixtures."""
+    """Load security and architecture registries, plus ISO when requested.
+
+    Security declares `scopes` locally; ISO `covers` remains requirement coverage.
+    """
+    architecture_override = os.environ.get("PLAT1658_ARCHITECTURE_MODULE")
     architecture_module = (
-        pathlib.Path(__file__).resolve().parent.parent
+        pathlib.Path(architecture_override)
+        if architecture_override
+        else pathlib.Path(__file__).resolve().parent.parent
         / "node_modules"
         / "@agent-ix"
         / "spec-objects-architecture"

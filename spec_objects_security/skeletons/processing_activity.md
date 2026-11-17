@@ -14,7 +14,7 @@ home_regions:
   - eu
 relationships:
   - target: CONN-001
-    type: covers
+    type: scopes
 ---
 <!-- Processing activity authoring skeleton. Choose one role form:
 
@@ -33,12 +33,12 @@ Processor form (use this form instead of the controller fields above):
   # purposes, data_subject_categories and retention may be omitted; categories
   # of processing are read from covered data sinks.
 
-Both forms require at least one home_regions entry and a covers relationship
+Both forms require at least one home_regions entry and a scopes relationship
 to a connection, data_sink or part. Region entries follow data_sink.region:
 ISO 3166-1 alpha-2, eu or eea. Do not infer any omitted field. -->
 # [PA-001] Customer support processing
 
 Describe the person-authored context that is not present in the flow model.
-State what the activity covers, how the named purposes apply, and where the
+State which elements the activity scopes, how the named purposes apply, and where the
 declared relationships begin and end. List facts that are unavailable under
 Gaps; do not infer a missing value from code, a sink name, or runtime behavior.
