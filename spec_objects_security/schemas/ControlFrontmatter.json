@@ -19,6 +19,14 @@
       },
       "minItems": 1,
       "uniqueItems": true
+    },
+    "option_type": {
+      "type": "string",
+      "enum": [
+        "design",
+        "protective",
+        "information"
+      ]
     }
   },
   "description": "Frontmatter keys authored on a control document."

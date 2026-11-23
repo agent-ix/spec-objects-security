@@ -9,6 +9,7 @@ safeguards: [encrypt-in-transit]
      substantive content. Contract (manifest body_extraction asserts):
      - Frontmatter MUST carry id, title, type: control, object: control.
      - Optional safeguards are the seven values in the Safeguard vocabulary.
+     - Optional option_type is one of design, protective, information.
      - "## Mappings" (H2, optional): a Set / Clause table, one row per clause
        of a clause set this control answers. Set is the key
        authority/id@version; no standard text belongs here. Threats and risks

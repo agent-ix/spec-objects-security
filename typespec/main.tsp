@@ -163,11 +163,19 @@ enum Safeguard {
   `validate-before-display`,
 }
 
+/** Risk-control option a person states for a control, in priority order. */
+enum ControlOptionType {
+  design,
+  protective,
+  information,
+}
+
 /** Frontmatter keys authored on a control document. */
 model ControlFrontmatter {
   @minItems(1)
   @uniqueItems
   safeguards?: Safeguard[];
+  option_type?: ControlOptionType;
 }
 
 /** Frontmatter keys authored on a data-classification document. */
@@ -843,6 +851,7 @@ model Control {
   @minItems(1)
   @uniqueItems
   safeguards?: Safeguard[];
+  option_type?: ControlOptionType;
   mitigates?: SemanticId[];
   mappings?: ControlMapping[];
   ...Record<never>;

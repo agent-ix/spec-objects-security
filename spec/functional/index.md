@@ -33,3 +33,4 @@ description: "Index of artifacts in this directory."
 * [FR-026: A threat_model states its method, who led it, its scope and the threats considered](./FR-026-threat-model-object.md)
 * [FR-027: A threat targets model elements, a risk records a named person's decision, and the module ships the threat-model completeness flow rules](./FR-027-threat-treatment-and-completeness-rules.md)
 * [FR-028: A processing_activity states the person-authored context for records of processing](./FR-028-processing-activity.md)
+* [FR-029: A control may state which risk-control option it is](./FR-029-control-option-type.md)
