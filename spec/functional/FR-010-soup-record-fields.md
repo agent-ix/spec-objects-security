@@ -22,8 +22,9 @@ means nobody has stated it, and an empty list means the reviewer stated that the
 Neither form has a default, in the manner of [FR-006](./FR-006-security-safe-declarations.md).
 
 The module reports a record whose `serves` names no requirement ([FR-013](./FR-013-soup-record-serves-requirement.md)), because a component that serves no
-requirement is unjustified scope. `SoupSupportStatus` is owned by this requirement and is not one of
-the ten vocabularies counted by FR-006.
+requirement is unjustified scope. `SoupSupportStatus` and `AnomalyOrigin` are owned by this requirement and are not among
+the ten vocabularies counted by FR-006. `AnomalyOrigin` is deliberately ungraded: it states where a
+finding came from, has no unassessed member, and an absent `origin` means not stated.
 
 ## Inputs
 
@@ -31,12 +32,15 @@ the ten vocabularies counted by FR-006.
 
 ## Outputs
 
-- The `SoupSupportStatus` closed vocabulary and the field set of the `soup_record` schema under `spec_objects_security/schemas/`.
+- The `SoupSupportStatus` and `AnomalyOrigin` closed vocabularies and the field set of the `soup_record` schema under `spec_objects_security/schemas/`.
 
 ## Behavior
 
 - The `soup_record` schema SHALL admit `serves`, a `SemanticId[]` naming the requirements the component serves.
 - The `soup_record` schema SHALL admit `known_anomalies`, a list of anomaly statements, each with a free-text `statement` and an optional `source_ref` `SemanticId`.
+- The `soup_record` schema SHALL admit on each anomaly an optional `origin`, a closed `AnomalyOrigin` vocabulary whose members are exactly `internal-test`, `field`, `complaint`, `soup-advisory`, so that a post-production finding is distinguishable from a development finding.
+- The `soup_record` schema SHALL treat an absent anomaly `origin` as not stated.
+- The `Anomaly` schema SHALL declare no severity or acceptability key.
 - The `soup_record` schema SHALL treat an absent `serves` or `known_anomalies` as not stated and an empty one as stated none.
 - The `soup_record` schema SHALL admit `support_status` only from the closed vocabulary `SoupSupportStatus`, whose members are exactly `supported`, `community_supported`, `unsupported`, `unknown`.
 - The `soup_record` schema SHALL admit `end_of_support` only as a calendar date or the literal `unknown`.
@@ -59,6 +63,7 @@ the ten vocabularies counted by FR-006.
 | FR-010-AC-2 | A fixture with `known_anomalies: []` validates, a fixture with the field absent validates, and the two emit different records, the first with an empty list and the second with no key. | Test |
 | FR-010-AC-3 | A fixture with `end_of_support: unknown` validates, a fixture with a calendar date validates, and a fixture with any other string fails. | Test |
 | FR-010-AC-4 | The emitted `soup_record` schema carries no `default` keyword at any depth. | Test |
+| FR-010-AC-7 | An anomaly carrying each of `internal-test`, `field`, `complaint` and `soup-advisory` as `origin` validates; an anomaly with no `origin` validates and emits no `origin` key; an anomaly with any other `origin` fails; the `Anomaly` schema declares no `default` and no severity or acceptability key. | Test |
 | FR-010-AC-6 | A fixture whose anomaly statement contains a credential-shaped string is refused by the FR-005 scan. | Test |
 
 ## Dependencies

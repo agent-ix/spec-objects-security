@@ -206,6 +206,27 @@ def test_empty_and_absent_known_anomalies_both_validate(validator):
     assert not validator.is_valid(record(known_anomalies=[{"source_ref": REQ}]))
 
 
+@pytest.mark.trace("TC-274", "FR-010-AC-7")
+def test_anomaly_origin_is_a_closed_optional_vocabulary(validator):
+    origins = ("internal-test", "field", "complaint", "soup-advisory")
+    enum = json.loads((SCHEMAS_DIR / "AnomalyOrigin.json").read_text())
+    assert enum["enum"] == list(origins)
+    for origin in origins:
+        stated = record(known_anomalies=[{"statement": "x", "origin": origin}])
+        assert validator.is_valid(stated), origin
+    assert validator.is_valid(record(known_anomalies=[{"statement": "x"}]))
+    assert not validator.is_valid(
+        record(known_anomalies=[{"statement": "x", "origin": "survey"}])
+    )
+    for name in ("Anomaly", "AnomalyOrigin"):
+        loaded = json.loads((SCHEMAS_DIR / f"{name}.json").read_text())
+        assert "default" not in keywords(loaded), name
+    for key in ("severity", "acceptability"):
+        assert not validator.is_valid(
+            record(known_anomalies=[{"statement": "x", key: "high"}])
+        ), key
+
+
 @pytest.mark.trace("TC-131", "FR-010-AC-3")
 def test_end_of_support_is_a_calendar_date_or_unknown(validator):
     assert validator.is_valid(record(end_of_support="unknown"))
@@ -470,6 +491,18 @@ def test_an_authored_document_with_a_digest_fails(quire_engine):
 @pytest.mark.trace("TC-143", "FR-012-AC-4")
 def test_an_authored_document_with_a_severity_fails(quire_engine):
     assert refused_document(quire_engine, severity="high")
+
+
+@pytest.mark.xfail(strict=True, reason=ENGINE_PROJECTION)
+@pytest.mark.trace("TC-274", "FR-010-AC-7")
+def test_an_anomaly_without_origin_emits_no_origin_key(
+    quire_engine, semantic_module, bundle_index, tmp_path
+):
+    emitted = extract_doc(
+        quire_engine, semantic_module, bundle_index, full_fixture(), tmp_path
+    )
+    assert emitted["known_anomalies"]
+    assert all("origin" not in anomaly for anomaly in emitted["known_anomalies"])
 
 
 @pytest.mark.xfail(strict=True, reason=ENGINE_PROJECTION)

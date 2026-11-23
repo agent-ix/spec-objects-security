@@ -53,6 +53,17 @@ enum SoupSupportStatus {
   `unknown`,
 }
 
+/**
+ * Where an anomaly was found. It is an observation of provenance, not a
+ * grade: it carries no severity and decides no acceptability.
+ */
+enum AnomalyOrigin {
+  `internal-test`,
+  `field`,
+  `complaint`,
+  `soup-advisory`,
+}
+
 /** How likely a risk is to be realized. `unknown` states that it was not assessed. */
 enum Likelihood {
   rare,
@@ -296,6 +307,7 @@ model FlowStep {
 model Anomaly {
   @minLength(1) statement: string;
   source_ref?: SemanticId;
+  origin?: AnomalyOrigin;
   ...Record<never>;
 }
 
