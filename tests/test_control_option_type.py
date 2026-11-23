@@ -66,5 +66,9 @@ def test_the_control_entry_extracts_option_type_from_frontmatter():
 @pytest.mark.trace("FR-029-AC-4")
 def test_no_rule_or_relation_names_option_type():
     manifest = yaml.safe_load((PACKAGE_ROOT / "manifest.yaml").read_text())
-    rules = yaml.safe_dump(manifest.get("traceability", {}))
-    assert "option_type" not in rules
+    # The extraction locator is the one place the key is named; every other
+    # section (edge_types, allowed_links, grammar_severity, lint_rules,
+    # traceability, ...) must not mention it.
+    for object_type in manifest.get("object_types", []):
+        object_type.pop("body_extraction", None)
+    assert "option_type" not in yaml.safe_dump(manifest)

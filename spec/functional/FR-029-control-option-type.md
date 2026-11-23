@@ -12,7 +12,7 @@ relationships:
 
 ## Description
 
-PLAT-1837. A risk-management process asks for risk-control options in priority order: inherently safe design, then protective measures, then information for safety. The security module SHALL let a person state, on a `control`, which of those three options it is. The module SHALL NOT derive the option from a title, safeguard, edge or any other field, SHALL NOT require it, and SHALL NOT rank, score or judge a control by it. A person decides the option; the tool records it.
+Risk-management processes order risk-control options as inherently safe design, then protective measures, then information for safety. A control can say which of the three it is, so a reader can see how a risk was addressed. The option is a statement a person makes about the control. It is kept as authored and plays no part in any rule or ranking.
 
 ## Inputs
 
