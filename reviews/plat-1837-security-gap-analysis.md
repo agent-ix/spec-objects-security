@@ -39,3 +39,9 @@ Examined units:
 | ID | Severity | Summary | Refs |
 | --- | --- | --- | --- |
 | FND-001 | low | The FR-029-AC-4 test scans only the `traceability` block. A relation that names `option_type` in the top-level `edge_types`, an object type's `allowed_links`, `grammar_severity` or `lint_rules` would still pass, although the AC and FR-029 forbid any relation or rule that reads it | tests/test_control_option_type.py:66-70 |
+
+## Dispositions
+
+| FND | outcome | reason |
+| --- | --- | --- |
+| FND-001 | fixed | Fix commit 1f7b467 scans the whole manifest after dropping each object type's body_extraction. Mutations adding option_type to edge_types, the control allowed_links, lint_rules, grammar_severity and a flow rule each make the test fail; a changed control locator is caught by the AC-3 test. |

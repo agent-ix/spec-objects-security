@@ -37,3 +37,10 @@ Examined units:
 ## Verdict
 
 **PASS with low findings.** The enum is closed and optional, carries no default, no rule reads, requires or orders it, and the TypeSpec and generated schemas agree. Both findings are wording or discoverability nits with no wrong behaviour; the PR is mergeable once the fix round addresses or dispositions them.
+
+## Dispositions
+
+| FND | outcome | reason |
+| --- | --- | --- |
+| FND-001 | fixed | Fix commit 1f7b467 rewrites the Description as plain prose with no ticket id and no SHALL clauses; quire validate on FR-029 reports no ears warning. |
+| FND-002 | fixed | Fix commit 1f7b467 adds "Optional option_type is one of design, protective, information." to the control skeleton contract comment. |
