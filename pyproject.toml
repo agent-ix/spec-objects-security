@@ -127,6 +127,7 @@ shell = "py-deps use-upstream ${package} || [ $? -eq 1 ] && poetry lock"
 help = "Switch dep to upstream registry"
 
 [tool.pytest.ini_options]
+pythonpath = ["."]
 addopts = "--cov=spec_objects_security --cov-report=term-missing --cov-fail-under=100 --json-report --json-report-file=report.json"
 
 # ALL WARNINGS MUST BE TREATED AS ERRORS, NO EXCEPTION!
