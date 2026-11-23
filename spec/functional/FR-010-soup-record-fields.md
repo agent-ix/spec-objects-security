@@ -22,8 +22,9 @@ means nobody has stated it, and an empty list means the reviewer stated that the
 Neither form has a default, in the manner of [FR-006](./FR-006-security-safe-declarations.md).
 
 The module reports a record whose `serves` names no requirement ([FR-013](./FR-013-soup-record-serves-requirement.md)), because a component that serves no
-requirement is unjustified scope. `SoupSupportStatus` is owned by this requirement and is not one of
-the ten vocabularies counted by FR-006.
+requirement is unjustified scope. `SoupSupportStatus` and `AnomalyOrigin` are owned by this requirement and are not among
+the ten vocabularies counted by FR-006. `AnomalyOrigin` is deliberately ungraded: it states where a
+finding came from, has no unassessed member, and an absent `origin` means not stated.
 
 ## Inputs
 
@@ -31,7 +32,7 @@ the ten vocabularies counted by FR-006.
 
 ## Outputs
 
-- The `SoupSupportStatus` closed vocabulary and the field set of the `soup_record` schema under `spec_objects_security/schemas/`.
+- The `SoupSupportStatus` and `AnomalyOrigin` closed vocabularies and the field set of the `soup_record` schema under `spec_objects_security/schemas/`.
 
 ## Behavior
 

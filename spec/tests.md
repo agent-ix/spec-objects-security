@@ -138,7 +138,7 @@ the Python package only: neither Node script is measured by it.
 | FR-007 | FR-007-AC-1..2 | TC-091, TC-092 | ✅ |
 | FR-008 | FR-008-AC-1..10 | TC-116..TC-120, TC-146..TC-149 | 🚧 |
 | FR-009 | FR-009-AC-1..8, FR-009-CON-1..2 | TC-121..TC-128 | ✅ AC-3 is an engine gap (TC-123); AC-8 and CON-2 are inspections |
-| FR-010 | FR-010-AC-1..4, FR-010-AC-6, FR-010-CON-1 | TC-129..TC-132, TC-134 | ✅ |
+| FR-010 | FR-010-AC-1..4, FR-010-AC-6, FR-010-AC-7, FR-010-CON-1 | TC-129..TC-132, TC-134, TC-274 | ✅ |
 | FR-011 | FR-011-AC-1..5, FR-011-CON-1 | TC-135..TC-139 | ✅ AC-4 and CON-1 need a human reviewer (TC-138) |
 | FR-012 | FR-012-AC-1..4 | TC-140..TC-143 | ✅ |
 | FR-013 | FR-013-AC-1..7 | TC-150..TC-156 | ✅ AC-6 reads the edge with `quire extract` |
@@ -267,7 +267,7 @@ the Python package only: neither Node script is measured by it.
 | TC-131 | `end_of_support` accepts a date or `unknown` and refuses any other string | Unit | P0 | FR-010-AC-3 | ✅ schema half; the authored-document half is a strict expected failure (the frontmatter record keys of an authored document are neither validated against the data schema nor projected into the extracted record) |
 | TC-132 | The `soup_record` schema carries no `default` keyword at any depth | Unit | P0 | FR-010-AC-4 | ✅ |
 | TC-134 | An anomaly statement with a credential-shaped string is refused by the FR-005 scan | Unit | P1 | FR-010-AC-6 | ✅ |
-| TC-274 | An anomaly `origin` is one of four closed members or absent; a severity or acceptability key fails | Unit | P0 | FR-010-AC-7 | ✅ |
+| TC-274 | An anomaly `origin` is one of four closed members or absent; a severity or acceptability key fails; neither `Anomaly.json` nor `AnomalyOrigin.json` carries a `default` | Unit | P0 | FR-010-AC-7 | 🚧 schema half; the emission half (an anomaly with no `origin` emits no `origin` key) is a strict expected failure (the frontmatter record keys of an authored document are neither validated against the data schema nor projected into the extracted record) |
 | TC-135 | A non-empty `disposition_clause` validates; an empty or whitespace-only one fails | Unit | P0 | FR-011-AC-1 | ✅ |
 | TC-136 | A record with no `disposition_clause` validates and carries no such key | Unit | P0 | FR-011-AC-2 | ✅ |
 | TC-137 | A record embedding `decision`, `rationale`, `approvalRef`, `attestation`, `approver` or `expires` fails | Unit | P0 | FR-011-AC-3 | ✅ |
