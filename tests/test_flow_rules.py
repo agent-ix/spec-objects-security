@@ -26,10 +26,6 @@ def _module(root, manifest: dict, *, include_threat_rules: bool = False) -> None
     schema without copying either module's files.
     """
     root.mkdir()
-    architecture_version = json.loads(
-        (ARCHITECTURE_MODULE / "package.json").read_text()
-    )["version"]
-    assert architecture_version == "0.13.0"
     schemas = root / "schemas"
     schemas.mkdir()
     for schema_name in (

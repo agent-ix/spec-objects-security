@@ -34,10 +34,10 @@
     "url": "git+https://github.com/agent-ix/spec-objects-security.git"
   },
   "devDependencies": {
-    "@agent-ix/quire-cli": "0.49.0",
-    "@agent-ix/quoin": "0.30.1",
+    "@agent-ix/quire-cli": "0.52.1",
+    "@agent-ix/quoin": "0.36.10",
     "@agent-ix/semantic-core": "0.4.4",
-    "@agent-ix/spec-objects-architecture": "0.13.0",
+    "@agent-ix/spec-objects-architecture": "0.14.0",
     "@typespec/compiler": "1.15.0",
     "@typespec/json-schema": "1.15.0"
   }
