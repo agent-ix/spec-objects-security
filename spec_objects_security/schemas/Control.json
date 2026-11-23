@@ -37,6 +37,9 @@
       "minItems": 1,
       "uniqueItems": true
     },
+    "option_type": {
+      "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/ControlOptionType.json"
+    },
     "mitigates": {
       "type": "array",
       "items": {

@@ -504,6 +504,10 @@ object_types:
           from: frontmatter_field
           path: [safeguards]
           required: false
+        option_type:
+          from: frontmatter_field
+          path: [option_type]
+          required: false
         # FR-005: the typed `## Properties` table the
         # semantic layer reads. Optional, so existing artifacts stay valid.
         properties:
