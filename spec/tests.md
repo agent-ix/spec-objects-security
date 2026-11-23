@@ -267,6 +267,7 @@ the Python package only: neither Node script is measured by it.
 | TC-131 | `end_of_support` accepts a date or `unknown` and refuses any other string | Unit | P0 | FR-010-AC-3 | ✅ schema half; the authored-document half is a strict expected failure (the frontmatter record keys of an authored document are neither validated against the data schema nor projected into the extracted record) |
 | TC-132 | The `soup_record` schema carries no `default` keyword at any depth | Unit | P0 | FR-010-AC-4 | ✅ |
 | TC-134 | An anomaly statement with a credential-shaped string is refused by the FR-005 scan | Unit | P1 | FR-010-AC-6 | ✅ |
+| TC-274 | An anomaly `origin` is one of four closed members or absent; a severity or acceptability key fails | Unit | P0 | FR-010-AC-7 | ✅ |
 | TC-135 | A non-empty `disposition_clause` validates; an empty or whitespace-only one fails | Unit | P0 | FR-011-AC-1 | ✅ |
 | TC-136 | A record with no `disposition_clause` validates and carries no such key | Unit | P0 | FR-011-AC-2 | ✅ |
 | TC-137 | A record embedding `decision`, `rationale`, `approvalRef`, `attestation`, `approver` or `expires` fails | Unit | P0 | FR-011-AC-3 | ✅ |

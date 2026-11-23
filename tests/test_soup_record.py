@@ -206,6 +206,24 @@ def test_empty_and_absent_known_anomalies_both_validate(validator):
     assert not validator.is_valid(record(known_anomalies=[{"source_ref": REQ}]))
 
 
+@pytest.mark.trace("TC-274", "FR-010-AC-7")
+def test_anomaly_origin_is_a_closed_optional_vocabulary(validator):
+    origins = ("internal-test", "field", "complaint", "soup-advisory")
+    enum = json.loads((SCHEMAS_DIR / "AnomalyOrigin.json").read_text())
+    assert enum["enum"] == list(origins)
+    for origin in origins:
+        stated = record(known_anomalies=[{"statement": "x", "origin": origin}])
+        assert validator.is_valid(stated), origin
+    assert validator.is_valid(record(known_anomalies=[{"statement": "x"}]))
+    assert not validator.is_valid(
+        record(known_anomalies=[{"statement": "x", "origin": "survey"}])
+    )
+    for key in ("severity", "acceptability"):
+        assert not validator.is_valid(
+            record(known_anomalies=[{"statement": "x", key: "high"}])
+        ), key
+
+
 @pytest.mark.trace("TC-131", "FR-010-AC-3")
 def test_end_of_support_is_a_calendar_date_or_unknown(validator):
     assert validator.is_valid(record(end_of_support="unknown"))
