@@ -41,3 +41,10 @@ Examined requirement units:
 | --- | --- | --- | --- |
 | FND-001 | low | FR-010 Description and Outputs still name only `SoupSupportStatus` as the vocabulary FR-010 owns and as "not one of the ten vocabularies counted by FR-006". `AnomalyOrigin` is a new closed enum schema with no unassessed member. Read against FR-006 ("Ten closed enum schemas"; every graded value has an explicit unassessed member), a reader cannot tell that it is a deliberately ungraded, FR-010-owned vocabulary where absence means not stated. Add `AnomalyOrigin` to the Description sentence and the Outputs bullet. | spec/functional/FR-010-soup-record-fields.md:24-34 |
 | FND-002 | low | The `spec/tests.md` coverage summary row for FR-010 still reads `FR-010-AC-1..4, FR-010-AC-6, FR-010-CON-1 \| TC-129..TC-132, TC-134`, so it omits FR-010-AC-7 and TC-274, which this PR added a few lines below. Update the row, or delete the hand-kept summary row in favour of the computed matrix. | spec/tests.md:141 |
+
+## Dispositions
+
+| FND | Outcome | Reason |
+| --- | --- | --- |
+| FND-001 | fixed | Round 1, head `9d159e85e7717997f3044cf8fc164b11c19f91eb`: the FR-010 Description now names `SoupSupportStatus` and `AnomalyOrigin` as owned by FR-010 and outside FR-006's ten, and states that `AnomalyOrigin` is deliberately ungraded with absence meaning not stated. The Outputs bullet names both vocabularies. `quire validate` with explicit `--module` roots (process, iso, security, architecture) exits 0 on FR-010 and `spec/tests.md`, and a section-rename mutation of FR-010 exits 3. |
+| FND-002 | fixed | Round 1: the `spec/tests.md` FR-010 summary row now lists `FR-010-AC-7` and `TC-274`. |
