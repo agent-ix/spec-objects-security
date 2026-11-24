@@ -29,7 +29,7 @@ requirement is unjustified scope, as a security NFR that mitigates nothing is
 ([FR-008](./FR-008-security-nfr-needs-mitigation-target.md)).
 
 A manifest cannot bind a list field to a typed verb, so the edge is the generic `references` verb of the
-`spec-artifacts-iso` registry, and the module introduces no link verb. The same verb is harvested from body
+`spec-artifacts-iso` registry, and this requirement introduces no link verb. The same verb is harvested from body
 links, so a body link from the record to a requirement also satisfies the rule; the `serves` list remains
 the authored statement that the report of quoin FR-144 reads.
 
@@ -52,7 +52,7 @@ AC-7 when both repositories are loaded into the same corpus.
 
 ## Outputs
 
-- One `required_relations` entry in the module manifest.
+- The `soup-record-serves-requirement` entry in the module manifest's `required_relations`.
 - A `[soup-serves-no-requirement]` finding for each `soup_record` with no outgoing `references` edge to a resolved `FR`, `NFR` or `StR`.
 
 ## Behavior
@@ -71,7 +71,7 @@ AC-7 when both repositories are loaded into the same corpus.
 
 | ID | Criteria | Verification |
 |----|----------|--------------|
-| FR-013-AC-1 | The loaded `soup_record` type declares no `allowed_links`, and the manifest declares one `required_relations` entry named `soup-record-serves-requirement` with `from: soup_record`, `edges: [references]`, `to: [FR, NFR, StR]`, `direction: outgoing` and `check: soup-serves-no-requirement`. | Test |
+| FR-013-AC-1 | The loaded `soup_record` type declares no `allowed_links`, and the manifest declares a `required_relations` entry named `soup-record-serves-requirement` with `from: soup_record`, `edges: [references]`, `to: [FR, NFR, StR]`, `direction: outgoing` and `check: soup-serves-no-requirement`. | Test |
 | FR-013-AC-2 | Over a bundle holding a `soup_record` fixture with no `serves` entry, `quire validate --okf` exits 0 and yields exactly one `soup-serves-no-requirement` finding naming the record. | Test |
 | FR-013-AC-3 | Over a bundle holding the same record with a `serves` entry naming an `FR` in the bundle, `quire validate --okf` yields no `soup-serves-no-requirement` finding. | Test |
 | FR-013-AC-4 | A `serves` list whose only entries name is a document of another kind, or an id that resolves to nothing, still yields the finding. | Test |
@@ -82,4 +82,4 @@ AC-7 when both repositories are loaded into the same corpus.
 ## Dependencies
 
 - **Upstream**: [FR-008](./FR-008-security-nfr-needs-mitigation-target.md), [FR-009](./FR-009-soup-record-identity-and-promotion.md), [FR-010](./FR-010-soup-record-fields.md); `agent-ix/quire-rs` FR-058 (required relations), FR-085 (cross-repository resolution)
-- **Downstream**: none
+- **Downstream**: [FR-030](./FR-030-soup-requirements-design-relation.md) reads the same `serves` edge from the requirement end
