@@ -43,7 +43,7 @@ traceability rule keeps its meaning.
 
 ## Behavior
 
-- The manifest `semantic` block SHALL carry exactly these keys and values: `contract_version: 1.0.0`, `package: agent-ix/spec-objects-security`, `exports` listing every object type that ships a schema, `imports: {}`, `targets: [json-schema, markdown]`, `mappings: [typed-table, sysml-fence, ocl-clause, record-sections]`, `compatibility_posture: additive`, `legacy_forms: warning`.
+- The manifest `semantic` block SHALL carry exactly these keys and values: `contract_version: 1.0.0`, `package: agent-ix/spec-objects-security`, `exports` listing every object type that ships a schema, `imports` mapping `agent-ix/spec-artifacts-process` to `0.3.0`, `agent-ix/spec-objects-architecture` to `0.5.0`, and `agent-ix/spec-artifacts-iso` to `0.3.0`, `targets: [json-schema, markdown]`, `mappings: [typed-table, sysml-fence, ocl-clause, record-sections]`, `compatibility_posture: additive`, `legacy_forms: warning`. These are the semantic package IDs and manifest versions of the modules whose object and edge vocabularies this module uses.
 - `semantic.exports` SHALL name all twenty-seven object types: `auth_flow`, `permission`, `scope`, `role`, `secret`, `encryption_key`, `session_config`, `data_classification`, `trust_boundary`, `audit_event`, `csrf_token`, `cors_policy`, `password_policy`, `mfa_method`, `jwt_claim`, `threat`, `control`, `risk`, `vulnerability`, `asset`, `attack_surface`, `policy`, `audit_finding`, `soup_record`, `scope_exclusion`, `threat_model`, `processing_activity`.
 - Every exported object type's `data_schema` SHALL be `{ schema: schemas/<Model>.json }`.
 - No exported object type SHALL carry an inline `data_schema`.
@@ -65,7 +65,7 @@ traceability rule keeps its meaning.
 
 | ID | Criteria | Verification |
 |----|----------|--------------|
-| FR-003-AC-1 | The loaded `semantic` block equals the eight admitted keys with the values above, and `exports` equals the twenty-seven object-type names. | Test |
+| FR-003-AC-1 | The loaded `semantic` block equals the eight admitted keys with the values above, including the three imported package IDs and manifest versions, and `exports` equals the twenty-seven object-type names. | Test |
 | FR-003-AC-4 | `quire.Registry.load_from([module dir])` lists all twenty-seven archetypes and `validate_document` on each skeleton reports no `semantic.*` load failure. | Test |
 | FR-003-AC-5 | `quoin module install path:<module dir>` exits zero and `quoin module` lists `spec-objects-security`; the previously installed entry is restored afterwards. | Test |
 | FR-003-AC-6 | A manifest copy whose `semantic` block gains a key `foo` is refused by Quire's loader. The refusal is verified; the half that requires the diagnostic to *name* `foo` or the path is an explicit expected failure while `agent-ix/quire-rs#221` and `agent-ix/quire-rs#394` are open. | Test |
