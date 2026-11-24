@@ -53,6 +53,31 @@ enum SoupSupportStatus {
   `unknown`,
 }
 
+/** A person's statement of vulnerability exploitability for a SOUP advisory. */
+enum VexStatus {
+  affected,
+  not_affected,
+  under_investigation,
+  fixed,
+}
+
+/** Why a vulnerability does not affect a component. */
+enum VexJustification {
+  component_not_present,
+  vulnerable_code_not_present,
+  vulnerable_code_not_in_execute_path,
+  vulnerable_code_cannot_be_controlled_by_adversary,
+  inline_mitigations_already_exist,
+}
+
+/** Lifecycle states a person may record for a vulnerability. */
+enum VulnerabilityStatus {
+  open,
+  in_remediation,
+  remediated,
+  closed,
+}
+
 /**
  * Where an anomaly was found. It is an observation of provenance, not a
  * grade: it carries no severity and decides no acceptability.
@@ -319,6 +344,41 @@ model Anomaly {
   ...Record<never>;
 }
 
+/** A `minLength: 1` constraint carried by the statement field. */
+model StatementMinLengthConstraint {
+  kind: "MinLengthConstraint";
+  value: {
+    keyword: ConstraintKeyword.minLength;
+    value: 1;
+  };
+}
+
+/** One person-authored VEX statement about an advisory and a SOUP component. */
+@extension(
+  "allOf",
+  #[
+    #{
+      `if`: #{ properties: #{ status: #{ `const`: "not_affected" } }, required: #["status"] },
+      `then`: #{ required: #["justification"] }
+    },
+    #{
+      `if`: #{ properties: #{ status: #{ `const`: "affected" } }, required: #["status"] },
+      `then`: #{ required: #["action_statement"] }
+    }
+  ]
+)
+model VexStatement {
+  advisory: NonBlankText;
+  status: VexStatus;
+  @pattern("\\S") assessed_by: string;
+  @pattern("^([0-9]{4}-(0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01])|[0-9]{4}-(0[469]|11)-(0[1-9]|[12][0-9]|30)|[0-9]{4}-02-(0[1-9]|1[0-9]|2[0-8])|([0-9]{2}(0[48]|[2468][048]|[13579][26])|([02468][048]|[13579][26])00)-02-29)$") assessed_at: string;
+  justification?: VexJustification;
+  @pattern("\\S") action_statement?: string;
+  impact_statement?: string;
+  evidence_refs?: SemanticId[];
+  ...Record<never>;
+}
+
 // ---------------------------------------------------------------------------
 // Open marker models
 //
@@ -355,6 +415,19 @@ model OccurrenceField {
 /** A `FieldDecl` named `purl`. */
 model PurlField {
   name: "purl";
+}
+
+/** A `FieldDecl` named `statement`, typed as String and constrained to minLength 1. */
+model AnomalyStatementField {
+  name: "statement";
+  type: {
+    target: {
+      kind: "KernelScalar";
+      value: KernelScalar.String;
+    };
+  };
+  @contains(StatementMinLengthConstraint)
+  constraints: ConstraintDecl[];
 }
 
 /** A `FieldDecl` named `stride_category`. */
@@ -538,6 +611,10 @@ model Threat {
 @extension(
   "allOf",
   #[
+    #{
+      `if`: #{ properties: #{ disposition: #{} }, required: #["disposition"] },
+      `then`: #{ required: #["disposition_by"] }
+    },
     #{ properties: #{ fields: #{ contains: #{ `$ref`: "SeverityField.json" } } } },
     #{ properties: #{ fields: #{ items: #{ not: #{ `$ref`: "DefaultedField.json" } } } } }
   ]
@@ -552,6 +629,32 @@ model Vulnerability {
   severity?: Severity;
   cve_id?: string;
   affects?: SemanticId[];
+  status?: VulnerabilityStatus;
+  @pattern("\\S") disposition?: string;
+  @pattern("\\S") disposition_by?: string;
+  @pattern("^([0-9]{4}-(0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01])|[0-9]{4}-(0[469]|11)-(0[1-9]|[12][0-9]|30)|[0-9]{4}-02-(0[1-9]|1[0-9]|2[0-8])|([0-9]{2}(0[48]|[2468][048]|[13579][26])|([02468][048]|[13579][26])00)-02-29)$") discovered_at?: string;
+  @pattern("^([0-9]{4}-(0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01])|[0-9]{4}-(0[469]|11)-(0[1-9]|[12][0-9]|30)|[0-9]{4}-02-(0[1-9]|1[0-9]|2[0-8])|([0-9]{2}(0[48]|[2468][048]|[13579][26])|([02468][048]|[13579][26])00)-02-29)$") disclosed_at?: string;
+  @pattern("^([0-9]{4}-(0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01])|[0-9]{4}-(0[469]|11)-(0[1-9]|[12][0-9]|30)|[0-9]{4}-02-(0[1-9]|1[0-9]|2[0-8])|([0-9]{2}(0[48]|[2468][048]|[13579][26])|([02468][048]|[13579][26])00)-02-29)$") fixed_at?: string;
+  ...Record<never>;
+}
+
+/** An addressable anomaly record; distinct from a SOUP-embedded Anomaly. */
+@extension(
+  "allOf",
+  #[
+    #{ properties: #{ fields: #{ contains: #{ `$ref`: "AnomalyStatementField.json" } } } },
+    #{ properties: #{ fields: #{ items: #{ not: #{ `$ref`: "DefaultedField.json" } } } } }
+  ]
+)
+model AnomalyRecord {
+  @minItems(1)
+  @contains(IdentityField)
+  fields: FieldDecl[];
+
+  clauses?: ClauseRef[];
+  relations?: RelationDecl[];
+  source_ref?: SemanticId;
+  origin?: AnomalyOrigin;
   ...Record<never>;
 }
 
@@ -997,6 +1100,7 @@ model SoupRecord {
   support_status?: SoupSupportStatus;
   @pattern("^(unknown|[0-9]{4}-(0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01])|[0-9]{4}-(0[469]|11)-(0[1-9]|[12][0-9]|30)|[0-9]{4}-02-(0[1-9]|1[0-9]|2[0-8])|([0-9]{2}(0[48]|[2468][048]|[13579][26])|([02468][048]|[13579][26])00)-02-29)$") end_of_support?: string;
   @pattern("\\S") disposition_clause?: string;
+  vex_statements?: VexStatement[];
   ...Record<never>;
 }
 

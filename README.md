@@ -59,6 +59,7 @@ This module adds the following object kinds (frontmatter `type:` value in parent
 | Control | `control` | A security control, with a `Mappings` section mapping it to the threats, risks and standards it addresses. |
 | Risk | `risk` | A risk-register entry, with qualitative `likelihood` and `impact` ratings and an authored `decision`; accepted or rejected decisions name `decided_by`. |
 | Vulnerability | `vulnerability` | A vulnerability, with frontmatter `severity` and optional `cve_id` linking the public advisory. |
+| Anomaly | `anomaly` | An addressable observation with an authored `statement`, optionally linked from a vulnerability. |
 | Asset | `asset` | A protected asset, with a `Description` section describing the asset and why it matters. |
 | Attack surface | `attack_surface` | An attack surface, with an `Entry Points` section enumerating the externally reachable entry points. |
 | Policy | `policy` | A normative security policy, with a `Policy` section stating the policy text. |

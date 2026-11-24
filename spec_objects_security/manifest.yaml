@@ -29,6 +29,7 @@ semantic:
   - control
   - risk
   - vulnerability
+  - anomaly
   - asset
   - attack_surface
   - policy
@@ -629,7 +630,7 @@ object_types:
 - name: vulnerability
   allowed_links:
     affects: [asset, attack_surface, soup_record]
-    references: [vulnerability]
+    references: [vulnerability, anomaly]
   data_schema:
     schema: schemas/Vulnerability.json
   body_extraction:
@@ -650,6 +651,19 @@ object_types:
           required: true
         # FR-005: the typed `## Properties` table the
         # semantic layer reads. Optional, so existing artifacts stay valid.
+        properties:
+          from: section_body
+          after_heading: Properties
+          required: false
+- name: anomaly
+  data_schema:
+    schema: schemas/AnomalyRecord.json
+  body_extraction:
+    yield_pattern:
+      match:
+        id: *id004
+        title: *id005
+        type: *id006
         properties:
           from: section_body
           after_heading: Properties
