@@ -49,3 +49,10 @@ Examined units:
 ## Verdict
 
 **PASS with two low findings.** Every Test-method criterion has a tagged test that can fail, and the manifest mutations prove it. The only untagged criterion, AC-8, is a Demonstration whose method is correct and which cannot be performed until a quoin release ships the `soup-requirements` kind (FND-001; suggested disposition: deferred to the ticket). FND-002 is a one-line test addition.
+
+## Dispositions
+
+| FND | outcome | reason |
+| --- | --- | --- |
+| FND-001 | deferred | AC-8 stays a Demonstration with no test here, which is right. It is demonstrated on PLAT-1855 once a quoin release carries quoin #1032 (released quoin rejects the `relation` key). The PR #80 body now records this. |
+| FND-002 | fixed | Verified in fix commit ab3abc6 (head ab3abc671a3f3f8be0b897e564b78adff6e8cd35): the AC-9 test asserts `findings[0].startswith("warning:") and plain.returncode == 0`. Measured: at default severity the assertion holds; with `trace:nfr-without-soup-requirements=error` the run exits 3 and the assertion fails, so it discriminates. A manifest `severity` key is not a possible mutation (the engine rejects the field). |

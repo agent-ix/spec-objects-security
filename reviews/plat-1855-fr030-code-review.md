@@ -51,3 +51,10 @@ Examined units:
 **PASS with one medium and one low finding; mergeable after FND-001 is fixed or the iso lock is bumped.** The manifest data matches FR-030 field for field. FR-013's relation is untouched and stays out of `design_relations`. Every manifest mutation tried was killed by a test. The membership rewrite of `test_manifest.py` loses no real invariant, and selecting the relation by name in `test_reverse_mitigates.py` is the right repair. FND-001 is the only blocker: a test asserts a property owned by another repository, so this repository's own suite goes red against its locked dependency.
 
 Observation for the lead, not a defect of this PR: quire-cli's `quire matrix` stdout labels every design-relation gap "no design element", which reads oddly for a SOUP-requirements gap. That wording belongs to quire-cli.
+
+## Dispositions
+
+| FND | outcome | reason |
+| --- | --- | --- |
+| FND-001 | fixed | Verified in fix commit ab3abc6 (head ab3abc671a3f3f8be0b897e564b78adff6e8cd35): the forward-verb `_disallowed(... FR-200.md) == []` assertion is removed; the inverse assertion (line 192) and the `blocks` control (lines 193-195) are kept. `tests/test_soup_requirements.py` passes 10/10 against iso origin/main (no iso #77 needed) and against iso #77 head d075202e. FR-030 Cross-repository now states iso lists only the forward verb and the inverse needs no allowance (quire-rs FR-041-AC-2), matching iso #77 d075202e and the engine (measured: inverse draws no `disallowed-edge-type` with iso main). |
+| FND-002 | fixed | Verified in fix commit ab3abc6: `assert names[-2:] == [FR_RELATION, NFR_RELATION]` plus `len(names) > 2`, and the gap and FR-500 lines are read from stderr only. Mutations killed: design order swap fails at line 321; `when_any` removal fails at line 328 (`design gap: spec/FR-500.md fr-without-soup-requirements`). |
