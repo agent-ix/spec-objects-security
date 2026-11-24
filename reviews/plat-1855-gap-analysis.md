@@ -47,3 +47,4 @@ Examined units:
 | --- | --- | --- |
 | FND-001 | fixed | Verified in fix commit 3b08c0a (head 3b08c0a3a9a515b5cfb284e0fa37d79ea5ce3180). |
 | FND-002 | fixed | Verified in fix commit 3b08c0a (head 3b08c0a3a9a515b5cfb284e0fa37d79ea5ce3180). |
+| FND-003 | fixed | Verified in fix commit 4eebba1 (head 4eebba194c163d1a1ddea3e6808a84a990c31d75). |
