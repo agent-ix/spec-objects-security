@@ -66,8 +66,8 @@ This document specifies the requirements for `spec-objects-security`, a Filament
   `quire validate --module` refuses an unknown top-level key but accepts bad
   `semantic.*`, and `quoin module install` refuses bad `semantic.*` but accepts
   an unknown top-level key, so together they cover what the schema closes. It is
-  also checked by activation (FR-001-AC-2), which needs a running filament-core and is `🚧`
-  here.
+  also checked by activation (FR-001-AC-2), which needs a running filament-core and
+  is verified outside this module.
 - Extraction of the declared-but-not-yet-extracted keys (`severity`,
   `likelihood`, `impact`, `status`, `level`, `trust_level`,
   `stride_category`, `effectiveness`, `lifecycle`, `material_ref`, and the

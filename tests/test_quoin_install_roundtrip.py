@@ -1,11 +1,10 @@
 """The Quoin install roundtrip.
 
-The IT-002 success criteria stay `Manual` and `🚧`: they need a Quoin that
-provides the module installer. This file does **not** bind them — a test that
-only checks files exist cannot claim "the pre-install listing is captured".
-What it checks is that the module directory the roundtrip would hand to Quoin
-is complete and self-consistent, so the manual step has a machine-checked
-starting point rather than a claim.
+The IT-002 success criteria need a Quoin that provides the module installer,
+so this file does not cover them: a test that only checks files exist cannot
+claim "the pre-install listing is captured". It checks only that the module
+directory the roundtrip would hand to Quoin is complete and self-consistent,
+which gives the manual install step a machine-checked starting point.
 """
 
 from __future__ import annotations
