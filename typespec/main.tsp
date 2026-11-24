@@ -312,6 +312,34 @@ model ProcessingActivity {
   ...Record<never>;
 }
 
+/** Frontmatter contract for the vulnerability-management plan artifact. */
+model VulnerabilityManagementPlanFrontmatter {
+  id: NonBlankText;
+  title: NonBlankText;
+  type: "vulnerability_management_plan";
+  relationships?: {
+    @pattern("^ix://") target: string;
+    type: "references";
+    cardinality?: string;
+    ...Record<never>;
+  }[];
+  ...Record<never>;
+}
+
+/** The extracted, authored sections of a vulnerability-management plan. */
+model VulnerabilityManagementPlan {
+  id: NonBlankText;
+  title: NonBlankText;
+  type: "vulnerability_management_plan";
+  @minLength(1) scope: string;
+  @minLength(1) intake_and_acknowledgement: string;
+  @minLength(1) assessment: string;
+  @minLength(1) coordination_and_disclosure: string;
+  @minLength(1) corrective_action_and_release: string;
+  @minLength(1) communication: string;
+  ...Record<never>;
+}
+
 // ---------------------------------------------------------------------------
 // Support records
 // ---------------------------------------------------------------------------
