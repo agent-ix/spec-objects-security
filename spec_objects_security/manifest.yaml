@@ -37,7 +37,11 @@ semantic:
   - scope_exclusion
   - threat_model
   - processing_activity
-  imports: {}
+  # Edge vocabularies used by this module are declared by these packages.
+  imports:
+    agent-ix/spec-artifacts-process: 0.3.0
+    agent-ix/spec-objects-architecture: 0.5.0
+    agent-ix/spec-artifacts-iso: 0.3.0
   targets: [json-schema, markdown]
   mappings: [typed-table, sysml-fence, ocl-clause, record-sections]
   compatibility_posture: additive
