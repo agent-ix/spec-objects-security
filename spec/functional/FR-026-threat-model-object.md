@@ -89,8 +89,8 @@ module. This requirement names no requirement id for the architecture objects un
 
 ### Exports
 
-- `threat_model` is one of the twenty-seven object types. `semantic.exports` SHALL name it ([FR-003](./FR-003-semantic-manifest-contract.md)),
-  and it is one of the twenty-seven types covered by the schema, skeleton and no-default contracts of
+- `threat_model` is one of the twenty-eight object types. `semantic.exports` SHALL name it ([FR-003](./FR-003-semantic-manifest-contract.md)),
+  and it is one of the twenty-eight types covered by the schema, skeleton and no-default contracts of
   [FR-004](./FR-004-role-schemas.md), [FR-005](./FR-005-executable-skeletons.md) and
   [FR-006](./FR-006-security-safe-declarations.md).
 
