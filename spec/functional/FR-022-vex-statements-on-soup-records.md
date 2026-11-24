@@ -78,6 +78,7 @@ a status from an advisory, reachability result, or other analysis.
 | FR-022-AC-6 | Two statements with the same exact `advisory` identifier fail with a located duplicate error naming `advisory`; statements with distinct identifiers validate. | Test |
 | FR-022-AC-7 | A fixture containing `evidence_refs` with `SemanticId` values validates, and one containing a non-`SemanticId` value fails with a located message naming `evidence_refs`. | Test |
 | FR-022-AC-8 | The emitted schema contains no default for any VEX statement field. | Test |
+| FR-022-AC-9 | The emitted `SoupRecord` schema admits optional `vex_statements` as a list of the statement objects defined in Behavior, and refuses every unlisted `SoupRecord` key. | Test |
 
 ## Dependencies
 
