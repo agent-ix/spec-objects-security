@@ -76,7 +76,7 @@ def linked_vulnerability(root, target, target_type):
         shutil.copy(SKELETONS_DIR / f"{target_type}.md", root / f"{target_type}.md")
 
 
-@pytest.mark.trace("FR-032-AC-7")
+@pytest.mark.trace("FR-032-AC-7", "FR-004-AC-17")
 def test_module_exports_anomaly_record_and_ships_its_skeleton(quire_engine):
     manifest = yaml.safe_load(MANIFEST_PATH.read_text())
     assert "anomaly" in manifest["semantic"]["exports"]
@@ -92,7 +92,7 @@ def test_module_exports_anomaly_record_and_ships_its_skeleton(quire_engine):
     assert frontmatter(ANOMALY_SKELETON.read_text())["object"] == "anomaly"
 
 
-@pytest.mark.trace("FR-032-AC-8")
+@pytest.mark.trace("FR-032-AC-8", "FR-004-AC-17")
 def test_anomaly_record_requires_identity_and_nonempty_string_statement(
     schema_registry,
 ):

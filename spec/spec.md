@@ -25,7 +25,7 @@ This document specifies the requirements for `spec-objects-security`, a Filament
 ### In Scope
 
 - The Module manifest this package publishes and its activation against filament-core.
-- The 27 tier-2 ObjectTypes the module contributes, covering threats/controls, anomalies, and authentication/authorization (identity folded in per ADR; revisit if identity grows past ~12 types).
+- The 28 tier-2 ObjectTypes the module contributes, covering threats/controls, anomalies, and authentication/authorization (identity folded in per ADR; revisit if identity grows past ~12 types).
 - A typed `vulnerability_management_plan` artifact type for recording a product's person-authored vulnerability intake, coordination, corrective-action, and communication process ([US-002](./usecase/US-002-vulnerability-management-plan.md), [FR-031](./functional/FR-031-vulnerability-management-plan-archetype.md)).
 - Person-authored vulnerability lifecycle status, disposition, dates, and links to SOUP and anomaly objects ([FR-032](./functional/FR-032-vulnerability-lifecycle.md)).
 - The templates, schemas, and grammars the module ships for those object types.
