@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import pathlib
+import subprocess
 
 import pytest
 import yaml
+from tests.conftest import engine_tool
 
 PKG_ROOT = pathlib.Path(__file__).resolve().parent.parent / "spec_objects_security"
 MANIFEST_PATH = PKG_ROOT / "manifest.yaml"
@@ -29,6 +31,19 @@ def test_semantic_imports_declare_edge_vocabulary_owners() -> None:
         "agent-ix/spec-objects-architecture": "0.5.0",
         "agent-ix/spec-artifacts-iso": "0.3.0",
     }
+
+
+@pytest.mark.trace("FR-003-AC-8")
+def test_quire_resolves_imported_vocabulary_when_security_is_loaded_alone() -> None:
+    result = subprocess.run(
+        [engine_tool("quire"), "relations", "--module", str(PKG_ROOT)],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
+    assert "UnknownEdgeType" not in result.stderr, result.stderr
+    assert "UnknownRole" not in result.stderr, result.stderr
 
 
 def _object_types():

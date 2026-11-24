@@ -44,6 +44,7 @@ traceability rule keeps its meaning.
 ## Behavior
 
 - The manifest `semantic` block SHALL carry exactly these keys and values: `contract_version: 1.0.0`, `package: agent-ix/spec-objects-security`, `exports` listing every object type that ships a schema, `imports` mapping `agent-ix/spec-artifacts-process` to `0.3.0`, `agent-ix/spec-objects-architecture` to `0.5.0`, and `agent-ix/spec-artifacts-iso` to `0.3.0`, `targets: [json-schema, markdown]`, `mappings: [typed-table, sysml-fence, ocl-clause, record-sections]`, `compatibility_posture: additive`, `legacy_forms: warning`. These are the semantic package IDs and manifest versions of the modules whose object and edge vocabularies this module uses.
+- When Quire loads `spec-objects-security` alone, it SHALL resolve the declared semantic imports so relations using imported edge types and roles have no `UnknownEdgeType` or `UnknownRole` diagnostic.
 - `semantic.exports` SHALL name all twenty-seven object types: `auth_flow`, `permission`, `scope`, `role`, `secret`, `encryption_key`, `session_config`, `data_classification`, `trust_boundary`, `audit_event`, `csrf_token`, `cors_policy`, `password_policy`, `mfa_method`, `jwt_claim`, `threat`, `control`, `risk`, `vulnerability`, `asset`, `attack_surface`, `policy`, `audit_finding`, `soup_record`, `scope_exclusion`, `threat_model`, `processing_activity`.
 - Every exported object type's `data_schema` SHALL be `{ schema: schemas/<Model>.json }`.
 - No exported object type SHALL carry an inline `data_schema`.
@@ -70,6 +71,7 @@ traceability rule keeps its meaning.
 | FR-003-AC-5 | `quoin module install path:<module dir>` exits zero and `quoin module` lists `spec-objects-security`; the previously installed entry is restored afterwards. | Test |
 | FR-003-AC-6 | A manifest copy whose `semantic` block gains a key `foo` is refused by Quire's loader. The refusal is verified; the half that requires the diagnostic to *name* `foo` or the path is an explicit expected failure while `agent-ix/quire-rs#221` and `agent-ix/quire-rs#394` are open. | Test |
 | FR-003-AC-7 | `quire validate --module <module dir>` and `quoin module install path:<module dir>` (with `HOME` pointed at a temporary directory, so the real install and registry are untouched) both accept the shipped manifest; a copy with an unknown top-level key is refused by `quire validate` naming `bogus_key`, and a copy with an unknown `semantic` key is refused by `quoin module install` naming `semantic.foo`. No copy of the schema is held here. | Test |
+| FR-003-AC-8 | `quire relations --module <module dir>` exits zero when `spec-objects-security` is the only requested module and reports no `UnknownEdgeType` or `UnknownRole` for its declared relation vocabulary. | Test |
 
 ## Dependencies
 
