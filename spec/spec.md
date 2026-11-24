@@ -66,8 +66,10 @@ This document specifies the requirements for `spec-objects-security`, a Filament
   `quire validate --module` refuses an unknown top-level key but accepts bad
   `semantic.*`, and `quoin module install` refuses bad `semantic.*` but accepts
   an unknown top-level key, so together they cover what the schema closes. It is
-  also checked by activation (FR-001-AC-2), which needs a running filament-core and
-  is verified outside this module.
+  also checked by activation (FR-001-AC-2), which the integration test
+  `test_activation_noop_hash_and_contribution_tables` in
+  `tests/test_activation_core.py` verifies. That test needs a running
+  filament-core and is excluded from the default run (`-m 'not integration'`).
 - Extraction of the declared-but-not-yet-extracted keys (`severity`,
   `likelihood`, `impact`, `status`, `level`, `trust_level`,
   `stride_category`, `effectiveness`, `lifecycle`, `material_ref`, and the

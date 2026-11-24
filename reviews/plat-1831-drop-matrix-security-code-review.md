@@ -32,3 +32,16 @@ Gap analysis did not run: the diff has no production code. The matrix comparison
 | --- | --- | --- | --- |
 | FND-001 | low | The module docstring still says the IT-002 success criteria "stay `Manual` and `🚧`". Those are the status marks of the deleted `spec/tests.md` row TC-110, which no longer exist anywhere, so the sentence cites a superseded status record. | tests/test_quoin_install_roundtrip.py:3 |
 | FND-002 | low | The Out of scope prose still says activation (FR-001-AC-2) "is `🚧` here". That is the deleted matrix's status mark for the row. The generated matrix carries no such mark, so it is a leftover matrix status reference. | spec/spec.md:69 |
+
+## New findings (disposition pass 1)
+
+| ID | Severity | Summary | Refs |
+| --- | --- | --- | --- |
+| FND-003 | low | The replacement wording says activation (FR-001-AC-2) "is verified outside this module". It is verified inside this module: `tests/test_activation_core.py:278` `test_activation_noop_hash_and_contribution_tables` carries `@pytest.mark.integration` and `@pytest.mark.trace("FR-001-AC-2")` and activates against a deployed filament-core. The sentence should say the check is this repo's integration test, which needs a running filament-core (Kind cluster) and is outside the default `-m 'not integration'` run. | spec/spec.md:69-70 |
+
+## Dispositions
+
+| FND | outcome | reason |
+| --- | --- | --- |
+| FND-001 | fixed | f8768ee rewrites the docstring with no `Manual`/`🚧` marks; the new text is accurate (the file has no trace marker, so it does not cover IT-002). |
+| FND-002 | fixed | f8768ee removes the `🚧` mark from spec/spec.md:69; the replacement claim's own inaccuracy is FND-003. |
