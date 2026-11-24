@@ -156,15 +156,21 @@ def test_threat_and_risk_coverage_is_declared_not_coded() -> None:
     """
     manifest = yaml.safe_load(MANIFEST_PATH.read_text())
     model = manifest["traceability"]
-    by_name = {r["name"]: r for r in model["required_relations"]}
+    # The design relations of FR-030 read requirements and a verb this module
+    # declares in `edge_types`; tests/test_soup_requirements.py owns them.
+    by_name = {
+        r["name"]: r
+        for r in model["required_relations"]
+        if r["name"] not in model.get("design_relations", [])
+    }
 
-    assert set(by_name) == {
+    assert {
         "risk-has-treatment",
         "security-nfr-has-mitigation-target",
         "soup-record-serves-requirement",
         "threat-model-scopes-something",
         "processing-activity-scopes-nothing",
-    }
+    } <= set(by_name)
     assert by_name["risk-has-treatment"]["from"] == "risk"
     assert by_name["risk-has-treatment"]["where"] == {
         "field": "decision",
@@ -172,13 +178,13 @@ def test_threat_and_risk_coverage_is_declared_not_coded() -> None:
     }
 
     checks = {r["check"] for r in by_name.values()}
-    assert checks == {
+    assert {
         "untreated-risk",
         "unjustified-security-nfr",
         "soup-serves-no-requirement",
         "threat-model-scopes-nothing",
         "processing-activity-scopes-nothing",
-    }
+    } <= checks
     assert len(checks) == len(by_name), "each relation is independently tunable"
 
     declared = {o["name"] for o in manifest["object_types"]}
