@@ -56,6 +56,7 @@ nav:
 edge_types:
   scopes: { description: "A security model or processing activity scopes a target element.", category: governance }
   considers: { description: "Threat model considers the threat at the target.", category: governance }
+  soup_requirement_for: { description: "An FR or NFR states the requirements placed on the SOUP item that serves the target requirement.", category: traceability, inverse: has_soup_requirement }
 archetypes: []
 grammars: []
 artifact_types: []
@@ -1308,6 +1309,29 @@ traceability:
     to: [FR, NFR, StR]
     direction: outgoing
     check: soup-serves-no-requirement
+  # FR-030: a requirement a SOUP record references is asked for the requirements
+  # placed on that SOUP item. `from` is the requirement, not the record, so a
+  # class policy that reads design relations per requirement gets a row. The
+  # statement is authored by a person on an FR or NFR with `soup_requirement_for`
+  # toward the served requirement, or by the served requirement as the inverse.
+  # `when_any` (quire-rs FR-058) scopes the rows to requirements a resolved
+  # soup_record references; elsewhere the relation yields no row and no finding.
+  - name: fr-has-soup-requirements
+    from: FR
+    edges: [soup_requirement_for]
+    to: [FR, NFR]
+    direction: incoming
+    check: fr-without-soup-requirements
+    when_any:
+    - {verb: references, direction: incoming, other: [soup_record]}
+  - name: nfr-has-soup-requirements
+    from: NFR
+    edges: [soup_requirement_for]
+    to: [FR, NFR]
+    direction: incoming
+    check: nfr-without-soup-requirements
+    when_any:
+    - {verb: references, direction: incoming, other: [soup_record]}
   - name: threat-model-scopes-something
     from: threat_model
     edges: [scopes]
@@ -1342,6 +1366,10 @@ traceability:
   - name: remove-from-sink
     description: Remove the connection's delivers_to relationship to this sink when it is the first path step.
     removes: {edge: delivers_to, direction: incoming}
+  # FR-030 names the two SOUP-requirement relations as design relations so the
+  # design join, `quire matrix --strict` and quoin's `soup-requirements` kind read
+  # them. FR-013's `soup-record-serves-requirement` is deliberately not listed.
+  design_relations: [fr-has-soup-requirements, nfr-has-soup-requirements]
   #
   # A risk that transitively arises from itself states nothing, and no
   # per-document check can see it: the defect is a property of the graph.

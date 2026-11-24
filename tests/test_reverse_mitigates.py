@@ -107,7 +107,9 @@ def _check_lines(result, check):
 def test_security_nfr_relation_is_declared_with_a_where_selector():
     manifest = yaml.safe_load(MANIFEST_PATH.read_text())
     relations = manifest["traceability"]["required_relations"]
-    (relation,) = [r for r in relations if r["from"] == "NFR"]
+    (relation,) = [
+        r for r in relations if r["name"] == "security-nfr-has-mitigation-target"
+    ]
     assert relation == {
         "name": "security-nfr-has-mitigation-target",
         "from": "NFR",
