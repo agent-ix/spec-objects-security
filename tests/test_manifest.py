@@ -21,6 +21,16 @@ def test_manifest_loads() -> None:
     assert isinstance(manifest.get("object_types", []), list)
 
 
+@pytest.mark.trace("FR-003-AC-1")
+def test_semantic_imports_declare_edge_vocabulary_owners() -> None:
+    manifest = yaml.safe_load(MANIFEST_PATH.read_text())
+    assert manifest["semantic"]["imports"] == {
+        "agent-ix/spec-artifacts-process": "0.3.0",
+        "agent-ix/spec-objects-architecture": "0.5.0",
+        "agent-ix/spec-artifacts-iso": "0.3.0",
+    }
+
+
 def _object_types():
     return yaml.safe_load(MANIFEST_PATH.read_text()).get("object_types", [])
 
