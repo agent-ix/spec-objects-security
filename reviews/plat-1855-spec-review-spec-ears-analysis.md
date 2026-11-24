@@ -35,3 +35,10 @@ Examined units:
 | --- | --- | --- | --- |
 | FND-001 | low | Behavior bullet "Quire SHALL report a requirement served by a `soup_record` that has no incoming `soup_requirement_for` edge from a resolved `FR` or `NFR`" has an ambiguous relative clause (the record or the requirement has no edge) and names only the forward verb, while the next bullet and FR-058 counterpart reading also accept `has_soup_requirement` authored by the served requirement | spec/functional/FR-030-soup-requirements-design-relation.md:86 |
 | FND-002 | low | A normative SHALL NOT sits in Description prose ("the relations SHALL NOT be declared without that scope"), outside Behavior and with no AC of its own; it duplicates the `when_any` field already fixed by the Behavior bullets and AC-1 | spec/functional/FR-030-soup-requirements-design-relation.md:57-59 |
+
+## Dispositions
+
+| FND | outcome | reason |
+| --- | --- | --- |
+| FND-001 | fixed | Verified in fix commit 3b08c0a (head 3b08c0a3a9a515b5cfb284e0fa37d79ea5ce3180). |
+| FND-002 | fixed | Verified in fix commit 3b08c0a (head 3b08c0a3a9a515b5cfb284e0fa37d79ea5ce3180). |

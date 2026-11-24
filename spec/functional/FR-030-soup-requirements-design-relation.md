@@ -73,11 +73,11 @@ relations of other modules (FR-086-CON-1). The readers below take the join as it
 - The quire design matrix gate (`agent-ix/quire-cli` FR-043, `quire matrix --strict`) and the quoin matrix design column
   (quoin FR-165) read the join verbatim. A missing SOUP-requirements edge is a design gap there only for a requirement in the scope above, and for no other.
 - A quoin class policy (quoin FR-161) entry `design-trace` with no `relation`, and a `detailed-design` entry with no `relation`, read these
-  relations like any other design relation. A policy pins `design-trace` to one relation by naming it. A `soup-requirements` entry
+  relations like any other design relation. Once the `design-trace` `relation` key of quoin FR-161 exists (quoin PR #1042; today FR-161 refuses a `design-trace` entry that names a relation), a policy can pin `design-trace` to one relation by naming it. A `soup-requirements` entry
   names one of the two relations.
 - The dossier readers (quoin FR-193, FR-194) read the join verbatim.
 
-Whether quoin adds the `relation` key on `design-trace` is quoin FR-161's, so it is a stated dependency and not behavior of this module.
+The `design-trace` `relation` key is quoin FR-161's, so it is a stated dependency (see Dependencies) and not behavior of this module.
 
 ### Consistency with the module's declared dependencies (PLAT-1852)
 
@@ -127,7 +127,7 @@ relations report `trace:undeclared-relation-vocabulary` as `agent-ix/quire-rs` F
 | FR-030-AC-8 | Over the same fixture, `quoin class obligations` with a `soup-requirements` entry naming `relation: fr-has-soup-requirements` reads the `FR` row `unmet` before the statement and `met` after it, and reports `not-available` for an `FR` no record serves. | Demonstration |
 | FR-030-AC-9 | Over a fixture where a `soup_record` serves an `NFR` and no document states SOUP requirements for it, the `NFR` is `uncovered` in `nfr-has-soup-requirements` with one `nfr-without-soup-requirements` finding; an `FR` or `NFR` authoring `soup_requirement_for` toward it makes it `covered` and removes the finding; `--severity trace:nfr-without-soup-requirements=error` promotes it and mapping the key `off` drops it. | Test |
 | FR-030-AC-10 | A `soup_record` whose body links an `FR` it does not list in `serves` puts that `FR` in scope, so it is `uncovered` until a statement exists. | Test |
-| FR-030-AC-11 | Over a corpus loading this module and spec-objects-architecture, the join of `agent-ix/quire-rs` FR-086 lists the two relations of this module in `design_relations` order after the relations of the modules loaded before it, and `quire matrix --strict` reports a block for the `uncovered` `FR` of AC-2 and none for a requirement outside the scope. | Test |
+| FR-030-AC-11 | Over a corpus loading this module and spec-objects-architecture, the join of `agent-ix/quire-rs` FR-086 lists the two relations of this module in `design_relations` order after the relations of the modules loaded before it. Over the fixture of AC-2, `quire matrix --strict` (`agent-ix/quire-cli` FR-043) exits 1 with a stderr line naming the document and `fr-without-soup-requirements`; for a requirement outside the scope, no `fr-has-soup-requirements` or `nfr-has-soup-requirements` block or gap appears (blocks of other relations are unaffected). | Test |
 
 ## Constraints
 
@@ -139,6 +139,6 @@ relations report `trace:undeclared-relation-vocabulary` as `agent-ix/quire-rs` F
 
 ## Dependencies
 
-- **Upstream**: [FR-013](./FR-013-soup-record-serves-requirement.md); `agent-ix/quire-rs` FR-058 (`when_any`), FR-086 (design join; a design relation is read over the same population as the finding), FR-041 (inverse labels); quoin FR-161 (the `soup-requirements` kind, which names the relation).
+- **Upstream**: [FR-013](./FR-013-soup-record-serves-requirement.md); `agent-ix/quire-rs` FR-058 (`when_any`), FR-086 (design join; a design relation is read over the same population as the finding), FR-041 (inverse labels); quoin FR-161 (the `soup-requirements` kind, which names the relation, and the `design-trace` `relation` key, which lands with quoin PR #1042).
 - **Cross-repository**: `spec-artifacts-iso` does not list `soup_requirement_for` or `has_soup_requirement` in the `allowed_links` of `FR` and `NFR`; until it does, authoring the verb draws the advisory `disallowed-edge-type` and the relation counts the edge regardless, being verb-based. Authoring the inverse from the served requirement avoids the warning. PLAT-1852 owns the module's declaration of the edge-type modules it uses.
 - **Downstream**: quoin FR-161 (the class policy), quoin FR-165 and the dossier, which read the new design relations.

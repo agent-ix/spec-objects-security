@@ -47,3 +47,17 @@ Examined units:
 | FND-001 | medium | Listing the two relations in `traceability.design_relations` also feeds every consumer of the design join, and FR-030 neither states nor decides that: quoin FR-161 `design-trace` reads every design relation and is `unmet` if any row is `uncovered`, so a served FR that has a design element but no SOUP statement turns `unmet` (and gates under `gate: true`); a `detailed-design` entry with no `relation` reads them too; quire-cli FR-043 `quire matrix --strict` exits 1 on any live requirement with an `uncovered` design block; and the quoin FR-165 / quire-rs FR-092 design column lists the SOUP-statement FR/NFR as design elements of the served requirement. FR-030 calls the finding a warning but does not say that design-relation membership makes it a `--strict` matrix gate. The ticket's scope item 3 asks the spec to settle this | spec/functional/FR-030-soup-requirements-design-relation.md:85 |
 | FND-002 | low | The scope is any incoming `references` edge from a resolved `soup_record`, which FR-013 says includes a body link from the record, but the Description says the requirement is in scope when it has "an incoming `serves` edge of FR-013"; a record's body link to an FR it does not serve puts that FR in scope | spec/functional/FR-030-soup-requirements-design-relation.md:42 |
 | FND-003 | low | The rationale for a new verb rules out `references` and `satisfies` only; iso `constrains` ("Imposes a constraint on the target", inverse `constrained_by`) and `specifies` are already in the `FR` (and, for `constrains`, `NFR`) `allowed_links` and would avoid the advisory warning, so the FR should say why they do not mean this fact | spec/functional/FR-030-soup-requirements-design-relation.md:47-49 |
+
+## New findings (disposition pass 1)
+
+| ID | Severity | Summary | Refs |
+| --- | --- | --- | --- |
+| FND-004 | low | The Effect section states as current fact that "A policy pins `design-trace` to one relation by naming it", but quoin origin/main FR-161-AC-12 refuses a `design-trace` entry naming a relation; that becomes true only when quoin PR #1042 (open) lands. The next line calls it "a stated dependency", yet Dependencies lists quoin FR-161 only for the `soup-requirements` kind, so the dependency is not stated. No contradiction with PR #1042's text | spec/functional/FR-030-soup-requirements-design-relation.md:76-80 |
+
+## Dispositions
+
+| FND | outcome | reason |
+| --- | --- | --- |
+| FND-001 | fixed | Verified in fix commit 3b08c0a (head 3b08c0a3a9a515b5cfb284e0fa37d79ea5ce3180). |
+| FND-002 | fixed | Verified in fix commit 3b08c0a (head 3b08c0a3a9a515b5cfb284e0fa37d79ea5ce3180). |
+| FND-003 | fixed | Verified in fix commit 3b08c0a (head 3b08c0a3a9a515b5cfb284e0fa37d79ea5ce3180). |

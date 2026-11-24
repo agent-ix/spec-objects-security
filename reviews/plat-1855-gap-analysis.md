@@ -34,3 +34,16 @@ Examined units:
 | --- | --- | --- | --- |
 | FND-001 | low | The `nfr-has-soup-requirements` relation has no behavioural criterion: AC-2, AC-3 and AC-6 exercise only a served `FR`, AC-4 only the unserved case, so no AC requires a served `NFR` with no statement to be `uncovered` with an `nfr-without-soup-requirements` finding, to become `covered` by a statement, or `trace:nfr-without-soup-requirements` to be tunable, although Behavior names both keys | spec/functional/FR-030-soup-requirements-design-relation.md:99-103 |
 | FND-002 | low | Outputs state the verb's category is `traceability`, but no Behavior SHALL and no AC fixes the category (AC-1 checks only the inverse), so the code step can declare any category and still pass | spec/functional/FR-030-soup-requirements-design-relation.md:76 |
+
+## New findings (disposition pass 1)
+
+| ID | Severity | Summary | Refs |
+| --- | --- | --- | --- |
+| FND-003 | low | FR-030-AC-11's matrix clause does not name the quire-cli FR-043 observable and its negative is ambiguous: "reports a block for the uncovered FR" holds without `--strict` too (the gate is exit 1 with a stderr line naming the document and `fr-without-soup-requirements`), and "none for a requirement outside the scope" is false read literally in the stated corpus, where spec-objects-architecture's relation still gives that requirement its own block; it should say no `fr-has-soup-requirements` block or gap | spec/functional/FR-030-soup-requirements-design-relation.md:130 |
+
+## Dispositions
+
+| FND | outcome | reason |
+| --- | --- | --- |
+| FND-001 | fixed | Verified in fix commit 3b08c0a (head 3b08c0a3a9a515b5cfb284e0fa37d79ea5ce3180). |
+| FND-002 | fixed | Verified in fix commit 3b08c0a (head 3b08c0a3a9a515b5cfb284e0fa37d79ea5ce3180). |
