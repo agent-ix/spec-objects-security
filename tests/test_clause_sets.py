@@ -102,24 +102,24 @@ NIST_FAMILIES = [
 ]  # fmt: skip
 
 
-@pytest.mark.trace("TC-175", "FR-017-AC-1")
+@pytest.mark.trace("FR-017-AC-1")
 def test_manifest_declares_exactly_the_expected_clause_sets():
     assert sorted(_key(s) for s in _declared()) == DECLARED_SETS
 
 
-@pytest.mark.trace("TC-176", "FR-017-AC-2")
+@pytest.mark.trace("FR-017-AC-2")
 def test_every_declared_set_has_a_publishable_text_right():
     for clause_set in _declared():
         assert clause_set["rights"]["text"] in PUBLISHABLE_TEXT, _key(clause_set)
 
 
-@pytest.mark.trace("TC-177", "FR-017-AC-3")
+@pytest.mark.trace("FR-017-AC-3")
 def test_publish_check_accepts_the_module():
     result = _run(engine_tool("quire"), "publish-check", "--module", str(PACKAGE_ROOT))
     assert result.returncode == 0, result.stderr + result.stdout
 
 
-@pytest.mark.trace("TC-178", "FR-017-AC-4")
+@pytest.mark.trace("FR-017-AC-4")
 def test_publish_check_refuses_a_licensed_set(tmp_path):
     root = _stage_clause_only_module(tmp_path, NIST_FILE)
     path = root / "clauses" / NIST_FILE.name
@@ -133,7 +133,7 @@ def test_publish_check_refuses_a_licensed_set(tmp_path):
     assert "sentinel" not in result.stdout + result.stderr
 
 
-@pytest.mark.trace("TC-179", "FR-017-AC-5")
+@pytest.mark.trace("FR-017-AC-5")
 def test_every_set_names_its_licence_and_the_nist_set_is_public_domain():
     for clause_set in _declared():
         assert clause_set["rights"]["licence"].strip(), _key(clause_set)
@@ -148,7 +148,7 @@ def test_every_set_names_its_licence_and_the_nist_set_is_public_domain():
     assert asvs["share_alike"].strip()
 
 
-@pytest.mark.trace("TC-180", "FR-017-AC-6")
+@pytest.mark.trace("FR-017-AC-6")
 def test_each_nist_clause_names_its_official_family_dimension_value():
     nist = _by_key(NIST_KEY)
     dimension = nist["classificationDimensions"]["family"]["values"]
@@ -160,7 +160,7 @@ def test_each_nist_clause_names_its_official_family_dimension_value():
     assert {c["subjects"][0] for c in nist["clauses"]} == set(NIST_FAMILIES)
 
 
-@pytest.mark.trace("TC-184", "FR-017-AC-6")
+@pytest.mark.trace("FR-017-AC-6")
 def test_each_asvs_clause_names_its_chapter_dimension_value():
     asvs = _by_key(ASVS_KEY)
     dimension = asvs["classificationDimensions"]["chapter"]["values"]
@@ -196,7 +196,7 @@ def test_levels_are_an_ordered_applicability_dimension():
     assert {c["applicability"]["dimension"] for c in asvs["clauses"]} == {"level"}
 
 
-@pytest.mark.trace("TC-185", "FR-017-AC-7")
+@pytest.mark.trace("FR-017-AC-7")
 def test_a_profile_binds_only_the_asvs_level_it_needs(tmp_path):
     root = _stage_clause_only_module(tmp_path, ASVS_FILE)
     counts = {}
@@ -238,7 +238,7 @@ def test_baselines_are_an_ordered_applicability_dimension():
     assert gated == {"baseline"}
 
 
-@pytest.mark.trace("TC-181", "FR-017-AC-7")
+@pytest.mark.trace("FR-017-AC-7")
 def test_a_profile_binds_only_the_baseline_it_needs(tmp_path):
     root = _stage_clause_only_module(tmp_path, NIST_FILE)
     counts = {}
@@ -258,7 +258,6 @@ def test_a_profile_binds_only_the_baseline_it_needs(tmp_path):
     assert set(unresolved.values()) == {"unresolved"}
 
 
-@pytest.mark.trace("TC-182")
 def test_the_module_data_files_ship_in_the_wheel_and_the_npm_tarball():
     shipped = [
         PACKAGE_ROOT / p
@@ -354,7 +353,6 @@ def _record_and_render_matrix(tmp_path, source, key, context, clause_id):
     )
 
 
-@pytest.mark.trace("TC-183")
 def test_quoin_renders_a_requirements_matrix_over_a_synthetic_corpus(tmp_path):
     rendered = _record_and_render_matrix(
         tmp_path, NIST_FILE, NIST_KEY, "baseline=low", "AC-1"
@@ -368,7 +366,6 @@ def test_quoin_renders_a_requirements_matrix_over_a_synthetic_corpus(tmp_path):
     assert "| AC-2\\(1\\) | Not applicable | Not applicable |" in matrix
 
 
-@pytest.mark.trace("TC-186")
 def test_quoin_renders_an_asvs_requirements_matrix_over_a_synthetic_corpus(tmp_path):
     rendered = _record_and_render_matrix(
         tmp_path, ASVS_FILE, ASVS_KEY, "level=1", "V1.2.1"

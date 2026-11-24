@@ -49,7 +49,7 @@ def target_doc(kind: str, ident: str) -> str:
     )
 
 
-@pytest.mark.trace("TC-248", "FR-028-AC-1", "TC-254", "FR-028-AC-7")
+@pytest.mark.trace("FR-028-AC-1", "FR-028-AC-7")
 def test_controller_skeleton_with_scoped_connection_validates(tmp_path):
     skeleton = (SKELETONS_DIR / "processing_activity.md").read_text()
     result = run_bundle(
@@ -79,7 +79,7 @@ def frontmatter_doc(**changes) -> str:
     return f"---\n{fields}---\n# Processing activity\n"
 
 
-@pytest.mark.trace("TC-248", "FR-028-AC-1")
+@pytest.mark.trace("FR-028-AC-1")
 def test_controller_activity_record_requires_scalar_identity_and_context(
     schema_registry,
 ):
@@ -96,7 +96,7 @@ def test_controller_activity_record_requires_scalar_identity_and_context(
     assert not validator.is_valid({**record, "controller": [record["controller"]]})
 
 
-@pytest.mark.trace("TC-249", "FR-028-AC-2")
+@pytest.mark.trace("FR-028-AC-2")
 def test_processor_activity_accepts_nonempty_controller_list_without_controller_context(
     schema_registry,
 ):
@@ -111,7 +111,7 @@ def test_processor_activity_accepts_nonempty_controller_list_without_controller_
     assert not {"purposes", "data_subject_categories", "retention"} & set(record)
 
 
-@pytest.mark.trace("TC-250", "FR-028-AC-3")
+@pytest.mark.trace("FR-028-AC-3")
 def test_missing_role_specific_fields_fail_with_field_named_schema_errors(
     schema_registry,
 ):
@@ -134,7 +134,7 @@ def test_missing_role_specific_fields_fail_with_field_named_schema_errors(
     assert any(error.json_path.startswith("$.controller") for error in errors), errors
 
 
-@pytest.mark.trace("TC-251", "FR-028-AC-4")
+@pytest.mark.trace("FR-028-AC-4")
 def test_unknown_role_and_invalid_home_regions_fail_naming_the_field(schema_registry):
     validator = schema_registry("ProcessingActivityFrontmatter")
     valid = {
@@ -157,7 +157,7 @@ def test_unknown_role_and_invalid_home_regions_fail_naming_the_field(schema_regi
         ), errors
 
 
-@pytest.mark.trace("TC-252", "FR-028-AC-5")
+@pytest.mark.trace("FR-028-AC-5")
 def test_missing_scopes_edge_emits_located_advisory_warning(tmp_path):
     skeleton = (SKELETONS_DIR / "processing_activity.md").read_text()
     skeleton = skeleton.replace(
@@ -175,7 +175,7 @@ def test_missing_scopes_edge_emits_located_advisory_warning(tmp_path):
     assert "has no 'scopes' edge" in output
 
 
-@pytest.mark.trace("TC-253", "FR-028-AC-6")
+@pytest.mark.trace("FR-028-AC-6")
 @pytest.mark.parametrize(
     ("target", "kind", "expected"),
     [("QUEUE-001", "queue", "disallowed"), ("MISSING-1", None, "dangling")],
@@ -194,7 +194,7 @@ def test_invalid_scopes_target_reports_wrong_kind_or_dangling(
     assert expected in output.lower(), output
 
 
-@pytest.mark.trace("TC-254", "FR-028-AC-7")
+@pytest.mark.trace("FR-028-AC-7")
 def test_manifest_exports_schema_and_skeleton_for_processing_activity():
     manifest = yaml.safe_load(MANIFEST_PATH.read_text())
     assert "processing_activity" in manifest["semantic"]["exports"]
@@ -228,7 +228,7 @@ def test_manifest_exports_schema_and_skeleton_for_processing_activity():
     assert result.returncode == 0, result.stdout + result.stderr
 
 
-@pytest.mark.trace("TC-255", "FR-028-AC-8")
+@pytest.mark.trace("FR-028-AC-8")
 def test_omitted_optional_processor_fields_are_absent_from_extracted_record(
     quire_engine, semantic_block, semantic_module, bundle_index
 ):

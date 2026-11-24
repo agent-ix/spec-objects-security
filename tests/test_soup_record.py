@@ -92,7 +92,7 @@ def validator(schema_registry):
     return schema_registry("SoupRecord")
 
 
-@pytest.mark.trace("TC-121", "FR-009-AC-1")
+@pytest.mark.trace("FR-009-AC-1")
 def test_manifest_exports_soup_record_with_a_shipped_schema(quire_engine):
     manifest = yaml.safe_load(MANIFEST_PATH.read_text())
     assert "soup_record" in manifest["semantic"]["exports"]
@@ -109,7 +109,7 @@ def test_manifest_exports_soup_record_with_a_shipped_schema(quire_engine):
     assert full["is_valid"], full["errors"]
 
 
-@pytest.mark.trace("TC-122", "FR-009-AC-2")
+@pytest.mark.trace("FR-009-AC-2")
 def test_the_purl_is_required_as_a_frontmatter_key_and_as_a_field_row(
     validator, quire_engine
 ):
@@ -129,7 +129,7 @@ def test_the_purl_is_required_as_a_frontmatter_key_and_as_a_field_row(
     assert any("semantic.record-invalid" in e["message"] for e in no_row["errors"])
 
 
-@pytest.mark.trace("TC-124", "FR-009-AC-4", "FR-009-CON-1")
+@pytest.mark.trace("FR-009-AC-4", "FR-009-CON-1")
 def test_a_digest_is_refused_and_a_different_purl_is_a_distinct_component(
     validator, quire_engine
 ):
@@ -141,7 +141,7 @@ def test_a_digest_is_refused_and_a_different_purl_is_a_distinct_component(
     assert validate_doc(quire_engine, other)["is_valid"]
 
 
-@pytest.mark.trace("TC-125", "FR-009-AC-5")
+@pytest.mark.trace("FR-009-AC-5")
 def test_unknown_is_a_value_and_absence_is_not_filled(validator):
     assert validator.is_valid(record(supplier="unknown"))
     for key in ("name", "version", "license"):
@@ -150,7 +150,7 @@ def test_unknown_is_a_value_and_absence_is_not_filled(validator):
     assert "default" not in keywords(schema())
 
 
-@pytest.mark.trace("TC-126", "FR-009-AC-6")
+@pytest.mark.trace("FR-009-AC-6")
 def test_license_and_license_fact_ref_are_exclusive(validator):
     fact = "ix://agent-ix/engineering-assurance/LIC-001"
     assert validator.is_valid(record(license="Apache-2.0"))
@@ -158,7 +158,7 @@ def test_license_and_license_fact_ref_are_exclusive(validator):
     assert not validator.is_valid(record(license="Apache-2.0", license_fact_ref=fact))
 
 
-@pytest.mark.trace("TC-127", "FR-009-AC-7")
+@pytest.mark.trace("FR-009-AC-7")
 def test_references_validate_and_finding_text_is_refused(validator):
     refs = record(
         license_fact_ref="ix://agent-ix/engineering-assurance/LIC-001",
@@ -171,7 +171,7 @@ def test_references_validate_and_finding_text_is_refused(validator):
     assert not validator.is_valid(record(sbom={"components": []}))
 
 
-@pytest.mark.trace("TC-128", "FR-009-AC-8", "FR-009-CON-2")
+@pytest.mark.trace("FR-009-AC-8", "FR-009-CON-2")
 def test_module_declares_no_discharges_option_or_sbom_reader():
     sources = [MANIFEST_PATH, *SKELETONS_DIR.glob("*.md")]
     sources += [p for p in PACKAGE_ROOT.glob("*.py")]
@@ -183,7 +183,7 @@ def test_module_declares_no_discharges_option_or_sbom_reader():
     assert "discharges" not in json.dumps(schema())
 
 
-@pytest.mark.trace("TC-129", "FR-010-AC-1", "FR-010-CON-1")
+@pytest.mark.trace("FR-010-AC-1", "FR-010-CON-1")
 def test_support_status_is_a_closed_four_member_enum(validator):
     enum = json.loads((SCHEMAS_DIR / "SoupSupportStatus.json").read_text())
     assert enum["enum"] == [
@@ -197,7 +197,7 @@ def test_support_status_is_a_closed_four_member_enum(validator):
     assert not validator.is_valid(record(support_status="end_of_life"))
 
 
-@pytest.mark.trace("TC-130", "FR-010-AC-2")
+@pytest.mark.trace("FR-010-AC-2")
 def test_empty_and_absent_known_anomalies_both_validate(validator):
     assert validator.is_valid(record(known_anomalies=[]))
     assert validator.is_valid(record())
@@ -206,7 +206,7 @@ def test_empty_and_absent_known_anomalies_both_validate(validator):
     assert not validator.is_valid(record(known_anomalies=[{"source_ref": REQ}]))
 
 
-@pytest.mark.trace("TC-274", "FR-010-AC-7")
+@pytest.mark.trace("FR-010-AC-7")
 def test_anomaly_origin_is_a_closed_optional_vocabulary(validator):
     origins = ("internal-test", "field", "complaint", "soup-advisory")
     enum = json.loads((SCHEMAS_DIR / "AnomalyOrigin.json").read_text())
@@ -227,7 +227,7 @@ def test_anomaly_origin_is_a_closed_optional_vocabulary(validator):
         ), key
 
 
-@pytest.mark.trace("TC-131", "FR-010-AC-3")
+@pytest.mark.trace("FR-010-AC-3")
 def test_end_of_support_is_a_calendar_date_or_unknown(validator):
     assert validator.is_valid(record(end_of_support="unknown"))
     assert validator.is_valid(record(end_of_support="2027-06-30"))
@@ -248,7 +248,7 @@ def test_end_of_support_is_a_calendar_date_or_unknown(validator):
     )
 
 
-@pytest.mark.trace("TC-132", "FR-010-AC-4")
+@pytest.mark.trace("FR-010-AC-4")
 def test_the_schema_carries_no_default_at_any_depth():
     assert "default" not in keywords(schema())
     anomaly = json.loads((SCHEMAS_DIR / "Anomaly.json").read_text())
@@ -268,7 +268,7 @@ def credential_hits(text: str) -> list[str]:
     ]
 
 
-@pytest.mark.trace("TC-134", "FR-010-AC-6")
+@pytest.mark.trace("FR-010-AC-6")
 def test_the_scan_refuses_a_credential_shaped_anomaly_statement():
     clean = full_fixture()
     assert anomaly_statements(clean), "the fixture must carry an anomaly statement"
@@ -281,14 +281,14 @@ def test_the_scan_refuses_a_credential_shaped_anomaly_statement():
     assert credential_hits(dirty) == [f"Ships a debug build with {canary}"]
 
 
-@pytest.mark.trace("TC-135", "FR-011-AC-1")
+@pytest.mark.trace("FR-011-AC-1")
 def test_disposition_clause_must_be_non_blank(validator):
     assert validator.is_valid(record(disposition_clause="SOUP-RISK-EXAMPLE-001"))
     for blank in ("", " ", "\t\n"):
         assert not validator.is_valid(record(disposition_clause=blank)), repr(blank)
 
 
-@pytest.mark.trace("TC-136", "FR-011-AC-2")
+@pytest.mark.trace("FR-011-AC-2")
 def test_absent_disposition_clause_adds_no_key(
     validator, quire_engine, semantic_module, bundle_index, tmp_path
 ):
@@ -300,7 +300,7 @@ def test_absent_disposition_clause_adds_no_key(
     assert "disposition_clause" not in extracted
 
 
-@pytest.mark.trace("TC-137", "FR-011-AC-3")
+@pytest.mark.trace("FR-011-AC-3")
 def test_an_embedded_decision_is_refused(validator):
     for key in (
         "decision",
@@ -315,7 +315,7 @@ def test_an_embedded_decision_is_refused(validator):
         assert key not in schema()["properties"], key
 
 
-@pytest.mark.trace("TC-139", "FR-011-AC-5")
+@pytest.mark.trace("FR-011-AC-5")
 def test_disposition_clause_changes_no_other_key(validator, quire_engine):
     plain = record(support_status="supported", serves=[REQ])
     assert validator.is_valid(plain)
@@ -326,7 +326,7 @@ def test_disposition_clause_changes_no_other_key(validator, quire_engine):
     assert validate_doc(quire_engine, other)["is_valid"]
 
 
-@pytest.mark.trace("TC-143", "FR-012-AC-4")
+@pytest.mark.trace("FR-012-AC-4")
 def test_advisory_keys_are_refused(validator):
     for key, value in (
         ("severity", "high"),
@@ -336,7 +336,7 @@ def test_advisory_keys_are_refused(validator):
         assert not validator.is_valid(record(**{key: value})), key
 
 
-@pytest.mark.trace("TC-144", "NFR-001-AC-1", "NFR-001-M-1")
+@pytest.mark.trace("NFR-001-AC-1", "NFR-001-M-1")
 def test_no_score_rating_class_tier_or_level_property():
     doc = schema()
     banned = {"score", "rating", "class", "tier", "level", "grade", "rank"}
@@ -347,7 +347,7 @@ def test_no_score_rating_class_tier_or_level_property():
         assert f"/{vocabulary}.json" not in text, vocabulary
 
 
-@pytest.mark.trace("TC-145", "NFR-001-AC-2", "NFR-001-M-2")
+@pytest.mark.trace("NFR-001-AC-2", "NFR-001-M-2")
 def test_a_validated_fixture_emits_exactly_the_keys_written(
     validator, quire_engine, semantic_module, bundle_index
 ):
@@ -402,7 +402,7 @@ def _vulnerability_affecting(root, target):
     (root / "vulnerability.md").write_text(text)
 
 
-@pytest.mark.trace("TC-140", "FR-012-AC-1")
+@pytest.mark.trace("FR-012-AC-1")
 def test_vulnerability_affects_lists_soup_record_and_soup_declares_no_links():
     vulnerability = object_type("vulnerability")
     assert vulnerability["allowed_links"]["affects"] == [
@@ -414,7 +414,7 @@ def test_vulnerability_affects_lists_soup_record_and_soup_declares_no_links():
     assert "required_relations" not in vulnerability
 
 
-@pytest.mark.trace("TC-141", "FR-012-AC-2")
+@pytest.mark.trace("FR-012-AC-2")
 def test_affects_edge_to_soup_validates_and_to_a_threat_is_disallowed(
     tmp_path, quire_engine
 ):
@@ -441,7 +441,7 @@ def test_affects_edge_to_soup_validates_and_to_a_threat_is_disallowed(
     assert "target type 'threat'" in bad[0], bad[0]
 
 
-@pytest.mark.trace("TC-142", "FR-012-AC-3")
+@pytest.mark.trace("FR-012-AC-3")
 def test_a_soup_record_no_vulnerability_affects_has_no_finding(tmp_path, quire_engine):
     # Directory mode skips record keys, so the record is checked on its own too.
     assert validate_doc(quire_engine, full_fixture())["is_valid"]
@@ -473,28 +473,28 @@ def refused_document(quire_engine, **keys) -> bool:
     return not validate_doc(quire_engine, bogus)["is_valid"]
 
 
-@pytest.mark.trace("TC-129", "FR-010-AC-1")
+@pytest.mark.trace("FR-010-AC-1")
 def test_an_authored_document_with_an_invented_support_status_fails(quire_engine):
     assert refused_document(quire_engine, support_status="bogus_status")
 
 
-@pytest.mark.trace("TC-131", "FR-010-AC-3")
+@pytest.mark.trace("FR-010-AC-3")
 def test_an_authored_document_with_a_bad_end_of_support_fails(quire_engine):
     assert refused_document(quire_engine, end_of_support="soon")
 
 
-@pytest.mark.trace("TC-124", "FR-009-AC-4")
+@pytest.mark.trace("FR-009-AC-4")
 def test_an_authored_document_with_a_digest_fails(quire_engine):
     assert refused_document(quire_engine, digest='"sha256:00"')
 
 
-@pytest.mark.trace("TC-143", "FR-012-AC-4")
+@pytest.mark.trace("FR-012-AC-4")
 def test_an_authored_document_with_a_severity_fails(quire_engine):
     assert refused_document(quire_engine, severity="high")
 
 
 @pytest.mark.xfail(strict=True, reason=ENGINE_PROJECTION)
-@pytest.mark.trace("TC-274", "FR-010-AC-7")
+@pytest.mark.trace("FR-010-AC-7")
 def test_an_anomaly_without_origin_emits_no_origin_key(
     quire_engine, semantic_module, bundle_index, tmp_path
 ):
@@ -506,7 +506,7 @@ def test_an_anomaly_without_origin_emits_no_origin_key(
 
 
 @pytest.mark.xfail(strict=True, reason=ENGINE_PROJECTION)
-@pytest.mark.trace("TC-130", "FR-010-AC-2")
+@pytest.mark.trace("FR-010-AC-2")
 def test_an_empty_known_anomalies_is_emitted_and_an_absent_one_is_not(
     quire_engine, semantic_module, bundle_index, tmp_path
 ):
@@ -520,7 +520,7 @@ def test_an_empty_known_anomalies_is_emitted_and_an_absent_one_is_not(
 
 
 @pytest.mark.xfail(strict=True, reason=ENGINE_PROJECTION)
-@pytest.mark.trace("TC-125", "FR-009-AC-5")
+@pytest.mark.trace("FR-009-AC-5")
 def test_unknown_supplier_is_emitted_and_an_omitted_supplier_is_not(
     quire_engine, semantic_module, bundle_index, tmp_path
 ):
@@ -535,7 +535,7 @@ def test_unknown_supplier_is_emitted_and_an_omitted_supplier_is_not(
 
 
 @pytest.mark.xfail(strict=True, reason=ENGINE_PROJECTION)
-@pytest.mark.trace("TC-139", "FR-011-AC-5")
+@pytest.mark.trace("FR-011-AC-5")
 def test_disposition_clause_is_emitted_and_changes_no_other_key(
     quire_engine, semantic_module, bundle_index, tmp_path
 ):
@@ -555,7 +555,7 @@ def test_disposition_clause_is_emitted_and_changes_no_other_key(
     strict=True,
     reason="The engine has no identity-uniqueness check over a frontmatter key.",
 )
-@pytest.mark.trace("TC-123", "FR-009-AC-3")
+@pytest.mark.trace("FR-009-AC-3")
 def test_two_documents_with_one_purl_yield_one_duplicate_identity_report(tmp_path):
     full = full_fixture()
     (tmp_path / "a.md").write_text(full)
@@ -592,7 +592,7 @@ def _findings(result):
     return [line for line in result.stderr.splitlines() if line.endswith(f"[{CHECK}]")]
 
 
-@pytest.mark.trace("TC-150", "FR-013-AC-1")
+@pytest.mark.trace("FR-013-AC-1")
 def test_required_relation_is_required_relation_are_declared():
     assert "allowed_links" not in object_type("soup_record")
     manifest = yaml.safe_load(MANIFEST_PATH.read_text())
@@ -608,7 +608,7 @@ def test_required_relation_is_required_relation_are_declared():
     }
 
 
-@pytest.mark.trace("TC-151", "FR-013-AC-2")
+@pytest.mark.trace("FR-013-AC-2")
 def test_record_with_no_serves_entry_is_reported_by_name(tmp_path):
     _requirement(tmp_path)
     (tmp_path / "soup.md").write_text(_unserved())
@@ -618,7 +618,7 @@ def test_record_with_no_serves_entry_is_reported_by_name(tmp_path):
     assert len(findings) == 1 and "SOUP-010" in findings[0], result.stderr
 
 
-@pytest.mark.trace("TC-152", "FR-013-AC-3")
+@pytest.mark.trace("FR-013-AC-3")
 def test_record_with_a_serves_entry_is_not_reported(tmp_path):
     _requirement(tmp_path)
     (tmp_path / "soup.md").write_text(SERVED.read_text())
@@ -638,7 +638,7 @@ def test_record_with_a_serves_entry_is_not_reported(tmp_path):
     assert set(relation["edges"]) <= set(registry)
 
 
-@pytest.mark.trace("TC-153", "FR-013-AC-4")
+@pytest.mark.trace("FR-013-AC-4")
 def test_serves_entry_to_another_kind_or_nothing_is_still_reported(tmp_path):
     shutil.copy(SKELETONS_DIR / "threat.md", tmp_path / "threat.md")
     threat_id = frontmatter((SKELETONS_DIR / "threat.md").read_text())["id"]
@@ -655,7 +655,7 @@ def test_serves_entry_to_another_kind_or_nothing_is_still_reported(tmp_path):
     assert len(_findings(_validate(tmp_path))) == 1
 
 
-@pytest.mark.trace("TC-154", "FR-013-AC-5")
+@pytest.mark.trace("FR-013-AC-5")
 def test_finding_is_advisory_and_tunable(tmp_path):
     (tmp_path / "soup.md").write_text(_unserved())
     plain = _validate(tmp_path)
@@ -665,7 +665,7 @@ def test_finding_is_advisory_and_tunable(tmp_path):
     assert len(_findings(promoted)) == 1, promoted.stderr
 
 
-@pytest.mark.trace("TC-155", "FR-013-AC-6")
+@pytest.mark.trace("FR-013-AC-6")
 def test_skeleton_carries_no_serves_and_extract_lists_the_authored_edge():
     assert "serves" not in frontmatter((SKELETONS_DIR / "soup_record.md").read_text())
     out = subprocess.run(
@@ -678,7 +678,7 @@ def test_skeleton_carries_no_serves_and_extract_lists_the_authored_edge():
     assert {"target": "FR-100", "type": "references"} in edges, edges
 
 
-@pytest.mark.trace("TC-156", "FR-013-AC-7")
+@pytest.mark.trace("FR-013-AC-7")
 def test_serves_edge_to_a_requirement_in_another_repository_is_resolved(
     tmp_path,
 ):

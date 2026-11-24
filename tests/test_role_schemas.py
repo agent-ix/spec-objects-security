@@ -45,7 +45,7 @@ def signature(model: str) -> tuple:
     return (required, admitted, tuple(sorted(rules)))
 
 
-@pytest.mark.trace("TC-050", "FR-004-AC-1")
+@pytest.mark.trace("FR-004-AC-1")
 def test_every_schema_differs_from_every_other():
     seen: dict[tuple, str] = {}
     for model in MODELS:
@@ -58,7 +58,7 @@ def test_every_schema_differs_from_every_other():
     assert len(seen) == len(MODELS)
 
 
-@pytest.mark.trace("TC-051", "FR-004-AC-2")
+@pytest.mark.trace("FR-004-AC-2")
 def test_asset_requires_an_identity_field(schema_registry):
     validator = schema_registry("Asset")
     ok = {"fields": [field("asset_id", "UUID", identity=True)]}
@@ -68,7 +68,7 @@ def test_asset_requires_an_identity_field(schema_registry):
     assert not validator.is_valid({"fields": []})
 
 
-@pytest.mark.trace("TC-052", "FR-004-AC-3")
+@pytest.mark.trace("FR-004-AC-3")
 def test_role_permission_and_scope_refuse_the_keys_their_roles_exclude(
     schema_registry,
 ):
@@ -87,7 +87,7 @@ def test_role_permission_and_scope_refuse_the_keys_their_roles_exclude(
         )
 
 
-@pytest.mark.trace("TC-053", "FR-004-AC-4")
+@pytest.mark.trace("FR-004-AC-4")
 def test_threat_requires_a_stride_row_and_a_closed_stride_value(schema_registry):
     validator = schema_registry("Threat")
     identity = field("threat_id", "UUID", identity=True)
@@ -102,7 +102,7 @@ def test_threat_requires_a_stride_row_and_a_closed_stride_value(schema_registry)
     )
 
 
-@pytest.mark.trace("TC-054", "FR-004-AC-5")
+@pytest.mark.trace("FR-004-AC-5")
 def test_the_assessment_types_require_the_rows_that_score_them(schema_registry):
     identity = field("id", "UUID", identity=True)
     vuln = schema_registry("Vulnerability")
@@ -119,7 +119,7 @@ def test_the_assessment_types_require_the_rows_that_score_them(schema_registry):
     assert not finding.is_valid({"fields": [identity]})
 
 
-@pytest.mark.trace("TC-055", "FR-004-AC-6")
+@pytest.mark.trace("FR-004-AC-6")
 def test_control_states_its_effectiveness_and_constrains_something(schema_registry):
     validator = schema_registry("Control")
     ok = {"clauses": [CLAUSE], "fields": [field("effectiveness")]}
@@ -130,7 +130,7 @@ def test_control_states_its_effectiveness_and_constrains_something(schema_regist
     assert not validator.is_valid({**ok, "relations": []})
 
 
-@pytest.mark.trace("TC-056", "FR-004-AC-7")
+@pytest.mark.trace("FR-004-AC-7")
 def test_every_governing_type_needs_a_clause_and_refuses_operations(schema_registry):
     for model in ("Policy", "PasswordPolicy", "CorsPolicy", "SessionConfig"):
         validator = schema_registry(model)
@@ -142,7 +142,7 @@ def test_every_governing_type_needs_a_clause_and_refuses_operations(schema_regis
         ), model
 
 
-@pytest.mark.trace("TC-057", "FR-004-AC-8")
+@pytest.mark.trace("FR-004-AC-8")
 def test_auth_flow_is_its_exchanges(schema_registry):
     validator = schema_registry("AuthFlow")
     assert validator.is_valid({"operations": [OPERATION]})
@@ -151,7 +151,7 @@ def test_auth_flow_is_its_exchanges(schema_registry):
     assert not validator.is_valid({"operations": [OPERATION], "relations": []})
 
 
-@pytest.mark.trace("TC-058", "FR-004-AC-9")
+@pytest.mark.trace("FR-004-AC-9")
 def test_audit_event_declares_an_occurrence_and_not_a_record(schema_registry):
     validator = schema_registry("AuditEvent")
     occurrence = field("occurred_at", "Timestamp")
@@ -164,7 +164,7 @@ def test_audit_event_declares_an_occurrence_and_not_a_record(schema_registry):
     assert not validator.is_valid({"fields": [occurrence], "relations": []})
 
 
-@pytest.mark.trace("TC-059", "FR-004-AC-10", "TC-220", "FR-024-AC-5")
+@pytest.mark.trace("FR-004-AC-10", "FR-024-AC-5")
 def test_trust_boundary_schema_refuses_crosses_record_key(schema_registry):
     validator = schema_registry("TrustBoundary")
     fields = [field("boundary_id", "UUID", identity=True), field("trust_level")]
@@ -180,7 +180,7 @@ def test_trust_boundary_schema_refuses_crosses_record_key(schema_registry):
     )
 
 
-@pytest.mark.trace("TC-060", "FR-004-AC-11", "FR-004-CON-2")
+@pytest.mark.trace("FR-004-AC-11", "FR-004-CON-2")
 def test_the_empty_record_fails_every_type(schema_registry):
     for model in MODELS:
         assert not schema_registry(model).is_valid({}), model
@@ -251,7 +251,7 @@ MINIMAL = {
 }
 
 
-@pytest.mark.trace("TC-050", "FR-004-AC-1")
+@pytest.mark.trace("FR-004-AC-1")
 def test_every_seal_refuses_a_key_its_type_does_not_list(schema_registry):
     assert set(MINIMAL) == set(MODELS)
     for model in MODELS:
@@ -261,7 +261,7 @@ def test_every_seal_refuses_a_key_its_type_does_not_list(schema_registry):
         assert not validator.is_valid({**minimal, "totally_unknown_key": 1}), model
 
 
-@pytest.mark.trace("TC-061", "FR-004-AC-12")
+@pytest.mark.trace("FR-004-AC-12")
 def test_an_unresolved_placeholder_is_a_semantic_id_and_a_bare_token_is_not(
     schema_registry, quire_engine, semantic_module
 ):
@@ -306,7 +306,7 @@ def test_an_unresolved_placeholder_is_a_semantic_id_and_a_bare_token_is_not(
     assert "semantic.unresolved-type" in codes, extracted.get("diagnostics")
 
 
-@pytest.mark.trace("TC-062", "FR-004-AC-13", "FR-004-CON-1")
+@pytest.mark.trace("FR-004-AC-13", "FR-004-CON-1")
 def test_no_module_schema_redeclares_a_semantic_core_model():
     core = {
         p.stem
@@ -332,7 +332,7 @@ def test_no_module_schema_redeclares_a_semantic_core_model():
             assert ref.startswith(SEMANTIC_CORE_BASE), (model, key, ref)
 
 
-@pytest.mark.trace("TC-063", "FR-004-AC-14")
+@pytest.mark.trace("FR-004-AC-14")
 def test_data_classification_carries_a_level_and_no_relations(schema_registry):
     validator = schema_registry("DataClassification")
     identity = field("classification_id", "UUID", identity=True)

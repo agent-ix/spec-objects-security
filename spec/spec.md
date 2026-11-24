@@ -124,7 +124,6 @@ The specification is organized into the standard requirement classes, each in it
 - `functional/` — FR-XXX functional requirements.
 - `integration/` — IT-XXX integration tests.
 - `usecase/` — US-XXX user stories.
-- `tests.md` — the per-repo test matrix tracing functional requirements to their tests.
 
 FR-001 activates the manifest against `filament-core`; FR-002 emits the
 schemas; FR-003 declares the semantic contract in the manifest; FR-004 fixes

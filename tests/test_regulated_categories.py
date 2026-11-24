@@ -110,14 +110,14 @@ def _owned_diagnostics(out: dict) -> list:
     ]
 
 
-@pytest.mark.trace("TC-206", "FR-023-AC-5")
+@pytest.mark.trace("FR-023-AC-5")
 def test_the_vocabulary_is_exactly_health_personal_financial():
     schema = _schema("RegulatedDataCategory")
     assert schema["enum"] == MEMBERS
     assert "unknown" not in schema["enum"]
 
 
-@pytest.mark.trace("TC-206", "FR-023-AC-5")
+@pytest.mark.trace("FR-023-AC-5")
 def test_frontmatter_category_enum_is_self_contained_for_quires_validator():
     frontmatter_schema = _schema("DataClassificationFrontmatter")
     categories = frontmatter_schema["properties"]["regulated_categories"]
@@ -125,7 +125,7 @@ def test_frontmatter_category_enum_is_self_contained_for_quires_validator():
     assert "$ref" not in categories["items"]
 
 
-@pytest.mark.trace("TC-273", "FR-028-AC-9")
+@pytest.mark.trace("FR-028-AC-9")
 def test_classification_title_is_declared_for_the_dossier_flow_selector(
     schema_registry,
 ):
@@ -142,7 +142,7 @@ def test_classification_title_is_declared_for_the_dossier_flow_selector(
     assert not validator.is_valid({**authored, "title": 7})
 
 
-@pytest.mark.trace("TC-207", "FR-023-AC-1", "NFR-004-AC-1", "NFR-004-M-1")
+@pytest.mark.trace("FR-023-AC-1", "NFR-004-AC-1", "NFR-004-M-1")
 def test_the_property_is_an_optional_non_empty_unique_list_without_default():
     schema = _schema("DataClassification")
     prop = schema["properties"]["regulatedCategories"]
@@ -155,7 +155,7 @@ def test_the_property_is_an_optional_non_empty_unique_list_without_default():
     assert "regulatedCategories" not in schema.get("required", [])
 
 
-@pytest.mark.trace("TC-208", "FR-023-AC-6")
+@pytest.mark.trace("FR-023-AC-6")
 @pytest.mark.parametrize("value", [["health", "personal"], ["financial"], ["health"]])
 def test_valid_lists_validate_and_neither_axis_implies_the_other(
     schema_registry, value
@@ -166,7 +166,7 @@ def test_valid_lists_validate_and_neither_axis_implies_the_other(
     )
 
 
-@pytest.mark.trace("TC-209", "FR-023-AC-2", "FR-023-AC-3")
+@pytest.mark.trace("FR-023-AC-2", "FR-023-AC-3")
 @pytest.mark.parametrize(
     "value",
     [["medical"], [], ["health", "health"], "health", ["unknown"]],
@@ -176,12 +176,12 @@ def test_invalid_lists_are_refused(schema_registry, value):
     assert _errors(schema_registry, _decl(regulatedCategories=value))
 
 
-@pytest.mark.trace("TC-210", "FR-023-AC-4")
+@pytest.mark.trace("FR-023-AC-4")
 def test_an_absent_field_validates_with_no_default(schema_registry):
     assert not _errors(schema_registry, _decl())
 
 
-@pytest.mark.trace("TC-211", "FR-023-AC-7", "NFR-004-AC-1")
+@pytest.mark.trace("FR-023-AC-7", "NFR-004-AC-1")
 def test_each_axis_has_one_source_locator_and_no_assert():
     declared = locators(object_type("data_classification"))
     assert declared["regulatedCategories"] == {
@@ -204,7 +204,7 @@ def test_each_axis_has_one_source_locator_and_no_assert():
         assert "default" not in locator, key
 
 
-@pytest.mark.trace("TC-212", "FR-023-AC-8")
+@pytest.mark.trace("FR-023-AC-8")
 def test_the_skeleton_shows_the_field_and_validates(quire_engine):
     text = (PACKAGE_ROOT / "skeletons" / "data_classification.md").read_text()
     assert frontmatter(text)["regulated_categories"] == ["health", "personal"]
@@ -214,9 +214,7 @@ def test_the_skeleton_shows_the_field_and_validates(quire_engine):
     assert result["is_valid"], result["errors"]
 
 
-@pytest.mark.trace(
-    "TC-213", "FR-023-AC-1", "FR-023-AC-6", "NFR-004-AC-3", "NFR-004-M-2"
-)
+@pytest.mark.trace("FR-023-AC-1", "FR-023-AC-6", "NFR-004-AC-3", "NFR-004-M-2")
 @pytest.mark.parametrize(
     ("name", "expected"),
     [
@@ -237,9 +235,7 @@ def test_valid_fixtures_validate_and_extract_the_list_in_order(
     assert not [d for d in out["diagnostics"] if d["severity"] == "error"]
 
 
-@pytest.mark.trace(
-    "TC-214", "FR-023-AC-4", "NFR-004-AC-2", "NFR-004-AC-3", "NFR-004-M-2"
-)
+@pytest.mark.trace("FR-023-AC-4", "NFR-004-AC-2", "NFR-004-AC-3", "NFR-004-M-2")
 @pytest.mark.parametrize("name", ["absent.md", "absent-health-named-fields.md"])
 def test_an_absent_field_extracts_no_key_and_no_default(
     quire_engine, semantic_block, semantic_module, name
@@ -250,7 +246,7 @@ def test_an_absent_field_extracts_no_key_and_no_default(
     assert not _owned_diagnostics(out)
 
 
-@pytest.mark.trace("TC-214", "NFR-004-AC-3")
+@pytest.mark.trace("NFR-004-AC-3")
 def test_a_classification_without_level_extracts_no_level_key(
     quire_engine, semantic_block, semantic_module
 ):
@@ -265,7 +261,7 @@ def test_a_classification_without_level_extracts_no_level_key(
     assert "level" not in [f["name"] for f in out["fields"]]
 
 
-@pytest.mark.trace("TC-215", "FR-023-AC-2", "FR-023-AC-3")
+@pytest.mark.trace("FR-023-AC-2", "FR-023-AC-3")
 @pytest.mark.parametrize(
     ("name", "needles"),
     [
@@ -287,7 +283,7 @@ def test_invalid_fixtures_fail_with_a_message_that_names_the_cause(
     assert errors[0]["line"] == 6
 
 
-@pytest.mark.trace("TC-216", "FR-023-AC-9")
+@pytest.mark.trace("FR-023-AC-9")
 def test_a_section_without_frontmatter_is_an_error_and_yields_no_key(
     quire_engine, semantic_block, semantic_module
 ):
@@ -298,7 +294,7 @@ def test_a_section_without_frontmatter_is_an_error_and_yields_no_key(
     assert "regulatedCategories" not in _record(out)
 
 
-@pytest.mark.trace("TC-217", "FR-023-AC-10")
+@pytest.mark.trace("FR-023-AC-10")
 def test_a_section_beside_frontmatter_warns_and_keeps_only_the_frontmatter(
     quire_engine, semantic_block, semantic_module
 ):

@@ -1,18 +1,16 @@
 """The Quoin install roundtrip.
 
-TC-110 and its IT-002 success criteria stay `Manual` and `🚧`: they need a
-Quoin that provides the module installer. This file does **not** bind them —
-a test that only checks files exist cannot claim "the pre-install listing is
-captured". What it binds is TC-114, its own row: the module directory the
-roundtrip would hand to Quoin is complete and self-consistent, so the manual
-step has a machine-checked starting point rather than a claim.
+The IT-002 success criteria stay `Manual` and `🚧`: they need a Quoin that
+provides the module installer. This file does **not** bind them — a test that
+only checks files exist cannot claim "the pre-install listing is captured".
+What it checks is that the module directory the roundtrip would hand to Quoin
+is complete and self-consistent, so the manual step has a machine-checked
+starting point rather than a claim.
 """
 
 from __future__ import annotations
 
 import json
-
-import pytest
 
 from tests.conftest import (
     MODEL_OF,
@@ -22,7 +20,6 @@ from tests.conftest import (
 )
 
 
-@pytest.mark.trace("TC-114")
 def test_the_module_directory_quoin_would_install_is_complete():
     assert (PACKAGE_ROOT / "manifest.yaml").is_file()
     assert (PACKAGE_ROOT / "skeletons").is_dir()

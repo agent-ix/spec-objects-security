@@ -11,9 +11,9 @@ PKG_ROOT = pathlib.Path(__file__).resolve().parent.parent / "spec_objects_securi
 MANIFEST_PATH = PKG_ROOT / "manifest.yaml"
 
 
-@pytest.mark.trace("TC-002", "FR-001-AC-1")
+@pytest.mark.trace("FR-001-AC-1")
 def test_manifest_loads() -> None:
-    """TC-002: FR-001-AC-1."""
+    """FR-001-AC-1."""
     manifest = yaml.safe_load(MANIFEST_PATH.read_text())
     assert manifest["manifest_version"] == "1.0.0"
     assert manifest["name"] == "spec-objects-security"
@@ -25,23 +25,23 @@ def _object_types():
     return yaml.safe_load(MANIFEST_PATH.read_text()).get("object_types", [])
 
 
-@pytest.mark.trace("TC-003", "FR-001-AC-1")
+@pytest.mark.trace("FR-001-AC-1")
 @pytest.mark.parametrize("ot", _object_types(), ids=lambda ot: ot["name"])
 def test_object_type_has_name_and_data_schema(ot: dict) -> None:
-    """TC-003: FR-001-AC-1."""
+    """FR-001-AC-1."""
     assert isinstance(ot["name"], str) and len(ot["name"]) > 0
     assert "data_schema" in ot
     assert isinstance(ot["data_schema"], dict)
 
 
-@pytest.mark.trace("TC-004", "FR-001-AC-1")
+@pytest.mark.trace("FR-001-AC-1")
 def test_no_duplicate_object_type_names() -> None:
-    """TC-004: FR-001-AC-1."""
+    """FR-001-AC-1."""
     names = [ot["name"] for ot in _object_types()]
     assert len(names) == len(set(names)), f"duplicate names: {names}"
 
 
-@pytest.mark.trace("TC-273", "FR-028-AC-9")
+@pytest.mark.trace("FR-028-AC-9")
 def test_dossier_flow_rules_select_only_the_authored_facts_it_needs() -> None:
     manifest = yaml.safe_load(MANIFEST_PATH.read_text())
     rules = {rule["name"]: rule for rule in manifest["traceability"]["flow_rules"]}
@@ -92,9 +92,9 @@ def test_dossier_flow_rules_select_only_the_authored_facts_it_needs() -> None:
         assert rule["unless_any"] == [{"path": [], "field": "id", "present": True}]
 
 
-@pytest.mark.trace("TC-006", "FR-001-AC-1")
+@pytest.mark.trace("FR-001-AC-1")
 def test_lexicon_entries_are_whole() -> None:
-    """TC-006: Every lexicon entry is exactly `{definition: <non-empty string>}`.
+    """Every lexicon entry is exactly `{definition: <non-empty string>}`.
 
     The regression this pins: `secret` and `audit` were written as YAML flow
     mappings whose definitions contained an unquoted comma —
@@ -131,9 +131,9 @@ def test_lexicon_entries_are_whole() -> None:
     )
 
 
-@pytest.mark.trace("TC-007", "FR-001-AC-1")
+@pytest.mark.trace("FR-001-AC-1")
 def test_threat_and_risk_coverage_is_declared_not_coded() -> None:
-    """TC-007: agent-ix/spec-objects-security#5: upward coverage is manifest data.
+    """agent-ix/spec-objects-security#5: upward coverage is manifest data.
 
     Assumptions: quire-rs FR-058 reads
     ``traceability.required_relations``; the engine holds no archetype name,
