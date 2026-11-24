@@ -68,7 +68,7 @@ def extract(quire_engine, module, bundle, path):
     )
 
 
-@pytest.mark.trace("TC-080", "FR-005-AC-1")
+@pytest.mark.trace("FR-005-AC-1")
 def test_every_skeleton_validates_with_no_error(quire_engine):
     paths = all_skeletons()
     assert len(paths) == len(OBJECT_TYPES) + len(ALTERNATES), [p.name for p in paths]
@@ -83,7 +83,7 @@ def test_every_skeleton_validates_with_no_error(quire_engine):
         ], path.name
 
 
-@pytest.mark.trace("TC-081", "FR-005-AC-2", "FR-005-CON-2")
+@pytest.mark.trace("FR-005-AC-2", "FR-005-CON-2")
 def test_table_and_sysml_skeletons_extract_to_identical_fields(
     quire_engine, semantic_module, bundle_index
 ):
@@ -102,7 +102,7 @@ def test_table_and_sysml_skeletons_extract_to_identical_fields(
         assert table["fields"] == fence["fields"], name
 
 
-@pytest.mark.trace("TC-082", "FR-005-AC-3")
+@pytest.mark.trace("FR-005-AC-3")
 def test_under_the_bundle_index_every_skeleton_extracts_clean(
     quire_engine, semantic_module, bundle_index
 ):
@@ -124,7 +124,7 @@ def test_under_the_bundle_index_every_skeleton_extracts_clean(
             assert target["value"].startswith(TYPE_PREFIX), (path.name, target)
 
 
-@pytest.mark.trace("TC-083", "FR-005-AC-4")
+@pytest.mark.trace("FR-005-AC-4")
 def test_availability_states_match_each_type(
     quire_engine, semantic_module, bundle_index
 ):
@@ -142,7 +142,7 @@ def test_availability_states_match_each_type(
         assert states == expected, (path.name, states)
 
 
-@pytest.mark.trace("TC-084", "FR-005-AC-5")
+@pytest.mark.trace("FR-005-AC-5")
 def test_every_negative_fixture_produces_its_expected_code(quire_engine):
     fixtures = sorted(NEGATIVE_DIR.glob("*.md"))
     assert len(fixtures) == 10, [p.name for p in fixtures]
@@ -170,7 +170,7 @@ def test_every_negative_fixture_produces_its_expected_code(quire_engine):
     assert seen == expected, seen
 
 
-@pytest.mark.trace("TC-090", "FR-005-CON-2")
+@pytest.mark.trace("FR-005-CON-2")
 def test_a_section_carrying_both_forms_is_refused(quire_engine):
     path = NEGATIVE_DIR / "properties-both-forms.md"
     text = path.read_text()
@@ -183,7 +183,7 @@ def test_a_section_carrying_both_forms_is_refused(quire_engine):
     ), result["errors"]
 
 
-@pytest.mark.trace("TC-085", "FR-005-AC-6")
+@pytest.mark.trace("FR-005-AC-6")
 def test_every_skeleton_heading_is_asserted_by_the_manifest():
     for path in all_skeletons():
         name = frontmatter(path.read_text())["type"]
@@ -208,7 +208,7 @@ def _h2(markdown: str) -> list[str]:
     return [m.group(1).strip() for m in re.finditer(r"^##\s+(.*\S)\s*$", body, re.M)]
 
 
-@pytest.mark.trace("TC-086", "FR-005-AC-7")
+@pytest.mark.trace("FR-005-AC-7")
 def test_every_skeleton_is_placeholder_free_and_substantive():
     tokens = ("TODO", "TBD", "{{", "}}", "placeholder", "none specified")
     for path in primary_skeletons():
@@ -243,7 +243,7 @@ def _sections(markdown: str) -> dict:
     return out
 
 
-@pytest.mark.trace("TC-087", "FR-005-AC-8")
+@pytest.mark.trace("FR-005-AC-8")
 def test_titles_are_distinct_identifiers_and_object_equals_type():
     titles = []
     for path in primary_skeletons():
@@ -262,7 +262,7 @@ def test_titles_are_distinct_identifiers_and_object_equals_type():
         assert alternate["object"] == alternate["type"] == name, name
 
 
-@pytest.mark.trace("TC-088", "FR-005-AC-9", "FR-005-CON-3")
+@pytest.mark.trace("FR-005-AC-9", "FR-005-CON-3")
 def test_no_skeleton_or_fixture_carries_a_credential_shaped_literal():
     paths = all_skeletons() + sorted(NEGATIVE_DIR.glob("*.md"))
     paths += sorted((NEGATIVE_DIR.parent / "soup").glob("*.md"))
@@ -275,7 +275,7 @@ def test_no_skeleton_or_fixture_carries_a_credential_shaped_literal():
     assert any(p.search(canary) for p in CREDENTIAL_SHAPES), "the scan detects nothing"
 
 
-@pytest.mark.trace("TC-089", "FR-005-CON-1")
+@pytest.mark.trace("FR-005-CON-1")
 def test_the_repository_holds_no_corpus_or_vendored_fixture():
     """FR-005-CON-1 as a **tree** assertion: no `corpus/`, `fixtures/semantic-module`
     or vendor path is tracked anywhere in this repository. `git ls-files`
@@ -340,7 +340,7 @@ def test_the_repository_holds_no_corpus_or_vendored_fixture():
     assert not stray, stray
 
 
-@pytest.mark.trace("TC-074", "FR-006-AC-5")
+@pytest.mark.trace("FR-006-AC-5")
 def test_the_markdown_path_cannot_express_embedded_material(
     quire_engine, semantic_module, bundle_index
 ):

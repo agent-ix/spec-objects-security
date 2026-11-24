@@ -33,7 +33,7 @@ def _control_record(**extra) -> dict:
     }
 
 
-@pytest.mark.trace("TC-244", "FR-025-AC-8", "FR-025-AC-11")
+@pytest.mark.trace("FR-025-AC-8", "FR-025-AC-11")
 def test_safeguard_and_frontmatter_schemas_are_closed_where_required(
     schema_registry,
 ):
@@ -90,7 +90,7 @@ def test_safeguard_and_frontmatter_schemas_are_closed_where_required(
     )
 
 
-@pytest.mark.trace("TC-245", "FR-025-AC-8", "FR-025-AC-9")
+@pytest.mark.trace("FR-025-AC-8", "FR-025-AC-9")
 def test_safeguards_are_optional_authored_frontmatter_and_the_skeleton_validates(
     tmp_path,
     quire_engine,
@@ -152,7 +152,7 @@ def test_safeguards_are_optional_authored_frontmatter_and_the_skeleton_validates
         ), diagnostics
 
 
-@pytest.mark.trace("TC-246", "FR-025-AC-9")
+@pytest.mark.trace("FR-025-AC-9")
 @pytest.mark.parametrize(
     ("kind", "identifier"),
     [("connection", "CONN-1"), ("data_sink", "SINK-1")],
@@ -179,7 +179,7 @@ def test_control_protects_connections_and_sinks(tmp_path, kind, identifier):
     assert result.returncode == 0 and not errors(result), result.stderr
 
 
-@pytest.mark.trace("TC-247", "FR-025-AC-9", "FR-025-AC-11")
+@pytest.mark.trace("FR-025-AC-9", "FR-025-AC-11")
 def test_manifest_declares_safeguard_and_classification_frontmatter():
     import yaml
 
@@ -212,7 +212,7 @@ def test_manifest_declares_safeguard_and_classification_frontmatter():
     }
 
 
-@pytest.mark.trace("TC-256", "FR-025-AC-10")
+@pytest.mark.trace("FR-025-AC-10")
 def test_manifest_declares_the_nine_remediations_with_exact_changes():
     import yaml
 

@@ -31,7 +31,7 @@ ADMITTED_KEYS = {
 }
 
 
-@pytest.mark.trace("TC-040", "FR-003-AC-1", "FR-003-CON-1")
+@pytest.mark.trace("FR-003-AC-1", "FR-003-CON-1")
 def test_the_semantic_block_is_exactly_the_eight_admitted_keys(semantic_block):
     assert set(semantic_block) == ADMITTED_KEYS
     assert len(ADMITTED_KEYS) == 8
@@ -50,7 +50,7 @@ def test_the_semantic_block_is_exactly_the_eight_admitted_keys(semantic_block):
     assert semantic_block["exports"] == list(OBJECT_TYPES)
 
 
-@pytest.mark.trace("TC-044", "FR-003-AC-4")
+@pytest.mark.trace("FR-003-AC-4")
 def test_the_registry_lists_every_archetype_and_no_skeleton_fails_to_load(
     quire_engine,
 ):
@@ -73,7 +73,7 @@ def test_the_registry_lists_every_archetype_and_no_skeleton_fails_to_load(
         assert not failures, (path.name, failures)
 
 
-@pytest.mark.trace("TC-045", "FR-003-AC-6")
+@pytest.mark.trace("FR-003-AC-6")
 def test_an_unknown_key_is_refused(quire_engine):
     """The refusal is verified. The *naming* half of FR-003-AC-6 — a diagnostic
     that names the offending key or path — is an expected failure while
@@ -90,7 +90,7 @@ def test_an_unknown_key_is_refused(quire_engine):
 
 
 @pytest.mark.xfail(strict=True, reason="agent-ix/quire-rs#221, agent-ix/quire-rs#394")
-@pytest.mark.trace("TC-045", "FR-003-AC-6")
+@pytest.mark.trace("FR-003-AC-6")
 def test_the_refusal_names_the_offending_key_or_path(quire_engine, capsys):
     with tempfile.TemporaryDirectory() as tmp:
         module = _copy_module(tmp, "unknown-key")
@@ -107,7 +107,7 @@ def _copy_module(tmp, name):
     return module
 
 
-@pytest.mark.trace("TC-111", "StR-001-VC-3")
+@pytest.mark.trace("StR-001-VC-3")
 def test_two_records_of_different_types_are_distinguishable_by_schema_alone(
     schema_registry,
 ):

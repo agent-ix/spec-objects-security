@@ -30,13 +30,13 @@ def _errors(validator_for, model: str, record: dict) -> list:
     return list(validator_for(model).iter_errors(record))
 
 
-@pytest.mark.trace("TC-218", "FR-004-AC-15")
+@pytest.mark.trace("FR-004-AC-15")
 @pytest.mark.parametrize(("model", "key"), MODELS.items())
 def test_the_key_is_optional_and_absence_validates(schema_registry, model, key):
     assert not _errors(schema_registry, model, _record(model))
 
 
-@pytest.mark.trace("TC-218", "FR-004-AC-15")
+@pytest.mark.trace("FR-004-AC-15")
 @pytest.mark.parametrize(
     ("model", "key", "value"),
     [
@@ -56,7 +56,7 @@ def test_accepted_values(schema_registry, model, key, value):
     assert not _errors(schema_registry, model, _record(model, **{key: value}))
 
 
-@pytest.mark.trace("TC-218", "FR-004-AC-15")
+@pytest.mark.trace("FR-004-AC-15")
 @pytest.mark.parametrize(
     ("model", "key", "value"),
     [
@@ -88,7 +88,7 @@ def test_rejected_values(schema_registry, model, key, value):
     assert _errors(schema_registry, model, _record(model, **{key: value}))
 
 
-@pytest.mark.trace("TC-219", "FR-004-AC-15")
+@pytest.mark.trace("FR-004-AC-15")
 @pytest.mark.parametrize(
     ("kind", "old", "new"),
     [

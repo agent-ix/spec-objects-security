@@ -194,7 +194,7 @@ def _flow_report(scope, module) -> dict:
     return json.loads(result.stdout)
 
 
-@pytest.mark.trace("TC-273", "FR-028-AC-9")
+@pytest.mark.trace("FR-028-AC-9")
 def test_dossier_facts_are_visible_in_flow_report_for_plat_fixture(tmp_path):
     fixture_value = os.environ.get("PLAT1658_ARCHITECTURE_FIXTURE_ROOT")
     if not fixture_value:
@@ -325,7 +325,7 @@ def test_dossier_facts_are_visible_in_flow_report_for_plat_fixture(tmp_path):
     ]
 
 
-@pytest.mark.trace("TC-258", "FR-025-AC-1", "FR-025-AC-2")
+@pytest.mark.trace("FR-025-AC-1", "FR-025-AC-2")
 @pytest.mark.parametrize(
     ("fixture_name", "expected_rule"),
     [
@@ -387,7 +387,7 @@ def _apply_fixture_remediation(scope, rule: str) -> None:
     )
 
 
-@pytest.mark.trace("TC-262", "FR-025-AC-5")
+@pytest.mark.trace("FR-025-AC-5")
 @pytest.mark.parametrize("rule", FLOW_FIXTURES)
 def test_each_rule_fixture_denies_passes_and_clears_with_its_remediation(
     tmp_path, rule
@@ -464,7 +464,7 @@ def _protect_sink(scope, sink_id: str, safeguard: str) -> None:
     )
 
 
-@pytest.mark.trace("TC-259", "FR-025-AC-3", "FR-025-AC-4", "FR-025-AC-5")
+@pytest.mark.trace("FR-025-AC-3", "FR-025-AC-4", "FR-025-AC-5")
 @pytest.mark.parametrize(
     ("rule", "kind", "category", "agreement", "safeguard", "via_connection"),
     [
@@ -531,7 +531,7 @@ def test_sink_rules_deny_each_risky_flow_and_accept_the_declared_remediation(
     assert not any(denial["rule"] == rule for denial in cleared["denials"])
 
 
-@pytest.mark.trace("TC-259", "FR-025-AC-4")
+@pytest.mark.trace("FR-025-AC-4")
 def test_llm_sink_unknown_agreement_is_denied_but_covered_is_not(tmp_path):
     source_manifest = yaml.safe_load((PACKAGE_ROOT / "manifest.yaml").read_text())
     module = tmp_path / "module"
@@ -568,7 +568,7 @@ def test_llm_sink_unknown_agreement_is_denied_but_covered_is_not(tmp_path):
     )
 
 
-@pytest.mark.trace("TC-260", "FR-025-AC-6", "FR-025-AC-13")
+@pytest.mark.trace("FR-025-AC-6", "FR-025-AC-13")
 def test_sink_rules_read_both_paths_and_do_not_extend_health_log_to_personal_data(
     tmp_path,
 ):
@@ -612,7 +612,7 @@ def test_sink_rules_read_both_paths_and_do_not_extend_health_log_to_personal_dat
     assert empty_report["denials"] == []
 
 
-@pytest.mark.trace("TC-261", "FR-025-AC-7", "FR-025-AC-11", "FR-025-AC-12")
+@pytest.mark.trace("FR-025-AC-7", "FR-025-AC-11", "FR-025-AC-12")
 def test_all_six_rules_load_against_published_sink_schema_and_reject_bad_enum(
     tmp_path,
 ):
@@ -714,7 +714,7 @@ def test_all_six_rules_load_against_published_sink_schema_and_reject_bad_enum(
     assert str(invalid_remediation_module / "manifest.yaml") in remediation_diagnostic
 
 
-@pytest.mark.trace("TC-263", "FR-025-AC-14")
+@pytest.mark.trace("FR-025-AC-14")
 def test_public_privacy_scope_is_limited_and_disclosed():
     manifest = yaml.safe_load((PACKAGE_ROOT / "manifest.yaml").read_text())
     rules = manifest["traceability"]["flow_rules"]

@@ -104,9 +104,9 @@ def _ot(name: str) -> dict:
     return next(ot for ot in _OBJECT_TYPES if ot["name"] == name)
 
 
-@pytest.mark.trace("TC-008", "FR-001-AC-1")
+@pytest.mark.trace("FR-001-AC-1")
 def test_every_object_type_ships_a_skeleton_and_nothing_extra() -> None:
-    """TC-008: FR-001-AC-1."""
+    """FR-001-AC-1."""
     missing = [n for n in _NAMES if not _skeleton_path(n).exists()]
     assert not missing, f"object_types without skeletons: {missing}"
     extra = sorted(
@@ -123,10 +123,10 @@ def test_every_object_type_ships_a_skeleton_and_nothing_extra() -> None:
     assert not orphan_alternates, orphan_alternates
 
 
-@pytest.mark.trace("TC-009", "FR-001-AC-1")
+@pytest.mark.trace("FR-001-AC-1")
 @pytest.mark.parametrize("name", _NAMES, ids=lambda n: n)
 def test_frontmatter_matches_manifest_locators(name: str) -> None:
-    """TC-009: Required frontmatter fields are present and non-empty; type is
+    """Required frontmatter fields are present and non-empty; type is
     the object_type name; no undeclared frontmatter keys (reverse drift)."""
     fm = _frontmatter(_skeleton_text(name))
     fm_locators = {
@@ -148,10 +148,10 @@ def test_frontmatter_matches_manifest_locators(name: str) -> None:
     assert not undeclared, f"{name}: undeclared frontmatter keys {undeclared}"
 
 
-@pytest.mark.trace("TC-010", "FR-001-AC-1")
+@pytest.mark.trace("FR-001-AC-1")
 @pytest.mark.parametrize("name", _NAMES, ids=lambda n: n)
 def test_asserted_sections_and_code_blocks_present(name: str) -> None:
-    """TC-010: Every section_body/code_block locator's heading exists at H2; code_block
+    """Every section_body/code_block locator's heading exists at H2; code_block
     locators have a fence with the asserted language inside their section."""
     md = _skeleton_text(name)
     sections = _split_h2_sections(md)
@@ -170,10 +170,10 @@ def test_asserted_sections_and_code_blocks_present(name: str) -> None:
             ), f"{name}: section {heading!r} lacks a ```{lang} code block"
 
 
-@pytest.mark.trace("TC-011", "FR-001-AC-1")
+@pytest.mark.trace("FR-001-AC-1")
 @pytest.mark.parametrize("name", _NAMES, ids=lambda n: n)
 def test_no_skeleton_drift_beyond_manifest(name: str) -> None:
-    """TC-011: Reverse direction: every H2 heading and fence language in the skeleton
+    """Reverse direction: every H2 heading and fence language in the skeleton
     is asserted by the manifest, so skeletons can't drift ahead of contract."""
     md = _skeleton_text(name)
     locators = _locators(_ot(name))
@@ -199,10 +199,10 @@ def test_no_skeleton_drift_beyond_manifest(name: str) -> None:
         assert lang in _fence_languages(md), f"{name}: missing ```{lang} fence"
 
 
-@pytest.mark.trace("TC-012", "FR-001-AC-1")
+@pytest.mark.trace("FR-001-AC-1")
 @pytest.mark.parametrize("name", _NAMES, ids=lambda n: n)
 def test_skeleton_is_substantive(name: str) -> None:
-    """TC-012: Bodies are filled with real content: no placeholder tokens anywhere and
+    """Bodies are filled with real content: no placeholder tokens anywhere and
     every asserted section carries a non-empty body."""
     md = _skeleton_text(name)
     lowered = md.lower()
@@ -235,18 +235,18 @@ def _quire_doc_validator():
     return require_quire()
 
 
-@pytest.mark.trace("TC-013", "FR-001-AC-1")
+@pytest.mark.trace("FR-001-AC-1")
 @pytest.mark.parametrize("name", _NAMES, ids=lambda n: n)
 def test_roundtrip_skeleton_validates(name: str) -> None:
-    """TC-013: Each filled skeleton passes validate_document against this module."""
+    """Each filled skeleton passes validate_document against this module."""
     quire = _quire_doc_validator()
     res = quire.validate_document(name, str(PKG_ROOT), _skeleton_text(name))
     assert res["is_valid"], res["errors"]
 
 
-@pytest.mark.trace("TC-014", "FR-001-AC-1")
+@pytest.mark.trace("FR-001-AC-1")
 def test_roundtrip_mutation_fails() -> None:
-    """TC-014: Deleting the required Schema code block from jwt_claim fails validation
+    """Deleting the required Schema code block from jwt_claim fails validation
     with a reason naming the missing locator."""
     quire = _quire_doc_validator()
     base = _skeleton_text("jwt_claim")

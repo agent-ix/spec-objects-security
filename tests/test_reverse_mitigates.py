@@ -103,7 +103,7 @@ def _check_lines(result, check):
     return [line for line in result.stderr.splitlines() if line.endswith(f"[{check}]")]
 
 
-@pytest.mark.trace("TC-116", "FR-008-AC-1")
+@pytest.mark.trace("FR-008-AC-1")
 def test_security_nfr_relation_is_declared_with_a_where_selector():
     manifest = yaml.safe_load(MANIFEST_PATH.read_text())
     relations = manifest["traceability"]["required_relations"]
@@ -119,7 +119,7 @@ def test_security_nfr_relation_is_declared_with_a_where_selector():
     }
 
 
-@pytest.mark.trace("TC-117", "FR-008-AC-2")
+@pytest.mark.trace("FR-008-AC-2")
 def test_security_nfr_without_a_mitigates_edge_is_reported(tmp_path):
     _nfr(tmp_path, "NFR-001", "security")
     result = _registered(_validate(tmp_path))
@@ -132,7 +132,7 @@ def test_security_nfr_without_a_mitigates_edge_is_reported(tmp_path):
     assert "quality_attribute" in findings[0], findings
 
 
-@pytest.mark.trace("TC-118", "FR-008-AC-3", "FR-008-AC-4")
+@pytest.mark.trace("FR-008-AC-3", "FR-008-AC-4")
 def test_only_security_nfr_with_unresolved_target_is_reported(tmp_path):
     _threat(tmp_path)
     _nfr(tmp_path, "NFR-001", "security", [THREAT_REF])
@@ -148,7 +148,7 @@ def test_only_security_nfr_with_unresolved_target_is_reported(tmp_path):
     )
 
 
-@pytest.mark.trace("TC-146", "FR-008-AC-7")
+@pytest.mark.trace("FR-008-AC-7")
 def test_security_nfr_mitigating_a_risk_is_not_reported(tmp_path):
     _risk(tmp_path)
     _nfr(tmp_path, "NFR-001", "security", [RISK_REF])
@@ -157,7 +157,7 @@ def test_security_nfr_mitigating_a_risk_is_not_reported(tmp_path):
     assert _findings(result) == [], result.stderr
 
 
-@pytest.mark.trace("TC-147", "FR-008-AC-8")
+@pytest.mark.trace("FR-008-AC-8")
 def test_security_nfr_mitigating_a_loaded_cross_repository_threat_is_not_reported(
     tmp_path,
 ):
@@ -172,7 +172,7 @@ def test_security_nfr_mitigating_a_loaded_cross_repository_threat_is_not_reporte
     assert _findings(result) == [], result.stderr
 
 
-@pytest.mark.trace("TC-148", "FR-008-AC-9")
+@pytest.mark.trace("FR-008-AC-9")
 def test_security_nfr_mitigating_only_a_hazard_is_reported(tmp_path):
     _hazard(tmp_path)
     _nfr(
@@ -187,7 +187,7 @@ def test_security_nfr_mitigating_only_a_hazard_is_reported(tmp_path):
     assert "NFR-001" in findings[0], findings
 
 
-@pytest.mark.trace("TC-149", "FR-008-AC-10")
+@pytest.mark.trace("FR-008-AC-10")
 def test_security_nfr_mitigating_an_unloaded_cross_repository_threat_is_reported(
     tmp_path,
 ):
@@ -200,7 +200,7 @@ def test_security_nfr_mitigating_an_unloaded_cross_repository_threat_is_reported
     assert "NFR-001" in findings[0], findings
 
 
-@pytest.mark.trace("TC-119", "FR-008-AC-5")
+@pytest.mark.trace("FR-008-AC-5")
 def test_finding_is_advisory_and_tunable(tmp_path):
     _nfr(tmp_path, "NFR-001", "security")
     strict = _registered(_validate(tmp_path, "--strict"))
@@ -217,7 +217,7 @@ def test_finding_is_advisory_and_tunable(tmp_path):
     assert not promoted_findings[0].startswith("warning:"), promoted.stderr
 
 
-@pytest.mark.trace("TC-120", "FR-008-AC-6")
+@pytest.mark.trace("FR-008-AC-6")
 def test_exposure_end_relations_keep_an_empty_to():
     manifest = yaml.safe_load(MANIFEST_PATH.read_text())
     by_name = {r["name"]: r for r in manifest["traceability"]["required_relations"]}

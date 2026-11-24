@@ -64,7 +64,7 @@ def clone_repo(destination) -> None:
     shutil.copytree(SCHEMAS_DIR, package / "schemas")
 
 
-@pytest.mark.trace("TC-021", "FR-002-AC-2")
+@pytest.mark.trace("FR-002-AC-2")
 def test_every_schema_declares_the_draft_id():
     base = MODULE_BASE
     for path in shipped_schemas():
@@ -73,7 +73,7 @@ def test_every_schema_declares_the_draft_id():
         assert schema["$id"] == f"{base}{path.name}", path.name
 
 
-@pytest.mark.trace("TC-022", "FR-002-AC-3")
+@pytest.mark.trace("FR-002-AC-3")
 def test_every_ref_resolves_to_a_sibling_or_semantic_core():
     base = MODULE_BASE
     shipped = {p.name for p in shipped_schemas()}
@@ -100,7 +100,7 @@ def _refs(node):
             yield from _refs(item)
 
 
-@pytest.mark.trace("TC-023", "FR-002-AC-4")
+@pytest.mark.trace("FR-002-AC-4")
 def test_check_is_clean_and_names_a_mutated_schema():
     assert run_generator("--check").returncode == 0
     with tempfile.TemporaryDirectory() as tmp:
@@ -119,7 +119,7 @@ def _scratch(tmp):
     return scratch
 
 
-@pytest.mark.trace("TC-025", "FR-002-AC-6")
+@pytest.mark.trace("FR-002-AC-6")
 def test_the_built_wheel_contains_every_exported_schema():
     with tempfile.TemporaryDirectory() as tmp:
         build = subprocess.run(
@@ -144,7 +144,7 @@ def test_the_built_wheel_contains_every_exported_schema():
             ), shipped.name
 
 
-@pytest.mark.trace("TC-026", "FR-002-AC-7")
+@pytest.mark.trace("FR-002-AC-7")
 def test_the_npm_tarball_ships_the_manifest_beside_its_schemas():
     with tempfile.TemporaryDirectory() as tmp:
         pack = subprocess.run(
@@ -177,7 +177,7 @@ def test_the_npm_tarball_ships_the_manifest_beside_its_schemas():
     assert not (REPO_ROOT / "manifest.yaml").exists(), "postpack left a staged manifest"
 
 
-@pytest.mark.trace("TC-028", "FR-002-AC-9")
+@pytest.mark.trace("FR-002-AC-9")
 def test_check_names_a_stale_schema_and_writes_nothing():
     with tempfile.TemporaryDirectory() as tmp:
         scratch = _scratch(tmp)
@@ -197,7 +197,7 @@ def test_check_names_a_stale_schema_and_writes_nothing():
         assert before == after
 
 
-@pytest.mark.trace("TC-029", "FR-002-CON-3")
+@pytest.mark.trace("FR-002-CON-3")
 def test_emission_is_deterministic():
     with tempfile.TemporaryDirectory() as tmp:
         scratch = _scratch(tmp)
@@ -209,7 +209,7 @@ def test_emission_is_deterministic():
         assert first == second
 
 
-@pytest.mark.trace("TC-030", "FR-002-CON-1")
+@pytest.mark.trace("FR-002-CON-1")
 def test_the_official_emitter_only_and_no_hand_edited_output():
     config = (REPO_ROOT / "typespec" / "tspconfig.yaml").read_text()
     assert '"@typespec/json-schema"' in config
@@ -219,7 +219,7 @@ def test_the_official_emitter_only_and_no_hand_edited_output():
     assert run_generator("--check").returncode == 0
 
 
-@pytest.mark.trace("TC-031", "FR-002-CON-2")
+@pytest.mark.trace("FR-002-CON-2")
 def test_no_npmrc_and_no_local_refs():
     assert not (REPO_ROOT / ".npmrc").exists()
     package = json.loads((REPO_ROOT / "package.json").read_text())
@@ -227,7 +227,7 @@ def test_no_npmrc_and_no_local_refs():
         assert not spec.startswith(("file:", "link:")), name
 
 
-@pytest.mark.trace("TC-032", "FR-002-CON-4")
+@pytest.mark.trace("FR-002-CON-4")
 def test_the_lockfile_resolves_public_packages_from_npmjs():
     """Every package, `@agent-ix/semantic-core` included, is published to
     npmjs; the committed lockfile resolves from there, not the private
@@ -243,7 +243,7 @@ def test_the_lockfile_resolves_public_packages_from_npmjs():
     assert not offenders, offenders
 
 
-@pytest.mark.trace("TC-035", "FR-002-AC-11")
+@pytest.mark.trace("FR-002-AC-11")
 def test_line_endings_are_pinned_and_packing_leaves_nothing_staged():
     attributes = (REPO_ROOT / ".gitattributes").read_text()
     for pattern in ("*.json", "*.tsp", "*.yaml", "*.md"):

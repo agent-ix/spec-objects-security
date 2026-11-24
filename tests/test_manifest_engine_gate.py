@@ -78,7 +78,7 @@ def _quoin_list(tmp_path):
     )
 
 
-@pytest.mark.trace("TC-115", "FR-003-AC-7")
+@pytest.mark.trace("FR-003-AC-7")
 def test_the_shipped_manifest_is_accepted_by_both_engines(tmp_path):
     module = _module(tmp_path)
     quire = _quire_validate(module, tmp_path)
@@ -92,7 +92,7 @@ def test_the_shipped_manifest_is_accepted_by_both_engines(tmp_path):
     assert after == before, "the install escaped the temporary HOME"
 
 
-@pytest.mark.trace("TC-115", "FR-003-AC-7")
+@pytest.mark.trace("FR-003-AC-7")
 def test_quire_refuses_an_unknown_top_level_key_and_names_it(tmp_path):
     module = _module(tmp_path, lambda d: d.update(bogus_key=1))
     result = _quire_validate(module, tmp_path)
@@ -100,7 +100,7 @@ def test_quire_refuses_an_unknown_top_level_key_and_names_it(tmp_path):
     assert "bogus_key" in result.stderr, result.stderr
 
 
-@pytest.mark.trace("TC-115", "FR-003-AC-7")
+@pytest.mark.trace("FR-003-AC-7")
 def test_quoin_refuses_an_unknown_semantic_key_and_names_it(tmp_path):
     module = _module(tmp_path, lambda d: d["semantic"].update(foo="bar"))
     result = _quoin_install(module, tmp_path)
@@ -108,7 +108,7 @@ def test_quoin_refuses_an_unknown_semantic_key_and_names_it(tmp_path):
     assert "semantic.foo" in result.stderr + result.stdout, result.stderr
 
 
-@pytest.mark.trace("TC-046", "FR-003-AC-5")
+@pytest.mark.trace("FR-003-AC-5")
 def test_quoin_install_lists_module_and_restores_previously_installed_version(
     tmp_path,
 ):

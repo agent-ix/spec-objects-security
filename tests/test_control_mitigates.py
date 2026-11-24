@@ -16,7 +16,7 @@ from tests.conftest import (
 )
 
 
-@pytest.mark.trace("TC-091", "FR-007-AC-1")
+@pytest.mark.trace("FR-007-AC-1")
 def test_control_mitigates_targets_are_exactly_the_five_types():
     manifest = yaml.safe_load(MANIFEST_PATH.read_text())
     control = next(ot for ot in manifest["object_types"] if ot["name"] == "control")
@@ -29,7 +29,7 @@ def test_control_mitigates_targets_are_exactly_the_five_types():
     ]
 
 
-@pytest.mark.trace("TC-092", "FR-007-AC-2")
+@pytest.mark.trace("FR-007-AC-2")
 def test_control_mitigating_an_asset_is_a_disallowed_edge_target(tmp_path):
     quire = engine_tool("quire")
     for name in ("control", "asset"):

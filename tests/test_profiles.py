@@ -114,7 +114,7 @@ def shipped_profiles() -> list[pathlib.Path]:
     return [path for path in profile_files() if path.suffix == ".yaml"]
 
 
-@pytest.mark.trace("TC-170", "TC-173", "FR-021-AC-5", "NFR-002-AC-1")
+@pytest.mark.trace("FR-021-AC-5", "NFR-002-AC-1")
 def test_profiles_holds_only_yaml_profile_files() -> None:
     stray = [
         p.name
@@ -124,7 +124,7 @@ def test_profiles_holds_only_yaml_profile_files() -> None:
     assert stray == [], f"files that are not profiles/<name>.yaml: {stray}"
 
 
-@pytest.mark.trace("TC-160", "FR-020-AC-1")
+@pytest.mark.trace("FR-020-AC-1")
 def test_a_complete_profile_passes(tmp_path: pathlib.Path) -> None:
     data = validate_profile(
         _write(tmp_path, "p", _good(extra="context:\n  market: eu\n"))
@@ -132,7 +132,7 @@ def test_a_complete_profile_passes(tmp_path: pathlib.Path) -> None:
     assert data["clauseSets"][0]["id"] == "a"
 
 
-@pytest.mark.trace("TC-161", "FR-020-AC-2")
+@pytest.mark.trace("FR-020-AC-2")
 @pytest.mark.parametrize("missing", ["name", "title", "description", "clauseSets"])
 def test_a_profile_missing_a_required_key_fails(
     tmp_path: pathlib.Path, missing: str
@@ -144,13 +144,13 @@ def test_a_profile_missing_a_required_key_fails(
         validate_profile(path)
 
 
-@pytest.mark.trace("TC-161", "FR-020-AC-2")
+@pytest.mark.trace("FR-020-AC-2")
 def test_a_name_differing_from_the_file_stem_fails(tmp_path: pathlib.Path) -> None:
     with pytest.raises(ProfileError, match="file stem"):
         validate_profile(_write(tmp_path, "p", _good(name="other")))
 
 
-@pytest.mark.trace("TC-162", "FR-020-AC-3")
+@pytest.mark.trace("FR-020-AC-3")
 def test_empty_sets_empty_fields_and_repeats_fail(tmp_path: pathlib.Path) -> None:
     head = "schemaVersion: source-profile-v1\nname: p\ntitle: T\ndescription: D\n"
     cases = {
@@ -166,7 +166,7 @@ def test_empty_sets_empty_fields_and_repeats_fail(tmp_path: pathlib.Path) -> Non
             validate_profile(_write(tmp_path, "p", text))
 
 
-@pytest.mark.trace("TC-163", "FR-020-AC-4")
+@pytest.mark.trace("FR-020-AC-4")
 def test_unknown_keys_and_bad_context_values_fail(tmp_path: pathlib.Path) -> None:
     for extra in (
         "surprise: 1\n",
@@ -177,7 +177,7 @@ def test_unknown_keys_and_bad_context_values_fail(tmp_path: pathlib.Path) -> Non
             validate_profile(_write(tmp_path, "p", _good(extra=extra)))
 
 
-@pytest.mark.trace("TC-164", "FR-020-AC-5")
+@pytest.mark.trace("FR-020-AC-5")
 @pytest.mark.parametrize("field", ["text", "title"])
 def test_a_clause_set_entry_carrying_text_or_title_fails(
     tmp_path: pathlib.Path, field: str
@@ -187,25 +187,25 @@ def test_a_clause_set_entry_carrying_text_or_title_fails(
         validate_profile(_write(tmp_path, "p", text))
 
 
-@pytest.mark.trace("TC-165", "FR-020-AC-6")
+@pytest.mark.trace("FR-020-AC-6")
 def test_the_manifest_declares_no_profiles_key() -> None:
     manifest = yaml.safe_load(MANIFEST_PATH.read_text())
     assert "profiles" not in manifest
 
 
-@pytest.mark.trace("TC-166", "TC-173", "FR-021-AC-1", "NFR-002-AC-1", "NFR-002-M-1")
+@pytest.mark.trace("FR-021-AC-1", "NFR-002-AC-1", "NFR-002-M-1")
 @pytest.mark.parametrize("path", shipped_profiles(), ids=lambda p: p.stem)
 def test_every_shipped_profile_passes_the_profile_test(path: pathlib.Path) -> None:
     validate_profile(path)
 
 
-@pytest.mark.trace("TC-170", "FR-021-AC-5")
+@pytest.mark.trace("FR-021-AC-5")
 def test_shipped_profile_names_are_among_the_three_defaults() -> None:
     names = {path.stem for path in shipped_profiles()}
     assert names <= ALLOWED_NAMES, sorted(names - ALLOWED_NAMES)
 
 
-@pytest.mark.trace("TC-166", "FR-021-AC-1")
+@pytest.mark.trace("FR-021-AC-1")
 def test_web_app_baseline_profile_is_shipped_with_only_its_public_sets() -> None:
     path = PROFILES_DIR / "web-app-baseline.yaml"
     assert path.is_file()
@@ -219,7 +219,7 @@ def test_web_app_baseline_profile_is_shipped_with_only_its_public_sets() -> None
     assert "context" not in profile
 
 
-@pytest.mark.trace("TC-166", "FR-021-AC-1")
+@pytest.mark.trace("FR-021-AC-1")
 def test_us_device_profile_names_the_published_public_sets() -> None:
     path = PROFILES_DIR / "us-device-cybersecurity-hipaa.yaml"
     assert path.is_file()
@@ -240,7 +240,7 @@ def test_us_device_profile_names_the_published_public_sets() -> None:
     assert "context" not in profile
 
 
-@pytest.mark.trace("TC-166", "FR-021-AC-1")
+@pytest.mark.trace("FR-021-AC-1")
 def test_eu_device_profile_names_the_published_public_sets() -> None:
     path = PROFILES_DIR / "eu-device-gdpr-ai-act.yaml"
     assert path.is_file()
@@ -363,7 +363,7 @@ def assert_profile_keys_declared(
         assert module is not None, f"{path.stem}: no module declares {key}"
 
 
-@pytest.mark.trace("TC-167", "FR-021-AC-2")
+@pytest.mark.trace("FR-021-AC-2")
 @pytest.mark.parametrize("path", shipped_profiles(), ids=lambda p: p.stem)
 def test_every_shipped_key_is_declared_by_a_reference_module(
     path: pathlib.Path, reference_modules: list[pathlib.Path]
@@ -371,7 +371,7 @@ def test_every_shipped_key_is_declared_by_a_reference_module(
     assert_profile_keys_declared(path, reference_modules)
 
 
-@pytest.mark.trace("TC-167", "FR-021-AC-2")
+@pytest.mark.trace("FR-021-AC-2")
 def test_a_profile_with_an_unpublished_version_fails_with_its_key(
     tmp_path: pathlib.Path, reference_modules: list[pathlib.Path]
 ) -> None:
@@ -387,7 +387,7 @@ def test_a_profile_with_an_unpublished_version_fails_with_its_key(
         assert_profile_keys_declared(path, reference_modules)
 
 
-@pytest.mark.trace("TC-168", "TC-174", "FR-021-AC-3", "NFR-002-AC-2", "NFR-002-M-2")
+@pytest.mark.trace("FR-021-AC-3", "NFR-002-AC-2", "NFR-002-M-2")
 @pytest.mark.parametrize("path", shipped_profiles(), ids=lambda p: p.stem)
 def test_every_shipped_key_has_a_publishable_declaring_module(
     path: pathlib.Path, reference_modules: list[pathlib.Path]
@@ -399,7 +399,7 @@ def test_every_shipped_key_has_a_publishable_declaring_module(
         assert result.returncode == 0, f"{module}: {result.stdout}{result.stderr}"
 
 
-@pytest.mark.trace("TC-167", "TC-168", "FR-021-AC-2", "FR-021-AC-3")
+@pytest.mark.trace("FR-021-AC-2", "FR-021-AC-3")
 def test_the_declaration_and_publishability_lookups_tell_modules_apart(
     tmp_path: pathlib.Path,
 ) -> None:
@@ -415,7 +415,7 @@ def test_the_declaration_and_publishability_lookups_tell_modules_apart(
     assert "example.invalid/rules@2" in refused.stdout + refused.stderr
 
 
-@pytest.mark.trace("TC-162", "FR-020-AC-3")
+@pytest.mark.trace("FR-020-AC-3")
 def test_a_numeric_version_is_refused_as_not_a_string(tmp_path: pathlib.Path) -> None:
     text = _good().replace("version: '1'", "version: 5")
     with pytest.raises(ProfileError, match="must be a string"):

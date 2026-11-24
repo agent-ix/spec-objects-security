@@ -129,7 +129,7 @@ def exclusion_variants():
     return variants
 
 
-@pytest.mark.trace("TC-187", "FR-014-AC-1")
+@pytest.mark.trace("FR-014-AC-1")
 def test_mapping_requires_set_and_clause_and_refuses_the_old_keys(mapping):
     assert set(schema("ControlMapping")["required"]) == {"set", "clause"}
     assert mapping.is_valid({"set": SET, "clause": "EX-1"})
@@ -139,7 +139,7 @@ def test_mapping_requires_set_and_clause_and_refuses_the_old_keys(mapping):
     assert not mapping.is_valid({"clause": "EX-1"})
 
 
-@pytest.mark.trace("TC-188", "FR-014-AC-2")
+@pytest.mark.trace("FR-014-AC-2")
 def test_set_key_and_clause_id_shapes(mapping):
     ok = lambda s, c="EX-1": mapping.is_valid({"set": s, "clause": c})  # noqa: E731
     assert ok("example.invalid/std@1")
@@ -164,7 +164,7 @@ def test_set_key_and_clause_id_shapes(mapping):
     assert ok(SET, "c" * 64)
 
 
-@pytest.mark.trace("TC-189", "FR-014-AC-3")
+@pytest.mark.trace("FR-014-AC-3")
 def test_authored_control_mappings_and_effectiveness_are_validated(quire_engine):
     text = control_skeleton().replace("`not_assessed`", "`effective`")
     good = validate(quire_engine, "control", text)
@@ -183,7 +183,7 @@ def test_authored_control_mappings_and_effectiveness_are_validated(quire_engine)
     ), bogus["errors"]
 
 
-@pytest.mark.trace("TC-190", "FR-014-AC-4")
+@pytest.mark.trace("FR-014-AC-4")
 def test_control_skeleton_has_a_mappings_table_and_not_assessed_effectiveness(
     quire_engine,
 ):
@@ -198,7 +198,7 @@ def test_control_skeleton_has_a_mappings_table_and_not_assessed_effectiveness(
     assert re.search(r"^## Effectiveness\n\n`not_assessed`\n", text, re.M)
 
 
-@pytest.mark.trace("TC-191", "FR-014-AC-5")
+@pytest.mark.trace("FR-014-AC-5")
 def test_a_control_with_no_mappings_or_effectiveness_section_validates(quire_engine):
     text = control_skeleton()
     text = re.sub(r"^## Mappings\n.*?(?=^## Properties)", "", text, flags=re.M | re.S)
@@ -208,7 +208,7 @@ def test_a_control_with_no_mappings_or_effectiveness_section_validates(quire_eng
     assert result["is_valid"], result["errors"]
 
 
-@pytest.mark.trace("TC-192", "FR-014-AC-7")
+@pytest.mark.trace("FR-014-AC-7")
 def test_control_manifest_mappings_and_effectiveness_locators_are_optional():
     match = locators(object_type("control"))
     assert match["mappings"]["required"] is False
@@ -218,19 +218,19 @@ def test_control_manifest_mappings_and_effectiveness_locators_are_optional():
     assert match["effectiveness"]["after_heading"] == "Effectiveness"
 
 
-@pytest.mark.trace("TC-193", "FR-014-AC-6")
+@pytest.mark.trace("FR-014-AC-6")
 def test_manifest_mappings_names_record_sections():
     manifest = yaml.safe_load(MANIFEST_PATH.read_text())
     assert "record-sections" in manifest["semantic"]["mappings"]
 
 
-@pytest.mark.trace("TC-194", "FR-015-AC-1")
+@pytest.mark.trace("FR-015-AC-1")
 def test_a_third_mapping_key_fails_for_each_of_title_text_note(mapping):
     for key in ("title", "text", "note"):
         assert not mapping.is_valid({"set": SET, "clause": "EX-1", key: "x"}), key
 
 
-@pytest.mark.trace("TC-195", "FR-015-AC-2")
+@pytest.mark.trace("FR-015-AC-2")
 def test_a_third_mapping_column_is_a_column_unknown_refusal(quire_engine):
     text = control_skeleton().replace(
         "| Set | Clause |\n|---|---|\n| example.invalid/std@1 | EX-1 |\n"
@@ -262,12 +262,12 @@ def test_a_third_mapping_column_is_a_column_unknown_refusal(quire_engine):
     assert sentinel not in json.dumps(out["record"])
 
 
-@pytest.mark.trace("TC-196", "FR-015-AC-3")
+@pytest.mark.trace("FR-015-AC-3")
 def test_control_mapping_schema_lists_exactly_set_and_clause():
     assert set(schema("ControlMapping")["properties"]) == {"set", "clause"}
 
 
-@pytest.mark.trace("TC-197", "FR-016-AC-1")
+@pytest.mark.trace("FR-016-AC-1")
 def test_scope_exclusion_schema_is_sealed_and_exported():
     """
     Description:
@@ -350,7 +350,7 @@ def test_scope_exclusion_schema_is_sealed_and_exported():
     assert "scope_exclusion" in manifest["semantic"]["exports"]
 
 
-@pytest.mark.trace("TC-198", "FR-016-AC-2")
+@pytest.mark.trace("FR-016-AC-2")
 def test_exclusion_requires_responsible_disposition_owner_and_approval(
     exclusion, quire_engine
 ):
@@ -389,7 +389,7 @@ def test_exclusion_requires_responsible_disposition_owner_and_approval(
     ), result["errors"]
 
 
-@pytest.mark.trace("TC-199", "FR-016-AC-3", "FR-016-AC-9")
+@pytest.mark.trace("FR-016-AC-3", "FR-016-AC-9")
 def test_exclusion_decisions_and_conditional_rfc3339_expiry(exclusion, quire_engine):
     """
     Description:
@@ -458,7 +458,7 @@ def test_exclusion_decisions_and_conditional_rfc3339_expiry(exclusion, quire_eng
     assert not exclusion.is_valid(extracted_missing_expiry)
 
 
-@pytest.mark.trace("TC-200", "FR-016-AC-4")
+@pytest.mark.trace("FR-016-AC-4")
 def test_exclusion_skeleton_validates_and_each_section_is_required(quire_engine):
     """
     Description:
@@ -498,7 +498,7 @@ def test_exclusion_skeleton_validates_and_each_section_is_required(quire_engine)
         ), (heading, broken["errors"])
 
 
-@pytest.mark.trace("TC-201", "FR-016-AC-7")
+@pytest.mark.trace("FR-016-AC-7")
 def test_responsible_is_a_bare_bundle_id_not_a_cross_repository_identity(
     quire_engine,
 ):
@@ -514,12 +514,12 @@ def test_responsible_is_a_bare_bundle_id_not_a_cross_repository_identity(
     assert any("not a bundle artifact id" in m for m in messages(bad)), bad["errors"]
 
 
-@pytest.mark.trace("TC-202", "FR-016-AC-5")
+@pytest.mark.trace("FR-016-AC-5")
 def test_the_empty_exclusion_record_fails(exclusion):
     assert not exclusion.is_valid({})
 
 
-@pytest.mark.trace("TC-203", "FR-016-AC-6")
+@pytest.mark.trace("FR-016-AC-6")
 def test_exclusion_manifest_entry_requires_authored_fields_and_optional_expiry():
     """
     Description:
@@ -558,7 +558,7 @@ def test_exclusion_manifest_entry_requires_authored_fields_and_optional_expiry()
 COVERAGE_WORDS = ("coverage", "compliance", "score", "percent", "rating", "status")
 
 
-@pytest.mark.trace("TC-204", "NFR-003-AC-1", "NFR-003-M-1")
+@pytest.mark.trace("NFR-003-AC-1", "NFR-003-M-1")
 def test_no_computed_value_property_on_mapping_or_exclusion_schemas():
     for model in ("ControlMapping", "ScopeExclusion"):
         properties = (
@@ -579,7 +579,7 @@ def test_no_computed_value_property_on_mapping_or_exclusion_schemas():
             ), (model, name)
 
 
-@pytest.mark.trace("TC-205", "FR-016-AC-8", "NFR-003-AC-2", "NFR-003-M-2")
+@pytest.mark.trace("FR-016-AC-8", "NFR-003-AC-2", "NFR-003-M-2")
 def test_validated_fixtures_emit_exactly_the_keys_the_author_wrote(quire_engine):
     """
     Description:

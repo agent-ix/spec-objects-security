@@ -129,7 +129,7 @@ def errors(result: subprocess.CompletedProcess) -> list[str]:
     ]
 
 
-@pytest.mark.trace("TC-224", "FR-026-AC-1", "FR-026-AC-9")
+@pytest.mark.trace("FR-026-AC-1", "FR-026-AC-9")
 def test_threat_model_with_scopes_and_considers_validates(tmp_path):
     control = (
         (SKELETONS_DIR / "control.md")
@@ -151,7 +151,7 @@ def test_threat_model_with_scopes_and_considers_validates(tmp_path):
     assert result.returncode == 0 and not errors(result), result.stderr
 
 
-@pytest.mark.trace("TC-225", "FR-026-AC-1", "FR-026-AC-10")
+@pytest.mark.trace("FR-026-AC-1", "FR-026-AC-10")
 def test_the_skeleton_validates(tmp_path):
     result = validate(
         tmp_path, {"tm.md": (SKELETONS_DIR / "threat_model.md").read_text()}
@@ -167,7 +167,7 @@ def messages(result: dict) -> str:
     return "\n".join(e["message"] for e in result["errors"])
 
 
-@pytest.mark.trace("TC-226", "FR-026-AC-2")
+@pytest.mark.trace("FR-026-AC-2")
 def test_method_guesswork_fails_naming_method(quire_engine):
     result = validate_doc(
         quire_engine, "threat_model", threat_model(method="guesswork")
@@ -176,7 +176,7 @@ def test_method_guesswork_fails_naming_method(quire_engine):
     assert "method" in messages(result), result["errors"]
 
 
-@pytest.mark.trace("TC-228", "FR-026-AC-3")
+@pytest.mark.trace("FR-026-AC-3")
 def test_missing_or_empty_reviewed_by_fails_naming_it(quire_engine):
     for value in (None, '""'):
         result = validate_doc(
@@ -187,7 +187,7 @@ def test_missing_or_empty_reviewed_by_fails_naming_it(quire_engine):
 
 
 @pytest.mark.parametrize("missing", ["Scope", "Assumptions", "Out of scope"])
-@pytest.mark.trace("TC-234", "FR-026-AC-6")
+@pytest.mark.trace("FR-026-AC-6")
 def test_a_missing_body_section_fails_naming_it(quire_engine, missing):
     sections = tuple(
         n for n in ("Scope", "Assumptions", "Out of scope") if n != missing
@@ -197,7 +197,7 @@ def test_a_missing_body_section_fails_naming_it(quire_engine, missing):
     assert missing in messages(result), result["errors"]
 
 
-@pytest.mark.trace("TC-242", "FR-026-AC-6")
+@pytest.mark.trace("FR-026-AC-6")
 def test_empty_out_of_scope_section_fails_naming_it(quire_engine):
     document = threat_model().replace(
         "## Out of scope\n\nText for Out of scope.\n", "## Out of scope\n\n"
@@ -207,14 +207,14 @@ def test_empty_out_of_scope_section_fails_naming_it(quire_engine):
     assert "Out of scope" in messages(result), result["errors"]
 
 
-@pytest.mark.trace("TC-229", "FR-026-AC-4")
+@pytest.mark.trace("FR-026-AC-4")
 def test_no_scopes_edge_fails(tmp_path):
     result = validate(tmp_path, {**world(), "tm.md": threat_model(relationships=())})
     out = result.stdout + result.stderr
     assert "threat-model-scopes-nothing" in out, out
 
 
-@pytest.mark.trace("TC-230", "FR-026-AC-4")
+@pytest.mark.trace("FR-026-AC-4")
 def test_scopes_each_allowed_model_element(tmp_path):
     targets = {
         "part": "PART-1",
@@ -233,7 +233,7 @@ def test_scopes_each_allowed_model_element(tmp_path):
     assert "disallowed-edge-target" not in out, out
 
 
-@pytest.mark.trace("TC-231", "FR-026-AC-5")
+@pytest.mark.trace("FR-026-AC-5")
 def test_scopes_risk_and_considers_control_are_disallowed(tmp_path):
     docs = {
         **world(),
@@ -260,7 +260,7 @@ def test_scopes_risk_and_considers_control_are_disallowed(tmp_path):
     assert "disallowed-edge-target" in considers_out and "considers" in considers_out
 
 
-@pytest.mark.trace("TC-232", "FR-026-AC-5")
+@pytest.mark.trace("FR-026-AC-5")
 def test_threat_model_with_scopes_and_no_considers_validates(tmp_path):
     result = validate(
         tmp_path,
@@ -300,7 +300,7 @@ def threat_threatening(target: str) -> str:
     )
 
 
-@pytest.mark.trace("TC-237", "FR-027-AC-7")
+@pytest.mark.trace("FR-027-AC-7")
 def test_threatens_a_connection_validates(tmp_path):
     ok = validate(
         tmp_path,
@@ -312,7 +312,7 @@ def test_threatens_a_connection_validates(tmp_path):
     assert "disallowed-edge-target" not in ok.stdout + ok.stderr, ok.stderr
 
 
-@pytest.mark.trace("TC-238", "FR-027-AC-7")
+@pytest.mark.trace("FR-027-AC-7")
 def test_threatens_does_not_allow_a_queue_target(tmp_path):
     result = validate(
         tmp_path,
@@ -325,8 +325,8 @@ def test_threatens_does_not_allow_a_queue_target(tmp_path):
     assert "disallowed-edge-target" in out and "threatens" in out, out
 
 
-@pytest.mark.trace("TC-233", "FR-026-AC-4", "FR-026-AC-9")
-@pytest.mark.trace("TC-233", "FR-027-AC-7")
+@pytest.mark.trace("FR-026-AC-4", "FR-026-AC-9")
+@pytest.mark.trace("FR-027-AC-7")
 def test_manifest_declares_the_verbs_and_the_link_targets():
     manifest = yaml.safe_load(MANIFEST_PATH.read_text())
     assert {"scopes", "considers"} <= set(manifest["edge_types"])
@@ -352,19 +352,19 @@ def test_manifest_declares_the_verbs_and_the_link_targets():
     ]
 
 
-@pytest.mark.trace("TC-243", "FR-026-AC-10")
+@pytest.mark.trace("FR-026-AC-10")
 def test_threat_model_remains_exported():
     manifest = yaml.safe_load(MANIFEST_PATH.read_text())
     assert "threat_model" in manifest["semantic"]["exports"]
 
 
-@pytest.mark.trace("TC-227", "FR-026-AC-2")
+@pytest.mark.trace("FR-026-AC-2")
 def test_method_enum_is_exactly_the_two_members():
     schema = json.loads((SCHEMAS_DIR / "ThreatModelMethod.json").read_text())
     assert schema["enum"] == ["stride_per_element", "stride_per_interaction"]
 
 
-@pytest.mark.trace("TC-235", "FR-026-AC-7", "FR-026-AC-10")
+@pytest.mark.trace("FR-026-AC-7", "FR-026-AC-10")
 def test_threat_model_schema_requires_method_and_reviewed_by_and_has_no_default(
     schema_registry, tmp_path
 ):
@@ -402,7 +402,7 @@ def test_threat_model_schema_requires_method_and_reviewed_by_and_has_no_default(
     assert extracted_record["reviewed_by"] == "A. Person"
 
 
-@pytest.mark.trace("TC-236", "FR-026-AC-9")
+@pytest.mark.trace("FR-026-AC-9")
 @pytest.mark.parametrize("verb", ["scopes", "considers"])
 def test_module_load_reports_a_missing_threat_model_verb_owner(tmp_path, verb):
     security_module = tmp_path / "module" / "spec_objects_security"
@@ -432,7 +432,7 @@ def test_module_load_reports_a_missing_threat_model_verb_owner(tmp_path, verb):
     assert verb in result.stderr and "UnknownEdgeType" in result.stderr
 
 
-@pytest.mark.trace("TC-239", "FR-027-AC-6")
+@pytest.mark.trace("FR-027-AC-6")
 @pytest.mark.parametrize(
     ("extra", "valid"),
     [
@@ -464,7 +464,7 @@ def risk_doc(**front) -> str:
     return text.replace("\n---\n<!--", f"\n{extra}---\n<!--", 1)
 
 
-@pytest.mark.trace("TC-240", "FR-027-AC-6")
+@pytest.mark.trace("FR-027-AC-6")
 @pytest.mark.parametrize(
     ("front", "valid"),
     [
@@ -480,7 +480,7 @@ def test_risk_document_decision_rules(quire_engine, front, valid):
     assert result["is_valid"] is valid, result["errors"]
 
 
-@pytest.mark.trace("TC-241", "FR-027-AC-6")
+@pytest.mark.trace("FR-027-AC-6")
 def test_risk_skeleton_states_a_decision():
     text = (SKELETONS_DIR / "risk.md").read_text()
     assert re.search(r"^decision: undecided$", text, re.M)

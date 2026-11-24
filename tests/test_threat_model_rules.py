@@ -41,7 +41,7 @@ def _denials(report, rule):
     return [denial for denial in report["denials"] if denial["rule"] == rule]
 
 
-@pytest.mark.trace("TC-264", "FR-027-AC-1", "FR-027-AC-2", "FR-027-AC-3")
+@pytest.mark.trace("FR-027-AC-1", "FR-027-AC-2", "FR-027-AC-3")
 def test_uncovered_fixture_reports_each_scoped_gap_and_covered_fixture_clears_it(
     tmp_path,
 ):
@@ -61,7 +61,7 @@ def test_uncovered_fixture_reports_each_scoped_gap_and_covered_fixture_clears_it
     assert not (set(denial["rule"] for denial in covered["denials"]) & RULES)
 
 
-@pytest.mark.trace("TC-269", "FR-027-AC-1", "FR-027-AC-2", "FR-027-AC-3")
+@pytest.mark.trace("FR-027-AC-1", "FR-027-AC-2", "FR-027-AC-3")
 def test_full_manifest_loads_threat_rules_with_the_published_module_set(tmp_path):
     scope = tmp_path / "uncovered"
     shutil.copytree(FIXTURES / "uncovered", scope)
@@ -89,7 +89,7 @@ def test_full_manifest_loads_threat_rules_with_the_published_module_set(tmp_path
     assert RULES <= {denial["rule"] for denial in report["denials"]}
 
 
-@pytest.mark.trace("TC-265", "FR-027-AC-2")
+@pytest.mark.trace("FR-027-AC-2")
 @pytest.mark.parametrize("edge_to_remove", ["sink carries", "connection carries"])
 def test_sink_classification_is_found_through_either_data_path(
     tmp_path, edge_to_remove
@@ -114,7 +114,7 @@ def test_sink_classification_is_found_through_either_data_path(
     assert len(_denials(report, "classified-sink-without-threat")) == 1
 
 
-@pytest.mark.trace("TC-266", "FR-027-AC-1", "FR-027-AC-5")
+@pytest.mark.trace("FR-027-AC-1", "FR-027-AC-5")
 def test_subject_target_clears_and_unscoped_elements_stay_quiet(tmp_path):
     scope, _ = _rule_report(tmp_path / "fixture")
     threat = scope / "spec" / "THREAT-1.md"
@@ -134,7 +134,7 @@ def test_subject_target_clears_and_unscoped_elements_stay_quiet(tmp_path):
     assert not (set(denial["rule"] for denial in quiet["denials"]) & RULES)
 
 
-@pytest.mark.trace("TC-271", "FR-027-AC-1")
+@pytest.mark.trace("FR-027-AC-1")
 @pytest.mark.parametrize("edge_to_remove", ["carries", "crosses"])
 def test_connection_without_either_crossing_precondition_is_not_reported(
     tmp_path, edge_to_remove
@@ -154,7 +154,7 @@ def test_connection_without_either_crossing_precondition_is_not_reported(
     assert not _denials(report, "crossing-without-threat")
 
 
-@pytest.mark.trace("TC-272", "FR-027-AC-5")
+@pytest.mark.trace("FR-027-AC-5")
 def test_empty_corpus_is_quiet_for_all_threat_model_rules(tmp_path):
     manifest = yaml.safe_load(MANIFEST_PATH.read_text())
     module = tmp_path / "module"
@@ -167,7 +167,7 @@ def test_empty_corpus_is_quiet_for_all_threat_model_rules(tmp_path):
     assert not (set(denial["rule"] for denial in report["denials"]) & RULES)
 
 
-@pytest.mark.trace("TC-267", "FR-027-AC-3", "FR-027-AC-4")
+@pytest.mark.trace("FR-027-AC-3", "FR-027-AC-4")
 @pytest.mark.parametrize(
     ("decision", "expected"),
     [("accepted", False), ("undecided", True), ("not_accepted", True)],
@@ -195,7 +195,7 @@ def test_control_or_only_accepted_risk_treats_a_considered_threat(
     assert bool(_denials(report, "threat-without-treatment")) is expected
 
 
-@pytest.mark.trace("TC-268", "FR-027-AC-8", "FR-027-AC-9", "FR-027-AC-10")
+@pytest.mark.trace("FR-027-AC-8", "FR-027-AC-9", "FR-027-AC-10")
 def test_rule_declarations_are_tunable_remediation_free_and_do_not_change_registry():
     manifest = yaml.safe_load(MANIFEST_PATH.read_text())
     declarations = {
@@ -239,7 +239,7 @@ def test_rule_declarations_are_tunable_remediation_free_and_do_not_change_regist
     assert "risk" in {obj["name"] for obj in manifest["object_types"]}
 
 
-@pytest.mark.trace("TC-270", "FR-027-AC-8")
+@pytest.mark.trace("FR-027-AC-8")
 def test_risk_frontmatter_schema_is_open_enum_only_and_referenced():
     manifest = yaml.safe_load(MANIFEST_PATH.read_text())
     risk_archetype = next(
@@ -261,7 +261,7 @@ def test_risk_frontmatter_schema_is_open_enum_only_and_referenced():
         assert "default" not in risk["properties"][key]
 
 
-@pytest.mark.trace("TC-268", "FR-027-AC-10")
+@pytest.mark.trace("FR-027-AC-10")
 def test_accepted_risk_is_excluded_from_the_untreated_risk_relation(tmp_path):
     source = yaml.safe_load(MANIFEST_PATH.read_text())
     rule = next(

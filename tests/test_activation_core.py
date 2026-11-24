@@ -275,9 +275,9 @@ def _assert_core_jwks_route(isolated_deployer, jwks_url: str) -> None:
 
 
 @pytest.mark.integration
-@pytest.mark.trace("TC-015", "FR-001-AC-2")
-@pytest.mark.trace("TC-016", "FR-001-AC-3")
-@pytest.mark.trace("TC-017", "FR-001-AC-4")
+@pytest.mark.trace("FR-001-AC-2")
+@pytest.mark.trace("FR-001-AC-3")
+@pytest.mark.trace("FR-001-AC-4")
 def test_activation_noop_hash_and_contribution_tables(
     isolated_deployer, unique_run_id, tmp_path
 ):

@@ -141,7 +141,7 @@ def default_keywords(node, path=("#",)) -> list[str]:
     return found
 
 
-@pytest.mark.trace("TC-070", "FR-006-AC-1")
+@pytest.mark.trace("FR-006-AC-1")
 def test_every_vocabulary_is_closed_over_exactly_its_declared_members():
     assert len(VOCABULARIES) == 10
     for name, (members, _) in VOCABULARIES.items():
@@ -151,7 +151,7 @@ def test_every_vocabulary_is_closed_over_exactly_its_declared_members():
         assert set(doc) <= {"$schema", "$id", "type", "enum", "description"}, name
 
 
-@pytest.mark.trace("TC-071", "FR-006-AC-2")
+@pytest.mark.trace("FR-006-AC-2")
 def test_the_unassessed_member_validates_and_an_invented_member_fails(
     schema_registry,
 ):
@@ -168,7 +168,7 @@ def test_the_unassessed_member_validates_and_an_invented_member_fails(
             assert not validator.is_valid({**record, key: invented}), (name, invented)
 
 
-@pytest.mark.trace("TC-072", "FR-006-AC-3")
+@pytest.mark.trace("FR-006-AC-3")
 def test_no_shipped_schema_carries_a_default_keyword():
     offenders = {}
     for path in sorted(SCHEMAS_DIR.glob("*.json")):
@@ -184,7 +184,7 @@ def test_no_shipped_schema_carries_a_default_keyword():
     assert default_keywords({"type": "string", "default": "granted"}) == ["#"]
 
 
-@pytest.mark.trace("TC-073", "FR-006-AC-4", "FR-006-CON-2")
+@pytest.mark.trace("FR-006-AC-4", "FR-006-CON-2")
 def test_no_declaration_admits_a_defaulted_field_or_param(schema_registry):
     """Every exported type, not only the sensitive four.
 
@@ -224,17 +224,18 @@ def test_no_declaration_admits_a_defaulted_field_or_param(schema_registry):
             assert not validator.is_valid(leaky), name
 
 
-@pytest.mark.trace("TC-073", "FR-006-AC-4")
+@pytest.mark.trace("FR-006-AC-4")
 def test_the_defaulted_field_the_guard_refuses_is_valid_semantic_core():
     """The canary the code review earned.
 
-    TC-073 used to pass for a reason unrelated to the rule: the fixture built
-    `default: {"kind": "literal"}`, and `literal` is outside semantic-core's
-    closed `DefaultKind`, so every "embedded" record was refused by `FieldDecl`
-    before the module's own guard was consulted. Deleting the whole `allOf`
-    from `Secret.json` left every assertion passing. This asserts the premise
-    the rest of TC-073 rests on: the defaulted field is a *valid* `FieldDecl`,
-    so the module's guard is what refuses it.
+    This test's predecessor used to pass for a reason unrelated to the rule:
+    the fixture built `default: {"kind": "literal"}`, and `literal` is outside
+    semantic-core's closed `DefaultKind`, so every "embedded" record was
+    refused by `FieldDecl` before the module's own guard was consulted.
+    Deleting the whole `allOf` from `Secret.json` left every assertion
+    passing. This asserts the premise the rule's other tests rest on: the
+    defaulted field is a *valid* `FieldDecl`, so the module's guard is what
+    refuses it.
     """
     from jsonschema import Draft202012Validator
     from referencing import Registry, Resource
@@ -252,7 +253,7 @@ def test_the_defaulted_field_the_guard_refuses_is_valid_semantic_core():
     assert defaulted["default"]["kind"] in ("semantic", "representation", "migration")
 
 
-@pytest.mark.trace("TC-076", "FR-006-AC-7")
+@pytest.mark.trace("FR-006-AC-7")
 def test_no_negative_rule_depends_on_a_counting_keyword():
     """A negative item rule is `items: {not: …}`, never
     `contains` + `minContains: 0` + `maxContains: 0`.
@@ -269,7 +270,7 @@ def test_no_negative_rule_depends_on_a_counting_keyword():
         assert "maxContains" not in text, path.name
 
 
-@pytest.mark.trace("TC-075", "FR-006-AC-6")
+@pytest.mark.trace("FR-006-AC-6")
 def test_the_ordered_vocabularies_start_at_their_least_granting_member():
     """Two of the ten vocabularies are ordered by how much they grant, and for
     those the unassessed member is also the least-granting one. The other eight
@@ -290,7 +291,7 @@ def test_the_ordered_vocabularies_start_at_their_least_granting_member():
         assert not (set(schema(name)["enum"]) & granting), name
 
 
-@pytest.mark.trace("TC-077", "FR-006-CON-1")
+@pytest.mark.trace("FR-006-CON-1")
 def test_no_vocabulary_member_expresses_assume_the_permissive_value():
     permissive = {
         "allow",
