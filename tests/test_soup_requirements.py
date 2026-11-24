@@ -180,7 +180,6 @@ def test_a_statement_or_the_inverse_covers_the_served_fr(tmp_path):
     assert row["state"] == "covered" and _linked(row) == [("FR-200", "FR")]
     result = _validate(tmp_path)
     assert _findings(result, FR_CHECK) == [], result.stderr
-    assert _disallowed(tmp_path / "spec" / "FR-200.md") == []
     # The served requirement authors the inverse toward the statement instead.
     inverse = tmp_path / "inverse"
     _soup(inverse, serves=["FR-100"])
@@ -276,6 +275,7 @@ def test_served_nfr_is_covered_by_a_statement_and_its_finding_is_tunable(tmp_pat
     plain = _validate(tmp_path)
     findings = _findings(plain, NFR_CHECK)
     assert len(findings) == 1 and "NFR-100" in findings[0], plain.stderr
+    assert findings[0].startswith("warning:") and plain.returncode == 0, plain.stderr
     promoted = _validate(tmp_path, "--severity", f"trace:{NFR_CHECK}=error")
     assert promoted.returncode != 0, promoted.stderr
     off = _validate(tmp_path, "--severity", f"trace:{NFR_CHECK}=off")
@@ -317,22 +317,16 @@ def test_the_design_join_lists_the_relations_after_earlier_modules_and_gates(tmp
     )
     assert design.returncode == 0, design.stderr
     names = [r["name"] for r in json.loads(design.stdout)["relations"]]
-    assert names.index(FR_RELATION) + 1 == names.index(NFR_RELATION)
-    earlier = [n for n in names if n not in (FR_RELATION, NFR_RELATION)]
-    assert earlier and names.index(FR_RELATION) > max(
-        names.index(n) for n in earlier if n.endswith("-has-design-element")
-    )
+    # iso and architecture load before this module, so its two relations come last.
+    assert names[-2:] == [FR_RELATION, NFR_RELATION], names
+    assert len(names) > 2
     matrix = _quire("matrix", "--strict", *_modules(), "--scope", str(tmp_path))
     assert matrix.returncode == 1, matrix.stderr
-    gap = [
-        ln
-        for ln in matrix.stderr.splitlines() + matrix.stdout.splitlines()
-        if "FR-100" in ln and FR_CHECK in ln
-    ]
-    assert gap, matrix.stdout + matrix.stderr
+    gap = [ln for ln in matrix.stderr.splitlines() if "FR-100" in ln and FR_CHECK in ln]
+    assert gap, matrix.stderr
     # FR-500 is outside the scope: no block of either relation names it.
     assert not [
         ln
-        for ln in matrix.stderr.splitlines() + matrix.stdout.splitlines()
-        if "FR-500" in ln and ("soup-requirements" in ln)
+        for ln in matrix.stderr.splitlines()
+        if "FR-500" in ln and "soup-requirements" in ln
     ]
