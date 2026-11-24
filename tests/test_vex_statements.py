@@ -91,6 +91,8 @@ def test_vex_status_vocabulary_is_closed(schema_registry):
         item = statement(status=status)
         if status == "affected":
             item["action_statement"] = "Patch the affected dependency."
+        if status == "not_affected":
+            item["justification"] = "component_not_present"
         assert validator.is_valid(record(vex_statements=[item])), status
     bad = statement(status="not_exploitable")
     assert names_field(validator, record(vex_statements=[bad]), "status")
