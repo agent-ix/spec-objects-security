@@ -26,6 +26,7 @@ This document specifies the requirements for `spec-objects-security`, a Filament
 
 - The Module manifest this package publishes and its activation against filament-core.
 - The 26 tier-2 ObjectTypes the module contributes, covering threats/controls and authentication/authorization (identity folded in per ADR; revisit if identity grows past ~12 types).
+- A typed vulnerability-management plan archetype for recording a product's person-authored vulnerability intake, coordination, corrective-action, and communication process ([US-002](./usecase/US-002-vulnerability-management-plan.md), [FR-031](./functional/FR-031-vulnerability-management-plan-archetype.md)).
 - The templates, schemas, and grammars the module ships for those object types.
 - The source profiles under `profiles/` (a named list of clause-set keys plus an applicability context) and the default profiles built only from publishable clause sets.
 - The semantic-module contract (issue #13): a TypeSpec source importing
@@ -131,6 +132,7 @@ FR-001 activates the manifest against `filament-core`; FR-002 emits the
 schemas; FR-003 declares the semantic contract in the manifest; FR-004 fixes
 each type's role-distinct schema; FR-005 makes the skeletons executable
 fixtures; FR-006 encodes the module's security rules into those schemas.
+FR-031 defines the vulnerability-management plan archetype.
 Integration tests in
 `integration/` verify the activation and Quoin-install boundaries; the third
 external boundary, the Quire engine (loader, extraction, record surface), has
