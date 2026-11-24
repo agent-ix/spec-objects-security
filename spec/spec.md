@@ -18,14 +18,16 @@ security_critical: true
 
 ## Purpose
 
-This document specifies the requirements for `spec-objects-security`, a Filament object module that contributes tier-2 security and identity ObjectTypes to filament-core. Security and identity specs need extractable graph entities for threats, controls, risks, vulnerabilities, auth flows, secrets, and policies, and this module makes those concepts first-class, queryable objects rather than free prose so that implementers, reviewers, and agent generators share one authoritative definition of the domain.
+This document specifies the requirements for `spec-objects-security`, a Filament object module that contributes tier-2 security and identity ObjectTypes to filament-core. Security and identity specs need extractable graph entities for threats, controls, risks, vulnerabilities, anomalies, auth flows, secrets, and policies, and this module makes those concepts first-class, queryable objects rather than free prose so that implementers, reviewers, and agent generators share one authoritative definition of the domain.
 
 ## Scope
 
 ### In Scope
 
 - The Module manifest this package publishes and its activation against filament-core.
-- The 26 tier-2 ObjectTypes the module contributes, covering threats/controls and authentication/authorization (identity folded in per ADR; revisit if identity grows past ~12 types).
+- The 28 tier-2 ObjectTypes the module contributes, covering threats/controls, anomalies, and authentication/authorization (identity folded in per ADR; revisit if identity grows past ~12 types).
+- A typed `vulnerability_management_plan` artifact type for recording a product's person-authored vulnerability intake, coordination, corrective-action, and communication process ([US-002](./usecase/US-002-vulnerability-management-plan.md), [FR-031](./functional/FR-031-vulnerability-management-plan-archetype.md)).
+- Person-authored vulnerability lifecycle status, disposition, dates, and links to SOUP and anomaly objects ([FR-032](./functional/FR-032-vulnerability-lifecycle.md)).
 - The templates, schemas, and grammars the module ships for those object types.
 - The source profiles under `profiles/` (a named list of clause-set keys plus an applicability context) and the default profiles built only from publishable clause sets.
 - The semantic-module contract (issue #13): a TypeSpec source importing
@@ -131,6 +133,8 @@ FR-001 activates the manifest against `filament-core`; FR-002 emits the
 schemas; FR-003 declares the semantic contract in the manifest; FR-004 fixes
 each type's role-distinct schema; FR-005 makes the skeletons executable
 fixtures; FR-006 encodes the module's security rules into those schemas.
+FR-031 defines the vulnerability-management plan artifact type; FR-032 defines
+person-authored vulnerability lifecycle facts and graph links.
 Integration tests in
 `integration/` verify the activation and Quoin-install boundaries; the third
 external boundary, the Quire engine (loader, extraction, record surface), has

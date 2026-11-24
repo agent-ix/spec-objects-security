@@ -203,6 +203,20 @@ MINIMAL = {
     "CsrfToken": {"fields": [field("a", "UUID", identity=True)]},
     "Threat": {"fields": [field("a", "UUID", identity=True), field("stride_category")]},
     "Vulnerability": {"fields": [field("a", "UUID", identity=True), field("severity")]},
+    "AnomalyRecord": {
+        "fields": [
+            field("a", "UUID", identity=True),
+            {
+                **field("statement"),
+                "constraints": [
+                    {
+                        "kind": "MinLengthConstraint",
+                        "value": {"keyword": "minLength", "value": 1},
+                    }
+                ],
+            },
+        ]
+    },
     "Risk": {
         "fields": [
             field("a", "UUID", identity=True),

@@ -11,6 +11,8 @@ relationships:
     type: "depends_on"
   - target: "ix://agent-ix/quoin/FR-142"
     type: "references"
+  - target: "ix://agent-ix/quoin/FR-216"
+    type: "references"
 ---
 # FR-022: A SOUP record carries optional person-authored VEX statements
 
@@ -55,8 +57,12 @@ a status from an advisory, reachability result, or other analysis.
   `action_statement`.
 - A statement MAY carry `impact_statement` and `evidence_refs`; each evidence
   reference SHALL be a `SemanticId`.
-- The `soup_record` schema SHALL refuse two `vex_statements` entries with the
-  same `advisory` identifier.
+- The `soup_record` schema SHALL validate each VEX statement's structure.
+- The `soup_record` schema SHALL NOT enforce uniqueness of `advisory` values
+  across the list.
+- The OpenVEX exporter in `agent-ix/quoin`
+  [FR-216](ix://agent-ix/quoin/FR-216) SHALL enforce advisory uniqueness for
+  each record before producing output.
 - The module SHALL NOT supply a default for any VEX statement field, including
   `status`.
 
@@ -75,9 +81,10 @@ a status from an advisory, reachability result, or other analysis.
 | FR-022-AC-3 | A fixture with `status: not_affected` and each allowed `justification` validates; one without `justification` or with an unlisted value fails with a located message naming `justification`. | Test |
 | FR-022-AC-4 | A fixture with `status: affected` and a non-blank `action_statement` validates; one without the field or with a blank value fails with a located message naming `action_statement`. | Test |
 | FR-022-AC-5 | A fixture with a missing or blank `assessed_by`, or with a missing, malformed, or impossible `assessed_at` date, fails with a located message naming the field; a fixture with a named assessor and valid `YYYY-MM-DD` date validates. | Test |
-| FR-022-AC-6 | Two statements with the same exact `advisory` identifier fail with a located duplicate error naming `advisory`; statements with distinct identifiers validate. | Test |
+| FR-022-AC-6 | Two structurally valid statements with the same exact `advisory` identifier but different `assessed_at` values validate against the `SoupRecord` schema; the schema does not impose advisory uniqueness. | Test |
 | FR-022-AC-7 | A fixture containing `evidence_refs` with `SemanticId` values validates, and one containing a non-`SemanticId` value fails with a located message naming `evidence_refs`. | Test |
 | FR-022-AC-8 | The emitted schema contains no default for any VEX statement field. | Test |
+| FR-022-AC-9 | The emitted `SoupRecord` schema admits optional `vex_statements` as a list of the statement objects defined in Behavior, and refuses every unlisted `SoupRecord` key. | Test |
 
 ## Dependencies
 

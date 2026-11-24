@@ -29,6 +29,7 @@ semantic:
   - control
   - risk
   - vulnerability
+  - anomaly
   - asset
   - attack_surface
   - policy
@@ -62,8 +63,71 @@ edge_types:
   considers: { description: "Threat model considers the threat at the target.", category: governance }
   soup_requirement_for: { description: "An FR or NFR states the requirements placed on the SOUP item that serves the target requirement.", category: traceability, inverse: has_soup_requirement }
 archetypes: []
-grammars: []
-artifact_types: []
+grammars:
+- name: security-artifacts
+  version: 0.1.0
+  description: Security process artifacts authored by product teams
+  doc_kinds:
+  - vulnerability_management_plan
+artifact_types:
+- name: vulnerability_management_plan
+  grammar_ref: security-artifacts
+  frontmatter_schema_ref: schemas/VulnerabilityManagementPlanFrontmatter.json
+  data_schema:
+    schema: schemas/VulnerabilityManagementPlan.json
+  allowed_links:
+  - references
+  body_extraction:
+    yield_pattern:
+      match:
+        id:
+          from: frontmatter_field
+          path: [id]
+          required: true
+        title:
+          from: frontmatter_field
+          path: [title]
+          required: true
+        type:
+          from: frontmatter_field
+          path: [type]
+          required: true
+        scope:
+          from: section_body
+          after_heading: Scope
+          required: true
+          assert:
+            level: 2
+        intake_and_acknowledgement:
+          from: section_body
+          after_heading: Intake and Acknowledgement
+          required: true
+          assert:
+            level: 2
+        assessment:
+          from: section_body
+          after_heading: Assessment
+          required: true
+          assert:
+            level: 2
+        coordination_and_disclosure:
+          from: section_body
+          after_heading: Coordination and Disclosure
+          required: true
+          assert:
+            level: 2
+        corrective_action_and_release:
+          from: section_body
+          after_heading: Corrective Action and Release
+          required: true
+          assert:
+            level: 2
+        communication:
+          from: section_body
+          after_heading: Communication
+          required: true
+          assert:
+            level: 2
 lint_rules: []
 object_types:
 - name: auth_flow
@@ -566,7 +630,7 @@ object_types:
 - name: vulnerability
   allowed_links:
     affects: [asset, attack_surface, soup_record]
-    references: [vulnerability]
+    references: [vulnerability, anomaly]
   data_schema:
     schema: schemas/Vulnerability.json
   body_extraction:
@@ -587,6 +651,19 @@ object_types:
           required: true
         # FR-005: the typed `## Properties` table the
         # semantic layer reads. Optional, so existing artifacts stay valid.
+        properties:
+          from: section_body
+          after_heading: Properties
+          required: false
+- name: anomaly
+  data_schema:
+    schema: schemas/AnomalyRecord.json
+  body_extraction:
+    yield_pattern:
+      match:
+        id: *id004
+        title: *id005
+        type: *id006
         properties:
           from: section_body
           after_heading: Properties

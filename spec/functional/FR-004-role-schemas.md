@@ -31,16 +31,19 @@ rules.
 
 ## Outputs
 
-- Twenty-seven object-type models, each emitted as `schemas/<Model>.json`,
+- Twenty-eight object-type models, each emitted as `schemas/<Model>.json`,
   sealed (`unevaluatedProperties: {not: {}}`).
 - Support models emitted as sibling files: the open marker models
   `IdentityField`, `DefaultedField`, `OccurrenceField`, `OccurrenceTypeRef`,
   `StrideCategoryField`, `SeverityField`, `LikelihoodField`, `ImpactField`,
-  `StatusField`, `LevelField`, `TrustLevelField`, `EffectivenessField`; the
-  records `ControlMapping` and `FlowStep`; and the closed graded vocabularies
+  `StatusField`, `LevelField`, `TrustLevelField`, `EffectivenessField`,
+  `AnomalyStatementField`; the records `ControlMapping`, `FlowStep` and
+  `VexStatement`; and the closed graded vocabularies
   `Severity`, `Likelihood`, `Impact`, `StrideCategory`, `ControlEffectiveness`,
-  `FindingStatus`, `ConfidentialityLevel`, `TrustLevel`, `SecretLifecycle`,
-  `MfaFactorKind`; and the processing-activity support schemas `ProcessingRole`,
+  `FindingStatus`, `ConfidentialityLevel`, `TrustLevel`, `SecretLifecycle` and
+  `MfaFactorKind`; the lifecycle and VEX vocabularies `VulnerabilityStatus`,
+  `VexStatus` and `VexJustification`; and the processing-activity support schemas
+  `ProcessingRole`,
   `ProcessingActivityFrontmatter`, `NonBlankText` and `RegionCode`.
 
 ## Behavior
@@ -62,10 +65,11 @@ semantic-core release that renders `identity: false` is a breaking change to the
 | scope | `Scope` | `fields` | `clauses`, `includes: SemanticId[]` | `fields` has ≥ 1 item and ≥ 1 identity field; `operations` and `relations` forbidden |
 | mfa_method | `MfaMethod` | `fields` | `clauses`, `operations`, `factor_kind: MfaFactorKind`, `kind: string` (`minLength: 1`) | `fields` has ≥ 1 item, ≥ 1 identity field, and 0 defaulted fields |
 | threat | `Threat` | `fields` | `clauses`, `relations`, `stride_category: StrideCategory`, `vector: string` (`minLength: 1`), `exploits: SemanticId[]` | `fields` has ≥ 1 item, ≥ 1 identity field, and ≥ 1 `stride_category` field; `operations` forbidden |
-| vulnerability | `Vulnerability` | `fields` | `clauses`, `relations`, `severity: Severity`, `cve_id: string`, `affects: SemanticId[]` | `fields` has ≥ 1 item, ≥ 1 identity field, and ≥ 1 `severity` field; `operations` forbidden |
+| vulnerability | `Vulnerability` | `fields` | `clauses`, `relations`, `severity: Severity`, `cve_id: string`, `affects: SemanticId[]`, `status: VulnerabilityStatus`, `disposition: NonBlankText`, `disposition_by: NonBlankText`, `discovered_at: date`, `disclosed_at: date`, `fixed_at: date` | `fields` has ≥ 1 item, ≥ 1 identity field, and ≥ 1 `severity` field; `operations` forbidden |
 | risk | `Risk` | `fields` | `clauses`, `relations`, `likelihood: Likelihood`, `impact: Impact`, `arises_from: SemanticId[]` | `fields` has ≥ 1 item, ≥ 1 identity field, ≥ 1 `likelihood` field and ≥ 1 `impact` field; `operations` forbidden |
 | audit_finding | `AuditFinding` | `fields` | `clauses`, `relations`, `status: FindingStatus`, `traces_to: SemanticId[]` | `fields` has ≥ 1 item, ≥ 1 identity field, and ≥ 1 `status` field; `operations` forbidden |
-| soup_record | `SoupRecord` | `fields` | `purl: string`, `name: string`, `version: string`, `supplier: string`, `license: string`, `license_fact_ref: SemanticId`, `finding_refs: SemanticId[]`, `inventory_ref: SemanticId`, `serves: SemanticId[]`, `known_anomalies: Anomaly[]`, `support_status: SoupSupportStatus`, `end_of_support: string`, `disposition_clause: string` | `fields` has ≥ 1 item, ≥ 1 identity field, ≥ 1 `purl` field, and 0 defaulted fields; `operations`, `relations` and `clauses` forbidden; no key beyond those listed (the field set of [FR-009](./FR-009-soup-record-identity-and-promotion.md) and [FR-010](./FR-010-soup-record-fields.md)) |
+| anomaly | `AnomalyRecord` | `fields` | `clauses`, `relations`, `source_ref: SemanticId`, `origin: AnomalyOrigin` | `fields` has ≥ 1 item, ≥ 1 identity field, and ≥ 1 `statement` field; `operations` forbidden |
+| soup_record | `SoupRecord` | `fields` | `purl: string`, `name: string`, `version: string`, `supplier: string`, `license: string`, `license_fact_ref: SemanticId`, `finding_refs: SemanticId[]`, `inventory_ref: SemanticId`, `serves: SemanticId[]`, `known_anomalies: Anomaly[]`, `support_status: SoupSupportStatus`, `end_of_support: string`, `disposition_clause: string`, `vex_statements: VexStatement[]` | `fields` has ≥ 1 item, ≥ 1 identity field, ≥ 1 `purl` field, and 0 defaulted fields; `operations`, `relations` and `clauses` forbidden; no key beyond those listed (the field set of [FR-009](./FR-009-soup-record-identity-and-promotion.md), [FR-010](./FR-010-soup-record-fields.md) and [FR-022](./FR-022-vex-statements-on-soup-records.md)) |
 | data_classification | `DataClassification` | `fields` | `clauses`, `level: ConfidentialityLevel`, `values: EnumValue[]` | `fields` has ≥ 1 item, ≥ 1 identity field, and ≥ 1 `level` field; `operations` and `relations` forbidden |
 | attack_surface | `AttackSurface` | `fields` | `clauses`, `relations`, `exposes: SemanticId[]` | `fields` has ≥ 1 item and ≥ 1 identity field; `operations` forbidden |
 | trust_boundary | `TrustBoundary` | `fields`, `clauses` | `relations`, `trust_level: TrustLevel` | `fields` has ≥ 1 item, ≥ 1 identity field and ≥ 1 `trust_level` field; `clauses` has ≥ 1 item — a boundary that admits every crossing is not a boundary; `operations` forbidden |
@@ -93,13 +97,15 @@ semantic-core release that renders `identity: false` is a breaking change to the
 - The TypeSpec source SHALL express every positive item rule through the official emitter's `@contains` decorator over an open marker model: `@contains(IdentityField)` for "≥ 1 identity field", `@contains(OccurrenceField)` for "≥ 1 occurrence field".
 - The TypeSpec source SHALL express every negative item rule ("0 identity fields", "0 defaulted fields") as `items: { not: { $ref: <marker> } }` rather than as a counting predicate, for the reason [FR-006](./FR-006-security-safe-declarations.md) gives: a counting predicate inverts under a validator that does not implement `minContains`/`maxContains`, and `items`/`not` cannot.
 - Because JSON Schema admits one `contains` per array, the TypeSpec source SHALL carry every predicate beyond the first on that array as an `@extension("allOf", …)` clause referencing the marker file (`DefaultedField.json`, `OccurrenceField.json`, `IdentityField.json`, `SeverityField.json`, and the rest); the generator normalizes those relative `$ref`s per FR-002.
-- Every cross-reference a declaration makes (`type.target`, `RelationDecl.target`, `owner`, `responsible`, `resource`, `grants`, `includes`, `exploits`, `affects`, `arises_from`, `traces_to`, `exposes`, `material_ref`, `custodian`, `issuer`, `binds`, `binds_flow`, `governs`, `mitigates`, `source`) SHALL be a `SemanticId` or `KernelScalar` per semantic-core, so a bare token is rejected by the schema; resolution against the bundle, and the placeholder `ix://<org>/<repo>/unresolved/<Token>` with its `semantic.unresolved-type` finding, exist today for `type.target` only (quire-rs FR-070). No published mapping covers the other keys: `agent-ix/quoin#335` is the ticket that would own one, and its body scopes itself to the ten `spec-objects-business` keys and names none of these, so this module records the gap rather than assuming that ticket will close it.
+- Every cross-reference a declaration makes (`type.target`, `RelationDecl.target`, `owner`, `responsible`, `resource`, `grants`, `includes`, `exploits`, `affects`, `references`, `arises_from`, `traces_to`, `exposes`, `material_ref`, `custodian`, `issuer`, `binds`, `binds_flow`, `governs`, `mitigates`, `source`, `source_ref`) SHALL be a `SemanticId` or `KernelScalar` per semantic-core, so a bare token is rejected by the schema; resolution against the bundle, and the placeholder `ix://<org>/<repo>/unresolved/<Token>` with its `semantic.unresolved-type` finding, exist today for `type.target` only (quire-rs FR-070). No published mapping covers the other keys: `agent-ix/quoin#335` is the ticket that would own one, and its body scopes itself to the ten `spec-objects-business` keys and names none of these, so this module records the gap rather than assuming that ticket will close it.
 - The `MfaMethod`, `Threat`, `EncryptionKey` and `CsrfToken` schemas SHALL each declare one optional string key for what its skeleton authors in frontmatter, because the engine projects every authored frontmatter key into the record that the closed schema validates: `kind` (the MFA method label, for example `totp`), `vector` (the attack-vector text), `rotation` and `rotation_window`. No other model gains a key from this rule.
 - The `MfaMethod` and `Threat` schemas SHALL require `kind` and `vector` to be non-empty strings when present.
+- Lifecycle fields, validation rules, and `VulnerabilityStatus` are defined authoritatively by [FR-032](./FR-032-vulnerability-lifecycle.md); the `Vulnerability` row above lists their schema projection.
 - The `EncryptionKey` and `CsrfToken` schemas SHALL require `rotation` and `rotation_window` to be ISO 8601 durations (for example `P90D`, `PT30M`) when present, refusing any other text.
 - Each schema SHALL describe the declared shape only, never a runtime occurrence (a session, an emitted audit record, a scanner hit), which is why `AuditEvent` carries no identity field: occurrence identity belongs to the runtime record, not the declaration.
-- Where a key is declared but the current extractor does not populate it (`relations`, `classification`, `owner`, `grants`, `includes`, `resource`, `verb`, `factor_kind`, `stride_category`, `severity`, `cve_id`, `likelihood`, `impact`, `status`, `level`, `values`, `crosses`, `exposes`, `lifecycle`, `material_ref`, `custodian`, `algorithm`, `issuer`, `binds`, `binds_flow`, `governs`, `mitigates`, `steps`, `source`, `affects`, `arises_from`, `traces_to`, `exploits`, `allowed_origins`) the key SHALL be optional, so a record produced by today's extractor validates and a future extractor can fill it without a schema change.
+- Where a key is declared but the current extractor does not populate it (`relations`, `classification`, `owner`, `grants`, `includes`, `resource`, `verb`, `factor_kind`, `stride_category`, `severity`, `cve_id`, `likelihood`, `impact`, `status`, `disposition`, `disposition_by`, `discovered_at`, `disclosed_at`, `fixed_at`, `vex_statements`, `level`, `values`, `crosses`, `exposes`, `lifecycle`, `material_ref`, `custodian`, `algorithm`, `issuer`, `binds`, `binds_flow`, `governs`, `mitigates`, `steps`, `source`, `affects`, `arises_from`, `traces_to`, `exploits`, `allowed_origins`) the key SHALL be optional, so a record produced by today's extractor validates and a future extractor can fill it without a schema change.
 - Eight of the optional graded keys SHALL additionally be expressed as an item rule over `fields`, which the extractor does populate — `stride_category`, `severity`, `likelihood`, `impact`, `status`, `level`, `trust_level` and `effectiveness`, one open marker model each — so a threat states its STRIDE class as a row and a control its effectiveness as a row, and the obligation is enforced today rather than deferred.
+- The `AnomalyRecord` schema and skeleton contract are defined authoritatively by [FR-032](./FR-032-vulnerability-lifecycle.md); the `anomaly` row above lists its schema projection.
 - The remaining graded keys (`lifecycle`, `classification`, `factor_kind`) SHALL carry no item rule: they record how something is held rather than how bad it is, and no refusal in this module turns on them. They are declared, typed, and optional; nothing else is claimed for them.
 - The test suite SHALL verify every criterion over a key the extractor does not populate against a hand-built JSON record rather than an extracted one, naming that limitation in the test itself, so that no row claims extraction evidence it does not have.
 - No model SHALL admit a key on a type whose row does not list it; the seal is the mechanism.
@@ -110,13 +116,13 @@ semantic-core release that renders `identity: false` is a breaking change to the
 | ID | Constraint | Type | Validation |
 |----|------------|------|------------|
 | FR-004-CON-1 | No model SHALL redeclare a semantic-core model or scalar; the module namespace contributes archetype shapes only (semantic-core NFR-014 kernel discipline). | Architecture | Test |
-| FR-004-CON-2 | The empty record `{}` SHALL fail every one of the twenty-seven types, because every type has a non-empty required set. | Integrity | Test |
+| FR-004-CON-2 | The empty record `{}` SHALL fail every one of the twenty-eight types, because every type has a non-empty required set. | Integrity | Test |
 
 ## Acceptance Criteria
 
 | ID | Criteria | Verification |
 |----|----------|--------------|
-| FR-004-AC-1 | Each of the twenty-seven shipped object-type schemas differs from every other in at least one required key, admitted key, or item rule listed in the table; a schema with only `type: object` is absent. | Test |
+| FR-004-AC-1 | Each of the twenty-eight shipped object-type schemas differs from every other in at least one required key, admitted key, or item rule listed in the table; a schema with only `type: object` is absent. | Test |
 | FR-004-AC-2 | An asset record with one identity field validates against `Asset.json`; the same record with the identity flag removed fails; a record with no `fields` fails. | Test |
 | FR-004-AC-3 | A role record validates; a record carrying `operations` fails. A permission and a scope record each fail when they carry `relations`. | Test |
 | FR-004-AC-4 | A threat record with a `stride_category` field validates; the same record without that field fails; a `stride_category` outside `StrideCategory` fails. | Test |
@@ -126,11 +132,13 @@ semantic-core release that renders `identity: false` is a breaking change to the
 | FR-004-AC-8 | An auth-flow record with one operation validates; an empty `operations` array fails; a record carrying `relations` fails. | Test |
 | FR-004-AC-9 | An audit-event record with a `Timestamp` field and no identity field validates against `AuditEvent.json`; a record whose only fields are non-`Timestamp` fails; a record with an identity field fails; a record with `operations` fails. | Test |
 | FR-004-AC-10 | A trust-boundary record with one clause and a `trust_level` field validates; the same record without `clauses` fails; a `trust_level` outside `TrustLevel` fails. | Test |
-| FR-004-AC-11 | The empty record `{}` fails against all twenty-seven schemas. | Test |
+| FR-004-AC-11 | The empty record `{}` fails against all twenty-eight schemas. | Test |
 | FR-004-AC-12 | A `type.target` of `ix://agent-ix/spec-objects-security/unresolved/Mystery` is accepted by the schema (it is a `SemanticId`) and reported by the extractor as `semantic.unresolved-type`; a `SemanticId`-tagged `Mystery` (no `ix://` prefix) is rejected by the schema. | Test |
 | FR-004-AC-13 | No module schema redeclares a semantic-core model; every grammar item is a `$ref` to semantic-core. | Test |
 | FR-004-AC-14 | A data-classification record with a `level` field validates; one without it fails; a record carrying `relations` fails. | Test |
 | FR-004-AC-15 | The `kind` (`MfaMethod`), `vector` (`Threat`), `rotation` (`EncryptionKey`) and `rotation_window` (`CsrfToken`) keys are each optional; a record without them validates, `kind` and `vector` accept non-empty strings and refuse an empty string or a non-string, and `rotation` and `rotation_window` accept the whole-unit ISO 8601 duration profile: `P` followed by ordered, unique integer year, month and day components, or a week-only `PnW` that never mixes with another date component, optionally followed by `T` and ordered, unique integer hour, minute and second components, with no fractions (`P90D`, `P2W`, `P1Y2M3DT4H5M6S`, `PT15M` pass), and refuse a bare `P` or `PT`, a trailing `T`, a repeated or out-of-order component, a week mixed with another date component (`P1Y2W`, `P2W3D`, `P1Y1M1W1D`), a fraction (`P0.5D`, `PT0.5S`) and non-duration text. | Test |
+| FR-004-AC-16 | The `Vulnerability` schema projection includes the optional lifecycle properties and types defined by [FR-032](./FR-032-vulnerability-lifecycle.md). | Test |
+| FR-004-AC-17 | The `AnomalyRecord` schema projection and skeleton expose the declaration shape defined by [FR-032](./FR-032-vulnerability-lifecycle.md). | Test |
 
 ## Dependencies
 

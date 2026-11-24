@@ -35,3 +35,5 @@ description: "Index of artifacts in this directory."
 * [FR-028: A processing_activity states the person-authored context for records of processing](./FR-028-processing-activity.md)
 * [FR-029: A control may state which risk-control option it is](./FR-029-control-option-type.md)
 * [FR-030: A requirement a SOUP record serves is asked for the requirements placed on that SOUP](./FR-030-soup-requirements-design-relation.md)
+* [FR-031: Define a vulnerability-management plan artifact type](./FR-031-vulnerability-management-plan-archetype.md)
+* [FR-032: Record vulnerability lifecycle and addressable anomalies](./FR-032-vulnerability-lifecycle.md)

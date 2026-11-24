@@ -63,6 +63,12 @@
     "disposition_clause": {
       "type": "string",
       "pattern": "\\S"
+    },
+    "vex_statements": {
+      "type": "array",
+      "items": {
+        "$ref": "https://schemas.agent-ix.org/agent-ix/spec-objects-security/VexStatement.json"
+      }
     }
   },
   "required": [
