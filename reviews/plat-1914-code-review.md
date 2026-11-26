@@ -83,3 +83,49 @@ bindings:
 ## Environment limits
 
 The focused run uses the local architecture fixture at `/home/peter/dev/worktrees/regfinish-matrix-spec-objects-architecture/spec_objects_architecture`, configured through PLAT1658_ARCHITECTURE_MODULE and an ignored node_modules symlink for the flow helper's hard-coded path. The cached semantic-core symlink is 0.4.3 whereas committed schema refs name 0.4.4; none of these nine tests uses schema_registry, so this does not invalidate this focused result and does not establish schema-registry compatibility. Quire CLI tests use PATH because no local CLI exists. No full-suite result is claimed.
+
+## Dispositions
+
+| FND | outcome | reason |
+| --- | --- | --- |
+| FND-001 | fixed | Returned facts now assert empty threat/risk lists and absence of considers edges across every returned record. |
+| FND-002 | fixed | Extraction now requires exactly one record and exactly the authored scopes edge. |
+| FND-003 | fixed | A real Risk skeleton extraction checks literal likelihood, impact and decision, and rejects a score key. |
+
+## Disposition pass 1
+
+**PASS; mergeable=yes** at f2b186aa2afc7380fccbecfa8ac8bbd8e012d7c3. Inspected every change since the reviewed head, including the copied original SR artifact and the new criterion-tagged risk extraction test. All three findings are fixed; no new findings.
+
+Independent focused Python 3.13 run: 10 passed. Replaying the original external-output mutation probe against the three affected tests now fails all three, as expected. A separate score-only wrapper confirms the new risk extraction test fails specifically on the injected score key. These probes modify only temporary wrapper files, never repository source. Ruff and Black passed for both changed test files; diff whitespace check passed. Tool selection remains explicit Quoin 0.37.0 and Quire 0.52.0 (engine 0.62.2); fixture and dependency limitations remain as documented above. The five examined units now have meaningful coverage for the reviewed obligations.
+
+Fixed excerpt FND-001:
+
+```python
+    facts = report["facts"]
+    assert facts["threat"] == []
+    assert facts["risk"] == []
+    assert not any(
+        edge["edge"] == "considers"
+        for records in facts.values()
+        for record in records
+        for edge in record["edges"]
+    )
+```
+
+Fixed excerpt FND-002:
+
+```python
+    assert len(extraction_output["extraction"]["records"]) == 1
+    assert extraction_output["edges"] == [{"target": "CONN-1", "type": "scopes"}]
+```
+
+Fixed excerpt FND-003:
+
+```python
+    assert len(payload["records"]) == 1
+    record = payload["records"][0]
+    assert record["likelihood"] == "possible"
+    assert record["impact"] == "major"
+    assert record["decision"] == "undecided"
+    assert "score" not in record
+```
