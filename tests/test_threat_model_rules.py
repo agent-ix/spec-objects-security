@@ -404,6 +404,15 @@ def test_unconsidered_crossing_emits_only_the_crossing_without_threat_finding(
         "BOUND-1.md",
         "TM-1.md",
     }
+    facts = report["facts"]
+    assert facts["threat"] == []
+    assert facts["risk"] == []
+    assert not any(
+        edge["edge"] == "considers"
+        for records in facts.values()
+        for record in records
+        for edge in record["edges"]
+    )
     threat_findings = [
         denial for denial in report["denials"] if denial["rule"] in RULES
     ]
@@ -451,8 +460,11 @@ def test_threat_model_extraction_contains_only_authored_judgments(tmp_path):
         check=True,
     )
 
-    record = json.loads(result.stdout)["extraction"]["records"][0]
+    extraction_output = json.loads(result.stdout)
+    record = extraction_output["extraction"]["records"][0]
 
+    assert len(extraction_output["extraction"]["records"]) == 1
+    assert extraction_output["edges"] == [{"target": "CONN-1", "type": "scopes"}]
     assert record["method"] == "stride_per_element"
     assert record["reviewed_by"] == "A. Person"
     assert not {
@@ -463,3 +475,28 @@ def test_threat_model_extraction_contains_only_authored_judgments(tmp_path):
         "decision",
         "decided_by",
     } & set(record)
+
+
+@pytest.mark.trace("NFR-005-AC-3")
+def test_risk_extraction_keeps_ratings_authored_and_has_no_computed_score():
+    """A risk extract contains the stated axes and decision without a score."""
+    result = subprocess.run(
+        [
+            engine_tool("quire"),
+            "extract",
+            "--module",
+            str(PACKAGE_ROOT),
+            str(PACKAGE_ROOT / "skeletons" / "risk.md"),
+        ],
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    payload = json.loads(result.stdout)["extraction"]
+
+    assert len(payload["records"]) == 1
+    record = payload["records"][0]
+    assert record["likelihood"] == "possible"
+    assert record["impact"] == "major"
+    assert record["decision"] == "undecided"
+    assert "score" not in record
