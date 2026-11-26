@@ -400,6 +400,14 @@ def test_threat_model_schema_requires_method_and_reviewed_by_and_has_no_default(
     extracted_record = json.loads(extracted.stdout)["extraction"]["records"][0]
     assert extracted_record["method"] == "stride_per_element"
     assert extracted_record["reviewed_by"] == "A. Person"
+    assert not {
+        "threat",
+        "considers",
+        "likelihood",
+        "impact",
+        "decision",
+        "decided_by",
+    } & set(extracted_record)
 
 
 @pytest.mark.trace("FR-026-AC-9")
@@ -454,7 +462,8 @@ def test_risk_decision_rules(schema_registry, extra, valid):
         ],
         **extra,
     }
-    assert schema_registry("Risk").is_valid(record) is valid
+    validator = schema_registry("Risk")
+    assert validator.is_valid(record) is valid
 
 
 def risk_doc(**front) -> str:
@@ -464,7 +473,7 @@ def risk_doc(**front) -> str:
     return text.replace("\n---\n<!--", f"\n{extra}---\n<!--", 1)
 
 
-@pytest.mark.trace("FR-027-AC-6")
+@pytest.mark.trace("FR-027-AC-6", "NFR-005-AC-3")
 @pytest.mark.parametrize(
     ("front", "valid"),
     [

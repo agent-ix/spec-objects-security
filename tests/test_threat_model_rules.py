@@ -316,3 +316,150 @@ def test_accepted_risk_is_excluded_from_the_untreated_risk_relation(tmp_path):
         "RISK-UNDECIDED",
         "RISK-REJECTED",
     }
+
+
+@pytest.mark.trace("NFR-005-AC-1", "NFR-005-M-1")
+def test_threat_and_risk_fields_have_no_schema_or_manifest_defaults():
+    """Threat, threat-model and risk judgments remain authored inputs.
+
+    Criteria:
+      * emitted schemas do not default threat method, reviewer, risk decision,
+        decision owner, likelihood or impact;
+      * the corresponding manifest extraction declarations do not assert or
+        default any of those values.
+    """
+    fields = {
+        "method",
+        "reviewed_by",
+        "decision",
+        "decided_by",
+        "likelihood",
+        "impact",
+    }
+    schema_names = {"ThreatModel", "Threat", "Risk"}
+    for name in schema_names:
+        document = json.loads((SCHEMAS_DIR / f"{name}.json").read_text())
+        for field_name in fields & set(document.get("properties", {})):
+            assert "default" not in document["properties"][field_name], (
+                name,
+                field_name,
+            )
+
+    manifest = yaml.safe_load(MANIFEST_PATH.read_text())
+    object_types = {
+        item["name"]: item
+        for item in manifest["object_types"]
+        if item["name"] in {"threat_model", "threat", "risk"}
+    }
+    assert set(object_types) == {"threat_model", "threat", "risk"}
+    for name, object_type in object_types.items():
+        extracted = object_type["body_extraction"]["yield_pattern"]["match"]
+        relevant = fields & set(extracted)
+        for field_name in relevant:
+            declaration = extracted[field_name]
+            assert "assert" not in declaration, (name, field_name)
+            assert "default" not in declaration, (name, field_name)
+
+
+@pytest.mark.trace("NFR-005-AC-2", "NFR-005-M-2")
+def test_unconsidered_crossing_emits_only_the_crossing_without_threat_finding(
+    tmp_path,
+):
+    """An authored empty threat-model consideration list creates no judgments.
+
+    The corpus contains a classified connection crossing a trust boundary and
+    a threat model that scopes it without a ``considers`` edge. The relation
+    report must preserve that absence and report only the missing-threat check.
+    """
+    manifest = yaml.safe_load(MANIFEST_PATH.read_text())
+    module = tmp_path / "module"
+    _module(module, manifest, include_threat_rules=True)
+    scope = tmp_path / "corpus"
+    spec = scope / "spec"
+    spec.mkdir(parents=True)
+    (spec / "CONN-1.md").write_text(
+        "---\nid: CONN-1\ntitle: Connection\ntype: connection\n"
+        "relationships:\n  - type: carries\n    target: CLASS-1\n"
+        "  - type: crosses\n    target: BOUND-1\n---\n# Connection\n"
+    )
+    (spec / "CLASS-1.md").write_text(
+        "---\nid: CLASS-1\ntitle: Classification\ntype: data_classification\n"
+        "regulated_categories: [health]\n---\n# Classification\n"
+    )
+    (spec / "BOUND-1.md").write_text(
+        "---\nid: BOUND-1\ntitle: Boundary\ntype: trust_boundary\n"
+        "trust_level: untrusted\n---\n# Boundary\n"
+    )
+    (spec / "TM-1.md").write_text(
+        "---\nid: TM-1\ntitle: Threat model\ntype: threat_model\n"
+        "relationships:\n  - type: scopes\n    target: CONN-1\n---\n"
+        "# Threat model\n"
+    )
+
+    report = _flow_report(scope, module)
+
+    assert {path.name for path in spec.iterdir()} == {
+        "CONN-1.md",
+        "CLASS-1.md",
+        "BOUND-1.md",
+        "TM-1.md",
+    }
+    threat_findings = [
+        denial for denial in report["denials"] if denial["rule"] in RULES
+    ]
+    assert [denial["rule"] for denial in threat_findings] == [
+        "crossing-without-threat"
+    ], report["denials"]
+    assert threat_findings[0]["subject"]["id"] == "CONN-1"
+
+
+@pytest.mark.trace("NFR-005-AC-3")
+def test_risk_flow_rules_do_not_read_ratings_or_emit_a_score():
+    """Risk completeness uses an authored decision and never computes a score."""
+    manifest = yaml.safe_load(MANIFEST_PATH.read_text())
+    for rule in manifest["traceability"]["flow_rules"]:
+        for condition in [*rule["match"], *rule.get("unless_any", [])]:
+            assert condition.get("field") not in {"likelihood", "impact"}
+
+    risk_schema = json.loads((SCHEMAS_DIR / "Risk.json").read_text())
+    assert "score" not in risk_schema["properties"]
+
+
+@pytest.mark.trace("NFR-005-M-2")
+def test_threat_model_extraction_contains_only_authored_judgments(tmp_path):
+    """Extraction preserves authored threat-model fields without inventing risk."""
+    document = tmp_path / "threat_model.md"
+    document.write_text(
+        "---\nid: TM-1\ntitle: Threat model\ntype: threat_model\n"
+        "method: stride_per_element\nreviewed_by: A. Person\n"
+        "relationships:\n  - type: scopes\n    target: CONN-1\n---\n"
+        "# Threat model\n\n## Scope\n\nThe connection.\n\n"
+        "## Assumptions\n\nNone.\n\n## Out of scope\n\nExternal systems.\n\n"
+        "## Properties\n\n| Field | Type | Multiplicity | Constraints |\n"
+        "|---|---|---|---|\n| threat_model_id | UUID | 1..1 | identity |\n"
+    )
+    result = subprocess.run(
+        [
+            engine_tool("quire"),
+            "extract",
+            "--module",
+            str(PACKAGE_ROOT),
+            str(document),
+        ],
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+
+    record = json.loads(result.stdout)["extraction"]["records"][0]
+
+    assert record["method"] == "stride_per_element"
+    assert record["reviewed_by"] == "A. Person"
+    assert not {
+        "threat",
+        "considers",
+        "likelihood",
+        "impact",
+        "decision",
+        "decided_by",
+    } & set(record)
