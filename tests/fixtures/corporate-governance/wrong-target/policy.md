@@ -13,3 +13,13 @@ relationships:
 
 Synthetic example: privileged access is approved by an assigned owner and
 reviewed quarterly.
+
+## Invariants
+
+### PrivilegedAccessHasAnOwner
+
+```ocl
+context SyntheticSecurityAccessPolicy
+inv PrivilegedAccessHasAnOwner:
+  true
+```
