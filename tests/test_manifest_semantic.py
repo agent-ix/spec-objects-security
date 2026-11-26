@@ -37,11 +37,7 @@ def test_the_semantic_block_is_exactly_the_eight_admitted_keys(semantic_block):
     assert len(ADMITTED_KEYS) == 8
     assert semantic_block["contract_version"] == "1.0.0"
     assert semantic_block["package"] == "agent-ix/spec-objects-security"
-    assert semantic_block["imports"] == {
-        "agent-ix/spec-artifacts-process": "0.3.0",
-        "agent-ix/spec-objects-architecture": "0.5.0",
-        "agent-ix/spec-artifacts-iso": "0.3.0",
-    }
+    assert semantic_block["imports"] == {}
     assert semantic_block["targets"] == ["json-schema", "markdown"]
     assert semantic_block["mappings"] == [
         "typed-table",
@@ -52,6 +48,16 @@ def test_the_semantic_block_is_exactly_the_eight_admitted_keys(semantic_block):
     assert semantic_block["compatibility_posture"] == "additive"
     assert semantic_block["legacy_forms"] == "warning"
     assert semantic_block["exports"] == list(OBJECT_TYPES)
+
+
+@pytest.mark.trace("FR-003-AC-1")
+def test_module_dependencies_declare_the_external_vocabulary_owners(manifest):
+    assert manifest["depends_on"] == [
+        {"name": "spec-artifacts-process", "version_range": "^0.3.0"},
+        {"name": "spec-objects-architecture", "version_range": "^0.5.0"},
+        {"name": "spec-artifacts-iso", "version_range": "^0.3.0"},
+        {"name": "spec-objects-safety", "version_range": "^0.4.1"},
+    ]
 
 
 @pytest.mark.trace("FR-003-AC-4")

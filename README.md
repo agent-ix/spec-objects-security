@@ -101,6 +101,12 @@ quire extract <DOC> --module ./spec_objects_security                 # extract s
 
 See the [quire-cli usage docs](https://github.com/agent-ix/quire-cli#usage-instructions) for all commands.
 
+### Corporate governance use and limits
+
+The policy, control, risk, and audit-finding types retain their security meaning.
+See [corporate governance authoring](docs/corporate-governance.md) for the
+supported links, reuse limits, and a synthetic example corpus.
+
 ## Development
 
 This module is a flat-layout Python package (`spec_objects_security`, Python 3.13+) managed with [Poetry](https://python-poetry.org/) and built/published via GitHub Actions to Google Artifact Registry (PyPI-compatible).

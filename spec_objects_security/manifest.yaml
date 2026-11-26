@@ -2,6 +2,15 @@ manifest_version: 1.0.0
 name: spec-objects-security
 version: 0.2.0
 description: 'Filament Module: tier-2 security and identity ObjectTypes (threats, controls, auth flows, secrets, policies)'
+depends_on:
+- name: spec-artifacts-process
+  version_range: ^0.3.0
+- name: spec-objects-architecture
+  version_range: ^0.5.0
+- name: spec-artifacts-iso
+  version_range: ^0.3.0
+- name: spec-objects-safety
+  version_range: ^0.4.1
 grammar_severity:
   trace:crossing-without-threat: error
   trace:classified-sink-without-threat: error
@@ -38,11 +47,7 @@ semantic:
   - scope_exclusion
   - threat_model
   - processing_activity
-  # Edge vocabularies used by this module are declared by these packages.
-  imports:
-    agent-ix/spec-artifacts-process: 0.3.0
-    agent-ix/spec-objects-architecture: 0.5.0
-    agent-ix/spec-artifacts-iso: 0.3.0
+  imports: {}
   targets: [json-schema, markdown]
   mappings: [typed-table, sysml-fence, ocl-clause, record-sections]
   compatibility_posture: additive
