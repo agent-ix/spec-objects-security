@@ -9,3 +9,4 @@ description: "Index of artifacts in this directory."
 
 * [IT-001: Manifest activation roundtrip against filament-core](./IT-001-manifest-activation-roundtrip.md)
 * [IT-002: Module installs into Quoin with the semantic contract](./IT-002-quoin-module-install.md)
+* [IT-003: Validate security artifacts alongside corporate governance](./IT-003-corporate-governance-security.md)
